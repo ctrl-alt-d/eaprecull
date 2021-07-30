@@ -1,15 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using CommonInterfaces;
 
 namespace DataModels.Models
 {
-    public class CursAcademic: INomDescripcio
+    public class CursAcademic: IEtiquetaDescripcio
     {
         public int Id {get; set; }
         public int AnyInici {get; set;}
         public string Nom {get; set;} = string.Empty;
-        public string Descripcio => $"{AnyInici}-{AnyInici+1} {_EsElCursActualTxt}";
-        private string _EsElCursActualTxt => EsElCursActual?"* Curs Actual *":"";
         public bool EsElCursActual {get; set;}
+
+        // IEtiquetaDescripcio
+        public string Etiqueta => Nom;
+        public string Descripcio => $"{Nom} {_EsElCursActualTxt}";
+        private string _EsElCursActualTxt => EsElCursActual?"* Curs Actual *":"";
+
+        //
+        public List<Alumne> AlumnesActualitzats { get; set; } = new();
+        public List<Actuacio> Actuacions { get; set; } = new();
     }
 }

@@ -2,9 +2,9 @@
 
 namespace CommonInterfaces
 {
-    public interface INomDescripcio
+    public interface IEtiquetaDescripcio
     {
-        string Nom {get;}
+        string Etiqueta {get;}
         string Descripcio {get;}
 
     }
