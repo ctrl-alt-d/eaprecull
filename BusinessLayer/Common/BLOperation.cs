@@ -1,14 +1,15 @@
 using DataLayer;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Common
 {
     public class BLOperation
     {
-        protected readonly AppDbContext Ctx;
+        protected readonly IDbContextFactory<AppDbContext> AppDbContextFactory;
 
-        public BLOperation(AppDbContext ctx)
+        public BLOperation(IDbContextFactory<AppDbContext> appDbContextFactory)
         {
-            Ctx = ctx;
+            AppDbContextFactory = appDbContextFactory;
         }
     }
 }
