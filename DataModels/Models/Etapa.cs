@@ -4,7 +4,7 @@ using CommonInterfaces;
 
 namespace DataModels.Models
 {
-    public class Etapa: IEtiquetaDescripcio, IActiu
+    public class Etapa: IIdEtiquetaDescripcio, IActiu
     {
         public int Id {get; set; }
         public string Codi {get; set; } = string.Empty; // Ex: BAT, ESO

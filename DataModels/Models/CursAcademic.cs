@@ -4,7 +4,7 @@ using CommonInterfaces;
 
 namespace DataModels.Models
 {
-    public class CursAcademic: IEtiquetaDescripcio
+    public class CursAcademic: IIdEtiquetaDescripcio
     {
         public int Id {get; set; }
         public int AnyInici {get; set;}

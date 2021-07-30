@@ -5,7 +5,7 @@ using CommonInterfaces;
 
 namespace DataModels.Models
 {
-    public class TipusActuacio: IEtiquetaDescripcio, IActiu
+    public class TipusActuacio: IIdEtiquetaDescripcio, IActiu
     {
         public int Id {get; set; }
 

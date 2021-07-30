@@ -4,7 +4,7 @@ using CommonInterfaces;
 
 namespace DataModels.Models
 {
-    public class Centre: IEtiquetaDescripcio, IActiu
+    public class Centre: IIdEtiquetaDescripcio, IActiu
     {
         public int Id {get; set; }
         public string Codi {get; set;} = string.Empty;
