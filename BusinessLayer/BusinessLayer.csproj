@@ -1,8 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer.Abstract\BusinessLayer.Abstract.csproj" />
+    <ProjectReference Include="..\DTO.o\DTO.o.csproj" />
+    <ProjectReference Include="..\CommonInterfaces\CommonInterfaces.csproj" />
+    <ProjectReference Include="..\DTO.i\DTO.i.csproj" />
+    <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
+    <ProjectReference Include="..\DTO.Projections\DTO.Projections.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
+  </ItemGroup>
 
 </Project>

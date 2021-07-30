@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonInterfaces\CommonInterfaces.csproj" />
-    <ProjectReference Include="..\DTO.i\DTO.i.csproj" />
+    <ProjectReference Include="..\DataModels\DataModels.csproj" />
     <ProjectReference Include="..\DTO.o\DTO.o.csproj" />
   </ItemGroup>
 
