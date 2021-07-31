@@ -36,16 +36,15 @@ namespace BusinessLayer.Common
 
         protected abstract TDTOo ToDto(TModel model );
 
-        public virtual Task<OperationResults<TDTOo>> GetItems(
+        public virtual async Task<OperationResults<TDTOo>> GetItems(
             TParm request
             )
             =>
-            Task.FromResult(
-                new OperationResults<TDTOo>(
-                    GetModels(request)
-                    .Select(ToDto)
-                    .ToList()
-                )
+            new OperationResults<TDTOo>(
+                await 
+                GetModels(request)
+                .Select(x=>ToDto(x))
+                .ToListAsync()
             );
 
     }
