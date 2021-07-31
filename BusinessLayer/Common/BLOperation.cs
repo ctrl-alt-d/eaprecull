@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Common
 {
-    public class BLOperation
+    public abstract class BLOperation
     {
         public readonly IDbContextFactory<AppDbContext> AppDbContextFactory;
 

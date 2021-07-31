@@ -4,6 +4,11 @@ namespace DTO.i.DTOs
 {
     public class EsActiuParms: IDtoi
     {
-        public bool? EsActiu {get; set;}
+        public EsActiuParms(bool? esActiu)
+        {
+            EsActiu = esActiu;
+        }
+
+        public bool? EsActiu {get; }
     }
 }

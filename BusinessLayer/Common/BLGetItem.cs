@@ -5,8 +5,6 @@ using DataLayer;
 using DataModels.Models.Interfaces;
 using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Common

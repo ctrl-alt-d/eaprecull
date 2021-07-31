@@ -7,14 +7,13 @@ using DTO.i;
 using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
     public abstract class BLGetItems<TModel, TParm, TDTOo>
-        :BLOperation,
+        : BLOperation,
          IGetItems<TParm, TDTOo>
             where TDTOo : IDTOo, IEtiquetaDescripcio
             where TParm : IDtoi
@@ -34,18 +33,20 @@ namespace BusinessLayer.Common
 
         protected abstract IQueryable<TModel> GetModels(TParm request);
 
-        protected abstract TDTOo ToDto(TModel model );
+        protected abstract Func<TModel, TDTOo> ToDto {get;}
 
         public virtual async Task<OperationResults<TDTOo>> GetItems(
             TParm request
             )
-            =>
-            new OperationResults<TDTOo>(
-                await 
+        {
+            //var todto = ToDto();
+            return new OperationResults<TDTOo>(
+                await
                 GetModels(request)
-                .Select(x=>ToDto(x))
+                .Select(x => ToDto(x))
                 .ToListAsync()
             );
+        }
 
     }
 }

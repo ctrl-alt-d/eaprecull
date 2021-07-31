@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO.o", "DTO.o\DTO.o.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO.Projections", "DTO.Projections\DTO.Projections.csproj", "{C4B6D981-1FE3-40FA-8594-B28D44555571}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer.Integration.Test", "BusinessLayer.Integration.Test\BusinessLayer.Integration.Test.csproj", "{9BAF16F9-595E-4543-8FA5-1AE1F53941BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{C4B6D981-1FE3-40FA-8594-B28D44555571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4B6D981-1FE3-40FA-8594-B28D44555571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4B6D981-1FE3-40FA-8594-B28D44555571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BAF16F9-595E-4543-8FA5-1AE1F53941BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BAF16F9-595E-4543-8FA5-1AE1F53941BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BAF16F9-595E-4543-8FA5-1AE1F53941BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BAF16F9-595E-4543-8FA5-1AE1F53941BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
