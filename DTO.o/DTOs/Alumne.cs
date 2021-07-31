@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommonInterfaces;
+using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
 {    
-    public class Alumne : IEtiquetaDescripcio, IActiu
+    public class Alumne : IEtiquetaDescripcio, IActiu, IDTOo
     {
         public Alumne(
             int id,

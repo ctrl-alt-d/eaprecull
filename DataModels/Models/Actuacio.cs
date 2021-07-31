@@ -1,10 +1,11 @@
 ﻿using System;
 using CommonInterfaces;
+using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
 
-    public class Actuacio : IIdEtiquetaDescripcio
+    public class Actuacio : IIdEtiquetaDescripcio, IModel
     {
         public int Id { get; set; }
         public Alumne Alumne { get; set; } = default!;

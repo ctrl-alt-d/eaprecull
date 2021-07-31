@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommonInterfaces;
+using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
 {
-    public class CursAcademic: IEtiquetaDescripcio
+    public class CursAcademic: IEtiquetaDescripcio, IDTOo
     {
         public CursAcademic(int id, int anyInici, string nom, bool esElCursActual, string etiqueta, string descripcio)
         {

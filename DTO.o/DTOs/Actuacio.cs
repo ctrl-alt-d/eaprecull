@@ -1,10 +1,11 @@
 ﻿using System;
 using CommonInterfaces;
+using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
 {
 
-    public class Actuacio : IEtiquetaDescripcio
+    public class Actuacio : IEtiquetaDescripcio, IDTOo
     {
         public Actuacio(
             int id,

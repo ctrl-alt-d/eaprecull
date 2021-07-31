@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommonInterfaces;
+using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class Etapa: IIdEtiquetaDescripcio, IActiu
+    public class Etapa: IIdEtiquetaDescripcio, IActiu, IModel
     {
         public int Id {get; set; }
         public string Codi {get; set; } = string.Empty; // Ex: BAT, ESO

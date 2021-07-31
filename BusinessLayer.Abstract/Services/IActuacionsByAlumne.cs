@@ -4,7 +4,7 @@ using DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioByAlumne: IQuery<Actuacio, GetActuacioByAlumneParms>
+    public interface IActuacionsByAlumne: IQuery<Actuacio, GetActuacioByAlumneParms>
     {        
     }
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommonInterfaces;
+using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class CursAcademic: IIdEtiquetaDescripcio
+    public class CursAcademic: IIdEtiquetaDescripcio, IModel
     {
         public int Id {get; set; }
         public int AnyInici {get; set;}
