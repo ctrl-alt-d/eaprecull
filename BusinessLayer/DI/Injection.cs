@@ -14,6 +14,7 @@ namespace BusinessLayer.DI
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<IAlumnes, Alumnes>();
             services.AddTransient<IAlumneCreate, AlumneCreate>();
+            services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
         }        
     }
 }

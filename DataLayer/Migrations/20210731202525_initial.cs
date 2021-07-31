@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer.Migrations
 {
-    public partial class inicial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,7 +73,7 @@ namespace DataLayer.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Non = table.Column<string>(type: "TEXT", nullable: false),
+                    Nom = table.Column<string>(type: "TEXT", nullable: false),
                     Cognoms = table.Column<string>(type: "TEXT", nullable: false),
                     DataNaixement = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CentreActualId = table.Column<int>(type: "INTEGER", nullable: true),

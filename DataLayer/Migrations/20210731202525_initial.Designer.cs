@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210730205726_inicial")]
-    partial class inicial
+    [Migration("20210731202525_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -103,7 +103,7 @@ namespace DataLayer.Migrations
                     b.Property<int?>("EtapaActualId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Non")
+                    b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

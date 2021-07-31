@@ -25,6 +25,7 @@ namespace BusinessLayer.Services
         protected override IQueryable<models.Alumne> GetModels(parms.EmptyParms request)
             =>
             GetAllModels()
+            .Include(x=>x.CentreActual)
             .OrderBy(c=>c.Nom);
 
         protected override Func<models.Alumne, dtoo.Alumne> ToDto

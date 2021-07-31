@@ -28,6 +28,7 @@ namespace BusinessLayer.Integration.Test
             var serviceProvider = services.BuildServiceProvider();
 
             var centreCreate = serviceProvider.GetRequiredService<ICentreCreate>();
+            var cursCreate = serviceProvider.GetRequiredService<ICursAcademicCreate>();
             var alumneCreate = serviceProvider.GetRequiredService<IAlumneCreate>();
             var alumnes = serviceProvider.GetRequiredService<IAlumnes>();
 
@@ -46,17 +47,24 @@ namespace BusinessLayer.Integration.Test
             );
             var createcentreresult = await centreCreate.Create(createcentreparms);
 
+            var createcursparms = new DTO.i.DTOs.CursAcademicCreateParms(
+                2021, 
+                true
+            );
+            var createcursresult = await cursCreate.Create(createcursparms);
+
+
             var createalumneparms = new DTO.i.DTOs.AlumneCreateParms(
                 nom: "coco",
                 cognoms: "cocino",
                 dataNaixement: DateTime.Today,
                 centreActualId: createcentreresult.Data.Id,
-                cursDarreraActualitacioDadesId: 1,  // ToDO
+                cursDarreraActualitacioDadesId: createcursresult.Data.Id,
                 etapaActualId: null,
                 dataInformeNESENEE: null,
-                observacionsNESENEE: null,
+                observacionsNESENEE: string.Empty,
                 dataInformeNESENoNEE: null,
-                observacionsNESENoNEE:null
+                observacionsNESENoNEE: string.Empty
 
             );
             var createalumeresult = await alumneCreate.Create(createalumneparms);
