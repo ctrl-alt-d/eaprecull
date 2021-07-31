@@ -27,8 +27,7 @@ namespace BusinessLayer.Common
 
         protected virtual IQueryable<TModel> GetAllModels()
             =>
-            AppDbContextFactory
-            .CreateDbContext()
+            GetContext()
             .Set<TModel>();
 
         protected abstract IQueryable<TModel> GetModels(TParm request);

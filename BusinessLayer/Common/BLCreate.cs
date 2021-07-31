@@ -28,8 +28,7 @@ namespace BusinessLayer.Common
 
         protected virtual IQueryable<TModel> GetAllModels()
             =>
-            AppDbContextFactory
-            .CreateDbContext()
+            GetContext()
             .Set<TModel>();
 
         protected abstract TModel SetValues(TParm parm );
@@ -40,9 +39,8 @@ namespace BusinessLayer.Common
             )
             {
                 var model = SetValues(parm);
-                using var ctx = AppDbContextFactory.CreateDbContext();                
-                ctx.Add(model);
-                await ctx.SaveChangesAsync();
+                GetContext().Add(model);
+                await GetContext().SaveChangesAsync();
                 return new( ToDto(model) );
             }
     }

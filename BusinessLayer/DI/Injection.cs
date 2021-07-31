@@ -10,8 +10,10 @@ namespace BusinessLayer.DI
         public static void BusinessLayerConfigureServices(this IServiceCollection services)
         {
             // Services (ToDo: per comprensió)
-            services.AddScoped<ICentres, Centres>();
-            services.AddScoped<ICentreCreate, CentreCreate>();
+            services.AddTransient<ICentres, Centres>();
+            services.AddTransient<ICentreCreate, CentreCreate>();
+            services.AddTransient<IAlumnes, Alumnes>();
+            services.AddTransient<IAlumneCreate, AlumneCreate>();
         }        
     }
 }

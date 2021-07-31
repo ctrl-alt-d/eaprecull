@@ -10,7 +10,7 @@ namespace DTO.Projections
             =>
             new dto.Alumne(
                 model.Id,
-                model.Non,
+                model.Nom,
                 model.Cognoms,
                 model.DataNaixement,
                 model.CentreActual,

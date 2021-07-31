@@ -23,8 +23,7 @@ namespace BusinessLayer.Common
 
         protected virtual ValueTask<TModel> GetById(int id) 
             =>
-            AppDbContextFactory
-            .CreateDbContext()
+            GetContext()
             .Set<TModel>()
             .FindAsync(id);
 

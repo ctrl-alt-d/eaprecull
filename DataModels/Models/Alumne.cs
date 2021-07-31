@@ -8,7 +8,7 @@ namespace DataModels.Models
     public class Alumne : IIdEtiquetaDescripcio, IActiu, IModel
     {
         public int Id { get; set; }
-        public string Non { get; set; } = string.Empty;
+        public string Nom { get; set; } = string.Empty;
         public string Cognoms { get; set; } = string.Empty;
         public DateTime? DataNaixement { get; set; }
         public Centre? CentreActual { get; set; }
@@ -23,7 +23,7 @@ namespace DataModels.Models
         public bool EsActiu { get; set; }
 
         // IEtiquetaDescripcio
-        public string Etiqueta => $"{Cognoms}, {Non}";
+        public string Etiqueta => $"{Cognoms}, {Nom}";
         public string Descripcio =>
             $"{DataNaixement} {CentreActual?.Etiqueta ?? ""} " +
             $"{EtapaActual?.Etiqueta ?? ""} {_NESEEE_txt}{_NESENoEE_txt}";

@@ -26,8 +26,6 @@ namespace BusinessLayer.Services
                 Nom = parm.Nom,
                 EsActiu = parm.EsActiu,
             };
-        
-
         protected override dtoo.Centre ToDto(models.Centre parm)
             =>
             project
