@@ -6,6 +6,7 @@ using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
@@ -19,21 +20,21 @@ namespace BusinessLayer.Common
         {
         }
 
-        protected virtual TModel GetById(int id) 
+        protected virtual ValueTask<TModel> GetById(int id) 
             =>
             AppDbContextFactory
             .CreateDbContext()
             .Set<TModel>()
-            .Find(id);
+            .FindAsync(id);
 
 
-        public virtual OperationResult<TDTOo> Get(
+        public virtual async Task<OperationResult<TDTOo>> Get(
             Func<TModel, TDTOo> toDto,
             int id
             ) 
             =>
             new (
-                toDto( GetById(id) )
+                toDto( await GetById(id) )
             );
         
     }

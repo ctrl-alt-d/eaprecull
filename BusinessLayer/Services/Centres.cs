@@ -6,6 +6,7 @@ using dtoo = DTO.o.DTOs;
 using System.Linq;
 using DTO.Projections;
 using models = DataModels.Models;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
@@ -18,7 +19,7 @@ namespace BusinessLayer.Services
             BLo = blo;
         }
 
-        public OperationResults<dtoo.Centre> Query(EsActiuParms request)
+        public Task<OperationResults<dtoo.Centre>> Query(EsActiuParms request)
             =>
             BLo
             .Execute(

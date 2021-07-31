@@ -5,37 +5,40 @@ using DataModels.Models.Interfaces;
 using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
     public class BLGetItems<TModel, TDTOo> : BLOperation
-            where TDTOo: IDTOo, IEtiquetaDescripcio
-            where TModel: class, IModel, IId
+            where TDTOo : IDTOo, IEtiquetaDescripcio
+            where TModel : class, IModel, IId
 
     {
         public BLGetItems(IDbContextFactory<AppDbContext> appDbContextFactory)
-        :base(appDbContextFactory)
+        : base(appDbContextFactory)
         {
         }
 
-        public virtual IQueryable<TModel> GetAllModels() 
+        public virtual IQueryable<TModel> GetAllModels()
             =>
             AppDbContextFactory
             .CreateDbContext()
             .Set<TModel>();
 
 
-        public virtual OperationResults<TDTOo> Execute(
+        public virtual Task<OperationResults<TDTOo>> Execute(
             Func<TModel, TDTOo> toDto,
             IQueryable<TModel>? get
-            ) 
+            )
             =>
-            new (
-                (get ?? GetAllModels())
-                .Select(toDto)
-                .ToList()
+            Task.FromResult(
+                new OperationResults<TDTOo>(
+                    (get ?? GetAllModels())
+                    .Select(toDto)
+                    .ToList()
+                )
             );
-        
     }
 }

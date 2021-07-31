@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CommonInterfaces;
 using DTO.i;
 
@@ -7,6 +8,6 @@ namespace BusinessLayer.Abstract.Generic
         where T: IEtiquetaDescripcio
         where P: IDtoi
     {
-        OperationResults<T> Query(P request);
+        Task<OperationResults<T>> Query(P request);
     }
 }
