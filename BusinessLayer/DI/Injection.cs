@@ -11,7 +11,7 @@ namespace BusinessLayer.DI
         {
             // Basic operations
             services.AddScoped(typeof(BLGetItem<,>));
-            services.AddScoped(typeof(BLGetItems<,>));
+            services.AddScoped(typeof(BLGetItems<,,>));
 
             // Services (ToDo: per comprensió)
             services.AddScoped<ICentres, Centres>();

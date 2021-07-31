@@ -1,37 +1,35 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using DTO.i.DTOs;
+using parms = DTO.i.DTOs;
 using dtoo = DTO.o.DTOs;
 using System.Linq;
-using DTO.Projections;
+using project = DTO.Projections;
 using models = DataModels.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DataLayer;
 
 namespace BusinessLayer.Services
 {
-    public class Centres : ICentres
+    public class Centres :
+        BLGetItems<models.Centre, parms.EsActiuParms, dtoo.Centre>,
+        ICentres
     {
-
-        protected readonly BLGetItems<models.Centre, dtoo.Centre> BLo;
-        public Centres(BLGetItems<models.Centre, dtoo.Centre> blo)
+        public Centres(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
-            BLo = blo;
         }
 
-        public Task<OperationResults<dtoo.Centre>> Query(EsActiuParms request)
+        protected override IQueryable<models.Centre> GetModels(parms.EsActiuParms request)
             =>
-            BLo
-            .Execute(
-                Centre.ToDto,
-                GetModels(request)
-            );
-
-        private IQueryable<models.Centre> GetModels(EsActiuParms request)
-            =>
-            BLo
-            .GetAllModels()
+            GetAllModels()
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
             .OrderBy(c=>c.Nom);
+
+        protected override dtoo.Centre ToDto(models.Centre model)
+            =>
+            project
+            .Centre
+            .ToDto(model);
+
     }
 }

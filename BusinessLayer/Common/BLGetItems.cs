@@ -1,7 +1,9 @@
 using BusinessLayer.Abstract;
+using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
 using DataModels.Models.Interfaces;
+using DTO.i;
 using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,8 +13,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public class BLGetItems<TModel, TDTOo> : BLOperation
+    public abstract class BLGetItems<TModel, TParm, TDTOo>
+        :BLOperation,
+         IGetItems<TParm, TDTOo>
             where TDTOo : IDTOo, IEtiquetaDescripcio
+            where TParm : IDtoi
             where TModel : class, IModel, IId
 
     {
@@ -21,24 +26,27 @@ namespace BusinessLayer.Common
         {
         }
 
-        public virtual IQueryable<TModel> GetAllModels()
+        protected virtual IQueryable<TModel> GetAllModels()
             =>
             AppDbContextFactory
             .CreateDbContext()
             .Set<TModel>();
 
+        protected abstract IQueryable<TModel> GetModels(TParm request);
 
-        public virtual Task<OperationResults<TDTOo>> Execute(
-            Func<TModel, TDTOo> toDto,
-            IQueryable<TModel>? get
+        protected abstract TDTOo ToDto(TModel model );
+
+        public virtual Task<OperationResults<TDTOo>> GetItems(
+            TParm request
             )
             =>
             Task.FromResult(
                 new OperationResults<TDTOo>(
-                    (get ?? GetAllModels())
-                    .Select(toDto)
+                    GetModels(request)
+                    .Select(ToDto)
                     .ToList()
                 )
             );
+
     }
 }

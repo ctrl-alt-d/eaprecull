@@ -1,32 +1,37 @@
-﻿using BusinessLayer.Abstract;
-using BusinessLayer.Abstract.Services;
+﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using parms = DTO.i.DTOs;
 using dtoo = DTO.o.DTOs;
-using System.Linq;
-using DTO.Projections;
+using project = DTO.Projections;
 using models = DataModels.Models;
-using System.Threading.Tasks;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 
 namespace BusinessLayer.Services
 {
-    public class CentreCreate : BLCreate<models.Centre, parms.CentreCreateParms, dtoo.Centre>
+    public class CentreCreate : 
+        BLCreate<models.Centre, parms.CentreCreateParms, dtoo.Centre>,
+        ICentreCreate
     {
         public CentreCreate(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        public override models.Centre SetValues(CentreCreateParms parm)
-        {
-            return new ()
+        protected override models.Centre SetValues(CentreCreateParms parm)
+            =>
+            new()
             {
                 Codi = parm.Codi,
                 Nom = parm.Nom,
                 EsActiu = parm.EsActiu,
             };
-        }
+        
+
+        protected override dtoo.Centre ToDto(models.Centre parm)
+            =>
+            project
+            .Centre
+            .ToDto(parm);
     }
 }

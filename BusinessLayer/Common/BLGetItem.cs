@@ -1,4 +1,5 @@
 using BusinessLayer.Abstract;
+using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
 using DataModels.Models.Interfaces;
@@ -10,7 +11,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public class BLGetItem<TModel, TDTOo> : BLOperation
+    public abstract class BLGetItem<TModel, TDTOo> 
+        :BLOperation,
+         IGetItem<TDTOo> 
             where TDTOo: IDTOo, IEtiquetaDescripcio
             where TModel: class, IModel, IId
 
@@ -27,14 +30,14 @@ namespace BusinessLayer.Common
             .Set<TModel>()
             .FindAsync(id);
 
+        protected abstract TDTOo ToDto(TModel parm );
 
-        public virtual async Task<OperationResult<TDTOo>> Get(
-            Func<TModel, TDTOo> toDto,
+        public virtual async Task<OperationResult<TDTOo>> GetItem(
             int id
             ) 
             =>
             new (
-                toDto( await GetById(id) )
+                ToDto( await GetById(id) )
             );
         
     }

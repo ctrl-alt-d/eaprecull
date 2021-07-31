@@ -2,7 +2,7 @@ using System;
 
 namespace DTO.i.DTOs
 {
-    public class CentreCreateParms: IDtoi
+    public class CentreCreateParms : IDtoi
     {
         public CentreCreateParms(string codi, string nom, bool esActiu)
         {
@@ -11,9 +11,10 @@ namespace DTO.i.DTOs
             EsActiu = esActiu;
         }
 
-        public string Codi {get;}
-        public string Nom {get;}
+        public string Codi { get; }
+        public string Nom { get; }
 
         // IActiu
-        public bool EsActiu {get;}
+        public bool EsActiu { get; }
+    }
 }

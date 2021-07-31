@@ -1,4 +1,5 @@
 using BusinessLayer.Abstract;
+using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
 using DataModels.Models.Interfaces;
@@ -12,7 +13,9 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public abstract class BLCreate<TModel, TParm, TDTOo> : BLOperation
+    public abstract class BLCreate<TModel, TParm, TDTOo>
+        :BLOperation,
+         ICreate<TDTOo, TParm>
             where TDTOo: IDTOo, IEtiquetaDescripcio
             where TParm: IDtoi
             where TModel : class, IModel, IId
@@ -23,24 +26,24 @@ namespace BusinessLayer.Common
         {
         }
 
-        public virtual IQueryable<TModel> GetAllModels()
+        protected virtual IQueryable<TModel> GetAllModels()
             =>
             AppDbContextFactory
             .CreateDbContext()
             .Set<TModel>();
 
-        public abstract TModel SetValues(TParm parm );
+        protected abstract TModel SetValues(TParm parm );
+        protected abstract TDTOo ToDto(TModel parm );
 
-        public virtual async Task<OperationResult<TDTOo>> Execute(
-            TParm parm,
-            Func<TModel, TDTOo> toDto
+        public virtual async Task<OperationResult<TDTOo>> Create(
+            TParm parm
             )
             {
                 var model = SetValues(parm);
                 using var ctx = AppDbContextFactory.CreateDbContext();                
                 ctx.Add(model);
                 await ctx.SaveChangesAsync();
-                return new( toDto(model) );
+                return new( ToDto(model) );
             }
     }
 }

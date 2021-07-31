@@ -1,10 +1,10 @@
 using BusinessLayer.Abstract.Generic;
-using DTO.i.DTOs;
-using DTO.o.DTOs;
+using parms = DTO.i.DTOs;
+using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacionsByAlumne: IQuery<Actuacio, GetActuacioByAlumneParms>
+    public interface IActuacionsByAlumne: IGetItems<parms.GetActuacioByAlumneParms, dtoo.Actuacio>
     {        
     }
 

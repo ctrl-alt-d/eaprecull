@@ -1,10 +1,13 @@
 using CommonInterfaces;
 using DTO.i;
+using DTO.o.Interfaces;
 
 namespace BusinessLayer.Abstract.Generic
 {
-    public interface IUpdate<T> where T: IEtiquetaDescripcio
+    public interface IUpdate<TParm, TDTOo> 
+        where TDTOo: IDTOo, IEtiquetaDescripcio
+        where TParm: IDtoi
     {
-        OperationResult<T> Update<P>(P request) where P: IDtoi;
+        OperationResult<TDTOo> Update(TParm request);
     }
 }

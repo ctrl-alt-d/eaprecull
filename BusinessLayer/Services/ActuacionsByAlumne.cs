@@ -1,37 +1,33 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using DTO.i.DTOs;
+using parms = DTO.i.DTOs;
 using dtoo = DTO.o.DTOs;
 using System.Linq;
-using DTO.Projections;
+using project = DTO.Projections;
 using models = DataModels.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DataLayer;
+using DTO.i.DTOs;
 
 namespace BusinessLayer.Services
 {
-    public class ActuacionsByAlumne : IActuacionsByAlumne
+    public class ActuacionsByAlumne :
+        BLGetItems<models.Actuacio, parms.GetActuacioByAlumneParms, dtoo.Actuacio>,
+        IActuacionsByAlumne
     {
-
-        protected readonly BLGetItems<models.Actuacio, dtoo.Actuacio> BLo;
-        public ActuacionsByAlumne(BLGetItems<models.Actuacio, dtoo.Actuacio> blo)
+        public ActuacionsByAlumne(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
-            BLo = blo;
         }
 
-        public Task<OperationResults<dtoo.Actuacio>> Query(GetActuacioByAlumneParms request)
-            =>
-            BLo
-            .Execute(
-                Actuacio.ToDto,
-                GetModels(request)
-            );
-
-        private IQueryable<models.Actuacio> GetModels(GetActuacioByAlumneParms request) 
-            =>
-            BLo
-            .GetAllModels()
+        protected override IQueryable<models.Actuacio> GetModels(GetActuacioByAlumneParms request)
+            => 
+            GetAllModels()
             .Where(x => x.Alumne.Id == request.IdAlumne);
+
+        protected override dtoo.Actuacio ToDto(models.Actuacio model)
+            =>
+            project.Actuacio.ToDto(model);
 
     }
 }

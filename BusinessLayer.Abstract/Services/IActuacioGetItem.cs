@@ -1,10 +1,10 @@
 using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
-using DTO.o.DTOs;
+using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioGet: IGet<Actuacio>
+    public interface IActuacioGetItem: IGetItem<dtoo.Actuacio>
     {        
     }
 
