@@ -26,11 +26,10 @@ namespace BusinessLayer.Services
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
             .OrderBy(c => c.Nom);
 
-        protected override dtoo.Centre ToDto(models.Centre model)
+        protected override Func<models.Centre, dtoo.Centre> ToDto
             =>
             project
             .Centre
-            .ToDto(model);
-
+            .ToDto;
     }
 }

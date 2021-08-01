@@ -28,11 +28,11 @@ namespace BusinessLayer.Services
             .Include(x=>x.CentreActual)
             .OrderBy(c=>c.Nom);
 
-        protected override dtoo.Alumne ToDto(models.Alumne model)
+        protected override Func<models.Alumne, dtoo.Alumne> ToDto
             =>
             project
             .Alumne
-            .ToDto(model);
+            .ToDto;
 
     }
 }

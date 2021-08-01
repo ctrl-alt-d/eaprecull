@@ -26,9 +26,9 @@ namespace BusinessLayer.Services
             GetAllModels()
             .Where(x => x.Alumne.Id == request.IdAlumne);
 
-        protected override dtoo.Actuacio ToDto(models.Actuacio model)
+        protected override Func<models.Actuacio, dtoo.Actuacio> ToDto
             =>
-            project.Actuacio.ToDto(model);
+            project.Actuacio.ToDto;
 
     }
 }

@@ -32,7 +32,7 @@ namespace BusinessLayer.Common
 
         protected abstract IQueryable<TModel> GetModels(TParm request);
 
-        protected abstract TDTOo ToDto(TModel model );
+        protected abstract Func<TModel, TDTOo> ToDto {get;}
 
         public virtual async Task<OperationResults<TDTOo>> GetItems(
             TParm request
