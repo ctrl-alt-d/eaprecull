@@ -1,4 +1,5 @@
 using BusinessLayer.Abstract;
+using BusinessLayer.Abstract.Exceptions;
 using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
@@ -40,6 +41,8 @@ namespace BusinessLayer.Common
         public virtual async Task<OperationResult<TDTOo>> Create(
             TParm parm
             )
+        {
+            try
             {
                 //
                 await PreInitialize(parm);
@@ -47,11 +50,20 @@ namespace BusinessLayer.Common
                 var model = await InitializeModel(parm);
                 GetContext().Add(model);                
                 //
-                await GetContext().SaveChangesAsync();
-                //
                 await PostInitialize(model, parm);
                 //
+                await GetContext().SaveChangesAsync();
+                //
                 return new( ToDto(model) );
+            } 
+            catch (BrokenRuleException br)
+            {
+                throw br;
+            } 
+            catch (Exception e)
+            {
+                throw new BrokenRuleException($"Error intern no esperat.", e);
             }
+        }
     }
 }

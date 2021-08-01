@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using System.Threading.Tasks;
 using DataModels.Models;
+using System.Linq;
 
 namespace BusinessLayer.Services
 {
@@ -36,15 +37,25 @@ namespace BusinessLayer.Services
                 }
             );
 
-        protected override Task PostInitialize(CursAcademic model, CursAcademicCreateParms parm)
-            =>
-            Task
-            .CompletedTask;
+        protected override async Task PostInitialize(CursAcademic model, CursAcademicCreateParms parm)
+        {
+            // Només pot haver un curs actual.
+            if (!parm.EsElCursActual)
+                return;
+
+            await 
+                GetContext()
+                .CursosAcademics
+                .Where(c=>c!=model)
+                .ForEachAsync(c => c.EsElCursActual = false);
+
+        }
 
         protected override dtoo.CursAcademic ToDto(models.CursAcademic parm)
             =>
             project
             .CursAcademic
             .ToDto(parm);
+
     }
 }

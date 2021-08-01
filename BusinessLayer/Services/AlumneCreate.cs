@@ -20,6 +20,11 @@ namespace BusinessLayer.Services
         {
         }
 
+        protected override Task PreInitialize(AlumneCreateParms parm)
+            =>
+            Task
+            .CompletedTask;
+
         protected override async Task<models.Alumne> InitializeModel(AlumneCreateParms parm)
             =>
             new()
@@ -41,10 +46,6 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override Task PreInitialize(AlumneCreateParms parm)
-            =>
-            Task
-            .CompletedTask;
         
         protected override dtoo.Alumne ToDto(models.Alumne parm)
             =>
