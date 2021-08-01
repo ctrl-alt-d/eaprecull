@@ -8,6 +8,7 @@ using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using DataModels.Models;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
@@ -19,22 +20,32 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override models.Alumne SetValues(AlumneCreateParms parm)
+        protected override async Task<models.Alumne> InitializeModel(AlumneCreateParms parm)
             =>
             new()
             {
                 Nom = parm.Nom,
                 Cognoms = parm.Cognoms,
                 DataNaixement = parm.DataNaixement,
-                CentreActual = Perfection<Centre>(parm.CentreActualId),
-                CursDarreraActualitacioDades = Perfection<CursAcademic>(parm.CursDarreraActualitacioDadesId),
-                EtapaActual = Perfection<Etapa>(parm.EtapaActualId),
+                CentreActual = await Perfection<Centre>(parm.CentreActualId),
+                CursDarreraActualitacioDades = await Perfection<CursAcademic>(parm.CursDarreraActualitacioDadesId),
+                EtapaActual = await Perfection<Etapa>(parm.EtapaActualId),
                 DataInformeNESENEE = parm.DataInformeNESENEE,
                 ObservacionsNESENEE = parm.ObservacionsNESENEE,
                 DataInformeNESENoNEE = parm.DataInformeNESENoNEE,
                 ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE,
             };
 
+        protected override Task PostInitialize(Alumne model, AlumneCreateParms parm)
+            =>
+            Task
+            .CompletedTask;
+
+        protected override Task PreInitialize(AlumneCreateParms parm)
+            =>
+            Task
+            .CompletedTask;
+        
         protected override dtoo.Alumne ToDto(models.Alumne parm)
             =>
             project

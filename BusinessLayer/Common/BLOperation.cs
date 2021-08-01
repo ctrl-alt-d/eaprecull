@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DataLayer;
 using DataModels.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -26,25 +27,25 @@ namespace BusinessLayer.Common
             return _DbContext;
         }
 
-        protected TTarget Perfection<TTarget>(int id)
+        protected ValueTask<TTarget> Perfection<TTarget>(int id)
             where TTarget: class, IModel
         {
             return
                 GetContext()
                 .Set<TTarget>()
-                .Find(id);
+                .FindAsync(id);
         }
 
-        protected TTarget? Perfection<TTarget>(int? id)
+        protected async ValueTask<TTarget?> Perfection<TTarget>(int? id)
             where TTarget: class, IModel
         {
             if (!id.HasValue) 
                 return (TTarget?) null;
 
             return 
-                GetContext()
+                await GetContext()
                 .Set<TTarget>()
-                .Find(id);
+                .FindAsync(id);
         }
 
         //

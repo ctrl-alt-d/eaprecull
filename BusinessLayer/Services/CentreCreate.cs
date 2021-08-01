@@ -7,6 +7,8 @@ using models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
+using DataModels.Models;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
@@ -18,18 +20,33 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override models.Centre SetValues(CentreCreateParms parm)
+        protected override Task PreInitialize(CentreCreateParms parm) 
             =>
-            new()
-            {
-                Codi = parm.Codi,
-                Nom = parm.Nom,
-                EsActiu = parm.EsActiu,
-            };
+            Task
+            .CompletedTask;
+
+        protected override Task<models.Centre> InitializeModel(CentreCreateParms parm)
+            =>
+            Task
+            .FromResult(
+                new models.Centre()
+                {
+                    Codi = parm.Codi,
+                    Nom = parm.Nom,
+                    EsActiu = parm.EsActiu,
+                }
+            );
+
+        protected override Task PostInitialize(Centre model, CentreCreateParms parm)
+            =>
+            Task
+            .CompletedTask;
+
         protected override dtoo.Centre ToDto(models.Centre parm)
             =>
             project
             .Centre
             .ToDto(parm);
+
     }
 }

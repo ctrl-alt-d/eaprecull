@@ -26,21 +26,31 @@ namespace BusinessLayer.Common
         {
         }
 
-        protected virtual IQueryable<TModel> GetAllModels()
+        protected virtual IQueryable<TModel> GetCollection()
             =>
             GetContext()
             .Set<TModel>();
 
-        protected abstract TModel SetValues(TParm parm );
+
+        protected abstract Task PreInitialize(TParm parm );
+        protected abstract Task<TModel> InitializeModel(TParm parm );
+        protected abstract Task PostInitialize(TModel model, TParm parm );
         protected abstract TDTOo ToDto(TModel parm );
 
         public virtual async Task<OperationResult<TDTOo>> Create(
             TParm parm
             )
             {
-                var model = SetValues(parm);
-                GetContext().Add(model);
+                //
+                await PreInitialize(parm);
+                //
+                var model = await InitializeModel(parm);
+                GetContext().Add(model);                
+                //
                 await GetContext().SaveChangesAsync();
+                //
+                await PostInitialize(model, parm);
+                //
                 return new( ToDto(model) );
             }
     }
