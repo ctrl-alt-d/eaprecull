@@ -15,6 +15,8 @@ namespace DataLayer
         public virtual DbSet<Etapa> Etapes  => Set<Etapa>();
         public virtual DbSet<TipusActuacio> TipusActuacions  => Set<TipusActuacio>();
 
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder

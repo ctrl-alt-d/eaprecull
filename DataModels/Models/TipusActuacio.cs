@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommonInterfaces;
+using DataModels.Models.Interfaces;
 
 
 namespace DataModels.Models
 {
-    public class TipusActuacio: IEtiquetaDescripcio, IActiu
+    public class TipusActuacio: IIdEtiquetaDescripcio, IActiu, IModel
     {
         public int Id {get; set; }
 
