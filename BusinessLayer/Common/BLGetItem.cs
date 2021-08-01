@@ -27,8 +27,8 @@ namespace BusinessLayer.Common
             .Set<TModel>()
             .FindAsync(id);
 
-        protected abstract TDTOo ToDto(TModel parm );
-
+        protected abstract TDTOo ToDto(TModel model );
+        
         public virtual async Task<OperationResult<TDTOo>> GetItem(
             int id
             ) 

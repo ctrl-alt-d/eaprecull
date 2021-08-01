@@ -1,13 +1,14 @@
+using System.Threading.Tasks;
 using CommonInterfaces;
 using DTO.i;
 using DTO.o.Interfaces;
 
 namespace BusinessLayer.Abstract.Generic
 {
-    public interface IUpdate<TParm, TDTOo> 
+    public interface IUpdate<TDTOo, TParm> 
         where TDTOo: IDTOo, IEtiquetaDescripcio
         where TParm: IDtoi
     {
-        OperationResult<TDTOo> Update(TParm request);
+        Task<OperationResult<TDTOo>> Update(int id, TParm request);
     }
 }

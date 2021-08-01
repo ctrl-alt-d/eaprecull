@@ -14,15 +14,15 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public abstract class BLCreate<TModel, TParm, TDTOo>
+    public abstract class BLUpdate<TModel, TParm, TDTOo>
         :BLOperation,
-         ICreate<TDTOo, TParm>
+         IUpdate<TDTOo, TParm>
             where TDTOo: IDTOo, IEtiquetaDescripcio
             where TParm: IDtoi
             where TModel : class, IModel, IId
 
     {
-        public BLCreate(IDbContextFactory<AppDbContext> appDbContextFactory)
+        public BLUpdate(IDbContextFactory<AppDbContext> appDbContextFactory)
         : base(appDbContextFactory)
         {
         }
@@ -33,24 +33,26 @@ namespace BusinessLayer.Common
             .Set<TModel>();
 
 
-        protected abstract Task PreInitialize(TParm parm );
-        protected abstract Task<TModel> InitializeModel(TParm parm );
-        protected abstract Task PostInitialize(TModel model, TParm parm );
+        protected abstract Task PreUpdate(TModel model, TParm parm );
+        protected abstract Task UpdateModel(TModel model, TParm parm );
+        protected abstract Task PostUpdate(TModel model, TParm parm );
         protected abstract TDTOo ToDto(TModel model );
 
-        public virtual async Task<OperationResult<TDTOo>> Create(
+        public virtual async Task<OperationResult<TDTOo>> Update(
+            int id,
             TParm parm
             )
         {
             try
             {
                 //
-                await PreInitialize(parm);
+                var model = await Perfection<TModel>(id);
                 //
-                var model = await InitializeModel(parm);
-                GetContext().Add(model);                
+                await PreUpdate(model, parm);
                 //
-                await PostInitialize(model, parm);
+                await UpdateModel(model, parm);
+                //
+                await PostUpdate(model, parm);
                 //
                 await GetContext().SaveChangesAsync();
                 //

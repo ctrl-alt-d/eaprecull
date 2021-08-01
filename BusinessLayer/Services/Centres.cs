@@ -24,13 +24,13 @@ namespace BusinessLayer.Services
             =>
             GetAllModels()
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
-            .OrderBy(c=>c.Nom);
+            .OrderBy(c => c.Nom);
 
-        protected override Func<models.Centre, dtoo.Centre> ToDto
+        protected override dtoo.Centre ToDto(models.Centre model)
             =>
             project
             .Centre
-            .ToDto;
+            .ToDto(model);
 
     }
 }
