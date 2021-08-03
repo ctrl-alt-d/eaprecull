@@ -12,19 +12,19 @@ namespace ER.AvaloniaUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public MainWindowViewModel()
+        private readonly CentresViewModel CentresViewModel;
+        public MainWindowViewModel(CentresViewModel centresViewModel)
         {
+            CentresViewModel = centresViewModel;
             ShowDialog = new Interaction<CentresViewModel, bool>();
 
-            BuyMusicCommand = ReactiveCommand.CreateFromTask(async () => 
+            GestionaCentresCommand = ReactiveCommand.CreateFromTask(async () => 
             {
-                var centres = SuperContext.GetViewModel<CentresViewModel>();
-
-                await ShowDialog.Handle(centres);
+                await ShowDialog.Handle(CentresViewModel);
             });
         }
 
-        public ICommand BuyMusicCommand { get; }
+        public ICommand GestionaCentresCommand { get; }
 
         public Interaction<CentresViewModel, bool> ShowDialog { get; }
 

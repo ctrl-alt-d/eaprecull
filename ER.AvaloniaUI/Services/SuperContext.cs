@@ -11,6 +11,7 @@ namespace ER.AvaloniaUI.Services
     {
         public static IServiceCollection ViewModelConfigureServices(this IServiceCollection services){
             services.AddTransient<CentresViewModel>();
+            services.AddTransient<MainWindowViewModel>();
             return services;
         }
     }

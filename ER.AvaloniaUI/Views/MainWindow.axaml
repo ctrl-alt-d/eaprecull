@@ -24,7 +24,7 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
-        <Button Content="Buy Music" Command="{Binding BuyMusicCommand}"/>
+        <Button Content="Gestiona centres" Command="{Binding GestionaCentresCommand}"/>
     </Panel>
 
 </Window>

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using ER.AvaloniaUI.Services;
 using ER.AvaloniaUI.ViewModels;
 using ER.AvaloniaUI.Views;
 
@@ -19,7 +20,7 @@ namespace ER.AvaloniaUI
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = SuperContext.GetViewModel<MainWindowViewModel>()
                 };
             }
 
