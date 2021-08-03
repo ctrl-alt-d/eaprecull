@@ -6,6 +6,7 @@ using DTO.o.Interfaces;
 namespace BusinessLayer.Abstract.Generic
 {
     public interface IGetItems<TParm, TDTOo>
+        :IBLOperation
             where TDTOo : IDTOo, IEtiquetaDescripcio
             where TParm : IDtoi
     {

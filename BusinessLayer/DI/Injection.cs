@@ -7,7 +7,7 @@ namespace BusinessLayer.DI
 {
     public static class Injection
     {
-        public static void BusinessLayerConfigureServices(this IServiceCollection services)
+        public static IServiceCollection BusinessLayerConfigureServices(this IServiceCollection services)
         {
             // Services (ToDo: per comprensió)
 
@@ -22,6 +22,8 @@ namespace BusinessLayer.DI
 
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
+
+            return services;
         }        
     }
 }

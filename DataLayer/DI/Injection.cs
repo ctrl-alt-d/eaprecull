@@ -4,12 +4,15 @@ namespace DataLayer.DI
 {
     public static class Injection
     {
-        public static void ConfigureServices(IServiceCollection services)
+        public static IServiceCollection DataLayerConfigureServices(this IServiceCollection services)
         {
-            services.AddDbContextFactory<AppDbContext>(
+            services
+            .AddDbContextFactory<AppDbContext>(
                 options =>
                     options.ConfigureAppDbContext()
             );
+
+            return services;
         }        
     }
 }

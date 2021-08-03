@@ -6,8 +6,9 @@ using DTO.o.Interfaces;
 namespace BusinessLayer.Abstract.Generic
 {
     public interface ICreate<TDTO, TParm>
-    where TDTO: IDTOo, IEtiquetaDescripcio
-    where TParm: IDtoi
+        :IBLOperation
+            where TDTO: IDTOo, IEtiquetaDescripcio
+            where TParm: IDtoi
     {
         Task<OperationResult<TDTO>> Create(TParm parm);
     }
