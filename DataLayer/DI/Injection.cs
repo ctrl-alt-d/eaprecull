@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataLayer.DI
@@ -11,6 +12,14 @@ namespace DataLayer.DI
                 options =>
                     options.ConfigureAppDbContext()
             );
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            serviceProvider
+                .GetRequiredService<IDbContextFactory<AppDbContext>>()
+                .CreateDbContext()
+                .Database
+                .Migrate();
 
             return services;
         }        
