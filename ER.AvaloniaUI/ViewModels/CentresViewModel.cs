@@ -13,8 +13,10 @@ namespace ER.AvaloniaUI.ViewModels
 {
     public class CentresViewModel : ViewModelBase
     {
-        public CentresViewModel()
+        private readonly ICentres BLCentres;
+        public CentresViewModel(ICentres centres)
         {
+            BLCentres = centres;
             RxApp.MainThreadScheduler.Schedule(LoadCentres);    
         }
 
@@ -25,8 +27,7 @@ namespace ER.AvaloniaUI.ViewModels
             var createParms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
             var l =
                 await
-                Services.SuperContext
-                .GetBLOperation<ICentres>()
+                BLCentres
                 .GetItems(createParms)
                 ;
 
