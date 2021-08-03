@@ -24,13 +24,13 @@ namespace ER.AvaloniaUI.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task DoShowDialogAsync(InteractionContext<CentresViewModel, CentreViewModel?> interaction)
+        private async Task DoShowDialogAsync(InteractionContext<CentresViewModel, bool> interaction)
         {
             var dialog = new CentresWindow();
             dialog.DataContext = interaction.Input;
 
-            var result = await dialog.ShowDialog<CentreViewModel?>(this);
-            interaction.SetOutput(result);
+            var result = await dialog.ShowDialog<bool>(this);
+            interaction.SetOutput(true);
         }
     }
 }
