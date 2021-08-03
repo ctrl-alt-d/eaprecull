@@ -7,7 +7,7 @@ using DataLayer.DI;
 namespace ER.AvaloniaUI.Services
 
 {
-    public static class AppContext
+    public static class SuperContext
     {
         private static ServiceProvider? _ServiceProvider;
         public static ServiceProvider GetServiceProvider() {
@@ -27,7 +27,13 @@ namespace ER.AvaloniaUI.Services
                 .GetRequiredService<T>();
         }
 
-
+        public static T GetViewModel<T>()
+            where T: ViewModelBase
+        {
+            return 
+                GetServiceProvider()
+                .GetRequiredService<T>();
+        }
     }
 }
 
