@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using ER.AvaloniaUI.Services;
 using ReactiveUI;
 
 namespace ER.AvaloniaUI.ViewModels
@@ -17,7 +18,7 @@ namespace ER.AvaloniaUI.ViewModels
 
             BuyMusicCommand = ReactiveCommand.CreateFromTask(async () => 
             {
-                var centres = new CentresViewModel();
+                var centres = SuperContext.GetViewModel<CentresViewModel>();
 
                 await ShowDialog.Handle(centres);
             });
