@@ -14,9 +14,9 @@ namespace ER.AvaloniaUI.ViewModels
     public class CentresViewModel : ViewModelBase
     {
         private readonly ICentres BLCentres;
-        public CentresViewModel(ICentres centres)
+        public CentresViewModel(ICentres blcentres)
         {
-            BLCentres = centres;
+            BLCentres = blcentres;
             RxApp.MainThreadScheduler.Schedule(LoadCentres);    
         }
 

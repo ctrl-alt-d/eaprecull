@@ -20,7 +20,7 @@ namespace ER.AvaloniaUI
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = SuperContext.GetViewModel<MainWindowViewModel>()
+                    DataContext = SuperContext.GetView<MainWindow>()
                 };
             }
 

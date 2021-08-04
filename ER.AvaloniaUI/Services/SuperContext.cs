@@ -4,6 +4,7 @@ using BusinessLayer.Abstract.Generic;
 using DataLayer.DI;
 using ER.AvaloniaUI.ViewModels;
 using ER.AvaloniaUI.DI;
+using Avalonia.Controls;
 
 namespace ER.AvaloniaUI.Services
 {    
@@ -36,6 +37,15 @@ namespace ER.AvaloniaUI.Services
                 GetServiceProvider()
                 .GetRequiredService<T>();
         }
+
+        public static T GetView<T>()
+            where T: Window
+        {
+            return 
+                GetServiceProvider()
+                .GetRequiredService<T>();
+        }
+
     }
 }
 

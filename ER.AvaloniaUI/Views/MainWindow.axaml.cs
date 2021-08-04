@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace ER.AvaloniaUI.Views
 {
-    public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
@@ -16,7 +16,6 @@ namespace ER.AvaloniaUI.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
-            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync)));        
         }
 
         private void InitializeComponent()
@@ -24,13 +23,5 @@ namespace ER.AvaloniaUI.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task DoShowDialogAsync(InteractionContext<CentresViewModel, bool> interaction)
-        {
-            var dialog = new CentresWindow();
-            dialog.DataContext = interaction.Input;
-
-            var result = await dialog.ShowDialog<bool>(this);
-            interaction.SetOutput(true);
-        }
     }
 }

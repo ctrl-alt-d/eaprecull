@@ -1,8 +1,11 @@
 ﻿using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
-
+using ER.AvaloniaUI.Services;
+using ER.AvaloniaUI.ViewModels;
+using ER.AvaloniaUI.Views;
 
 namespace ER.AvaloniaUI
 {
@@ -12,11 +15,7 @@ namespace ER.AvaloniaUI
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
         public static void Main(string[] args) {
-
-
-
-            BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+             BuildAvaloniaApp().Start(AppMain, args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
@@ -27,5 +26,9 @@ namespace ER.AvaloniaUI
             .LogToTrace()
             .UseReactiveUI();
 
+        public static MainWindow? MainWindow { get; private set; }
+        private static void AppMain(Application app, string[] args) {
+            app.Run(SuperContext.GetView<MainWindow>());
+        }
     }
 }
