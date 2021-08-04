@@ -1,12 +1,8 @@
-﻿using System;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.ReactiveUI;
 using ER.AvaloniaUI.Services;
-using ER.AvaloniaUI.ViewModels;
 using ER.AvaloniaUI.Views;
-
+using ShowMeTheXaml;
 namespace ER.AvaloniaUI
 {
     class Program
@@ -23,8 +19,9 @@ namespace ER.AvaloniaUI
             =>
             AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .UseXamlDisplay()
             .LogToTrace()
-            .UseReactiveUI();
+            ;
 
         public static MainWindow? MainWindow { get; private set; }
         private static void AppMain(Application app, string[] args) {

@@ -14,17 +14,6 @@ namespace ER.AvaloniaUI
             AvaloniaXamlLoader.Load(this);
         }
 
-        public override void OnFrameworkInitializationCompleted()
-        {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = SuperContext.GetView<MainWindow>()
-                };
-            }
 
-            base.OnFrameworkInitializationCompleted();
-        }
     }
 }
