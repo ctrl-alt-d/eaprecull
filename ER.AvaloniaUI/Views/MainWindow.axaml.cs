@@ -5,6 +5,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Material.Styles;
+using ER.AvaloniaUI.Pages;
+using ER.AvaloniaUI.Services;
 
 namespace ER.AvaloniaUI.Views
 {

@@ -47,9 +47,9 @@
                                 </Style>
                             </ListBox.Styles>
                             <TextBlock Classes="Body2" Text="Centres" />
+                            <TextBlock Classes="Body2" Text="Cursos acadèmics" />
                             <TextBlock Classes="Body2" Text="Inici" />
                             <TextBlock Classes="Body2" Text="Alumnes" />                            
-                            <TextBlock Classes="Body2" Text="Cursos" />
                             <TextBlock Classes="Body2" Text="Etapes" />
                             <TextBlock Classes="Body2" Text="Tipus d'acutacions" />
                         </ListBox>
@@ -113,7 +113,10 @@
                                     </Setter>
                                 </Style>
                             </Carousel.Styles>
+
                             <pages:CentresUserCtrl />
+                            <pages:CursAcademicGetSetUserCtrl />
+
                         </Carousel>
                     </Border>
                 </ScrollViewer>

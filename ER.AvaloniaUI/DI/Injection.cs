@@ -28,6 +28,15 @@ namespace ER.AvaloniaUI.DI
                 .ToList()
                 .ForEach(t => services.AddTransient(t));
 
+            System
+                .Reflection
+                .Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(p => typeof(UserControl).IsAssignableFrom(p))
+                .ToList()
+                .ForEach(t => services.AddTransient(t));
+
 
             return services;
         }

@@ -46,6 +46,15 @@ namespace ER.AvaloniaUI.Services
                 .GetRequiredService<T>();
         }
 
+        public static T GetUserCtrl<T>()
+            where T: UserControl
+        {
+            return 
+                GetServiceProvider()
+                .GetRequiredService<T>();
+        }
+
+
     }
 }
 
