@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:ER.AvaloniaUI.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+
+
+
+             xmlns:system="clr-namespace:System;assembly=System.Runtime.Extensions"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ER.AvaloniaUI.Pages.CentresUserCtrl">
+    <Design.DataContext>
+        <viewModels:CentresViewModel />
+    </Design.DataContext>
+
+    <TextBlock Classes="Headline4 Subheadline" Text="👋 Aquí la llista de centres"/>
+
+</UserControl>    
