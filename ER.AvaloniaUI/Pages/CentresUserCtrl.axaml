@@ -22,8 +22,7 @@
                         Padding="4">
                     <StackPanel Orientation="Vertical" >
                         <StackPanel Orientation="Horizontal" >
-                            <ToggleButton IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" >
-                            </ToggleButton>
+                            <ToggleSwitch IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" />
                             <TextBlock Text="{Binding Etiqueta}"/>
                         </StackPanel>                     
                         <TextBlock Text="{Binding Descripcio}"/>
