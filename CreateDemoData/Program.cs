@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BusinessLayer.Abstract.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,10 +33,40 @@ namespace CreateDemoData
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Creant Centres!");
-            var centreCreate = GetBLOperation<ICentreCreate>();   
-            await centreCreate.Create(new parms.CentreCreateParms("M1", "Les Melies",true));
-            await centreCreate.Create(new parms.CentreCreateParms("M2", "Cendrassos",true));
+            await CreaCentre();
+            await CreaCursAcademic();
         }
+
+        private static async Task CreaCentre()
+        {
+            Console.WriteLine("Creant Centres!");
+
+            var getset = GetBLOperation<ICentreGetSet>();
+            var nhiha = (await getset.GetItems(new parms.EsActiuParms(null))).Data!.Any();
+
+            if (!nhiha)
+            {
+                var crea = GetBLOperation<ICentreCreate>();
+                await crea.Create(new parms.CentreCreateParms("M1", "Les Melies", true));
+                await crea.Create(new parms.CentreCreateParms("M2", "Cendrassos", true));
+            }
+        }
+
+        private static async Task CreaCursAcademic()
+        {
+            Console.WriteLine("Creant Cursos Acadèmics!");
+
+            var getset = GetBLOperation<ICursAcademicGetSet>();
+            var nhiha = (await getset.GetItems(new parms.EmptyParms())).Data!.Any();
+
+            if (!nhiha)
+            {
+                var crea = GetBLOperation<ICursAcademicCreate>();
+                await crea.Create(new parms.CursAcademicCreateParms(2020, false));
+                await crea.Create(new parms.CursAcademicCreateParms(2021, true));
+                await crea.Create(new parms.CursAcademicCreateParms(2022, false));
+            }
+        }
+
     }
 }

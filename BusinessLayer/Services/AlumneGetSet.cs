@@ -14,11 +14,11 @@ using DTO.i.DTOs;
 
 namespace BusinessLayer.Services
 {
-    public class Alumnes :
+    public class AlumneGetSet :
         BLGetItems<models.Alumne, parms.EmptyParms, dtoo.Alumne>,
-        IAlumnes
+        IAlumneGetSet
     {
-        public Alumnes(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public AlumneGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 

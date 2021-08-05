@@ -12,11 +12,11 @@ using System;
 
 namespace BusinessLayer.Services
 {
-    public class Centres :
+    public class CentreGetSet :
         BLGetItems<models.Centre, parms.EsActiuParms, dtoo.Centre>,
-        ICentres
+        ICentreGetSet
     {
-        public Centres(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public CentreGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 

@@ -4,7 +4,7 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IAlumnes: IGetItems<parms.EmptyParms, dtoo.Alumne>
+    public interface ICursAcademicGetSet: IGetItems<parms.EmptyParms, dtoo.CursAcademic>
     {        
     }
 
