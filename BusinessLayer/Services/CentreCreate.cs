@@ -42,11 +42,11 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override dtoo.Centre ToDto(models.Centre parm)
+        protected override dtoo.Centre ToDto(models.Centre model)
             =>
             project
             .Centre
-            .ToDto(parm);
+            .ToDto(model);
 
     }
 }

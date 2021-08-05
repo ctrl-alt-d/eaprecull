@@ -5,17 +5,21 @@ using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class CursAcademic: IIdEtiquetaDescripcio, IModel
+    public class CursAcademic: IIdEtiquetaDescripcio, IActivable, IModel
     {
         public int Id {get; set; }
         public int AnyInici {get; set;}
         public string Nom {get; set;} = string.Empty;
-        public bool EsElCursActual {get; set;}
+
+        // IActiu
+        public bool EsActiu {get; set;}
+        public void SetActiu() => EsActiu = true;
+        public void SetInactiu() => EsActiu = false;
 
         // IEtiquetaDescripcio
         public string Etiqueta => Nom;
-        public string Descripcio => $"{Nom} {_EsElCursActualTxt}";
-        private string _EsElCursActualTxt => EsElCursActual?"* Curs Actual *":"";
+        public string Descripcio => $"{Nom} {_EsActiuTxt}";
+        private string _EsActiuTxt => EsActiu?"* Curs Actual *":"";
 
         //
         public List<Alumne> AlumnesActualitzats { get; set; } = new();

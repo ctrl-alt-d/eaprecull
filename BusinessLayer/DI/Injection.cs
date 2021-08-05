@@ -15,6 +15,7 @@ namespace BusinessLayer.DI
             services.AddTransient<ICentreGetSet, CentreGetSet>();
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<ICentreUpdate, CentreUpdate>();
+            services.AddTransient<ICentreActivaDesactiva, CentreActivaDesactiva>();
    
             // alumnes
             services.AddTransient<IAlumneGetSet, AlumneGetSet>();

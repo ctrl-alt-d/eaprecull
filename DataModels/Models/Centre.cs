@@ -5,7 +5,7 @@ using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class Centre: IIdEtiquetaDescripcio, IActiu, IModel
+    public class Centre: IIdEtiquetaDescripcio, IActivable, IModel
     {
         public int Id {get; set; }
         public string Codi {get; set;} = string.Empty;
@@ -13,6 +13,8 @@ namespace DataModels.Models
 
         // IActiu
         public bool EsActiu {get; set;}
+        public void SetActiu() => EsActiu = true;
+        public void SetInactiu() => EsActiu = false;
 
         // IEtiquetaDescripcio
         public string Etiqueta => Nom;

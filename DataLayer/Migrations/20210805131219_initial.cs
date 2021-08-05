@@ -30,7 +30,7 @@ namespace DataLayer.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     AnyInici = table.Column<int>(type: "INTEGER", nullable: false),
                     Nom = table.Column<string>(type: "TEXT", nullable: false),
-                    EsElCursActual = table.Column<bool>(type: "INTEGER", nullable: false)
+                    EsActiu = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
