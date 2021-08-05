@@ -7,12 +7,12 @@ namespace DTO.o.DTOs
 {
     public class CursAcademic: IEtiquetaDescripcio, IDTOo
     {
-        public CursAcademic(int id, int anyInici, string nom, bool EsActiu, string etiqueta, string descripcio)
+        public CursAcademic(int id, int anyInici, string nom, bool esActiu, string etiqueta, string descripcio)
         {
             Id = id;
             AnyInici = anyInici;
             Nom = nom;
-            EsActiu = EsActiu;
+            EsActiu = esActiu;
             Etiqueta = etiqueta;
             Descripcio = descripcio;
         }

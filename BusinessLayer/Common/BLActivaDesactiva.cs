@@ -75,7 +75,7 @@ namespace BusinessLayer.Common
             return Update(id, false);
         }
 
-        public Task<OperationResult<TDTOo>> Togle(int id)
+        public Task<OperationResult<TDTOo>> Toggle(int id)
         {
             return Update(id);
         }

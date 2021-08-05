@@ -11,6 +11,6 @@ namespace BusinessLayer.Abstract.Generic
     {
         Task<OperationResult<TDTOo>> Activa(int id);
         Task<OperationResult<TDTOo>> Desactiva(int id);
-        Task<OperationResult<TDTOo>> Togle(int id);
+        Task<OperationResult<TDTOo>> Toggle(int id);
     }
 }
