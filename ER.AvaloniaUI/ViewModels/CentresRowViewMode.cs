@@ -13,9 +13,10 @@ namespace ER.AvaloniaUI.ViewModels
 
         public CentresRowViewMode(dtoo.Centre centreDto)
         {
-            Etiqueta = centreDto.Etiqueta;
-            Descripcio = centreDto.Descripcio;
+            _Etiqueta = centreDto.Etiqueta;
+            _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
+            _EsActiu = centreDto.EsActiu;
             Id = centreDto.Id;
             DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing ); 
         }
@@ -43,6 +44,14 @@ namespace ER.AvaloniaUI.ViewModels
             get { return _Descripcio; }
             protected set { this.RaiseAndSetIfChanged(ref _Descripcio, value); }
         }
+
+        private bool _EsActiu;
+        public bool EsActiu
+        {
+            get { return _EsActiu; }
+            protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
+        }
+
         public int Id {get;}
 
         protected async Task RunTheThing()  
@@ -54,6 +63,7 @@ namespace ER.AvaloniaUI.ViewModels
             Etiqueta = centreDto.Etiqueta;
             Descripcio = centreDto.Descripcio;
             Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
+            EsActiu = centreDto.EsActiu;
         }
 
     }

@@ -20,10 +20,13 @@
                         BorderThickness="1"
                         CornerRadius="4"
                         Padding="4">
-                    <StackPanel Orientation="Horizontal" >
-                        <TextBlock Text="{Binding Etiqueta}"/>
-                        <TextBlock Text="{Binding Estat}"/>
-                        <Button Command="{Binding DoTheThing}">Do the thing! HERE!!!!!!</Button>
+                    <StackPanel Orientation="Vertical" >
+                        <StackPanel Orientation="Horizontal" >
+                            <ToggleButton IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" >
+                            </ToggleButton>
+                            <TextBlock Text="{Binding Etiqueta}"/>
+                        </StackPanel>                     
+                        <TextBlock Text="{Binding Descripcio}"/>
                     </StackPanel>                     
                 </Border>
             </DataTemplate>
