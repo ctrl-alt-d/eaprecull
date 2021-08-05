@@ -25,37 +25,23 @@ namespace ER.AvaloniaUI.ViewModels
         {
             BLCentres = blcentres;
             BLActivaDesactiva = blActivaDesactiva;
-            DoTheThing = ReactiveCommand.Create( RunTheThing ); // <-- HERE!!!
             RxApp.MainThreadScheduler.Schedule(LoadCentres);    
         }
-        public ObservableCollection<dtoo.Centre> MyItems {get;} = new();
-
-        public ReactiveCommand<Unit, Unit> DoTheThing { get; }   // <-- HERE!!!
-
-        void RunTheThing()  // <-- HERE!!!
-        {
-            if (SelectedItem == null) return;
-
-            //
-            var model = (BLActivaDesactiva.Toggle(SelectedItem.Id).GetAwaiter().GetResult()).Data!;
-            if (model == null) return;
-
-            //
-            var item = MyItems.First(x=>x.Id==model.Id);
-            var i = MyItems.IndexOf(item);
-            MyItems[i] = model;
-        }
+        public ObservableCollection<CentresRowViewMode> MyItems {get;} = new();
 
         private async void LoadCentres()
         {
-            var createParms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
+            var parms = new DTO.i.DTOs.EsActiuParms(esActiu: null);
             var l =
                 await
                 BLCentres
-                .GetItems(createParms)
+                .GetItems(parms)
                 ;
 
-            l.Data!.ForEach(x=>MyItems.Add(x));
+            l.Data!
+            .Select(x => new CentresRowViewMode(x ))
+            .ToList()
+            .ForEach(x=>MyItems.Add(x));
         }
     }
 }

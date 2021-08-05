@@ -1,7 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using ER.AvaloniaUI.Services;
 using ER.AvaloniaUI.Views;
+using ReactiveUI;
 using ShowMeTheXaml;
 namespace ER.AvaloniaUI
 {
@@ -11,7 +13,8 @@ namespace ER.AvaloniaUI
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
         public static void Main(string[] args) {
-             BuildAvaloniaApp().Start(AppMain, args);
+            RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
+            BuildAvaloniaApp().Start(AppMain, args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
