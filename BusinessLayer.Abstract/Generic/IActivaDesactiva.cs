@@ -6,7 +6,8 @@ using DTO.o.Interfaces;
 
 namespace BusinessLayer.Abstract.Generic
 {
-    public interface IActivaDesactiva<TDTOo>     
+    public interface IActivaDesactiva<TDTOo>
+        :IBLOperation   
             where TDTOo: IDTOo, IEtiquetaDescripcio, IActiu
     {
         Task<OperationResult<TDTOo>> Activa(int id);

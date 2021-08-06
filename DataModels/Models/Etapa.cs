@@ -18,8 +18,7 @@ namespace DataModels.Models
 
         // IEtiquetaDescripcio
         public string Etiqueta => Codi;
-        public string Descripcio => $"{Nom} {_EsActiuTxt}";
-        public string _EsActiuTxt => EsActiu?"":" * Obsolet * ";
+        public string Descripcio => $"{Nom}";
 
         //
         public List<Alumne> Alumnes { get; set; } = new();
