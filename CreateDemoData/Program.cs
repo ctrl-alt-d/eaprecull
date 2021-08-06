@@ -49,6 +49,10 @@ namespace CreateDemoData
                 var crea = GetBLOperation<ICentreCreate>();
                 await crea.Create(new parms.CentreCreateParms("M1", "Les Melies", true));
                 await crea.Create(new parms.CentreCreateParms("M2", "Cendrassos", true));
+                for (var i =0; i<200; i++)
+                {
+                    await crea.Create(new parms.CentreCreateParms(Guid.NewGuid().ToString().Substring(2,3), Guid.NewGuid().ToString().Substring(2,8), true));
+                }
             }
         }
 

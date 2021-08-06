@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
-using CommonInterfaces;
-using DTO.i;
-using DTO.o.Interfaces;
+using System;
 
 namespace BusinessLayer.Abstract.Generic
 {
-    public interface IBLOperation
+    public interface IBLOperation:
+        IDisposable
     {
     }
 }
