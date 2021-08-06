@@ -16,7 +16,7 @@ namespace ER.AvaloniaUI.Views
         private ToggleButton NavDrawerSwitch = default!;
         private ListBox DrawerList = default!;
         private Carousel PageCarousel = default!;
-        private StackPanel mainScroller = default!;
+        private Grid mainScroller = default!;
         #endregion
 
         public MainWindow()
@@ -38,7 +38,7 @@ namespace ER.AvaloniaUI.Views
 
             PageCarousel = this.Get<Carousel>(nameof(PageCarousel));
 
-            mainScroller = this.Get<StackPanel>(nameof(mainScroller));
+            mainScroller = this.Get<Grid>(nameof(mainScroller));
             #endregion
         }
 

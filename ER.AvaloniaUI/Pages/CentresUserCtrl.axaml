@@ -13,7 +13,9 @@
         <viewModels:CentresViewModel />
     </Design.DataContext>
 
-    <ListBox Items="{Binding MyItems}" SelectedItem="{Binding SelectedItem}" Padding="15">
+    <ListBox Items="{Binding MyItems}" 
+             SelectedItem="{Binding SelectedItem}"
+             Padding="15">
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <Border BorderBrush="White"

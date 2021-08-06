@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
@@ -15,7 +16,7 @@ namespace ER.AvaloniaUI.ViewModels
             RxApp.MainThreadScheduler.Schedule(LoadCursAcademicGetSet);    
         }
 
-        public ObservableCollection<dtoo.CursAcademic> MyItems {get;} = new();
+        public ObservableCollection<CursAcademicRowViewModel> MyItems {get;} = new();
 
         private async void LoadCursAcademicGetSet()
         {
@@ -25,7 +26,10 @@ namespace ER.AvaloniaUI.ViewModels
                 BLCursAcademicGetSet
                 .GetItems(createParms)
                 ;
-            l.Data!.ForEach(x=>MyItems.Add(x));
+            l.Data!
+            .Select(x=>new CursAcademicRowViewModel(x, MyItems))
+            .ToList()
+            .ForEach(x=>MyItems.Add(x));
         }
     }
 }
