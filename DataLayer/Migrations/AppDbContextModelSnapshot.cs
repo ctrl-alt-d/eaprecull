@@ -155,7 +155,7 @@ namespace DataLayer.Migrations
                     b.Property<int>("AnyInici")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("EsElCursActual")
+                    b.Property<bool>("EsActiu")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Nom")

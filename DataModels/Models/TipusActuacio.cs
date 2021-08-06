@@ -6,7 +6,7 @@ using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class TipusActuacio: IIdEtiquetaDescripcio, IActiu, IModel
+    public class TipusActuacio: IIdEtiquetaDescripcio, IActivable, IModel
     {
         public int Id {get; set; }
 
@@ -15,6 +15,8 @@ namespace DataModels.Models
 
         // IActiu
         public bool EsActiu {get; set;}
+        public void SetActiu() => EsActiu = true;
+        public void SetInactiu() => EsActiu = false;
 
         // IEtiquetaDescripcio
         public string Etiqueta => Nom;

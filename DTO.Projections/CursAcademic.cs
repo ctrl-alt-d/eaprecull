@@ -12,7 +12,7 @@ namespace DTO.Projections
                 model.Id,
                 model.AnyInici,
                 model.Nom,
-                model.EsElCursActual,
+                model.EsActiu,
                 model.Etiqueta,
                 model.Descripcio
             );

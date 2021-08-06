@@ -63,7 +63,7 @@ namespace BusinessLayer.Integration.Test
             var serviceProvider = services.BuildServiceProvider();
 
             var centreCreate = serviceProvider.GetRequiredService<ICentreCreate>();
-            var centres = serviceProvider.GetRequiredService<ICentres>();
+            var centres = serviceProvider.GetRequiredService<ICentreGetSet>();
 
             serviceProvider
                 .GetRequiredService<IDbContextFactory<AppDbContext>>()

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210731202525_initial")]
+    [Migration("20210805131219_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,7 +157,7 @@ namespace DataLayer.Migrations
                     b.Property<int>("AnyInici")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("EsElCursActual")
+                    b.Property<bool>("EsActiu")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Nom")

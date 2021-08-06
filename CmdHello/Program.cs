@@ -1,12 +1,19 @@
 ﻿using System;
-
+using Terminal.Gui;
+using System;
+using Mono.Terminal;
+using CmdHello.Windows;
 namespace CmdHello
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Application.Init();
+            var mainWin = new MainWindow();
+            var top = Application.Top;
+            top.Add(mainWin);
+            Application.Run();
         }
     }
 }

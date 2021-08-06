@@ -32,7 +32,7 @@ namespace BusinessLayer.Services
                 new models.CursAcademic()
                 {
                     AnyInici = parm.AnyInici,
-                    EsElCursActual = parm.EsElCursActual,
+                    EsActiu = parm.EsActiu,
                     Nom = $"{parm.AnyInici}-{parm.AnyInici+1}"
                 }
             );
@@ -40,14 +40,14 @@ namespace BusinessLayer.Services
         protected override async Task PostInitialize(CursAcademic model, CursAcademicCreateParms parm)
         {
             // Només pot haver un curs actual.
-            if (!parm.EsElCursActual)
+            if (!parm.EsActiu)
                 return;
 
             await 
                 GetContext()
                 .CursosAcademics
                 .Where(c=>c!=model)
-                .ForEachAsync(c => c.EsElCursActual = false);
+                .ForEachAsync(c => c.EsActiu = false);
 
         }
 

@@ -7,12 +7,12 @@ namespace DTO.o.DTOs
 {
     public class CursAcademic: IEtiquetaDescripcio, IDTOo
     {
-        public CursAcademic(int id, int anyInici, string nom, bool esElCursActual, string etiqueta, string descripcio)
+        public CursAcademic(int id, int anyInici, string nom, bool esActiu, string etiqueta, string descripcio)
         {
             Id = id;
             AnyInici = anyInici;
             Nom = nom;
-            EsElCursActual = esElCursActual;
+            EsActiu = esActiu;
             Etiqueta = etiqueta;
             Descripcio = descripcio;
         }
@@ -20,10 +20,12 @@ namespace DTO.o.DTOs
         public int Id {get;  }
         public int AnyInici {get; }
         public string Nom {get; } = string.Empty;
-        public bool EsElCursActual {get; }
+        public bool EsActiu {get; }
 
         // IEtiquetaDescripcio
         public string Etiqueta {get; } = string.Empty;
         public string Descripcio {get; } = string.Empty;
+
+        public override string ToString() => Etiqueta;
     }
 }

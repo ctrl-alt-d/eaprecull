@@ -7,21 +7,26 @@ namespace BusinessLayer.DI
 {
     public static class Injection
     {
-        public static void BusinessLayerConfigureServices(this IServiceCollection services)
+        public static IServiceCollection BusinessLayerConfigureServices(this IServiceCollection services)
         {
             // Services (ToDo: per comprensió)
 
             // centres
-            services.AddTransient<ICentres, Centres>();
+            services.AddTransient<ICentreGetSet, CentreGetSet>();
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<ICentreUpdate, CentreUpdate>();
+            services.AddTransient<ICentreActivaDesactiva, CentreActivaDesactiva>();
    
             // alumnes
-            services.AddTransient<IAlumnes, Alumnes>();
+            services.AddTransient<IAlumneGetSet, AlumneGetSet>();
             services.AddTransient<IAlumneCreate, AlumneCreate>();
 
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
+            services.AddTransient<ICursAcademicGetSet, CursAcademicGetSet>();
+            
+
+            return services;
         }        
     }
 }

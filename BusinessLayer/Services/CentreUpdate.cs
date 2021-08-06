@@ -28,10 +28,11 @@ namespace BusinessLayer.Services
             =>
             Task.CompletedTask;
 
-        protected override dtoo.Centre ToDto(models.Centre parm)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected override dtoo.Centre ToDto(models.Centre model)
+            =>
+            project
+            .Centre
+            .ToDto(model);
 
         protected override Task UpdateModel(models.Centre model, CentreUpdateParms parm)
         {

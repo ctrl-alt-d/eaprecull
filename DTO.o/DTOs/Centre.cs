@@ -27,5 +27,7 @@ namespace DTO.o.DTOs
         public string Etiqueta {get; } = string.Empty;
         public string Descripcio {get; } = string.Empty;
 
+        public override string ToString() => Etiqueta;
+
     }
 }
