@@ -16,7 +16,7 @@ namespace ER.AvaloniaUI.Views
         private ToggleButton NavDrawerSwitch = default!;
         private ListBox DrawerList = default!;
         private Carousel PageCarousel = default!;
-        private ScrollViewer mainScroller = default!;
+        private StackPanel mainScroller = default!;
         #endregion
 
         public MainWindow()
@@ -38,7 +38,7 @@ namespace ER.AvaloniaUI.Views
 
             PageCarousel = this.Get<Carousel>(nameof(PageCarousel));
 
-            mainScroller = this.Get<ScrollViewer>(nameof(mainScroller));
+            mainScroller = this.Get<StackPanel>(nameof(mainScroller));
             #endregion
         }
 
@@ -56,9 +56,9 @@ namespace ER.AvaloniaUI.Views
             try
             {
                 PageCarousel.SelectedIndex = listBox.SelectedIndex;
-                mainScroller.Offset = Vector.Zero;
-                mainScroller.VerticalScrollBarVisibility =
-                    listBox.SelectedIndex == 5 ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto;
+                //mainScroller.Offset = Vector.Zero;
+                //mainScroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                    // listBox.SelectedIndex == 5 ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto;
 
             }
             catch

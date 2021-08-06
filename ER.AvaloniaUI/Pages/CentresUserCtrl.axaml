@@ -13,20 +13,22 @@
         <viewModels:CentresViewModel />
     </Design.DataContext>
 
-    <ListBox Items="{Binding MyItems}" SelectedItem="{Binding SelectedItem}">
+    <ListBox Items="{Binding MyItems}" SelectedItem="{Binding SelectedItem}" Padding="15">
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <Border BorderBrush="Black"
+                <Border BorderBrush="White"
                         BorderThickness="1"
                         CornerRadius="4"
-                        Padding="4">
-                    <StackPanel Orientation="Vertical" >
-                        <StackPanel Orientation="Horizontal" >
-                            <ToggleSwitch IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" />
-                            <TextBlock Text="{Binding Etiqueta}"/>
+                        Padding="6"
+                        BoxShadow="5 5 10 2 Gray">
+                    <DockPanel>
+                        <ToggleSwitch IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" DockPanel.Dock="Right"/>
+                        <StackPanel Orientation="Vertical" DockPanel.Dock="Left">                            
+                            <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
+                            <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
                         </StackPanel>                     
-                        <TextBlock Text="{Binding Descripcio}"/>
-                    </StackPanel>                     
+                        
+                    </DockPanel>                     
                 </Border>
             </DataTemplate>
         </ListBox.ItemTemplate>

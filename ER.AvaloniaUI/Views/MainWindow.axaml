@@ -48,7 +48,7 @@
                             </ListBox.Styles>
                             <TextBlock Classes="Body2" Text="Centres" />
                             <TextBlock Classes="Body2" Text="Cursos acadèmics" />
-IActuacionsByAlumne                            <TextBlock Classes="Body2" Text="Inici" />
+                            <TextBlock Classes="Body2" Text="Inici" />
                             <TextBlock Classes="Body2" Text="Alumnes" />                            
                             <TextBlock Classes="Body2" Text="Etapes" />
                             <TextBlock Classes="Body2" Text="Tipus d'acutacions" />
@@ -96,11 +96,8 @@ IActuacionsByAlumne                            <TextBlock Classes="Body2" Text="
                         </Menu>
                     </Grid>
                 </styles:ColorZone>
-                <ScrollViewer Name="mainScroller"
-                              DockPanel.Dock="Top"
-                              HorizontalContentAlignment="Stretch"
-                              HorizontalAlignment="Stretch"
-                              HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Name="mainScroller"
+                              DockPanel.Dock="Top">
                     <Border HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">
                         <Carousel Name="PageCarousel"
@@ -119,7 +116,7 @@ IActuacionsByAlumne                            <TextBlock Classes="Body2" Text="
 
                         </Carousel>
                     </Border>
-                </ScrollViewer>
+                </StackPanel>
             </DockPanel>
         </styles:NavigationDrawer>
     </styles:SnackbarHost>
