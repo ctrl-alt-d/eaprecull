@@ -19,7 +19,7 @@
              Padding="15">
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <pages:CentreRowUserCtrl DataContext="{Binding}" />
+                <pages:CentreRowUserCtrl  />
             </DataTemplate>
         </ListBox.ItemTemplate>
     </ListBox>

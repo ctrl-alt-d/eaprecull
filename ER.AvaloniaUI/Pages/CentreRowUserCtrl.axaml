@@ -23,6 +23,7 @@
             <StackPanel Orientation="Vertical" DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+                <Button Command="{Binding Create}" />
             </StackPanel>                     
             
         </DockPanel>                     
