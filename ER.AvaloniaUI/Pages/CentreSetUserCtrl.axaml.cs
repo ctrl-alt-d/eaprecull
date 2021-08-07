@@ -6,11 +6,11 @@ using ER.AvaloniaUI.Services;
 using ER.AvaloniaUI.ViewModels;
 
 namespace ER.AvaloniaUI.Pages {
-    public class CentresUserCtrl : UserControl {
-        public CentresUserCtrl() {
+    public class CentreSetUserCtrl : UserControl {
+        public CentreSetUserCtrl() {
             InitializeComponent();
             
-            DataContext = SuperContext.GetViewModel<CentresViewModel>();
+            DataContext = SuperContext.GetViewModel<CentreSetViewModel>();
         }
         
         private void InitializeComponent()

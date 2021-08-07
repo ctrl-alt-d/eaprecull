@@ -5,20 +5,34 @@ using CommonInterfaces;
 using System.Threading.Tasks;
 using ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
+using BusinessLayer.Abstract;
+using System.Windows.Input;
+using System.Reactive.Linq;
 
 namespace ER.AvaloniaUI.ViewModels
 {
-    public class CentresRowViewMode : ViewModelBase, IEtiquetaDescripcio, IId
+    public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        public CentresRowViewMode(dtoo.Centre centreDto)
+        public CentreRowViewModel(dtoo.Centre centreDto)
         {
             _Etiqueta = centreDto.Etiqueta;
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = centreDto.EsActiu;
             Id = centreDto.Id;
-            DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing ); 
+            DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
+
+            // ----
+            ShowDialog = new Interaction<CentreCreateViewModel, OperationResult<dtoo.Centre>?>();
+
+            Crear = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var create = new CentreCreateViewModel();
+
+                var result = await ShowDialog.Handle(create);
+            });
+
         }
 
 
@@ -65,6 +79,11 @@ namespace ER.AvaloniaUI.ViewModels
             Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             EsActiu = centreDto.EsActiu;
         }
+
+        // ----------------------
+        public ICommand Crear { get; }
+        public Interaction<CentreCreateViewModel, OperationResult<dtoo.Centre>?> ShowDialog { get; }
+
 
     }
 }

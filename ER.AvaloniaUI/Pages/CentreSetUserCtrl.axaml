@@ -3,12 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:ER.AvaloniaUI.ViewModels"
+             xmlns:pages="clr-namespace:ER.AvaloniaUI.Pages"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:system="clr-namespace:System;assembly=System.Runtime.Extensions"
              xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ER.AvaloniaUI.Pages.CentresUserCtrl">
+             x:Class="ER.AvaloniaUI.Pages.CentreSetUserCtrl">
     <Design.DataContext>
         <viewModels:CentresViewModel />
     </Design.DataContext>
@@ -18,20 +19,7 @@
              Padding="15">
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <Border BorderBrush="White"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="6"
-                        BoxShadow="5 5 10 2 Gray">
-                    <DockPanel>
-                        <ToggleSwitch IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" DockPanel.Dock="Right"/>
-                        <StackPanel Orientation="Vertical" DockPanel.Dock="Left">                            
-                            <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
-                            <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
-                        </StackPanel>                     
-                        
-                    </DockPanel>                     
-                </Border>
+                <pages:CentreRowUserCtrl DataContext="{Binding}" />
             </DataTemplate>
         </ListBox.ItemTemplate>
     </ListBox>

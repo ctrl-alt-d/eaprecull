@@ -1,19 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Collections.ObjectModel;
-using System.Reactive;
 using System.Reactive.Concurrency;
-using System.Text;
 using BusinessLayer.Abstract.Services;
-using DTO.o.DTOs;
-using ER.AvaloniaUI.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 
 namespace ER.AvaloniaUI.ViewModels
 {
-    public class CentresViewModel : ViewModelBase
+    public class CentreSetViewModel : ViewModelBase
     {
         private readonly ICentreGetSet BLCentres;
         private readonly ICentreActivaDesactiva BLActivaDesactiva;
@@ -21,13 +15,13 @@ namespace ER.AvaloniaUI.ViewModels
             get; 
             set;
         }
-        public CentresViewModel(ICentreGetSet blcentres, ICentreActivaDesactiva blActivaDesactiva)
+        public CentreSetViewModel(ICentreGetSet blcentres, ICentreActivaDesactiva blActivaDesactiva)
         {
             BLCentres = blcentres;
             BLActivaDesactiva = blActivaDesactiva;
             RxApp.MainThreadScheduler.Schedule(LoadCentres);    
         }
-        public ObservableCollection<CentresRowViewMode> MyItems {get;} = new();
+        public ObservableCollection<CentreRowViewModel> MyItems {get;} = new();
 
         private async void LoadCentres()
         {
@@ -39,7 +33,7 @@ namespace ER.AvaloniaUI.ViewModels
                 ;
 
             l.Data!
-            .Select(x => new CentresRowViewMode(x ))
+            .Select(x => new CentreRowViewModel(x ))
             .ToList()
             .ForEach(x=>MyItems.Add(x));
         }
