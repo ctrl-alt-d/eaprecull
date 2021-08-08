@@ -16,8 +16,7 @@
         <viewModels:CursAcademicGetSetViewModel />
     </Design.DataContext>
     
-    <ListBox Items="{Binding MyItems}" 
-             SelectedItem="{Binding SelectedItem}"
+    <ListBox Items="{Binding MyItems}"              
              Padding="15">
         <ListBox.ItemTemplate>
             <DataTemplate>

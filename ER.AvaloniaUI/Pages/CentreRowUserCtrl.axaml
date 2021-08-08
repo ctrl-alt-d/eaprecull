@@ -19,11 +19,22 @@
             Padding="6"
             BoxShadow="5 5 10 2 Gray">
         <DockPanel>
-            <ToggleSwitch IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" DockPanel.Dock="Right"/>
+
+            <Menu DockPanel.Dock="Right" Height="32" Padding="0" Margin="0">
+                <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
+                    <MenuItem Header="Editar" Command="{Binding Update}">
+                        <MenuItem.Icon>
+                            <avalonia:MaterialIcon Kind="Edit" Width="24" Height="24" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <ToggleSwitch VerticalAlignment="Center" IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" DockPanel.Dock="Right"/>
+
             <StackPanel Orientation="Vertical" DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
-                <Button Command="{Binding Update}" />
             </StackPanel>                     
             
         </DockPanel>                     

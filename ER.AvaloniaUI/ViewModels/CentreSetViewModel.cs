@@ -11,10 +11,6 @@ namespace ER.AvaloniaUI.ViewModels
     {
         private readonly ICentreGetSet BLCentres;
         private readonly ICentreActivaDesactiva BLActivaDesactiva;
-        private dtoo.Centre? SelectedItem {
-            get; 
-            set;
-        }
         public CentreSetViewModel(ICentreGetSet blcentres, ICentreActivaDesactiva blActivaDesactiva)
         {
             BLCentres = blcentres;
