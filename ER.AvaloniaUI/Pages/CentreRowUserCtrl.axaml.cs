@@ -8,15 +8,18 @@ using ER.AvaloniaUI.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
+using ER.AvaloniaUI.Services;
 
 namespace ER.AvaloniaUI.Pages
 {
-    public class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel> {
-        public CentreRowUserCtrl( ) {
-            InitializeComponent();            
+    public class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel>
+    {
+        public CentreRowUserCtrl()
+        {
+            InitializeComponent();
             this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
         }
-        
+
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
@@ -27,11 +30,9 @@ namespace ER.AvaloniaUI.Pages
             var dialog = new CentreUpdateWindow();
             dialog.DataContext = interaction.Input;
 
-            if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(desktop.MainWindow);
-                interaction.SetOutput(result);
-            }
+            //if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(SuperContext.MainWindow);
+            interaction.SetOutput(result);
         }
 
     }

@@ -1,9 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Threading;
-using ER.AvaloniaUI.Services;
-using ER.AvaloniaUI.Views;
-using ReactiveUI;
 using ShowMeTheXaml;
 using Avalonia.ReactiveUI;
 
@@ -16,12 +11,18 @@ namespace ER.AvaloniaUI
         // yet and stuff might break.
         public static void Main(string[] args) => 
             BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+            .With(new X11PlatformOptions { UseGpu = false })
+            .StartWithClassicDesktopLifetime(args)
+            ;
+
+
+
 
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
             =>
-            AppBuilder.Configure<App>()
+            AppBuilder
+            .Configure<App>()
             .UsePlatformDetect()
             .UseXamlDisplay()
             .LogToTrace()

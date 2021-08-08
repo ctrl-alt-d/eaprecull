@@ -5,6 +5,7 @@ using DataLayer.DI;
 using ER.AvaloniaUI.ViewModels;
 using ER.AvaloniaUI.DI;
 using Avalonia.Controls;
+using ER.AvaloniaUI.Views;
 
 namespace ER.AvaloniaUI.Services
 {    
@@ -29,6 +30,8 @@ namespace ER.AvaloniaUI.Services
                 GetServiceProvider()
                 .GetRequiredService<T>();
         }
+
+        public static Avalonia.Controls.Window MainWindow {get;} =  new MainWindow();
 
     }
 }

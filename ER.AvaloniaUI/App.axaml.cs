@@ -18,7 +18,7 @@ namespace ER.AvaloniaUI
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow = Services.SuperContext.MainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();
