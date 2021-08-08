@@ -10,7 +10,7 @@ namespace ER.AvaloniaUI.Pages {
         public CentreSetUserCtrl() {
             InitializeComponent();
             
-            DataContext = SuperContext.GetViewModel<CentreSetViewModel>();
+            DataContext = new CentreSetViewModel();
         }
         
         private void InitializeComponent()

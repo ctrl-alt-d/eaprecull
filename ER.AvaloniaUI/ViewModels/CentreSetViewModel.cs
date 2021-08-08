@@ -4,17 +4,15 @@ using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
+using ER.AvaloniaUI.Services;
 
 namespace ER.AvaloniaUI.ViewModels
 {
     public class CentreSetViewModel : ViewModelBase
     {
-        private readonly ICentreGetSet BLCentres;
-        private readonly ICentreActivaDesactiva BLActivaDesactiva;
-        public CentreSetViewModel(ICentreGetSet blcentres, ICentreActivaDesactiva blActivaDesactiva)
+        protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
+        public CentreSetViewModel()
         {
-            BLCentres = blcentres;
-            BLActivaDesactiva = blActivaDesactiva;
             RxApp.MainThreadScheduler.Schedule(LoadCentres);    
         }
         public ObservableCollection<CentreRowViewModel> MyItems {get;} = new();
@@ -22,13 +20,16 @@ namespace ER.AvaloniaUI.ViewModels
         private async void LoadCentres()
         {
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: null);
+
+            using var bl = BLCentres();
             var l =
                 await
-                BLCentres
+                bl
                 .GetItems(parms)
                 ;
 
-            l.Data!
+            l
+            .Data! // ToDo: gestionar broken rules
             .Select(x => new CentreRowViewModel(x ))
             .ToList()
             .ForEach(x=>MyItems.Add(x));

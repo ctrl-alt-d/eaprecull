@@ -11,7 +11,7 @@ namespace ER.AvaloniaUI.Services
     public static class SuperContext
     {
         private static ServiceProvider? _ServiceProvider;
-        public static ServiceProvider GetServiceProvider() {
+        private static ServiceProvider GetServiceProvider() {
             _ServiceProvider = _ServiceProvider ??
                 new ServiceCollection()
                 .DataLayerConfigureServices()
@@ -29,31 +29,6 @@ namespace ER.AvaloniaUI.Services
                 GetServiceProvider()
                 .GetRequiredService<T>();
         }
-
-        public static T GetViewModel<T>()
-            where T: ViewModelBase
-        {
-            return 
-                GetServiceProvider()
-                .GetRequiredService<T>();
-        }
-
-        public static T GetView<T>()
-            where T: Window
-        {
-            return 
-                GetServiceProvider()
-                .GetRequiredService<T>();
-        }
-
-        public static T GetUserCtrl<T>()
-            where T: UserControl
-        {
-            return 
-                GetServiceProvider()
-                .GetRequiredService<T>();
-        }
-
 
     }
 }

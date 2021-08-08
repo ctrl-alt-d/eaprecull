@@ -11,7 +11,7 @@ namespace ER.AvaloniaUI.Pages {
         public CursAcademicGetSetUserCtrl() {
             InitializeComponent();
             
-            DataContext = SuperContext.GetViewModel<CursAcademicGetSetViewModel>();
+            DataContext = new CursAcademicGetSetViewModel();
         }
         
         private void InitializeComponent()
