@@ -2,12 +2,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        x:Class="ER.AvaloniaUI.Pages.CentreCreateWindow"
+        x:Class="ER.AvaloniaUI.Pages.CentreUpdateWindow"
         HorizontalContentAlignment="Stretch"
         Title="Alta nou centre"        
         >
 
 
-    <TextBlock Text="Mierda pa ti" />
+    <TextBlock Text="{Binding Id}" />
 
 </Window>

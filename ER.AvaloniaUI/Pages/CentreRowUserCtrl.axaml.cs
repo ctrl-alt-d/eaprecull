@@ -14,7 +14,7 @@ namespace ER.AvaloniaUI.Pages
     public class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel> {
         public CentreRowUserCtrl( ) {
             InitializeComponent();            
-            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(CreateShowDialogAsync)));
+            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
         }
         
         private void InitializeComponent()
@@ -22,9 +22,9 @@ namespace ER.AvaloniaUI.Pages
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task CreateShowDialogAsync(InteractionContext<CentreCreateViewModel, OperationResult<dtoo.Centre>?> interaction)
+        private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> interaction)
         {
-            var dialog = new CentreCreateWindow();
+            var dialog = new CentreUpdateWindow();
             dialog.DataContext = interaction.Input;
 
             if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

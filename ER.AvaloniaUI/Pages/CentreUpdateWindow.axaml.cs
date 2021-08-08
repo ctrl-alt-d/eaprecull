@@ -7,12 +7,12 @@ using dtoo = DTO.o.DTOs;
 
 namespace ER.AvaloniaUI.Pages
 {
-    public class CentreCreateWindow : Window, IDialogWindowResult<OperationResult<dtoo.Centre>>
+    public class CentreUpdateWindow : Window, IDialogWindowResult<OperationResult<dtoo.Centre>>
     { 
         public OperationResult<dtoo.Centre> Result { get; set; } = default!;
-        public CentreCreateWindow()
+        public CentreUpdateWindow()
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
         }        
         public OperationResult<dtoo.Centre> GetResult() => Result;
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

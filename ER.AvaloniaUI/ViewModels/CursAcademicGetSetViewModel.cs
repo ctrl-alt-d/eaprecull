@@ -20,11 +20,11 @@ namespace ER.AvaloniaUI.ViewModels
 
         private async void LoadCursAcademicGetSet()
         {
-            var createParms = new DTO.i.DTOs.EmptyParms();
+            var parms = new DTO.i.DTOs.EmptyParms();
             var l =
                 await
                 BLCursAcademicGetSet
-                .GetItems(createParms)
+                .GetItems(parms)
                 ;
             l.Data!
             .Select(x=>new CursAcademicRowViewModel(x, MyItems))
