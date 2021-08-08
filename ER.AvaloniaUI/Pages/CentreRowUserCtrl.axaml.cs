@@ -17,8 +17,11 @@ namespace ER.AvaloniaUI.Pages
         public CentreRowUserCtrl()
         {
             InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
+            // this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
+            this.WhenActivated(d => d(ViewModel!.GetActivator()));
         }
+
+
 
         private void InitializeComponent()
         {
@@ -32,8 +35,9 @@ namespace ER.AvaloniaUI.Pages
                 DataContext = interaction.Input
             };
 
+            var currentWindow = (Window)this.VisualRoot;
             //if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(SuperContext.MainWindow);
+            var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(currentWindow);
             interaction.SetOutput(result);
         }
 

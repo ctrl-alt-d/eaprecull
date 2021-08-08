@@ -30,6 +30,7 @@ namespace ER.AvaloniaUI.ViewModels
 
             l
             .Data! // ToDo: gestionar broken rules
+            .OrderBy(x=>x.Id) // for issue
             .Select(x => new CentreRowViewModel(x ))
             .ToList()
             .ForEach(x=>MyItems.Add(x));

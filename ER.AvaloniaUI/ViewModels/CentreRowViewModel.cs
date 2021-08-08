@@ -8,6 +8,7 @@ using BusinessLayer.Abstract.Services;
 using BusinessLayer.Abstract;
 using System.Windows.Input;
 using System.Reactive.Linq;
+using System;
 
 namespace ER.AvaloniaUI.ViewModels
 {
@@ -84,6 +85,37 @@ namespace ER.AvaloniaUI.ViewModels
         public ICommand Update { get; }
         public Interaction<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> ShowDialog { get; }
 
+        // ----------------------
+
+        private bool _Activated;
+        public bool Activated
+        {
+            get { return _Activated; }
+            protected set { 
+                this.RaiseAndSetIfChanged(ref _Activated, value); 
+            }
+        }
+        public IDisposable GetActivator()
+        {
+            return new Activator(this);
+        }
+
+        public class Activator: IDisposable
+        {
+            public Activator(CentreRowViewModel centreRowViewModel)
+            {
+                CentreRowViewModel = centreRowViewModel;
+                CentreRowViewModel.Activated = true;
+                System.Console.WriteLine(  $"Activating: {centreRowViewModel.Id}" );
+            }
+
+            private CentreRowViewModel CentreRowViewModel {get;}
+
+            public void Dispose()
+            {
+                CentreRowViewModel.Activated = false;
+            }
+        }
 
     }
 }
