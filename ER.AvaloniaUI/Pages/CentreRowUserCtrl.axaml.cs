@@ -27,8 +27,10 @@ namespace ER.AvaloniaUI.Pages
 
         private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> interaction)
         {
-            var dialog = new CentreUpdateWindow();
-            dialog.DataContext = interaction.Input;
+            var dialog = new CentreUpdateWindow()
+            {
+                DataContext = interaction.Input
+            };
 
             //if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(SuperContext.MainWindow);
