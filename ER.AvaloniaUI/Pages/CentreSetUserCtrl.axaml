@@ -14,12 +14,14 @@
         <viewModels:CentresViewModel />
     </Design.DataContext>
 
-    <ListBox Items="{Binding MyItems}"              
-             Padding="15">
-        <ListBox.ItemTemplate>
-            <DataTemplate>
-                <pages:CentreRowUserCtrl  />
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+    <ScrollViewer>
+        <ItemsRepeater Items="{Binding MyItems}">
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate>
+                    <pages:CentreRowUserCtrl/>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+    </ScrollViewer>
+    
 </UserControl>    
