@@ -15,13 +15,13 @@
     </Design.DataContext>
 
     <ScrollViewer>
-        <ItemsRepeater Items="{Binding MyItems}">
-            <ItemsRepeater.ItemTemplate>
+        <ItemsControl Margin="0 40 0 0" Items="{Binding MyItems}">            
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <pages:CentreRowUserCtrl/>
                 </DataTemplate>
-            </ItemsRepeater.ItemTemplate>
-        </ItemsRepeater>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </ScrollViewer>
     
 </UserControl>    
