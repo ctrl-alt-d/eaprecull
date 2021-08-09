@@ -1,8 +1,9 @@
 using System;
+using CommonInterfaces;
 
 namespace DTO.i.DTOs
 {
-    public class CentreUpdateParms : IDtoi
+    public class CentreUpdateParms : IDtoi, IId
     {
         public CentreUpdateParms(int id, string codi, string nom, bool esActiu)
         {
