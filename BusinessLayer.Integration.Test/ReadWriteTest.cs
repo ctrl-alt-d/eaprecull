@@ -81,7 +81,7 @@ namespace BusinessLayer.Integration.Test
             var createresult = await centreCreate.Create(createparms);
 
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
-            var results = await centres.GetItems(parms);
+            var results = await centres.FromPredicate(parms);
             var result = results.Data.First();
 
 

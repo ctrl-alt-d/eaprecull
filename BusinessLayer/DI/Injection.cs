@@ -12,6 +12,7 @@ namespace BusinessLayer.DI
             // Services (ToDo: per comprensió)
 
             // centres
+            services.AddTransient<ICentreGet, CentreGet>();
             services.AddTransient<ICentreGetSet, CentreGetSet>();
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<ICentreUpdate, CentreUpdate>();

@@ -5,20 +5,38 @@ using CommonInterfaces;
 using System.Threading.Tasks;
 using ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
+using BusinessLayer.Abstract;
+using System.Windows.Input;
+using System.Reactive.Linq;
 
 namespace ER.AvaloniaUI.ViewModels
 {
-    public class CentresRowViewMode : ViewModelBase, IEtiquetaDescripcio, IId
+    public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        public CentresRowViewMode(dtoo.Centre centreDto)
+        public CentreRowViewModel(dtoo.Centre centreDto)
         {
             _Etiqueta = centreDto.Etiqueta;
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = centreDto.EsActiu;
             Id = centreDto.Id;
-            DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing ); 
+            DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
+
+            // ----
+            ShowDialog = new Interaction<CentreUpdateViewModel, OperationResult<dtoo.Centre>?>();
+
+            Update = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var update = new CentreUpdateViewModel(Id);
+
+                var result = await ShowDialog.Handle(update);
+
+                var data = result.Data; 
+
+                if (data != null) DTO2ModelView(data);
+            });
+
         }
 
 
@@ -54,17 +72,27 @@ namespace ER.AvaloniaUI.ViewModels
 
         public int Id {get;}
 
-        protected async Task RunTheThing()  
+        protected async Task RunTheThing()
         {
-            using  var bl = SuperContext.GetBLOperation<ICentreActivaDesactiva>();
+            using var bl = SuperContext.GetBLOperation<ICentreActivaDesactiva>();
 
-            var centreDto = ( await bl.Toggle(Id)).Data!;
+            var data = (await bl.Toggle(Id)).Data!;
 
-            Etiqueta = centreDto.Etiqueta;
-            Descripcio = centreDto.Descripcio;
-            Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
-            EsActiu = centreDto.EsActiu;
+            DTO2ModelView(data);
         }
+
+        private void DTO2ModelView(dtoo.Centre data)
+        {
+            Etiqueta = data.Etiqueta;
+            Descripcio = data.Descripcio;
+            Estat = data.EsActiu ? "Activat" : "Desactivat";
+            EsActiu = data.EsActiu;
+        }
+
+        // ----------------------
+        public ICommand Update { get; }
+        public Interaction<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> ShowDialog { get; }
+
 
     }
 }

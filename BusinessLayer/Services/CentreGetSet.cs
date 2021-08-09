@@ -13,7 +13,7 @@ using System;
 namespace BusinessLayer.Services
 {
     public class CentreGetSet :
-        BLGetItems<models.Centre, parms.EsActiuParms, dtoo.Centre>,
+        BLGetSet<models.Centre, parms.EsActiuParms, dtoo.Centre>,
         ICentreGetSet
     {
         public CentreGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)

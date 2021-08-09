@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
+using ER.AvaloniaUI.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 
@@ -9,10 +10,9 @@ namespace ER.AvaloniaUI.ViewModels
 {
     public class CursAcademicGetSetViewModel : ViewModelBase
     {
-        private readonly ICursAcademicGetSet BLCursAcademicGetSet;
-        public CursAcademicGetSetViewModel(ICursAcademicGetSet blCursAcademicGetSet)
+        protected virtual ICursAcademicGetSet BLCursAcademicGetSet() => SuperContext.GetBLOperation<ICursAcademicGetSet>();
+        public CursAcademicGetSetViewModel()
         {
-            BLCursAcademicGetSet = blCursAcademicGetSet;
             RxApp.MainThreadScheduler.Schedule(LoadCursAcademicGetSet);    
         }
 
@@ -20,13 +20,17 @@ namespace ER.AvaloniaUI.ViewModels
 
         private async void LoadCursAcademicGetSet()
         {
-            var createParms = new DTO.i.DTOs.EmptyParms();
+            var parms = new DTO.i.DTOs.EmptyParms();
+
+            using var bl = BLCursAcademicGetSet();
             var l =
                 await
-                BLCursAcademicGetSet
-                .GetItems(createParms)
+                bl
+                .FromPredicate(parms)
                 ;
-            l.Data!
+
+            l
+            .Data! // ToDo: gestionar broken rules
             .Select(x=>new CursAcademicRowViewModel(x, MyItems))
             .ToList()
             .ForEach(x=>MyItems.Add(x));

@@ -113,7 +113,7 @@
                                 </Style>
                             </Carousel.Styles>
 
-                            <pages:CentresUserCtrl />
+                            <pages:CentreSetUserCtrl />
                             <pages:CursAcademicGetSetUserCtrl />
                             
                         </Carousel>

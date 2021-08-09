@@ -69,7 +69,7 @@ namespace BusinessLayer.Integration.Test
             );
             var createalumeresult = await alumneCreate.Create(createalumneparms);
 
-            var results = await alumnes.GetItems(new DTO.i.DTOs.EmptyParms());
+            var results = await alumnes.FromPredicate(new DTO.i.DTOs.EmptyParms());
             var result = results.Data.First();
 
 

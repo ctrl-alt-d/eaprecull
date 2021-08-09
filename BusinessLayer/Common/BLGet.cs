@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public abstract class BLGetItem<TModel, TDTOo> 
+    public abstract class BLGet<TModel, TDTOo> 
         :BLOperation,
-         IGetItem<TDTOo> 
+         IGet<TDTOo> 
             where TDTOo: IDTOo, IEtiquetaDescripcio
             where TModel: class, IModel, IId
 
     {
-        public BLGetItem(IDbContextFactory<AppDbContext> appDbContextFactory)
+        public BLGet(IDbContextFactory<AppDbContext> appDbContextFactory)
         :base(appDbContextFactory)
         {
         }
@@ -29,7 +29,7 @@ namespace BusinessLayer.Common
 
         protected abstract TDTOo ToDto(TModel model );
         
-        public virtual async Task<OperationResult<TDTOo>> GetItem(
+        public virtual async Task<OperationResult<TDTOo>> FromId(
             int id
             ) 
             =>

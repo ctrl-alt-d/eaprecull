@@ -4,7 +4,7 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICentreGetSet: IGetItems<parms.EsActiuParms, dtoo.Centre>
+    public interface ICentreGetSet: IGetSet<parms.EsActiuParms, dtoo.Centre>
     {        
     }
 

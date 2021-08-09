@@ -4,7 +4,7 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioGetItem: IGetItem<dtoo.Actuacio>
+    public interface IActuacioGet: IGet<dtoo.Actuacio>
     {        
     }
 

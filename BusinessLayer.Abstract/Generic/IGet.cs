@@ -4,11 +4,11 @@ using DTO.o.Interfaces;
 
 namespace BusinessLayer.Abstract.Generic
 {
-    public interface IGetItem<TDTOo>
+    public interface IGet<TDTOo>
         :IBLOperation
             where TDTOo: IDTOo, IEtiquetaDescripcio
         
     {
-        Task<OperationResult<TDTOo>> GetItem(int id);
+        Task<OperationResult<TDTOo>> FromId(int id);
     }
 }
