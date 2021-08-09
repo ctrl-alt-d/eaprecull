@@ -17,7 +17,7 @@ namespace ER.AvaloniaUI.ViewModels
         }
         public ObservableCollection<CentreRowViewModel> MyItems {get;} = new();
 
-        private async void LoadCentres()
+        protected virtual async void LoadCentres()
         {
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: null);
 
@@ -25,7 +25,7 @@ namespace ER.AvaloniaUI.ViewModels
             var l =
                 await
                 bl
-                .GetItems(parms)
+                .FromPredicate(parms)
                 ;
 
             l

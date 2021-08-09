@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public abstract class BLGetItems<TModel, TParm, TDTOo>
+    public abstract class BLGetSet<TModel, TParm, TDTOo>
         : BLOperation,
-         IGetItems<TParm, TDTOo>
+         IGetSet<TParm, TDTOo>
             where TDTOo : IDTOo, IEtiquetaDescripcio
             where TParm : IDtoi
             where TModel : class, IModel, IId
 
     {
-        public BLGetItems(IDbContextFactory<AppDbContext> appDbContextFactory)
+        public BLGetSet(IDbContextFactory<AppDbContext> appDbContextFactory)
         : base(appDbContextFactory)
         {
         }
@@ -34,7 +34,7 @@ namespace BusinessLayer.Common
 
         protected abstract Func<TModel, TDTOo> ToDto {get;}
 
-        public virtual async Task<OperationResults<TDTOo>> GetItems(
+        public virtual async Task<OperationResults<TDTOo>> FromPredicate(
             TParm request
             )
         {

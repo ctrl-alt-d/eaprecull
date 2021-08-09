@@ -2,12 +2,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="ER.AvaloniaUI.Pages.CentreUpdateWindow"
         HorizontalContentAlignment="Stretch"
         Title="Alta nou centre"        
+        Width="800" Height="500" MinWidth="720"
+        WindowStartupLocation="CenterOwner"
         >
 
 
-    <TextBlock Text="{Binding Id}" />
+    <StackPanel Orientation="Vertical"
+                Margin="16, 0"
+                HorizontalAlignment="Stretch">
+
+        <TextBox Text="{Binding Id}"
+             UseFloatingWatermark="True"
+             Classes="Outline"
+             IsReadOnly="true"
+             wpf:TextFieldAssist.Label="Id" />
+
+
+        <TextBox Text="{Binding Codi}"
+             UseFloatingWatermark="True"
+             Classes="Outline"
+             wpf:TextFieldAssist.Label="Codi" />
+
+        <TextBox Text="{Binding Nom}"
+             UseFloatingWatermark="True"
+             Classes="Outline"
+             wpf:TextFieldAssist.Label="Nom" />
+
+
+
+    </StackPanel>
 
 </Window>

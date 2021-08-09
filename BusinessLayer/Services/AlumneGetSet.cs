@@ -15,7 +15,7 @@ using DTO.i.DTOs;
 namespace BusinessLayer.Services
 {
     public class AlumneGetSet :
-        BLGetItems<models.Alumne, parms.EmptyParms, dtoo.Alumne>,
+        BLGetSet<models.Alumne, parms.EmptyParms, dtoo.Alumne>,
         IAlumneGetSet
     {
         public AlumneGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)

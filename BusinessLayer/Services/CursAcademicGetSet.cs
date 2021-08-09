@@ -13,7 +13,7 @@ using System;
 namespace BusinessLayer.Services
 {
     public class CursAcademicGetSet :
-        BLGetItems<models.CursAcademic, parms.EmptyParms, dtoo.CursAcademic>,
+        BLGetSet<models.CursAcademic, parms.EmptyParms, dtoo.CursAcademic>,
         ICursAcademicGetSet
     {
         public CursAcademicGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)

@@ -42,7 +42,7 @@ namespace CreateDemoData
             Console.WriteLine("Creant Centres!");
 
             var getset = GetBLOperation<ICentreGetSet>();
-            var nhiha = (await getset.GetItems(new parms.EsActiuParms(null))).Data!.Any();
+            var nhiha = (await getset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {
@@ -51,7 +51,7 @@ namespace CreateDemoData
                 await crea.Create(new parms.CentreCreateParms("M2", "Cendrassos", true));
                 for (var i =0; i<200; i++)
                 {
-                    await crea.Create(new parms.CentreCreateParms(Guid.NewGuid().ToString().Substring(2,3), Guid.NewGuid().ToString().Substring(2,8), true));
+                    await crea.Create(new parms.CentreCreateParms("Centre: "+Guid.NewGuid().ToString().Substring(2,3), Guid.NewGuid().ToString().Substring(2,8), true));
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace CreateDemoData
             Console.WriteLine("Creant Cursos Acadèmics!");
 
             var getset = GetBLOperation<ICursAcademicGetSet>();
-            var nhiha = (await getset.GetItems(new parms.EmptyParms())).Data!.Any();
+            var nhiha = (await getset.FromPredicate(new parms.EmptyParms())).Data!.Any();
 
             if (!nhiha)
             {

@@ -14,7 +14,7 @@ using System;
 namespace BusinessLayer.Services
 {
     public class ActuacionsByAlumne :
-        BLGetItems<models.Actuacio, parms.GetActuacioByAlumneParms, dtoo.Actuacio>,
+        BLGetSet<models.Actuacio, parms.GetActuacioByAlumneParms, dtoo.Actuacio>,
         IActuacioSetByAlumne
     {
         public ActuacionsByAlumne(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)

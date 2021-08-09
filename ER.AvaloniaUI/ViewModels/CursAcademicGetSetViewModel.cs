@@ -26,7 +26,7 @@ namespace ER.AvaloniaUI.ViewModels
             var l =
                 await
                 bl
-                .GetItems(parms)
+                .FromPredicate(parms)
                 ;
 
             l
