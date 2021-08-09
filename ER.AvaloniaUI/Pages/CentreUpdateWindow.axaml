@@ -48,7 +48,7 @@
              wpf:TextFieldAssist.Label="Nom" />
 
 
-        <material:FloatingButton Classes="" IsExtended="True" />
+        <material:FloatingButton Classes="" IsExtended="True" Command="{Binding SubmitCommand}"/>
 
     </StackPanel>
 

@@ -7,6 +7,9 @@ using ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Avalonia.Data;
+using dtoi = DTO.i.DTOs;
+using System.Windows.Input;
+using BusinessLayer.Abstract;
 
 namespace ER.AvaloniaUI.ViewModels
 {
@@ -19,6 +22,9 @@ namespace ER.AvaloniaUI.ViewModels
         {
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadData);    
+
+            SubmitCommand = ReactiveCommand.CreateFromTask( () => UpdateData() );
+
         }
         public int Id {get;}
         public string IdTxt => $"Centre #{Id}";
@@ -59,13 +65,42 @@ namespace ER.AvaloniaUI.ViewModels
                 bl
                 .FromId(Id)
                 )
-                .Data!;
-            Codi = data.Nom;
-            Nom = data.Codi;
-            EsActiu = data.EsActiu;
+                .Data!; // ToDo: deal with br
+            DTO2ModelView(data);
+        }
 
-                
+        private void DTO2ModelView(dtoo.Centre data)
+        {
+            Codi = data.Codi;
+            Nom = data.Nom;
+            EsActiu = data.EsActiu;
+        }
+
+        public virtual async Task<OperationResult<dtoo.Centre>?> UpdateData()
+        {
+            using var bl = BLUpdate();
+
+            var parms = 
+                new
+                dtoi
+                .CentreUpdateParms(Id,Codi,Nom,EsActiu);
+
+            var dto =
+                await
+                bl
+                .Update(parms);
+
+            var data =
+                dto
+                .Data!; // ToDo: deal with br
+
+            DTO2ModelView(data);
+
+            return dto;
 
         }
+
+        public ReactiveCommand<Unit, OperationResult<dtoo.Centre>?> SubmitCommand { get; }
+
     }
 }

@@ -31,6 +31,10 @@ namespace ER.AvaloniaUI.ViewModels
                 var update = new CentreUpdateViewModel(Id);
 
                 var result = await ShowDialog.Handle(update);
+
+                var data = result.Data; 
+
+                if (data != null) DTO2ModelView(data);
             });
 
         }
@@ -68,16 +72,21 @@ namespace ER.AvaloniaUI.ViewModels
 
         public int Id {get;}
 
-        protected async Task RunTheThing()  
+        protected async Task RunTheThing()
         {
-            using  var bl = SuperContext.GetBLOperation<ICentreActivaDesactiva>();
+            using var bl = SuperContext.GetBLOperation<ICentreActivaDesactiva>();
 
-            var centreDto = ( await bl.Toggle(Id)).Data!;
+            var data = (await bl.Toggle(Id)).Data!;
 
-            Etiqueta = centreDto.Etiqueta;
-            Descripcio = centreDto.Descripcio;
-            Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
-            EsActiu = centreDto.EsActiu;
+            DTO2ModelView(data);
+        }
+
+        private void DTO2ModelView(dtoo.Centre data)
+        {
+            Etiqueta = data.Etiqueta;
+            Descripcio = data.Descripcio;
+            Estat = data.EsActiu ? "Activat" : "Desactivat";
+            EsActiu = data.EsActiu;
         }
 
         // ----------------------
