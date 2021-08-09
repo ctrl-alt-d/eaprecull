@@ -18,7 +18,7 @@ namespace BusinessLayer.Common
         :BLOperation,
          IUpdate<TDTOo, TParm>
             where TDTOo: IDTOo, IEtiquetaDescripcio
-            where TParm: IDtoi
+            where TParm: IDtoi, IId
             where TModel : class, IModel, IId
 
     {
@@ -39,14 +39,13 @@ namespace BusinessLayer.Common
         protected abstract TDTOo ToDto(TModel model );
 
         public virtual async Task<OperationResult<TDTOo>> Update(
-            int id,
             TParm parm
             )
         {
             try
             {
                 //
-                var model = await Perfection<TModel>(id);
+                var model = await Perfection<TModel>(parm.Id);
                 //
                 await PreUpdate(model, parm);
                 //

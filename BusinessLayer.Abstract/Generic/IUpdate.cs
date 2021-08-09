@@ -8,8 +8,8 @@ namespace BusinessLayer.Abstract.Generic
     public interface IUpdate<TDTOo, TParm>
         :IBLOperation
             where TDTOo: IDTOo, IEtiquetaDescripcio
-            where TParm: IDtoi
+            where TParm: IDtoi, IId
     {
-        Task<OperationResult<TDTOo>> Update(int id, TParm request);
+        Task<OperationResult<TDTOo>> Update(TParm request);
     }
 }
