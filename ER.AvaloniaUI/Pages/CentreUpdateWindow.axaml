@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="ER.AvaloniaUI.Pages.CentreUpdateWindow"
@@ -12,8 +13,27 @@
 
 
     <StackPanel Orientation="Vertical"
-                Margin="16, 0"
-                HorizontalAlignment="Stretch">
+                Margin="16, 16"
+                >
+
+        <StackPanel.Styles>
+            <Style Selector="material|FloatingButton[IsExtended=true]">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <StackPanel Orientation="Horizontal" Height="24">
+                                <Viewbox Stretch="Fill"                                            
+                                         VerticalAlignment="Stretch">
+                                    <avalonia:MaterialIcon Kind="Edit" Width="24" Height="24" />
+                                </Viewbox>
+                                <TextBlock Margin="8,0" Text="Editar" Classes="Subtitle2"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </StackPanel.Styles>                
 
         <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
 
@@ -28,6 +48,7 @@
              wpf:TextFieldAssist.Label="Nom" />
 
 
+        <material:FloatingButton Classes="" IsExtended="True" />
 
     </StackPanel>
 
