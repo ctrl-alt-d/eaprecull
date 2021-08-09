@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
+using Avalonia.Data;
 
 namespace ER.AvaloniaUI.ViewModels
 {
@@ -20,12 +21,21 @@ namespace ER.AvaloniaUI.ViewModels
             RxApp.MainThreadScheduler.Schedule(LoadData);    
         }
         public int Id {get;}
+        public string IdTxt => $"Centre #{Id}";
 
         public string _Codi = string.Empty;
         public string Codi 
         {
             get => _Codi;
-            set => this.RaiseAndSetIfChanged(ref _Codi, value);
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value) )
+                {
+                    throw new DataValidationException("Aquest camp no pot quedat buit.");
+                }
+
+                this.RaiseAndSetIfChanged(ref _Codi, value);
+            }
         }
         public string _Nom = string.Empty;
         public string Nom 

@@ -15,7 +15,8 @@ namespace ER.AvaloniaUI.Pages {
         
         private void InitializeComponent()
         {
-            AvaloniaXamlLoader.Load(this);            
+            AvaloniaXamlLoader.Load(this);
+            TextBox x;
         }
 
     }

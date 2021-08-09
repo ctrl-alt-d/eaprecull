@@ -15,21 +15,16 @@
                 Margin="16, 0"
                 HorizontalAlignment="Stretch">
 
-        <TextBox Text="{Binding Id}"
-             UseFloatingWatermark="True"
-             Classes="Outline"
-             IsReadOnly="true"
-             wpf:TextFieldAssist.Label="Id" />
-
+        <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
 
         <TextBox Text="{Binding Codi}"
              UseFloatingWatermark="True"
-             Classes="Outline"
+             Classes="Filled"
              wpf:TextFieldAssist.Label="Codi" />
 
         <TextBox Text="{Binding Nom}"
              UseFloatingWatermark="True"
-             Classes="Outline"
+             Classes="Filled"
              wpf:TextFieldAssist.Label="Nom" />
 
 
