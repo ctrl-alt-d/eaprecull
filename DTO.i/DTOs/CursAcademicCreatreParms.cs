@@ -4,10 +4,10 @@ namespace DTO.i.DTOs
 {
     public class CursAcademicCreateParms : IDtoi
     {
-        public CursAcademicCreateParms(int anyInici, bool EsActiu)
+        public CursAcademicCreateParms(int anyInici, bool esActiu)
         {
             AnyInici = anyInici;
-            EsActiu = EsActiu;
+            EsActiu = esActiu;
         }
 
         public int AnyInici {get; }

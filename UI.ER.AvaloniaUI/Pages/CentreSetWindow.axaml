@@ -16,14 +16,19 @@
         <viewModels:CentresViewModel />
     </Design.DataContext>
 
-    <ScrollViewer>
-        <ItemsControl Margin="10" Items="{Binding MyItems}">            
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <pages:CentreRowUserCtrl/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
-    
+    <DockPanel>
+        <ToggleSwitch DockPanel.Dock="Right"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding NomesActius}"
+                      />
+        <ScrollViewer>
+            <ItemsControl Margin="10" Items="{Binding MyItems}">            
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <pages:CentreRowUserCtrl/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
 </Window>    
