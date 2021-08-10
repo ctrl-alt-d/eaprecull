@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using ShowMeTheXaml;
 using Avalonia.ReactiveUI;
 
 namespace UI.ER.AvaloniaUI
@@ -24,7 +23,6 @@ namespace UI.ER.AvaloniaUI
             AppBuilder
             .Configure<App>()
             .UsePlatformDetect()
-            .UseXamlDisplay()
             .LogToTrace()
             .UseReactiveUI()
             ;
