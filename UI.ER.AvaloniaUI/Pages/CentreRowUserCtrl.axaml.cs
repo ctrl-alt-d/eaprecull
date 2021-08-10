@@ -35,11 +35,11 @@ namespace UI.ER.AvaloniaUI.Pages
 
             if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)            
             {
-                var result = await dialog.ShowDialog<dtoo.Centre?>(desktop.MainWindow);
+                var window = (Window)this.VisualRoot;
+                var result = await dialog.ShowDialog<dtoo.Centre?>(window);
                 interaction.SetOutput(result);
             }
             
         }
-
     }
 }
