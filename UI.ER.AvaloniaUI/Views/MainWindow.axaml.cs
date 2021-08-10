@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Material.Styles;
 using UI.ER.AvaloniaUI.Pages;
 using UI.ER.AvaloniaUI.Services;
+using System.Threading.Tasks;
 
 namespace UI.ER.AvaloniaUI.Views
 {
@@ -74,7 +75,8 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void HelloButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            SnackbarHost.Post("Hello, user!");
+            var w = new CentreSetWindow();
+            w.ShowDialog(this);
         }
 
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
