@@ -24,15 +24,13 @@ namespace UI.ER.AvaloniaUI.ViewModels
             DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
 
             // ----
-            ShowDialog = new Interaction<CentreUpdateViewModel, OperationResult<dtoo.Centre>?>();
+            ShowDialog = new Interaction<CentreUpdateViewModel, dtoo.Centre?>();
 
             Update = ReactiveCommand.CreateFromTask(async () =>
             {
                 var update = new CentreUpdateViewModel(Id);
 
-                var result = await ShowDialog.Handle(update);
-
-                var data = result.Data; 
+                var data = await ShowDialog.Handle(update);
 
                 if (data != null) DTO2ModelView(data);
             });
@@ -91,7 +89,7 @@ namespace UI.ER.AvaloniaUI.ViewModels
 
         // ----------------------
         public ICommand Update { get; }
-        public Interaction<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> ShowDialog { get; }
+        public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowDialog { get; }
 
 
     }

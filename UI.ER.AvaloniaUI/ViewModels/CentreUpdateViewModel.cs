@@ -76,7 +76,7 @@ namespace UI.ER.AvaloniaUI.ViewModels
             EsActiu = data.EsActiu;
         }
 
-        public virtual async Task<OperationResult<dtoo.Centre>?> UpdateData()
+        public virtual async Task<dtoo.Centre?> UpdateData()
         {
             using var bl = BLUpdate();
 
@@ -92,15 +92,15 @@ namespace UI.ER.AvaloniaUI.ViewModels
 
             var data =
                 dto
-                .Data!; // ToDo: deal with br
+                .Data; 
 
-            DTO2ModelView(data);
+            DTO2ModelView(data!); // ToDo: deal with br
 
-            return dto;
+            return data;
 
         }
 
-        public ReactiveCommand<Unit, OperationResult<dtoo.Centre>?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
 
     }
 }

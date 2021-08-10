@@ -25,7 +25,7 @@ namespace UI.ER.AvaloniaUI.Pages
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> interaction)
+        private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreUpdateWindow()
             {
@@ -33,7 +33,7 @@ namespace UI.ER.AvaloniaUI.Pages
             };
 
             //if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(SuperContext.MainWindow);
+            var result = await dialog.ShowDialog<dtoo.Centre?>(SuperContext.MainWindow);
             interaction.SetOutput(result);
         }
 
