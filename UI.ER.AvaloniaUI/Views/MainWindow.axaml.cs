@@ -6,8 +6,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Material.Styles;
 using UI.ER.AvaloniaUI.Pages;
-using UI.ER.AvaloniaUI.Services;
-using System.Threading.Tasks;
 
 namespace UI.ER.AvaloniaUI.Views
 {
