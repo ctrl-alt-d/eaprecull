@@ -13,12 +13,46 @@
         <viewModels:CentreRowViewModel />
     </Design.DataContext>
 
+    <UserControl.Styles>
+        <Style Selector="Border.Apareix">
+            <Setter Property="Opacity" Value="1.0"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+
+        <Style Selector="Border.Desapareix">
+            <Setter Property="Opacity" Value="0.0"/>
+            <Setter Property="Height" Value="0.0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+
+        <Style Selector="Border.Amagat">
+            <Setter Property="Opacity" Value="0.0"/>
+            <Setter Property="Height" Value="0.0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+
+        <Style Selector="Border.Visible">
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+
+    </UserControl.Styles>
+
     <Border BorderBrush="White"
             BorderThickness="1"
             CornerRadius="4"
-            Margin="10"
             Padding="6"
+            Classes.Apareix="{Binding ClasseApareix}"
+            Classes.Desapareix="{Binding ClasseDesapareix}"
+            Classes.Amagat="{Binding ClasseAmagat}"
+            Classes.Visible="{Binding ClasseVisible}"
             BoxShadow="5 5 10 2 Gray">
+
+        <Border.Transitions>
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:1"/>
+            </Transitions>
+        </Border.Transitions>
+
         <DockPanel>
 
             <Menu DockPanel.Dock="Right" Height="32" Padding="0" Margin="0">

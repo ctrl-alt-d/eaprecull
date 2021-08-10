@@ -8,6 +8,7 @@ using BusinessLayer.Abstract.Services;
 using BusinessLayer.Abstract;
 using System.Windows.Input;
 using System.Reactive.Linq;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -20,6 +21,8 @@ namespace UI.ER.ViewModels.ViewModels
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = centreDto.EsActiu;
+            _ClasseAmagat = centreDto.EsActiu ? true : false;
+            _ClasseVisible = centreDto.EsActiu;
             Id = centreDto.Id;
             DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
 
@@ -37,6 +40,13 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
+        internal void NomesActius(bool nomesActius)
+        {
+            ClasseDesapareix = nomesActius && !EsActiu;
+            ClasseApareix = !nomesActius && !EsActiu;
+            ClasseAmagat = false;
+            ClasseVisible = EsActiu;
+        }
 
         public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
 
@@ -91,6 +101,34 @@ namespace UI.ER.ViewModels.ViewModels
         public ICommand Update { get; }
         public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowDialog { get; }
 
+        // 
+        private bool _ClasseAmagat;
+        public bool ClasseAmagat
+        {
+            get { return _ClasseAmagat; }
+            set { this.RaiseAndSetIfChanged(ref _ClasseAmagat, value); }
+        }
 
+        private bool _ClasseVisible;
+        public bool ClasseVisible
+        {
+            get { return _ClasseVisible; }
+            set { this.RaiseAndSetIfChanged(ref _ClasseVisible, value); }
+        }
+
+
+        private bool _ClasseApareix = false;
+        public bool ClasseApareix
+        {
+            get { return _ClasseApareix; }
+            set { this.RaiseAndSetIfChanged(ref _ClasseApareix, value); }
+        }
+
+        private bool _ClasseDesapareix = false;
+        public bool ClasseDesapareix
+        {
+            get { return _ClasseDesapareix; }
+            set { this.RaiseAndSetIfChanged(ref _ClasseDesapareix, value); }
+        }
     }
 }

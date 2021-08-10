@@ -15,25 +15,28 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
         public CentreSetViewModel()
         {
-            //RxApp.MainThreadScheduler
-            //    .Schedule(LoadCentresNoParm);    
+            RxApp.MainThreadScheduler
+                .Schedule(LoadCentresNoParm);    
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(LoadCentres);
+                .Subscribe(Filtra);
         }
         public ObservableCollection<CentreRowViewModel> MyItems {get;} = new();
 
-        protected virtual void LoadCentresNoParm()
+
+        protected virtual void Filtra(bool nomesActius)
         {
-            LoadCentres(true);
+            MyItems
+            .ToList()
+            .ForEach(i=> i.NomesActius(nomesActius));
         }
-        protected virtual async void LoadCentres(bool nomesActius)
+
+        protected virtual async void LoadCentresNoParm()
         {
 
             MyItems.Clear();
-            var esActiu = nomesActius ? true : (bool?) null;
-            var parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
+            var parms = new DTO.i.DTOs.EsActiuParms(esActiu: null);
 
             using var bl = BLCentres();
             var l =
