@@ -4,13 +4,13 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Services;
 
-namespace ER.AvaloniaUI.Pages
+namespace UI.ER.AvaloniaUI.Pages
 {
     public class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel>
     {

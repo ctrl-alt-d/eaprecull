@@ -2,12 +2,12 @@ using Microsoft.Extensions.DependencyInjection;
 using BusinessLayer.DI;
 using BusinessLayer.Abstract.Generic;
 using DataLayer.DI;
-using ER.AvaloniaUI.ViewModels;
-using ER.AvaloniaUI.DI;
+using UI.ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.DI;
 using Avalonia.Controls;
-using ER.AvaloniaUI.Views;
+using UI.ER.AvaloniaUI.Views;
 
-namespace ER.AvaloniaUI.Services
+namespace UI.ER.AvaloniaUI.Services
 {    
     public static class SuperContext
     {

@@ -3,10 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using ER.AvaloniaUI.Services;
-using ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.ViewModels;
 
-namespace ER.AvaloniaUI.Pages {
+namespace UI.ER.AvaloniaUI.Pages {
     public class CursAcademicGetSetUserCtrl : UserControl {
         public CursAcademicGetSetUserCtrl() {
             InitializeComponent();

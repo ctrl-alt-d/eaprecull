@@ -3,13 +3,13 @@ using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Abstract;
 using System.Windows.Input;
 using System.Reactive.Linq;
 
-namespace ER.AvaloniaUI.ViewModels
+namespace UI.ER.AvaloniaUI.ViewModels
 {
     public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {

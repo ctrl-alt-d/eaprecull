@@ -4,10 +4,10 @@ using Material.Dialog.Interfaces;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using Avalonia.ReactiveUI;
-using ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.ViewModels;
 using System;
 
-namespace ER.AvaloniaUI.Pages
+namespace UI.ER.AvaloniaUI.Pages
 {
     public class CentreUpdateWindow : ReactiveWindow<CentreUpdateViewModel>, IDialogWindowResult<OperationResult<dtoo.Centre>>
     { 

@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
-using ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.ViewModels;
 using System;
 using System.Linq;
 using Avalonia.Controls;
 
-namespace ER.AvaloniaUI.DI
+namespace UI.ER.AvaloniaUI.DI
 {
     public static class Injection
     {

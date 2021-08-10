@@ -2,7 +2,7 @@
 using ShowMeTheXaml;
 using Avalonia.ReactiveUI;
 
-namespace ER.AvaloniaUI
+namespace UI.ER.AvaloniaUI
 {
     class Program
     {

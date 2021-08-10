@@ -1,11 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using ER.AvaloniaUI.Services;
-using ER.AvaloniaUI.ViewModels;
-using ER.AvaloniaUI.Views;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.Views;
 
-namespace ER.AvaloniaUI
+namespace UI.ER.AvaloniaUI
 {
     public class App : Application
     {

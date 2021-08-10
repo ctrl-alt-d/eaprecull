@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer.Integration.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateDemoData", "CreateDemoData\CreateDemoData.csproj", "{5953DC4D-A1D1-4ED2-8A07-E1E45A18778A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ER.AvaloniaUI", "ER.AvaloniaUI\ER.AvaloniaUI.csproj", "{C2C953F0-7995-40E6-AD0E-B261EAD00D8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.ER.AvaloniaUI", "UI.ER.AvaloniaUI\UI.ER.AvaloniaUI.csproj", "{C2C953F0-7995-40E6-AD0E-B261EAD00D8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,11 +1,11 @@
-<Window x:Class="ER.AvaloniaUI.Views.MainWindow"
+<Window x:Class="UI.ER.AvaloniaUI.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:pages="clr-namespace:ER.AvaloniaUI.Pages"
+        xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Width="1280" Height="720" MinWidth="720"
         Title="Eap Recull">
@@ -31,7 +31,7 @@
                         <styles:ColorZone Mode="Accent" Height="180">
                             <StackPanel>
                                 <Image Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Top"
-                                       Source="avares://ER.AvaloniaUI/Assets/FavIcon_200x.png" Margin="0,0,0,-8" />
+                                       Source="avares://UI.ER.AvaloniaUI/Assets/FavIcon_200x.png" Margin="0,0,0,-8" />
                                 <TextBlock Classes="Headline6" Text="EAP Recull" HorizontalAlignment="Center" />
                                 <TextBlock Classes="Subtitle1" Text="By @ctrl.alt.d" HorizontalAlignment="Center" />
                             </StackPanel>
