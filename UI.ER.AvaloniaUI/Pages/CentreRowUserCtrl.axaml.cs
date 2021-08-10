@@ -4,13 +4,14 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using ER.AvaloniaUI.ViewModels;
+using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Views;
 
-namespace ER.AvaloniaUI.Pages
+namespace UI.ER.AvaloniaUI.Pages
 {
     public class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel>
     {
@@ -25,16 +26,19 @@ namespace ER.AvaloniaUI.Pages
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, OperationResult<dtoo.Centre>?> interaction)
+        private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreUpdateWindow()
             {
                 DataContext = interaction.Input
             };
 
-            //if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            var result = await dialog.ShowDialog<OperationResult<dtoo.Centre>?>(SuperContext.MainWindow);
-            interaction.SetOutput(result);
+            if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)            
+            {
+                var result = await dialog.ShowDialog<dtoo.Centre?>(desktop.MainWindow);
+                interaction.SetOutput(result);
+            }
+            
         }
 
     }

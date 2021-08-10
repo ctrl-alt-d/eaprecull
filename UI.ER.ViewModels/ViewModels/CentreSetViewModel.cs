@@ -4,9 +4,9 @@ using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Services;
 
-namespace ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CentreSetViewModel : ViewModelBase
     {

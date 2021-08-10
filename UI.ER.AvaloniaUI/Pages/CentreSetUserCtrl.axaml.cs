@@ -2,10 +2,10 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using ER.AvaloniaUI.Services;
-using ER.AvaloniaUI.ViewModels;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.ViewModels;
 
-namespace ER.AvaloniaUI.Pages {
+namespace UI.ER.AvaloniaUI.Pages {
     public class CentreSetUserCtrl : UserControl {
         public CentreSetUserCtrl() {
             InitializeComponent();

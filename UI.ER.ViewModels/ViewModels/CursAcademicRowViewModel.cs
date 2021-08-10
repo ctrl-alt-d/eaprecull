@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract.Services;
 using CommonInterfaces;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 
-namespace ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CursAcademicRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {

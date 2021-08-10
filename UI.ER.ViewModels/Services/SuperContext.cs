@@ -2,12 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using BusinessLayer.DI;
 using BusinessLayer.Abstract.Generic;
 using DataLayer.DI;
-using ER.AvaloniaUI.ViewModels;
-using ER.AvaloniaUI.DI;
-using Avalonia.Controls;
-using ER.AvaloniaUI.Views;
 
-namespace ER.AvaloniaUI.Services
+namespace UI.ER.AvaloniaUI.Services
 {    
     public static class SuperContext
     {
@@ -17,7 +13,6 @@ namespace ER.AvaloniaUI.Services
                 new ServiceCollection()
                 .DataLayerConfigureServices()
                 .BusinessLayerConfigureServices()
-                .ViewModelConfigureServices()
                 .BuildServiceProvider()
                 ;            
             return _ServiceProvider;
@@ -30,9 +25,6 @@ namespace ER.AvaloniaUI.Services
                 GetServiceProvider()
                 .GetRequiredService<T>();
         }
-
-        public static Avalonia.Controls.Window MainWindow {get;} =  new MainWindow();
-
     }
 }
 

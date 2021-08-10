@@ -5,10 +5,10 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Material.Styles;
-using ER.AvaloniaUI.Pages;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Pages;
+using UI.ER.AvaloniaUI.Services;
 
-namespace ER.AvaloniaUI.Views
+namespace UI.ER.AvaloniaUI.Views
 {
     public class MainWindow : Window
     {

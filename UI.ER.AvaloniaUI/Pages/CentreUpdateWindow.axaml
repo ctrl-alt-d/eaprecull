@@ -4,7 +4,7 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        x:Class="ER.AvaloniaUI.Pages.CentreUpdateWindow"
+        x:Class="UI.ER.AvaloniaUI.Pages.CentreUpdateWindow"
         HorizontalContentAlignment="Stretch"
         Title="Alta nou centre"        
         Width="800" Height="500" MinWidth="720"

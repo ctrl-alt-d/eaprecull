@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
-using ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 
-namespace ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CursAcademicGetSetViewModel : ViewModelBase
     {
