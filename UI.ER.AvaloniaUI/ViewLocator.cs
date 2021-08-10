@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using UI.ER.AvaloniaUI.ViewModels;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI
 {

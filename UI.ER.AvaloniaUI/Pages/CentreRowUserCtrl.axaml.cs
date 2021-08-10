@@ -4,11 +4,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using UI.ER.AvaloniaUI.ViewModels;
+using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
 using UI.ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Views;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -32,9 +33,12 @@ namespace UI.ER.AvaloniaUI.Pages
                 DataContext = interaction.Input
             };
 
-            //if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            var result = await dialog.ShowDialog<dtoo.Centre?>(SuperContext.MainWindow);
-            interaction.SetOutput(result);
+            if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)            
+            {
+                var result = await dialog.ShowDialog<dtoo.Centre?>(desktop.MainWindow);
+                interaction.SetOutput(result);
+            }
+            
         }
 
     }

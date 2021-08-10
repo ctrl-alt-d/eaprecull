@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using UI.ER.AvaloniaUI.Services;
-using UI.ER.AvaloniaUI.ViewModels;
+using UI.ER.ViewModels.ViewModels;
 using UI.ER.AvaloniaUI.Views;
 
 namespace UI.ER.AvaloniaUI
@@ -18,7 +18,7 @@ namespace UI.ER.AvaloniaUI
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = Services.SuperContext.MainWindow;
+                desktop.MainWindow = new MainWindow();
             }
 
             base.OnFrameworkInitializationCompleted();

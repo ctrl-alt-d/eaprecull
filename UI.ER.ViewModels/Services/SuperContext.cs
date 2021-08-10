@@ -2,10 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using BusinessLayer.DI;
 using BusinessLayer.Abstract.Generic;
 using DataLayer.DI;
-using UI.ER.AvaloniaUI.ViewModels;
-using UI.ER.AvaloniaUI.DI;
-using Avalonia.Controls;
-using UI.ER.AvaloniaUI.Views;
 
 namespace UI.ER.AvaloniaUI.Services
 {    
@@ -17,7 +13,6 @@ namespace UI.ER.AvaloniaUI.Services
                 new ServiceCollection()
                 .DataLayerConfigureServices()
                 .BusinessLayerConfigureServices()
-                .ViewModelConfigureServices()
                 .BuildServiceProvider()
                 ;            
             return _ServiceProvider;
@@ -30,9 +25,6 @@ namespace UI.ER.AvaloniaUI.Services
                 GetServiceProvider()
                 .GetRequiredService<T>();
         }
-
-        public static Avalonia.Controls.Window MainWindow {get;} =  new MainWindow();
-
     }
 }
 

@@ -6,7 +6,7 @@ using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using UI.ER.AvaloniaUI.Services;
 
-namespace UI.ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CentreSetViewModel : ViewModelBase
     {

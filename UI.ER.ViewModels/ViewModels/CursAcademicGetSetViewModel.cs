@@ -6,7 +6,7 @@ using UI.ER.AvaloniaUI.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 
-namespace UI.ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CursAcademicGetSetViewModel : ViewModelBase
     {

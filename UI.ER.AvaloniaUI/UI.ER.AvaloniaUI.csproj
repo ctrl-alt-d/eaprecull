@@ -24,9 +24,9 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
-    <ProjectReference Include="..\BusinessLayer.Abstract\BusinessLayer.Abstract.csproj" />
+    <ProjectReference Include="..\UI.ER.ViewModels\UI.ER.ViewModels.csproj" />
   </ItemGroup>
+
+
 </Project>

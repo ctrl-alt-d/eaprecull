@@ -4,7 +4,7 @@ using Material.Dialog.Interfaces;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using Avalonia.ReactiveUI;
-using UI.ER.AvaloniaUI.ViewModels;
+using UI.ER.ViewModels.ViewModels;
 using System;
 
 namespace UI.ER.AvaloniaUI.Pages

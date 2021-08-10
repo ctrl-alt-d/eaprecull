@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using Avalonia.Data;
 using dtoi = DTO.i.DTOs;
-using System.Windows.Input;
-using BusinessLayer.Abstract;
+using System.ComponentModel;
+using UI.ER.ViewModels.Common;
 
-namespace UI.ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CentreUpdateViewModel : ViewModelBase, IId
     {
@@ -21,30 +20,30 @@ namespace UI.ER.AvaloniaUI.ViewModels
         public CentreUpdateViewModel(int id)
         {
             Id = id;
-            RxApp.MainThreadScheduler.Schedule(LoadData);    
+            RxApp.MainThreadScheduler.Schedule(LoadData);
 
-            SubmitCommand = ReactiveCommand.CreateFromTask( () => UpdateData() );
+            SubmitCommand = ReactiveCommand.CreateFromTask(() => UpdateData());
 
         }
-        public int Id {get;}
+        public int Id { get; }
         public string IdTxt => $"Centre #{Id}";
 
         public string _Codi = string.Empty;
-        public string Codi 
+        public string Codi
         {
             get => _Codi;
             set
             {
-                if (string.IsNullOrWhiteSpace(value) )
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new DataValidationException("Aquest camp no pot quedat buit.");
+                    throw new NotifyDataErrorInfo("Aquest camp no pot quedat buit.");
                 }
 
                 this.RaiseAndSetIfChanged(ref _Codi, value);
             }
         }
         public string _Nom = string.Empty;
-        public string Nom 
+        public string Nom
         {
             get => _Nom;
             set => this.RaiseAndSetIfChanged(ref _Nom, value);
@@ -80,10 +79,10 @@ namespace UI.ER.AvaloniaUI.ViewModels
         {
             using var bl = BLUpdate();
 
-            var parms = 
+            var parms =
                 new
                 dtoi
-                .CentreUpdateParms(Id,Codi,Nom,EsActiu);
+                .CentreUpdateParms(Id, Codi, Nom, EsActiu);
 
             var dto =
                 await
@@ -92,7 +91,7 @@ namespace UI.ER.AvaloniaUI.ViewModels
 
             var data =
                 dto
-                .Data; 
+                .Data;
 
             DTO2ModelView(data!); // ToDo: deal with br
 

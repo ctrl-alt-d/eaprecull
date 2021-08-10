@@ -9,7 +9,7 @@ using BusinessLayer.Abstract;
 using System.Windows.Input;
 using System.Reactive.Linq;
 
-namespace UI.ER.AvaloniaUI.ViewModels
+namespace UI.ER.ViewModels.ViewModels
 {
     public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
