@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+        xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
+        x:Class="UI.ER.AvaloniaUI.Pages.CentreSetWindow"
+        HorizontalContentAlignment="Stretch"
+        Title="Centres"        
+        Width="1000" Height="700" MinWidth="720"
+        WindowStartupLocation="CenterOwner"
+        >
+    <Design.DataContext>
+        <viewModels:CentresViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <ItemsControl Margin="10" Items="{Binding MyItems}">            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <pages:CentreRowUserCtrl/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+    
+</Window>    

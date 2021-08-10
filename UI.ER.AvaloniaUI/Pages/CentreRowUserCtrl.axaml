@@ -16,6 +16,7 @@
     <Border BorderBrush="White"
             BorderThickness="1"
             CornerRadius="4"
+            Margin="10"
             Padding="6"
             BoxShadow="5 5 10 2 Gray">
         <DockPanel>
