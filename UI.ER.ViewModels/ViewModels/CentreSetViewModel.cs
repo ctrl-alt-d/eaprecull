@@ -8,29 +8,28 @@ using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
+using UI.ER.ViewModels.Common;
 
 namespace UI.ER.ViewModels.ViewModels
 {
+
     public class CentreSetViewModel : ViewModelBase
     {
         protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
         public CentreSetViewModel()
         {
-            //RxApp.MainThreadScheduler
-            //    .Schedule(LoadCentresNoParm);    
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(async nomesActius=>await LoadCentres(nomesActius))
+                .Subscribe(async nomesActius => await LoadCentres(nomesActius))
                 ;
         }
-        public ObservableCollection<CentreRowViewModel> MyItems {get;} = new();
+        public RangeObservableCollection<CentreRowViewModel> MyItems { get; } = new();
 
         protected virtual async Task LoadCentres(bool nomesActius)
         {
-
-            // Buidar la llista actual
-            MyItems.Clear();
+            // Nota: aquesta tasca triga molt, perquè llença la tira de notificacions.
+            MyItems.ClearSilently();
             await OmplirAmbElsNousValors(nomesActius);
         }
 
@@ -47,11 +46,18 @@ namespace UI.ER.ViewModels.ViewModels
                 ;
 
             // Omplir la llista amb els nous valors
-            l
-            .Data! // ToDo: gestionar broken rules            
-            .Select(x => new CentreRowViewModel(x))
-            .ToList()
-            .ForEach(x => MyItems.Add(x));
+            // l
+            // .Data! // ToDo: gestionar broken rules            
+            // .Select(x => new CentreRowViewModel(x))
+            // .ToList()
+            // .ForEach(x => MyItems.Add(x));
+
+            var newList =
+                l
+                .Data! // ToDo: gestionar broken rules            
+                .Select(x => new CentreRowViewModel(x));
+            MyItems.AddRange(newList);
+
         }
 
         private bool _NomesActius = true;
@@ -60,6 +66,6 @@ namespace UI.ER.ViewModels.ViewModels
             get => _NomesActius;
             set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
         }
-        
+
     }
 }
