@@ -8,6 +8,7 @@ using BusinessLayer.Abstract.Services;
 using BusinessLayer.Abstract;
 using System.Windows.Input;
 using System.Reactive.Linq;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -36,7 +37,6 @@ namespace UI.ER.ViewModels.ViewModels
             });
 
         }
-
 
         public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
 
