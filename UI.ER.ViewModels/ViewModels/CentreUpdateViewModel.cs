@@ -9,6 +9,7 @@ using System.Reactive.Concurrency;
 using dtoi = DTO.i.DTOs;
 using System.ComponentModel;
 using UI.ER.ViewModels.Common;
+using System.Linq;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -68,8 +69,10 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(data);
         }
 
-        private void DTO2ModelView(dtoo.Centre data)
+        private void DTO2ModelView(dtoo.Centre? data)
         {
+            if (data==null) return;
+
             Codi = data.Codi;
             Nom = data.Nom;
             EsActiu = data.EsActiu;
@@ -77,29 +80,36 @@ namespace UI.ER.ViewModels.ViewModels
 
         public virtual async Task<dtoo.Centre?> UpdateData()
         {
+            BrokenRules.Clear();
+
+            // preparar paràmetres
+            var parms = new dtoi.CentreUpdateParms(Id, Codi, Nom, EsActiu);
+
+            // cridar backend
             using var bl = BLUpdate();
+            var dto = await bl.Update(parms);
+            var data = dto.Data;
 
-            var parms =
-                new
-                dtoi
-                .CentreUpdateParms(Id, Codi, Nom, EsActiu);
+            // actualitzar dades amb el resultat
+            DTO2ModelView(data);
+            dto.BrokenRules.ForEach(br=>BrokenRules.Add(br.Message));
 
-            var dto =
-                await
-                bl
-                .Update(parms);
-
-            var data =
-                dto
-                .Data;
-
-            DTO2ModelView(data!); // ToDo: deal with br
+            Sortir = data != null && !dto.BrokenRules.Any();
 
             return data;
-
         }
 
+        public RangeObservableCollection<string> BrokenRules { get; } = new();
+
         public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
+
+         private bool _Sortir;
+        public bool Sortir
+        {
+            get { return _Sortir; }
+            protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }
+        }
+       
 
     }
 }

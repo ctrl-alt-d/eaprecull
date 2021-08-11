@@ -27,16 +27,18 @@ namespace BusinessLayer.Services
 
         protected override async Task PreUpdate(models.Centre model, CentreUpdateParms parm)
         {
+            // Està repetit?
             var repetit =
                 await
                 GetCollection()
                 .Where(x=> x.Id != model.Id)
-                .AnyAsync(x=> x.Codi == model.Codi || x.Nom == model.Nom);
+                .AnyAsync(x=> x.Codi == parm.Codi || x.Nom == parm.Nom);
 
             if (repetit)
                 throw new BrokenRuleException("Ja existeix un altre centre amb aquest mateix nom o codi");
 
-            if (string.IsNullOrEmpty(model.Nom))
+            // El nom és correcte?
+            if (string.IsNullOrEmpty(parm.Nom))
                 throw new BrokenRuleException("No es pot deixar el Nom en blanc");
 
         }

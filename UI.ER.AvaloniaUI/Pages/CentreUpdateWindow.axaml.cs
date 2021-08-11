@@ -6,6 +6,8 @@ using ReactiveUI;
 using Avalonia.ReactiveUI;
 using UI.ER.ViewModels.ViewModels;
 using System;
+using System.Reactive.Linq;
+using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -15,8 +17,15 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreUpdateWindow()
         {
             this.InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.SubmitCommand.Subscribe(Close)));
-        }        
+            this.WhenActivated(d => d(ViewModel!.SubmitCommand.Subscribe(SortirSiCal)));
+        }
+
+        private void SortirSiCal(Centre? obj)
+        {
+            if (ViewModel!.Sortir)
+                Close(obj);
+        }
+
         public OperationResult<dtoo.Centre> GetResult() => Result;
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }

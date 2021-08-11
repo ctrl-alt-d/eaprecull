@@ -57,7 +57,7 @@ namespace BusinessLayer.Common
             } 
             catch (BrokenRuleException br)
             {
-                throw br;
+                return new OperationResult<TDTOo>(br.BrokenRules);
             } 
             catch (Exception e)
             {
