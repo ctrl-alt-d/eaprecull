@@ -35,6 +35,10 @@ namespace BusinessLayer.Services
 
             if (repetit)
                 throw new BrokenRuleException("Ja existeix un altre centre amb aquest mateix nom o codi");
+
+            if (string.IsNullOrEmpty(model.Nom))
+                throw new BrokenRuleException("No es pot deixar el Nom en blanc");
+
         }
             
 
