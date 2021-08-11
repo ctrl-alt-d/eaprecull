@@ -11,7 +11,7 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CentreUpdateWindow : ReactiveWindow<CentreUpdateViewModel>, IDialogWindowResult<OperationResult<dtoo.Centre>>
+    public class CentreUpdateWindow : ReactiveWindow<CentreUpdateViewModel>
     { 
         public OperationResult<dtoo.Centre> Result { get; set; } = default!;
         public CentreUpdateWindow()
@@ -25,8 +25,6 @@ namespace UI.ER.AvaloniaUI.Pages
             if (ViewModel!.Sortir)
                 Close(obj);
         }
-
-        public OperationResult<dtoo.Centre> GetResult() => Result;
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }
