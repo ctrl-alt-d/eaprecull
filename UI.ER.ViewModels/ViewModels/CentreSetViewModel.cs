@@ -21,43 +21,39 @@ namespace UI.ER.ViewModels.ViewModels
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(async nomesActius => await LoadCentres(nomesActius))
+                .Subscribe(nomesActius => LoadCentres(nomesActius))
                 ;
         }
         public RangeObservableCollection<CentreRowViewModel> MyItems { get; } = new();
 
-        protected virtual async Task LoadCentres(bool nomesActius)
+        protected virtual async void LoadCentres(bool nomesActius)
         {
-            // Nota: aquesta tasca triga molt, perquè llença la tira de notificacions.
+            // Nota: aquesta tasca triga molt, la UX és pobra 
+            // https://stackoverflow.com/questions/68740471/update-ui-inside-a-suscribed-task.
             MyItems.ClearSilently();
             await OmplirAmbElsNousValors(nomesActius);
         }
 
         private async Task OmplirAmbElsNousValors(bool nomesActius)
         {
-            // Petició al backend
-            var esActiu = nomesActius ? true : (bool?)null;
+            // Preparar paràmetres al backend
+            var esActiu = nomesActius ? true : (bool?)null;            
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
-            var bl = BLCentres();
-            var l =
-                await
-                bl
-                .FromPredicate(parms)
-                ;
 
-            // Omplir la llista amb els nous valors
-            // l
-            // .Data! // ToDo: gestionar broken rules            
-            // .Select(x => new CentreRowViewModel(x))
-            // .ToList()
-            // .ForEach(x => MyItems.Add(x));
+            // Petició al backend            
+            using var bl = BLCentres();
+            var result = await bl.FromPredicate(parms);
 
-            var newList =
-                l
-                .Data! // ToDo: gestionar broken rules            
+            // Ha fallat la petició
+            if (result.Data == null)
+                throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
+
+            // Tenim els resultats
+            var newItems =
+                result
+                .Data
                 .Select(x => new CentreRowViewModel(x));
-            MyItems.AddRange(newList);
-
+            MyItems.AddRange(newItems);
         }
 
         private bool _NomesActius = true;
