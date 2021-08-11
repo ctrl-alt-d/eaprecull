@@ -17,11 +17,43 @@
     </Design.DataContext>
 
     <DockPanel>
-        <ToggleSwitch DockPanel.Dock="Right"
-                      VerticalAlignment="Center"
-                      IsChecked="{Binding NomesActius}"
-                      />
-        <ScrollViewer>
+
+        <DockPanel.Styles>
+            <Style Selector="Button.DesarCss">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <StackPanel Orientation="Horizontal" Height="24">
+                                <Viewbox Stretch="Fill"                                            
+                                         VerticalAlignment="Stretch">
+                                    <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
+                                </Viewbox>
+                                <TextBlock Margin="8,0" Text="Afegir un nou Centre" Classes="Subtitle2"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </DockPanel.Styles>   
+
+        <DockPanel Margin="10"
+                   DockPanel.Dock="Top">
+
+            <ToggleSwitch DockPanel.Dock="Right"
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding NomesActius}"
+                        Content="Filtrar només actius"
+                        Margin="0 5 0 5"
+                        />
+            <Button DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    Width="200"
+                    Classes="Outline DesarCss"  />
+
+        </DockPanel>
+
+        <ScrollViewer DockPanel.Dock="Bottom">
             <ItemsControl Margin="10" Items="{Binding MyItems}">            
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

@@ -24,9 +24,9 @@
                             <StackPanel Orientation="Horizontal" Height="24">
                                 <Viewbox Stretch="Fill"                                            
                                          VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="Edit" Width="24" Height="24" />
+                                    <avalonia:MaterialIcon Kind="FolderDownload" Width="24" Height="24" />
                                 </Viewbox>
-                                <TextBlock Margin="8,0" Text="Editar" Classes="Subtitle2"
+                                <TextBlock Margin="8,0" Text="Desar els canvis" Classes="Subtitle2"
                                            VerticalAlignment="Center" />
                             </StackPanel>
                         </Template>

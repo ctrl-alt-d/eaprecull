@@ -50,9 +50,13 @@
                 </MenuItem>
             </Menu>
 
-            <ToggleSwitch VerticalAlignment="Center" IsChecked="{Binding EsActiu}"  Command="{Binding DoTheThing}" DockPanel.Dock="Right"/>
+            <ToggleSwitch VerticalAlignment="Center" 
+                          IsChecked="{Binding EsActiu}"
+                          Command="{Binding DoTheThing}"
+                          DockPanel.Dock="Right"/>
 
-            <StackPanel Orientation="Vertical" DockPanel.Dock="Left">                            
+            <StackPanel Orientation="Vertical"
+                        DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
             </StackPanel>                     
