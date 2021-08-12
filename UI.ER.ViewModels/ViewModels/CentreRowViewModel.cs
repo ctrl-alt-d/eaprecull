@@ -5,10 +5,8 @@ using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
-using BusinessLayer.Abstract;
 using System.Windows.Input;
 using System.Reactive.Linq;
-using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
