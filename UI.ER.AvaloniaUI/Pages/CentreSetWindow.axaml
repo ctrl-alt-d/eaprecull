@@ -49,6 +49,7 @@
             <Button DockPanel.Dock="Left"
                     HorizontalAlignment="Left"
                     Width="200"
+                    Command="{Binding Create}"
                     Classes="Outline DesarCss"  />
 
         </DockPanel>

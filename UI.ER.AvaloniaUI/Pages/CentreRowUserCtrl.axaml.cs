@@ -33,12 +33,9 @@ namespace UI.ER.AvaloniaUI.Pages
                 DataContext = interaction.Input
             };
 
-            if (Avalonia.Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)            
-            {
-                var window = (Window)this.VisualRoot;
-                var result = await dialog.ShowDialog<dtoo.Centre?>(window);
-                interaction.SetOutput(result);
-            }
+            var window = (Window)this.VisualRoot;
+            var result = await dialog.ShowDialog<dtoo.Centre?>(window);
+            interaction.SetOutput(result);
             
         }
     }

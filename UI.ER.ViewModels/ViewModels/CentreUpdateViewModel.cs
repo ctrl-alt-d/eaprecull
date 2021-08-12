@@ -35,10 +35,10 @@ namespace UI.ER.ViewModels.ViewModels
             get => _Codi;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new NotifyDataErrorInfo("Aquest camp no pot quedat buit.");
-                }
+                // if (string.IsNullOrWhiteSpace(value))
+                // {
+                //     throw new NotifyDataErrorInfo("Aquest camp no pot quedat buit.");
+                // }
 
                 this.RaiseAndSetIfChanged(ref _Codi, value);
             }
@@ -59,14 +59,16 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadData()
         {
+            // Clear brokenRules
+            BrokenRules.Clear();
+
+            // Backend request
             using var bl = BLGet();
-            var data =
-                (await
-                bl
-                .FromId(Id)
-                )
-                .Data!; // ToDo: deal with br
-            DTO2ModelView(data);
+            var dto = await bl.FromId(Id); 
+
+            // Update UI
+            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
+            DTO2ModelView(dto.Data);
         }
 
         private void DTO2ModelView(dtoo.Centre? data)
@@ -80,6 +82,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public virtual async Task<dtoo.Centre?> UpdateData()
         {
+            // Clear brokenRules
             BrokenRules.Clear();
 
             // preparar paràmetres
@@ -94,8 +97,10 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(data);
             BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
 
+            // Close window?
             Sortir = data != null && !dto.BrokenRules.Any();
 
+            //
             return data;
         }
 
