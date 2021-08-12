@@ -92,7 +92,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // actualitzar dades amb el resultat
             DTO2ModelView(data);
-            dto.BrokenRules.ForEach(br=>BrokenRules.Add(br.Message));
+            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
 
             Sortir = data != null && !dto.BrokenRules.Any();
 
@@ -103,7 +103,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
 
-         private bool _Sortir;
+        private bool _Sortir;
         public bool Sortir
         {
             get { return _Sortir; }

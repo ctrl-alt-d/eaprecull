@@ -53,6 +53,16 @@
 
         </DockPanel>
 
+        <ItemsControl Items="{Binding BrokenRules}"
+                      DockPanel.Dock="Bottom"
+                      Margin="10" >            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Classes="Error" Text="{Binding}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>        
+
         <ScrollViewer DockPanel.Dock="Bottom">
             <ItemsControl Margin="10" Items="{Binding MyItems}">            
                 <ItemsControl.ItemTemplate>

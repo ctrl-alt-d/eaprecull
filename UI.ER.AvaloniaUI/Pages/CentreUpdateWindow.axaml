@@ -35,19 +35,8 @@
                 </Setter>
             </Style>
 
-            <Style Selector="TextBlock.Error">
-                <Setter Property="Foreground" Value="Red"/>
-                <Style.Animations>                    
-                    <Animation Duration="0:0:1"> 
-                        <KeyFrame Cue="0%">
-                            <Setter Property="Opacity" Value="0.0"/>
-                        </KeyFrame>
-                        <KeyFrame Cue="100%">
-                            <Setter Property="Opacity" Value="1.0"/>
-                        </KeyFrame>
-                    </Animation>
-                </Style.Animations>
-            </Style>
+            
+
         </StackPanel.Styles>                
 
         <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
@@ -69,7 +58,6 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
 
         <material:FloatingButton Classes="" IsExtended="True" Command="{Binding SubmitCommand}"/>
 

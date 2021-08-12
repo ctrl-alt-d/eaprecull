@@ -25,6 +25,7 @@ namespace UI.ER.ViewModels.ViewModels
                 ;
         }
         public RangeObservableCollection<CentreRowViewModel> MyItems { get; } = new();
+        public RangeObservableCollection<string> BrokenRules { get; } = new();
 
         protected virtual async void LoadCentres(bool nomesActius)
         {
@@ -42,15 +43,20 @@ namespace UI.ER.ViewModels.ViewModels
 
             // Petició al backend            
             using var bl = BLCentres();
-            var result = await bl.FromPredicate(parms);
+            var dto = await bl.FromPredicate(parms);
+
+            // 
+            BrokenRules.Clear();
+            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
+            
 
             // Ha fallat la petició
-            if (result.Data == null)
+            if (dto.Data == null)
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             // Tenim els resultats
             var newItems =
-                result
+                dto
                 .Data
                 .Select(x => new CentreRowViewModel(x));
             MyItems.AddRange(newItems);
