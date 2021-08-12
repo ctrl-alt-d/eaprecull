@@ -9,6 +9,7 @@ using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
 using UI.ER.ViewModels.Common;
+using System.Windows.Input;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -18,11 +19,28 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
         public CentreSetViewModel()
         {
+            // Filtre
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(nomesActius => LoadCentres(nomesActius))
                 ;
+
+            // Create
+            ShowDialog = new Interaction<CentreCreateViewModel, dtoo.Centre?>();
+
+            Create = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var update = new CentreCreateViewModel();
+
+                var data = await ShowDialog.Handle(update);
+
+                if (data != null) {
+                    var item = new CentreRowViewModel(data);
+                    MyItems.Insert(0, item);
+                }
+            });
+
         }
         public RangeObservableCollection<CentreRowViewModel> MyItems { get; } = new();
         public RangeObservableCollection<string> BrokenRules { get; } = new();
@@ -62,12 +80,18 @@ namespace UI.ER.ViewModels.ViewModels
             MyItems.AddRange(newItems);
         }
 
+        // Filtre
         private bool _NomesActius = true;
         public bool NomesActius
         {
             get => _NomesActius;
             set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
         }
+
+        // Crear item
+        public ICommand Create { get; }
+        public Interaction<CentreCreateViewModel, dtoo.Centre?> ShowDialog { get; }
+
 
     }
 }
