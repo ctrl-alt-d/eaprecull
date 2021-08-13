@@ -22,16 +22,20 @@ namespace UI.ER.AvaloniaUI.Pages
 
                 // https://stackoverflow.com/questions/68747035/subscribe-to-close-but-close-only-if-item-was-saved
                 d(
-                    ViewModel
-                    .WhenAnyValue(x => x.SuccessfullySaved)
-                    .CombineLatest(ViewModel!.SubmitCommand, (saved, obj) => (saved, obj))
-                    .Where(s => s.saved)
-                    .Select(s => s.obj)
-                    .Subscribe(Close)
+                    ViewModel!
+                    .SubmitCommand
+                    .Subscribe(CloseIfSaved)
                 );
                 
             });
         }
+
+        private void CloseIfSaved(Centre? obj)
+        {
+            if (ViewModel!.SuccessfullySaved)
+                Close(obj);
+        }
+
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

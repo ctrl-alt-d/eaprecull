@@ -21,17 +21,18 @@ namespace UI.ER.AvaloniaUI.Pages
 
                 // Tancar la finestra.
                 d(
-                    ViewModel
-                    .WhenAnyValue(x => x.SuccessfullySaved)
-                    .CombineLatest(ViewModel!.SubmitCommand, (saved, obj) => (saved, obj))
-                    .Where(s => s.saved)
-                    .Select(s => s.obj)
-                    .Subscribe(Close));
+                    ViewModel!
+                    .SubmitCommand
+                    .Subscribe(CloseIfSaved));
                     
             });                    
         }
 
-
+        private void CloseIfSaved(Centre? obj)
+        {
+            if (ViewModel!.SuccessfullySaved)
+                Close(obj);
+        }
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }
