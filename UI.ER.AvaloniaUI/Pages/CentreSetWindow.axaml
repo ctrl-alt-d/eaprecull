@@ -59,13 +59,13 @@
                       Margin="10" >            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Classes="Error" Text="{Binding}"/>
+                    <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>        
 
         <ScrollViewer DockPanel.Dock="Bottom">
-            <ItemsControl Margin="10" Items="{Binding MyItems}">            
+            <ItemsControl Margin="10" Items="{Binding MyItems, Mode=OneWay}">            
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <pages:CentreRowUserCtrl/>
