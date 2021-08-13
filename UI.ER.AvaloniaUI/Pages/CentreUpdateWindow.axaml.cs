@@ -17,10 +17,10 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreUpdateWindow()
         {
             this.InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.SubmitCommand.Subscribe(SortirSiCal)));
+            this.WhenActivated(d => d(ViewModel!.SubmitCommand.Subscribe(CloseIfSaved)));
         }
 
-        private void SortirSiCal(Centre? obj)
+        private void CloseIfSaved(Centre? obj)
         {
             if (ViewModel!.SuccessfullySaved)
                 Close(obj);
