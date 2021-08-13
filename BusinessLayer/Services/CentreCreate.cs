@@ -23,9 +23,9 @@ namespace BusinessLayer.Services
 
         protected override Task PreInitialize(CentreCreateParms parm)
             =>
-            new RuleChecker()
-            .AddCheck( () => RuleValorsEstanInformats(parm) ,"No es pot deixar el Nom en blanc" )
-            .AddCheck( () => RuleNoEstaRepetit(parm), "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            new RuleChecker<CentreCreateParms>(parm)
+            .AddCheck( RuleValorsEstanInformats, "No es pot deixar el Nom en blanc" )
+            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
             .Check();
 
         protected virtual bool RuleValorsEstanInformats(CentreCreateParms parm)

@@ -25,24 +25,22 @@ namespace BusinessLayer.Services
             =>
             Task.CompletedTask;
 
-        protected override async Task PreUpdate(models.Centre model, CentreUpdateParms parm)
-        {
-            // Està repetit?
-            var repetit =
-                await
-                GetCollection()
-                .Where(x=> x.Id != model.Id)
-                .AnyAsync(x=> x.Codi == parm.Codi || x.Nom == parm.Nom);
+        protected override Task PreUpdate(models.Centre model, CentreUpdateParms parm)
+            =>
+            new RuleChecker<models.Centre, CentreUpdateParms>(model, parm)
+            .AddCheck( RuleValorsEstanInformats, "No es pot deixar el Nom en blanc" )
+            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            .Check();
 
-            if (repetit)
-                throw new BrokenRuleException("Ja existeix un altre centre amb aquest mateix nom o codi");
+        protected virtual bool RuleValorsEstanInformats(models.Centre model, CentreUpdateParms parm)
+            =>
+            string.IsNullOrEmpty(parm.Nom);
 
-            // El nom és correcte?
-            if (string.IsNullOrEmpty(parm.Nom))
-                throw new BrokenRuleException("No es pot deixar el Nom en blanc");
-
-        }
-            
+        protected virtual Task<bool> RuleNoEstaRepetit(models.Centre model, CentreUpdateParms parm)
+            =>
+            GetCollection()
+            .Where(x=> x.Id != model.Id)
+            .AnyAsync(x=> x.Codi == parm.Codi || x.Nom == parm.Nom);
 
         protected override dtoo.Centre ToDto(models.Centre model)
             =>
