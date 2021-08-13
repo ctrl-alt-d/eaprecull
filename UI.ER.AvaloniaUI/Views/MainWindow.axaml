@@ -90,7 +90,7 @@
 
                                 <MenuItem Header="Alumnes" Click="Alumne_OnClick">
                                     <MenuItem.Icon>
-                                        <avalonia:MaterialIcon Kind="OfficeBuildingOutline" Width="24" Height="24" />
+                                        <avalonia:MaterialIcon Kind="School" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 

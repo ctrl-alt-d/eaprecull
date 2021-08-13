@@ -35,11 +35,23 @@
                 </Setter>
             </Style>
 
-            
+            <Style Selector="Button.LookupCss">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <StackPanel Orientation="Horizontal" Height="24">
+                                <Viewbox Stretch="Fill"                                            
+                                         VerticalAlignment="Stretch">
+                                    <avalonia:MaterialIcon Kind="CardSearchOutline" Width="24" Height="24" />
+                                </Viewbox>
+                            </StackPanel>
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
         </StackPanel.Styles>                
 
-        <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
 
         <TextBox Text="{Binding Nom}"
              UseFloatingWatermark="True"
@@ -50,6 +62,17 @@
              UseFloatingWatermark="True"
              Classes="Filled"
              wpf:TextFieldAssist.Label="Cognoms" />
+
+        <StackPanel Orientation="Horizontal">
+            <TextBox Text="{Binding CentreTxt}"
+                     UseFloatingWatermark="True"
+                     Classes="Filled"
+                     IsReadOnly="true"
+                     wpf:TextFieldAssist.Label="Cognoms" />
+            <Button Width="50"
+                    Command="{Binding CentreLookup}"
+                    Classes="LookupCss"  />
+        </StackPanel>
 
         <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
             <ItemsControl.ItemTemplate>

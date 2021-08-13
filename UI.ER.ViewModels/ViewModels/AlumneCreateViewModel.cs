@@ -10,6 +10,8 @@ using dtoi = DTO.i.DTOs;
 using System.ComponentModel;
 using UI.ER.ViewModels.Common;
 using System.Linq;
+using System.Windows.Input;
+using System.Reactive.Linq;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -20,6 +22,19 @@ namespace UI.ER.ViewModels.ViewModels
         public AlumneCreateViewModel()
         {
             SubmitCommand = ReactiveCommand.CreateFromTask(() => CreateData());
+
+            // --- configura lookup --
+            ShowCentreLookup = new Interaction<bool, IIdEtiquetaDescripcio?>();
+            CentreLookup = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var data = await ShowCentreLookup.Handle(true);
+                if (data != null)
+                {
+                    CentreTxt = data.Etiqueta;
+                    CentreId = data.Id;
+                }
+            });
+
         }
 
 /*
@@ -108,7 +123,12 @@ namespace UI.ER.ViewModels.ViewModels
             get { return _Sortir; }
             protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }
         }
-       
+
+        // ----------------------
+        public ICommand CentreLookup { get; }
+        public Interaction<bool, IIdEtiquetaDescripcio?> ShowCentreLookup { get; }
+
+
 
     }
 }

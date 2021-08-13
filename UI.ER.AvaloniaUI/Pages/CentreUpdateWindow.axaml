@@ -39,8 +39,6 @@
 
         </StackPanel.Styles>                
 
-        <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
-
         <TextBox Text="{Binding Nom}"
              UseFloatingWatermark="True"
              Classes="Filled"
