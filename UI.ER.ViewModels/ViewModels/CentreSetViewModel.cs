@@ -10,6 +10,9 @@ using System;
 using System.Threading.Tasks;
 using UI.ER.ViewModels.Common;
 using System.Windows.Input;
+using DynamicData.Binding;
+using DynamicData;
+using CommonInterfaces;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -17,11 +20,18 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreSetViewModel : ViewModelBase
     {
         protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
-        public bool ModeLookup {get;}
+        private IIdEtiquetaDescripcio? _SelectedItem;
+        public IIdEtiquetaDescripcio? SelectedItem
+        {
+            get => _SelectedItem;
+            set => this.RaiseAndSetIfChanged(ref _SelectedItem, value);
+        }
+
+        public Action<IIdEtiquetaDescripcio> ModeLookup {get;}
         public CentreSetViewModel(bool? modeLookup = false)
         {
 
-            ModeLookup = modeLookup ?? false;
+            ModeLookup = (i) => this.SelectedItem = i;
 
             // Filtre
             this

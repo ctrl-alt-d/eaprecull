@@ -7,16 +7,19 @@ using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        public CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup)
+        protected dtoo.Centre Model {get;}
+        public CentreRowViewModel(dtoo.Centre centreDto, Action<IIdEtiquetaDescripcio> modeLookup)
         {
 
             ModeLookup = modeLookup;
+            Model = centreDto;
             _Etiqueta = centreDto.Etiqueta;
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
@@ -39,7 +42,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
-        public bool ModeLookup {get; }
+        public Action<IIdEtiquetaDescripcio> ModeLookup {get; }
         public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
 
         private string _Etiqueta = string.Empty;
@@ -93,11 +96,11 @@ namespace UI.ER.ViewModels.ViewModels
         public ICommand Update { get; }
         public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowDialog { get; }
 
-        //
+        // -----------------------
         public ReactiveCommand<Unit, Unit> Seleccionar { get; } 
         protected void RunSeleccionar()
         {
-            _ = 1;
+            ModeLookup(Model);
         }
 
 

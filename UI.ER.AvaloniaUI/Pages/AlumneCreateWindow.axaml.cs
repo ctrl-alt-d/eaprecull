@@ -24,6 +24,8 @@ namespace UI.ER.AvaloniaUI.Pages
             this.InitializeComponent();
             
             this.WhenActivated(d => {
+
+                // Tancar finestre
                 d(
                     ViewModel
                     .WhenAnyValue(x => x.SuccessfullySaved)
@@ -33,6 +35,7 @@ namespace UI.ER.AvaloniaUI.Pages
                     .Subscribe(Close)
                 );
 
+                // Lookup Centre
                 d(ViewModel!.ShowCentreLookup.RegisterHandler(CentreLookupShowDialogAsync));
             });
         }

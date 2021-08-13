@@ -17,8 +17,10 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreUpdateWindow()
         {
             this.InitializeComponent();
-            // https://stackoverflow.com/questions/68747035/subscribe-to-close-but-close-only-if-item-was-saved
-            this.WhenActivated(d =>
+            
+            this.WhenActivated(d => {
+
+                // https://stackoverflow.com/questions/68747035/subscribe-to-close-but-close-only-if-item-was-saved
                 d(
                     ViewModel
                     .WhenAnyValue(x => x.SuccessfullySaved)
@@ -26,7 +28,9 @@ namespace UI.ER.AvaloniaUI.Pages
                     .Where(s => s.saved)
                     .Select(s => s.obj)
                     .Subscribe(Close)
-                ));
+                );
+                
+            });
         }
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
