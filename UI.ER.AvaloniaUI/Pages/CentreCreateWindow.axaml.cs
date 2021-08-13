@@ -17,14 +17,21 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreCreateWindow()
         {
             this.InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.SubmitCommand.Subscribe(SortirSiCal)));
+            this.WhenActivated(d => {
+
+                // Tancar la finestra.
+                d(
+                    ViewModel
+                    .WhenAnyValue(x => x.SuccessfullySaved)
+                    .CombineLatest(ViewModel!.SubmitCommand, (saved, obj) => (saved, obj))
+                    .Where(s => s.saved)
+                    .Select(s => s.obj)
+                    .Subscribe(Close));
+                    
+            });                    
         }
 
-        private void SortirSiCal(Centre? obj)
-        {
-            if (ViewModel!.Sortir)
-                Close(obj);
-        }
+
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

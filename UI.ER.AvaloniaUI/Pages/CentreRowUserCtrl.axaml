@@ -40,6 +40,11 @@
 
         <DockPanel>
 
+            <Button DockPanel.Dock="Left"
+                    IsVisible="{Binding ModeLookup}"
+                    Command="{Binding Seleccionar}"
+                    Classes="LookupFinishedCss Flat" />
+
             <Menu DockPanel.Dock="Right" Height="32" Padding="0" Margin="0">
                 <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
                     <MenuItem Header="Editar" Command="{Binding Update}">
@@ -50,7 +55,8 @@
                 </MenuItem>
             </Menu>
 
-            <ToggleSwitch VerticalAlignment="Center" 
+            <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
+                          VerticalAlignment="Center" 
                           IsChecked="{Binding EsActiu}"
                           Command="{Binding DoTheThing}"
                           DockPanel.Dock="Right"/>

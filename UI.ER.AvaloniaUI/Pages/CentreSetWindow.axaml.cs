@@ -8,19 +8,33 @@ using ReactiveUI;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 using dtoo = DTO.o.DTOs;
+using System.Reactive.Linq;
+using DynamicData.Binding;
+using DynamicData;
+using System.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages {
     public class CentreSetWindow : ReactiveWindow<CentreSetViewModel> {
         public CentreSetWindow() {
             InitializeComponent();
-            
-            DataContext = new CentreSetViewModel();
-            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(CreateShowDialogAsync)));
+                        
+            this.WhenActivated(d => {
+
+                // Crear nou item
+                d(ViewModel!.ShowDialog.RegisterHandler(CreateShowDialogAsync));
+
+                // Tancar la finestra si seleccionen item
+                d(ViewModel
+                    .WhenAnyValue(x => x.SelectedItem)
+                    .Where(s => s != null)
+                    .Select(x => x)
+                    .Subscribe(x=>Close(x)));
+            });
         }
         
         private void InitializeComponent()
         {
-            AvaloniaXamlLoader.Load(this);
+            AvaloniaXamlLoader.Load(this);            
         }
 
         private async Task CreateShowDialogAsync(InteractionContext<CentreCreateViewModel, dtoo.Centre?> interaction)

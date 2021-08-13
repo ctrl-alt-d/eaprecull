@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Material.Styles;
 using UI.ER.AvaloniaUI.Pages;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Views
 {
@@ -71,9 +72,19 @@ namespace UI.ER.AvaloniaUI.Views
             SnackbarHost.Post("Welcome to demo of Material.Avalonia!");
         }
 
-        private void HelloButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
+        private void Centre_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new CentreSetWindow();
+            var w = new CentreSetWindow()
+            {
+                DataContext = new CentreSetViewModel()
+            };
+
+            w.ShowDialog(this);
+        }
+
+        private void Alumne_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var w = new AlumneCreateWindow(); // <--- caldrà substituir per ALumneSet. ToDo issue20
             w.ShowDialog(this);
         }
 

@@ -10,6 +10,9 @@ using System;
 using System.Threading.Tasks;
 using UI.ER.ViewModels.Common;
 using System.Windows.Input;
+using DynamicData.Binding;
+using DynamicData;
+using CommonInterfaces;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -17,8 +20,19 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreSetViewModel : ViewModelBase
     {
         protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
-        public CentreSetViewModel()
+        private IIdEtiquetaDescripcio? _SelectedItem;
+        public IIdEtiquetaDescripcio? SelectedItem
         {
+            get => _SelectedItem;
+            set => this.RaiseAndSetIfChanged(ref _SelectedItem, value);
+        }
+
+        public Action<IIdEtiquetaDescripcio> ModeLookup {get;}
+        public CentreSetViewModel(bool? modeLookup = false)
+        {
+
+            ModeLookup = (i) => this.SelectedItem = i;
+
             // Filtre
             this
                 .WhenAnyValue(x => x.NomesActius)
@@ -36,7 +50,7 @@ namespace UI.ER.ViewModels.ViewModels
                 var data = await ShowDialog.Handle(update);
 
                 if (data != null) {
-                    var item = new CentreRowViewModel(data);
+                    var item = new CentreRowViewModel(data, ModeLookup);
                     MyItems.Insert(0, item);
                 }
             });
@@ -76,7 +90,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new CentreRowViewModel(x));
+                .Select(x => new CentreRowViewModel(x, ModeLookup));
             MyItems.AddRange(newItems);
         }
 

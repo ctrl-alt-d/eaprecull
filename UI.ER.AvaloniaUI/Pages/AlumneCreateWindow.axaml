@@ -4,9 +4,9 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        x:Class="UI.ER.AvaloniaUI.Pages.CentreCreateWindow"
+        x:Class="UI.ER.AvaloniaUI.Pages.AlumneCreateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nou centre"        
+        Title="Alta nou Alumne"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
@@ -17,19 +17,31 @@
                 >
 
         <StackPanel.Styles>
+
         </StackPanel.Styles>                
 
-        <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
 
         <TextBox Text="{Binding Nom}"
              UseFloatingWatermark="True"
              Classes="Filled"
              wpf:TextFieldAssist.Label="Nom" />
 
-        <TextBox Text="{Binding Codi}"
+        <TextBox Text="{Binding Cognoms}"
              UseFloatingWatermark="True"
              Classes="Filled"
-             wpf:TextFieldAssist.Label="Codi" />
+             wpf:TextFieldAssist.Label="Cognoms" />
+
+        <StackPanel Orientation="Horizontal">
+            <TextBox Text="{Binding CentreTxt}"
+                     Width="250"
+                     UseFloatingWatermark="True"
+                     Classes="Classic Textbox"
+                     IsReadOnly="true"
+                     Focusable="false"
+                     wpf:TextFieldAssist.Label="Centre actual" />
+            <Button Command="{Binding CentreLookup}"
+                    Classes="LookupCss Flat"  />
+        </StackPanel>
 
         <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
             <ItemsControl.ItemTemplate>
@@ -39,7 +51,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <material:FloatingButton Classes="Desar"  IsExtended="True" Command="{Binding SubmitCommand}"/>
+        <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}"/>
 
     </StackPanel>
 
