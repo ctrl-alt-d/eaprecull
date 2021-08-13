@@ -40,12 +40,11 @@
 
         <DockPanel>
 
-            <Menu DockPanel.Dock="Left" Height="32" Padding="0" Margin="0 5 0 0">
-                <MenuItem Height="32"
-                          Width="32"
-                          Header="{avalonia:MaterialIconExt Check, Size=24}"
-                          IsVisible="{Binding ModeLookup}" />
-            </Menu>
+            <Button DockPanel.Dock="Left"
+                    IsVisible="{Binding ModeLookup}"
+                    Command="{Binding Seleccionar}">
+                Seleccionar
+            </Button>
 
             <Menu DockPanel.Dock="Right" Height="32" Padding="0" Margin="0">
                 <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">

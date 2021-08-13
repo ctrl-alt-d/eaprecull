@@ -23,6 +23,7 @@ namespace UI.ER.ViewModels.ViewModels
             _EsActiu = centreDto.EsActiu;
             Id = centreDto.Id;
             DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
+            Seleccionar = ReactiveCommand.Create( RunSeleccionar );
 
             // ----
             ShowDialog = new Interaction<CentreUpdateViewModel, dtoo.Centre?>();
@@ -91,6 +92,13 @@ namespace UI.ER.ViewModels.ViewModels
         // ----------------------
         public ICommand Update { get; }
         public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowDialog { get; }
+
+        //
+        public ReactiveCommand<Unit, Unit> Seleccionar { get; } 
+        protected void RunSeleccionar()
+        {
+            _ = 1;
+        }
 
 
     }
