@@ -38,13 +38,13 @@ namespace BusinessLayer.Common
             TParm request
             )
         {
-            //var todto = ToDto();
-            return new OperationResults<TDTOo>(
+            var data = 
                 await
                 GetModels(request)
                 .Select(x => ToDto(x))
-                .ToListAsync()
-            );
+                .ToListAsync();
+
+            return new OperationResults<TDTOo>(data);
         }
 
     }

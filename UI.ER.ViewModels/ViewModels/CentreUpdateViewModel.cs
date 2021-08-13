@@ -98,7 +98,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
 
             // Close window?
-            Sortir = data != null && !dto.BrokenRules.Any();
+            SuccessfullySaved = data != null && !dto.BrokenRules.Any();
 
             //
             return data;
@@ -109,7 +109,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
 
         private bool _Sortir;
-        public bool Sortir
+        public bool SuccessfullySaved
         {
             get { return _Sortir; }
             protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }

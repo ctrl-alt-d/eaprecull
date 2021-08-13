@@ -22,7 +22,7 @@ namespace UI.ER.AvaloniaUI.Pages
 
         private void SortirSiCal(Centre? obj)
         {
-            if (ViewModel!.Sortir)
+            if (ViewModel!.SuccessfullySaved)
                 Close(obj);
         }
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
