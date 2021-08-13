@@ -13,8 +13,10 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        public CentreRowViewModel(dtoo.Centre centreDto)
+        public CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup)
         {
+
+            ModeLookup = modeLookup;
             _Etiqueta = centreDto.Etiqueta;
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
@@ -36,6 +38,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
+        public bool ModeLookup {get; }
         public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
 
         private string _Etiqueta = string.Empty;

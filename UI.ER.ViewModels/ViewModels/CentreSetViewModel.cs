@@ -17,8 +17,12 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreSetViewModel : ViewModelBase
     {
         protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
-        public CentreSetViewModel()
+        public bool ModeLookup {get;}
+        public CentreSetViewModel(bool? modeLookup = false)
         {
+
+            ModeLookup = modeLookup ?? false;
+
             // Filtre
             this
                 .WhenAnyValue(x => x.NomesActius)
@@ -36,7 +40,7 @@ namespace UI.ER.ViewModels.ViewModels
                 var data = await ShowDialog.Handle(update);
 
                 if (data != null) {
-                    var item = new CentreRowViewModel(data);
+                    var item = new CentreRowViewModel(data, ModeLookup);
                     MyItems.Insert(0, item);
                 }
             });
@@ -76,7 +80,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new CentreRowViewModel(x));
+                .Select(x => new CentreRowViewModel(x, ModeLookup));
             MyItems.AddRange(newItems);
         }
 

@@ -13,8 +13,7 @@ namespace UI.ER.AvaloniaUI.Pages {
     public class CentreSetWindow : ReactiveWindow<CentreSetViewModel> {
         public CentreSetWindow() {
             InitializeComponent();
-            
-            DataContext = new CentreSetViewModel();
+                        
             this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(CreateShowDialogAsync)));
         }
         

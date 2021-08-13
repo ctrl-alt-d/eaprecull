@@ -42,7 +42,10 @@ namespace UI.ER.AvaloniaUI.Pages
         //
         private async Task CentreLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
-            var dialog = new CentreSetWindow();
+            var dialog = new CentreSetWindow()
+            {
+                DataContext = new CentreSetViewModel(modeLookup: true)
+            };
 
             var window = (Window)this.VisualRoot;
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);

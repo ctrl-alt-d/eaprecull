@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Material.Styles;
 using UI.ER.AvaloniaUI.Pages;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Views
 {
@@ -73,7 +74,11 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new CentreSetWindow();
+            var w = new CentreSetWindow()
+            {
+                DataContext = new CentreSetViewModel()
+            };
+
             w.ShowDialog(this);
         }
 
