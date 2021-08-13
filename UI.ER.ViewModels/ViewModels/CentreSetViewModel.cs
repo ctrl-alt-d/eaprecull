@@ -27,11 +27,12 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _SelectedItem, value);
         }
 
-        public Action<IIdEtiquetaDescripcio> ModeLookup {get;}
-        public CentreSetViewModel(bool? modeLookup = false)
+        public Action<IIdEtiquetaDescripcio>? ModeLookup {get;}
+        public CentreSetViewModel(bool? modeLookup = null)
         {
 
-            ModeLookup = (i) => this.SelectedItem = i;
+            if (modeLookup ?? false)
+                ModeLookup = (i) => this.SelectedItem = i;
 
             // Filtre
             this

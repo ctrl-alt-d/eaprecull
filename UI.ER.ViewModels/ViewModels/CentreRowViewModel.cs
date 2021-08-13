@@ -15,7 +15,7 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected dtoo.Centre Model {get;}
-        public CentreRowViewModel(dtoo.Centre centreDto, Action<IIdEtiquetaDescripcio> modeLookup)
+        public CentreRowViewModel(dtoo.Centre centreDto, Action<IIdEtiquetaDescripcio>? modeLookup = null)
         {
 
             ModeLookup = modeLookup;
@@ -42,7 +42,8 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
-        public Action<IIdEtiquetaDescripcio> ModeLookup {get; }
+        public Action<IIdEtiquetaDescripcio>? ModeLookup {get; }
+        public bool ModeLookupActivat => ModeLookup != null;
         public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
 
         private string _Etiqueta = string.Empty;
@@ -100,7 +101,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> Seleccionar { get; } 
         protected void RunSeleccionar()
         {
-            ModeLookup(Model);
+            ModeLookup?.Invoke(Model);
         }
 
 
