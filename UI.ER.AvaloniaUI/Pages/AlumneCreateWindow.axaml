@@ -18,38 +18,6 @@
 
         <StackPanel.Styles>
 
-            <Style Selector="material|FloatingButton[IsExtended=true]">
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Template>
-                            <StackPanel Orientation="Horizontal" Height="24">
-                                <Viewbox Stretch="Fill"                                            
-                                         VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="FolderDownload" Width="24" Height="24" />
-                                </Viewbox>
-                                <TextBlock Margin="8,0" Text="Desar els canvis" Classes="Subtitle2"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Template>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <Style Selector="Button.LookupCss">
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Template>
-                            <StackPanel Orientation="Horizontal" Height="24">
-                                <Viewbox Stretch="Fill"                                            
-                                         VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="CardSearchOutline" Width="24" Height="24" />
-                                </Viewbox>
-                            </StackPanel>
-                        </Template>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
         </StackPanel.Styles>                
 
 
@@ -65,13 +33,14 @@
 
         <StackPanel Orientation="Horizontal">
             <TextBox Text="{Binding CentreTxt}"
+                     Width="250"
                      UseFloatingWatermark="True"
-                     Classes="Filled"
+                     Classes="Classic Textbox"
                      IsReadOnly="true"
-                     wpf:TextFieldAssist.Label="Cognoms" />
-            <Button Width="50"
-                    Command="{Binding CentreLookup}"
-                    Classes="LookupCss"  />
+                     Focusable="false"
+                     wpf:TextFieldAssist.Label="Centre actual" />
+            <Button Command="{Binding CentreLookup}"
+                    Classes="LookupCss Flat"  />
         </StackPanel>
 
         <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
@@ -82,7 +51,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <material:FloatingButton Classes="" IsExtended="True" Command="{Binding SubmitCommand}"/>
+        <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}"/>
 
     </StackPanel>
 

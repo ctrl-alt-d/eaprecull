@@ -17,26 +17,6 @@
                 >
 
         <StackPanel.Styles>
-
-            <Style Selector="material|FloatingButton[IsExtended=true]">
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Template>
-                            <StackPanel Orientation="Horizontal" Height="24">
-                                <Viewbox Stretch="Fill"                                            
-                                         VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="FolderDownload" Width="24" Height="24" />
-                                </Viewbox>
-                                <TextBlock Margin="8,0" Text="Desar els canvis" Classes="Subtitle2"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Template>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            
-
         </StackPanel.Styles>                
 
         <TextBox Text="{Binding Nom}"
@@ -57,7 +37,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <material:FloatingButton Classes="" IsExtended="True" Command="{Binding SubmitCommand}"/>
+        <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}"/>
 
     </StackPanel>
 

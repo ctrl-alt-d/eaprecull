@@ -1,5 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              x:Class="UI.ER.AvaloniaUI.App">
     <Application.Resources>
@@ -20,5 +22,46 @@
                     </Animation>
                 </Style.Animations>
             </Style>      
+
+            <Style Selector="Button.LookupCss">
+                <Setter Property="ToolTip.Tip" Value="Obrir pantalla de selecció"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <avalonia:MaterialIcon Kind="CardSearchOutline" VerticalAlignment="Center" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style Selector="Button.LookupFinishedCss">
+                <Setter Property="ToolTip.Tip" Value="Seleccionar-ne aquest"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <avalonia:MaterialIcon Kind="Check" VerticalAlignment="Center" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style Selector="material|FloatingButton.Desar[IsExtended=true]">
+                <Setter Property="ToolTip.Tip" Value="Desar els canvis"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <StackPanel Orientation="Horizontal" Height="24">
+                                <Viewbox Stretch="Fill"                                            
+                                         VerticalAlignment="Stretch">
+                                    <avalonia:MaterialIcon Kind="FolderDownload" Width="24" Height="24" />
+                                </Viewbox>
+                                <TextBlock Margin="8,0" Text="Desar els canvis" Classes="Subtitle2"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
     </Application.Styles>
 </Application>
