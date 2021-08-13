@@ -24,7 +24,7 @@ namespace DTO.o.DTOs
             string descripcio)
         {
             Id = id;
-            Non = non;
+            Nom = non;
             Cognoms = cognoms;
             DataNaixement = dataNaixement;
             CentreActual = centreActual;
@@ -40,7 +40,7 @@ namespace DTO.o.DTOs
         }
 
         public int Id { get; set; }
-        public string Non { get; }= string.Empty;
+        public string Nom { get; }= string.Empty;
         public string Cognoms { get; }= string.Empty;
         public DateTime? DataNaixement { get; set; }
         public IIdEtiquetaDescripcio? CentreActual { get; set; }

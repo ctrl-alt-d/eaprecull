@@ -11,12 +11,14 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CentreCreateWindow : ReactiveWindow<CentreCreateViewModel>
+    public class AlumneCreateWindow : ReactiveWindow<AlumneCreateViewModel>
     { 
-        public OperationResult<dtoo.Centre> Result { get; set; } = default!;
-        public CentreCreateWindow()
+        public OperationResult<dtoo.Alumne> Result { get; set; } = default!;
+        public AlumneCreateWindow()
         {
+            this.DataContext = new AlumneCreateViewModel(); // ToDo: issue20. Això anirà al dataset.
             this.InitializeComponent();
+            
             this.WhenActivated(d =>
                 d(
                     ViewModel
@@ -25,9 +27,8 @@ namespace UI.ER.AvaloniaUI.Pages
                     .Where(s => s.saved)
                     .Select(s => s.obj)
                     .Subscribe(Close)
-                ));        
+                ));
         }
-
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }

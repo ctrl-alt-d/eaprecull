@@ -71,9 +71,15 @@ namespace UI.ER.AvaloniaUI.Views
             SnackbarHost.Post("Welcome to demo of Material.Avalonia!");
         }
 
-        private void HelloButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
+        private void Centre_OnClick(object? sender, RoutedEventArgs e)
         {
             var w = new CentreSetWindow();
+            w.ShowDialog(this);
+        }
+
+        private void Alumne_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var w = new AlumneCreateWindow(); // <--- caldrà substituir per ALumneSet. ToDo issue20
             w.ShowDialog(this);
         }
 
