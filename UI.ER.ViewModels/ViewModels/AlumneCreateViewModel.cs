@@ -24,10 +24,10 @@ namespace UI.ER.ViewModels.ViewModels
             SubmitCommand = ReactiveCommand.CreateFromTask(() => CreateData());
 
             // --- configura lookup --
-            ShowCentreLookup = new Interaction<bool, IIdEtiquetaDescripcio?>();
+            ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             CentreLookup = ReactiveCommand.CreateFromTask(async () =>
             {
-                var data = await ShowCentreLookup.Handle(true);
+                var data = await ShowCentreLookup.Handle(Unit.Default);
                 if (data != null)
                 {
                     CentreTxt = data.Etiqueta;
@@ -126,7 +126,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // ----------------------
         public ICommand CentreLookup { get; }
-        public Interaction<bool, IIdEtiquetaDescripcio?> ShowCentreLookup { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCentreLookup { get; }
 
 
 

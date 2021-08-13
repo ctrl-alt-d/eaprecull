@@ -40,7 +40,7 @@ namespace UI.ER.AvaloniaUI.Pages
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
         //
-        private async Task CentreLookupShowDialogAsync(InteractionContext<bool, IIdEtiquetaDescripcio?> interaction)
+        private async Task CentreLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
             var dialog = new CentreSetWindow();
 
