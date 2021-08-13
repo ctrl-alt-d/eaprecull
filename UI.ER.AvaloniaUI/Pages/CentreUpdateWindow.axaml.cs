@@ -12,18 +12,21 @@ using DTO.o.DTOs;
 namespace UI.ER.AvaloniaUI.Pages
 {
     public class CentreUpdateWindow : ReactiveWindow<CentreUpdateViewModel>
-    { 
+    {
         public OperationResult<dtoo.Centre> Result { get; set; } = default!;
         public CentreUpdateWindow()
         {
             this.InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.SubmitCommand.Subscribe(CloseIfSaved)));
-        }
-
-        private void CloseIfSaved(Centre? obj)
-        {
-            if (ViewModel!.SuccessfullySaved)
-                Close(obj);
+            // https://stackoverflow.com/questions/68747035/subscribe-to-close-but-close-only-if-item-was-saved
+            this.WhenActivated(d =>
+                d(
+                    ViewModel
+                    .WhenAnyValue(x => x.SuccessfullySaved)
+                    .CombineLatest(ViewModel!.SubmitCommand, (saved, obj) => (saved, obj))
+                    .Where(s => s.saved)
+                    .Select(s => s.obj)
+                    .Subscribe(Close)
+                ));
         }
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
