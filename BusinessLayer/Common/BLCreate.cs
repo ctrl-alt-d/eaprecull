@@ -35,7 +35,7 @@ namespace BusinessLayer.Common
 
         protected abstract Task PreInitialize(TParm parm );
         protected abstract Task<TModel> InitializeModel(TParm parm );
-        protected abstract Task PostInitialize(TModel model, TParm parm );
+        protected abstract Task PostAdd(TModel model, TParm parm );
         protected abstract TDTOo ToDto(TModel model );
 
         public virtual async Task<OperationResult<TDTOo>> Create(
@@ -50,7 +50,7 @@ namespace BusinessLayer.Common
                 var model = await InitializeModel(parm);
                 GetContext().Add(model);                
                 //
-                await PostInitialize(model, parm);
+                await PostAdd(model, parm);
                 //
                 await GetContext().SaveChangesAsync();
                 //

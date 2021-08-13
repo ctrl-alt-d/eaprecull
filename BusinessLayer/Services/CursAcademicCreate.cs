@@ -37,7 +37,7 @@ namespace BusinessLayer.Services
                 }
             );
 
-        protected override async Task PostInitialize(CursAcademic model, CursAcademicCreateParms parm)
+        protected override async Task PostAdd(CursAcademic model, CursAcademicCreateParms parm)
         {
             // Només pot haver un curs actual.
             if (!parm.EsActiu)

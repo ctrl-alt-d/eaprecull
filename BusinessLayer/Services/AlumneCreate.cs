@@ -41,7 +41,7 @@ namespace BusinessLayer.Services
                 ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE,
             };
 
-        protected override Task PostInitialize(Alumne model, AlumneCreateParms parm)
+        protected override Task PostAdd(Alumne model, AlumneCreateParms parm)
             =>
             Task
             .CompletedTask;

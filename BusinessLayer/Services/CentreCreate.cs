@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using DataModels.Models;
 using System.Threading.Tasks;
+using BusinessLayer.Abstract.Exceptions;
 
 namespace BusinessLayer.Services
 {
@@ -20,10 +21,21 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Task PreInitialize(CentreCreateParms parm) 
+        protected override Task PreInitialize(CentreCreateParms parm)
             =>
-            Task
-            .CompletedTask;
+            new RuleChecker()
+            .AddCheck( () => RuleValorsEstanInformats(parm) ,"No es pot deixar el Nom en blanc" )
+            .AddCheck( () => RuleNoEstaRepetit(parm), "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            .Check();
+
+        protected virtual bool RuleValorsEstanInformats(CentreCreateParms parm)
+            =>
+            string.IsNullOrEmpty(parm.Nom);
+
+        protected virtual Task<bool> RuleNoEstaRepetit(CentreCreateParms parm)
+            =>
+            GetCollection()
+            .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
 
         protected override Task<models.Centre> InitializeModel(CentreCreateParms parm)
             =>
@@ -37,7 +49,7 @@ namespace BusinessLayer.Services
                 }
             );
 
-        protected override Task PostInitialize(Centre model, CentreCreateParms parm)
+        protected override Task PostAdd(Centre model, CentreCreateParms parm)
             =>
             Task
             .CompletedTask;
