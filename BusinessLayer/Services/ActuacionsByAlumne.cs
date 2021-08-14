@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using DTO.i.DTOs;
 using System;
+using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
@@ -26,9 +27,13 @@ namespace BusinessLayer.Services
             GetAllModels()
             .Where(x => x.Alumne.Id == request.IdAlumne);
 
-        protected override Func<models.Actuacio, dtoo.Actuacio> ToDto
+        protected override Expression<Func<models.Actuacio, dtoo.Actuacio>> ToDto
             =>
-            project.Actuacio.ToDto;
+            x
+            =>
+            project
+            .Actuacio
+            .ToDto(x);
 
     }
 }

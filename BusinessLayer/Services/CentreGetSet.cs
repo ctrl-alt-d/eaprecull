@@ -9,6 +9,7 @@ using models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using System;
+using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
@@ -26,10 +27,12 @@ namespace BusinessLayer.Services
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
             .OrderBy(c => c.Nom);
 
-        protected override Func<models.Centre, dtoo.Centre> ToDto
+        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto
+            =>
+            x
             =>
             project
             .Centre
-            .ToDto;
+            .ToDto(x);
     }
 }

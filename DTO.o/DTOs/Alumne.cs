@@ -5,7 +5,7 @@ using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
 {    
-    public class Alumne : IEtiquetaDescripcio, IActiu, IDTOo
+    public class Alumne : IIdEtiquetaDescripcio, IActiu, IDTOo
     {
         public Alumne(
             int id,

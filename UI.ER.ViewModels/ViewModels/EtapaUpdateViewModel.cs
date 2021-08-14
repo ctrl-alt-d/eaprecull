@@ -13,12 +13,12 @@ using System.Linq;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class CentreUpdateViewModel : ViewModelBase, IId
+    public class EtapaUpdateViewModel : ViewModelBase, IId
     {
 
-        protected virtual ICentreUpdate BLUpdate() => SuperContext.GetBLOperation<ICentreUpdate>();
-        protected virtual ICentreGetSet BLGet() => SuperContext.GetBLOperation<ICentreGetSet>();
-        public CentreUpdateViewModel(int id)
+        protected virtual IEtapaUpdate BLUpdate() => SuperContext.GetBLOperation<IEtapaUpdate>();
+        protected virtual IEtapaGetSet BLGet() => SuperContext.GetBLOperation<IEtapaGetSet>();
+        public EtapaUpdateViewModel(int id)
         {
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadData);
@@ -27,7 +27,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
         public int Id { get; }
-        public string IdTxt => $"Centre #{Id}";
+        public string IdTxt => $"Etapa #{Id}";
 
         public string _Codi = string.Empty;
         public string Codi
@@ -48,6 +48,13 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _Nom;
             set => this.RaiseAndSetIfChanged(ref _Nom, value);
+        }
+
+        public bool _SonEstudisObligatoris;
+        public bool SonEstudisObligatoris
+        {
+            get => _SonEstudisObligatoris;
+            set => this.RaiseAndSetIfChanged(ref _SonEstudisObligatoris, value);
         }
 
         private bool _EsActiu;
@@ -71,22 +78,23 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(dto.Data);
         }
 
-        private void DTO2ModelView(dtoo.Centre? data)
+        private void DTO2ModelView(dtoo.Etapa? data)
         {
             if (data==null) return;
 
             Codi = data.Codi;
             Nom = data.Nom;
+            SonEstudisObligatoris = data.SonEstudisObligatoris;
             EsActiu = data.EsActiu;
         }
 
-        public virtual async Task<dtoo.Centre?> UpdateData()
+        public virtual async Task<dtoo.Etapa?> UpdateData()
         {
             // Clear brokenRules
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CentreUpdateParms(Id, Codi, Nom, EsActiu);
+            var parms = new dtoi.EtapaUpdateParms(Id, Codi, Nom, SonEstudisObligatoris, EsActiu);
 
             // cridar backend
             using var bl = BLUpdate();
@@ -106,7 +114,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public RangeObservableCollection<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, dtoo.Etapa?> SubmitCommand { get; }
 
         private bool _Sortir;
         public bool SuccessfullySaved

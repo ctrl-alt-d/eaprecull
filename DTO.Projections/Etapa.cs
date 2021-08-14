@@ -12,6 +12,7 @@ namespace DTO.Projections
                 model.Id,
                 model.Codi,
                 model.Nom,
+                model.SonEstudisObligatoris,
                 model.EsActiu,
                 model.Etiqueta,
                 model.Descripcio
