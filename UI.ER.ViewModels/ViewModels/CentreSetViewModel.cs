@@ -34,6 +34,12 @@ namespace UI.ER.ViewModels.ViewModels
             if (modeLookup ?? false)
                 ModeLookup = (i) => this.SelectedItem = i;
 
+            SourceItems
+                .ToObservableChangeSet(t=>t.Id)
+                // .Filter(x=> !NomesActius || x.EsActiu == NomesActius)
+                .Bind(out _MyItems)
+                .Subscribe();
+
             // Filtre
             this
                 .WhenAnyValue(x => x.NomesActius)
@@ -52,19 +58,23 @@ namespace UI.ER.ViewModels.ViewModels
 
                 if (data != null) {
                     var item = new CentreRowViewModel(data, ModeLookup);
-                    MyItems.Insert(0, item);
+                    SourceItems.Insert(0, item);
                 }
             });
 
+
         }
-        public RangeObservableCollection<CentreRowViewModel> MyItems { get; } = new();
+        public ObservableCollectionExtended<CentreRowViewModel> SourceItems { get; } = new();
+        private readonly ReadOnlyObservableCollection<CentreRowViewModel> _MyItems;
+        public ReadOnlyObservableCollection<CentreRowViewModel> MyItems => _MyItems;
+
         public RangeObservableCollection<string> BrokenRules { get; } = new();
 
         protected virtual async void LoadCentres(bool nomesActius)
         {
             // Nota: aquesta tasca triga molt, la UX és pobra 
             // https://stackoverflow.com/questions/68740471/update-ui-inside-a-suscribed-task.
-            MyItems.ClearSilently();
+            SourceItems.Clear();
             await OmplirAmbElsNousValors(nomesActius);
         }
 
@@ -92,7 +102,7 @@ namespace UI.ER.ViewModels.ViewModels
                 dto
                 .Data
                 .Select(x => new CentreRowViewModel(x, ModeLookup));
-            MyItems.AddRange(newItems);
+            SourceItems.AddRange(newItems);
         }
 
         // Filtre

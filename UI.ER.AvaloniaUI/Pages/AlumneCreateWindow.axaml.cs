@@ -37,7 +37,7 @@ namespace UI.ER.AvaloniaUI.Pages
             });
         }
 
-        private void CloseIfSaved(Centre? obj)
+        private void CloseIfSaved(Alumne? obj)
         {
             if (ViewModel!.SuccessfullySaved)
                 Close(obj);
