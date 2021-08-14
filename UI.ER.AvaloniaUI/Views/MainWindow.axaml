@@ -88,6 +88,12 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
 
+                                <MenuItem Header="Etapas" Click="Etapa_OnClick">
+                                    <MenuItem.Icon>
+                                        <avalonia:MaterialIcon Kind="StairsUp" Width="24" Height="24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
                                 <MenuItem Header="Alumnes" Click="Alumne_OnClick">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="School" Width="24" Height="24" />

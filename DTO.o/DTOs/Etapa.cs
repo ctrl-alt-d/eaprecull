@@ -5,13 +5,14 @@ using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
 {
-    public class Etapa: IEtiquetaDescripcio, IActiu, IDTOo
+    public class Etapa: IIdEtiquetaDescripcio, IActiu, IDTOo
     {
-        public Etapa(int id, string codi, string nom, bool esActiu, string etiqueta, string descripcio)
+        public Etapa(int id, string codi, string nom, bool sonEstudisObligatoris, bool esActiu, string etiqueta, string descripcio)
         {
             Id = id;
             Codi = codi;
             Nom = nom;
+            SonEstudisObligatoris = sonEstudisObligatoris;
             EsActiu = esActiu;
             Etiqueta = etiqueta;
             Descripcio = descripcio;
@@ -20,6 +21,8 @@ namespace DTO.o.DTOs
         public int Id {get;  }
         public string Codi {get;  } = string.Empty; // Ex: BAT, ESO
         public string Nom {get;  }  = string.Empty; // Ex: Batxillerat
+
+        public bool SonEstudisObligatoris {get; }
 
         // IActiu
         public bool EsActiu {get; }

@@ -8,6 +8,7 @@ using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
@@ -32,19 +33,31 @@ namespace BusinessLayer.Common
 
         protected abstract IQueryable<TModel> GetModels(TParm request);
 
-        protected abstract Func<TModel, TDTOo> ToDto {get;}
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto { get; }
 
         public virtual async Task<OperationResults<TDTOo>> FromPredicate(
             TParm request
             )
         {
-            var data = 
+            var data =
                 await
                 GetModels(request)
-                .Select(x => ToDto(x))
+                .Select(ToDto)
                 .ToListAsync();
 
             return new OperationResults<TDTOo>(data);
+        }
+
+        public virtual async Task<OperationResult<TDTOo>> FromId(int id)
+        {
+            var data =
+                await
+                GetAllModels()
+                .Where(x=>x.Id == id)
+                .Select(ToDto)
+                .FirstOrDefaultAsync();
+
+            return new OperationResult<TDTOo>(data);
         }
 
     }

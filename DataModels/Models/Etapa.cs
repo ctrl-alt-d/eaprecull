@@ -10,6 +10,7 @@ namespace DataModels.Models
         public int Id {get; set; }
         public string Codi {get; set; } = string.Empty; // Ex: BAT, ESO
         public string Nom {get; set; }  = string.Empty; // Ex: Batxillerat
+        public bool SonEstudisObligatoris {get; set; } 
 
         // IActiu
         public bool EsActiu {get; set;}

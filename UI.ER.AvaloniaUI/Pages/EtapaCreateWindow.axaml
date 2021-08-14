@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        x:Class="UI.ER.AvaloniaUI.Pages.EtapaCreateWindow"
+        HorizontalContentAlignment="Stretch"
+        Title="Alta nova Etapa"        
+        Width="800" Height="500" MinWidth="720"
+        WindowStartupLocation="CenterOwner"
+        >
+
+
+    <StackPanel Orientation="Vertical"
+                Margin="16, 16"
+                >
+
+        <StackPanel.Styles>
+        </StackPanel.Styles>                
+
+        <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
+
+        <TextBox Text="{Binding Nom}"
+             UseFloatingWatermark="True"
+             Classes="Filled"
+             wpf:TextFieldAssist.Label="Nom" />
+
+        <TextBox Text="{Binding Codi}"
+             UseFloatingWatermark="True"
+             Classes="Filled"
+             wpf:TextFieldAssist.Label="Codi" />
+
+        <CheckBox Content="Són estudis obligatòris?" IsChecked="{Binding SonEstudisObligatoris}"/>
+
+        <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Classes="Error" Text="{Binding}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <material:FloatingButton Classes="Desar"  IsExtended="True" Command="{Binding SubmitCommand}"/>
+
+    </StackPanel>
+
+</Window>

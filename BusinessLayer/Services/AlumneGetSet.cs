@@ -11,6 +11,7 @@ using DataLayer;
 using System;
 using DataModels.Models;
 using DTO.i.DTOs;
+using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
@@ -28,11 +29,12 @@ namespace BusinessLayer.Services
             .Include(x=>x.CentreActual)
             .OrderBy(c=>c.Nom);
 
-        protected override Func<models.Alumne, dtoo.Alumne> ToDto
-            =>
+        protected override Expression<Func<models.Alumne, dtoo.Alumne>> ToDto
+            => 
+            (x) =>
             project
             .Alumne
-            .ToDto;
+            .ToDto(x);
 
     }
 }

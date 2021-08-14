@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICentreGet: IGet<dtoo.Centre>
+    public interface IEtapaCreate: ICreate<dtoo.Etapa, parms.EtapaCreateParms>
     {
     }
 }
