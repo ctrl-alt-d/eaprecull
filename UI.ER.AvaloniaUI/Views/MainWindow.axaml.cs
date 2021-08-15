@@ -102,6 +102,16 @@ namespace UI.ER.AvaloniaUI.Views
             w.ShowDialog(this);
         }
 
+        private void TipusActuacio_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var w = new TipusActuacioSetWindow()
+            {
+                DataContext = new TipusActuacioSetViewModel()
+            };
+
+            w.ShowDialog(this);
+        }
+
         private void Alumne_OnClick(object? sender, RoutedEventArgs e)
         {
             var w = new AlumneCreateWindow(); // <--- caldrà substituir per ALumneSet. ToDo issue20
