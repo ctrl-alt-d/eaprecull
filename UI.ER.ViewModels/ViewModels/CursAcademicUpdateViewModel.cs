@@ -18,7 +18,7 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected virtual ICursAcademicUpdate BLUpdate() => SuperContext.GetBLOperation<ICursAcademicUpdate>();
-        protected virtual ICursAcademicGetSet BLGet() => SuperContext.GetBLOperation<ICursAcademicGetSet>();
+        protected virtual ICursAcademicSet BLGet() => SuperContext.GetBLOperation<ICursAcademicSet>();
         public CursAcademicUpdateViewModel(int id)
         {
             Id = id;

@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
 
     public class CursAcademicSetViewModel : ViewModelBase
     {
-        protected virtual ICursAcademicGetSet BLCursAcademics() => SuperContext.GetBLOperation<ICursAcademicGetSet>();
+        protected virtual ICursAcademicSet BLCursAcademics() => SuperContext.GetBLOperation<ICursAcademicSet>();
         private IIdEtiquetaDescripcio? _SelectedItem;
         public IIdEtiquetaDescripcio? SelectedItem
         {

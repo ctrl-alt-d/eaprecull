@@ -41,8 +41,8 @@ namespace CreateDemoData
         {
             Console.WriteLine("Creant Centres!");
 
-            var getset = GetBLOperation<ICentreGetSet>();
-            var nhiha = (await getset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
+            var blset = GetBLOperation<ICentreSet>();
+            var nhiha = (await blset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {
@@ -60,8 +60,8 @@ namespace CreateDemoData
         {
             Console.WriteLine("Creant Cursos Acadèmics!");
 
-            var getset = GetBLOperation<ICursAcademicGetSet>();
-            var nhiha = (await getset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
+            var blset = GetBLOperation<ICursAcademicSet>();
+            var nhiha = (await blset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {

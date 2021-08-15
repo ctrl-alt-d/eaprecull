@@ -15,7 +15,7 @@ using System.Linq.Expressions;
 namespace BusinessLayer.Services
 {
     public class ActuacionsByAlumne :
-        BLGetSet<models.Actuacio, parms.GetActuacioByAlumneParms, dtoo.Actuacio>,
+        BLSet<models.Actuacio, parms.GetActuacioByAlumneParms, dtoo.Actuacio>,
         IActuacioSetByAlumne
     {
         public ActuacionsByAlumne(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)

@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
 
     public class EtapaSetViewModel : ViewModelBase
     {
-        protected virtual IEtapaGetSet BLEtapas() => SuperContext.GetBLOperation<IEtapaGetSet>();
+        protected virtual IEtapaSet BLEtapas() => SuperContext.GetBLOperation<IEtapaSet>();
         private IIdEtiquetaDescripcio? _SelectedItem;
         public IIdEtiquetaDescripcio? SelectedItem
         {

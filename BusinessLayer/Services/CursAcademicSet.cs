@@ -13,24 +13,24 @@ using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
-    public class EtapaGetSet :
-        BLGetSet<models.Etapa, parms.EsActiuParms, dtoo.Etapa>,
-        IEtapaGetSet
+    public class CursAcademicSet :
+        BLSet<models.CursAcademic, parms.EsActiuParms, dtoo.CursAcademic>,
+        ICursAcademicSet
     {
-        public EtapaGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public CursAcademicSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        protected override IQueryable<models.Etapa> GetModels(parms.EsActiuParms request)
+        protected override IQueryable<models.CursAcademic> GetModels(parms.EsActiuParms request)
             =>
             GetAllModels()
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
             .OrderBy(c => c.Nom);
 
-        protected override Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
             =>
             project
-            .Etapa
+            .CursAcademic
             .ToDto;
     }
 }
