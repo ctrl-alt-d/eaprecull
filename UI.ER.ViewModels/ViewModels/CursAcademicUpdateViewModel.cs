@@ -10,6 +10,7 @@ using dtoi = DTO.i.DTOs;
 using System.ComponentModel;
 using UI.ER.ViewModels.Common;
 using System.Linq;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -29,18 +30,11 @@ namespace UI.ER.ViewModels.ViewModels
         public int Id { get; }
         public string IdTxt => $"CursAcademic #{Id}";
 
-        public int? _AnyInici;
-        public int? AnyInici
+        public double _AnyInici;
+        public double AnyInici
         {
             get => _AnyInici;
             set => this.RaiseAndSetIfChanged(ref _AnyInici, value);
-        }
-
-        public bool _SonEstudisObligatoris;
-        public bool SonEstudisObligatoris
-        {
-            get => _SonEstudisObligatoris;
-            set => this.RaiseAndSetIfChanged(ref _SonEstudisObligatoris, value);
         }
 
         private bool _EsActiu;
@@ -78,7 +72,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CursAcademicUpdateParms(Id, AnyInici ?? 0, EsActiu);
+            var parms = new dtoi.CursAcademicUpdateParms(Id, Convert.ToInt32(AnyInici), EsActiu);
 
             // cridar backend
             using var bl = BLUpdate();

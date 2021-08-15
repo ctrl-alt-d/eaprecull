@@ -34,6 +34,13 @@ namespace UI.ER.ViewModels.ViewModels
             if (modeLookup ?? false)
                 ModeLookup = (i) => this.SelectedItem = i;
 
+            SourceItems
+                .ToObservableChangeSet(t=>t.Id)
+                // .Filter(x=> !NomesActius || x.EsActiu == NomesActius)
+                .Bind(out _MyItems)
+                .Subscribe();
+
+
             // Filtre
             this
                 .WhenAnyValue(x => x.NomesActius)
@@ -51,14 +58,17 @@ namespace UI.ER.ViewModels.ViewModels
                 var data = await ShowDialog.Handle(update);
 
                 if (data != null) {
-                    var item = new CursAcademicRowViewModel(data, ModeLookup);
-                    MyItems.Insert(0, item);
+                    var item = new CursAcademicRowViewModel(data, SourceItems, ModeLookup);
+                    SourceItems.Insert(0, item);
                 }
             });
 
 
         }
-        public RangeObservableCollection<CursAcademicRowViewModel> MyItems = new();
+        public ObservableCollectionExtended<CursAcademicRowViewModel> SourceItems { get; } = new();
+        private readonly ReadOnlyObservableCollection<CursAcademicRowViewModel> _MyItems;
+        public ReadOnlyObservableCollection<CursAcademicRowViewModel> MyItems => _MyItems;
+
 
         public RangeObservableCollection<string> BrokenRules { get; } = new();
 
@@ -66,7 +76,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             // Nota: aquesta tasca triga molt, la UX és pobra 
             // https://stackoverflow.com/questions/68740471/update-ui-inside-a-suscribed-task.
-            MyItems.Clear();
+            SourceItems.Clear();
             await OmplirAmbElsNousValors(nomesActius);
         }
 
@@ -93,8 +103,8 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new CursAcademicRowViewModel(x, ModeLookup));
-            MyItems.AddRange(newItems);
+                .Select(x => new CursAcademicRowViewModel(x, SourceItems, ModeLookup));
+            SourceItems.AddRange(newItems);
         }
 
         // Filtre

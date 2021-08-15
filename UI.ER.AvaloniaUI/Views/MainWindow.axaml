@@ -94,6 +94,12 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
 
+                                <MenuItem Header="Cursos" Click="CursAcademic_OnClick">
+                                    <MenuItem.Icon>
+                                        <avalonia:MaterialIcon Kind="CalendarCheck" Width="24" Height="24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
                                 <MenuItem Header="Alumnes" Click="Alumne_OnClick">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="School" Width="24" Height="24" />
@@ -127,7 +133,6 @@
                                 </Style>
                             </Carousel.Styles>
 
-                            <pages:CursAcademicGetSetUserCtrl />
                             
                         </Carousel>
                     </Border>

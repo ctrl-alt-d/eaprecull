@@ -10,6 +10,7 @@ using dtoi = DTO.i.DTOs;
 using System.ComponentModel;
 using UI.ER.ViewModels.Common;
 using System.Linq;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -22,8 +23,8 @@ namespace UI.ER.ViewModels.ViewModels
             SubmitCommand = ReactiveCommand.CreateFromTask(() => CreateData());
         }
 
-        public int? _AnyInici;
-        public int? AnyInici
+        public double _AnyInici;
+        public double AnyInici
         {
             get => _AnyInici;
             set => this.RaiseAndSetIfChanged(ref _AnyInici, value);
@@ -41,7 +42,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CursAcademicCreateParms(AnyInici ?? 0, true);
+            var parms = new dtoi.CursAcademicCreateParms( Convert.ToInt32(AnyInici), true);
 
             // cridar backend
             using var bl = BLCreate();

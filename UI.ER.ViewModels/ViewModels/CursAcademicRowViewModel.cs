@@ -8,6 +8,8 @@ using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using System;
+using DynamicData.Binding;
+using System.Linq;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -15,10 +17,15 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected dtoo.CursAcademic Model {get;}
-        public CursAcademicRowViewModel(dtoo.CursAcademic CursAcademicDto, Action<IIdEtiquetaDescripcio>? modeLookup = null)
+        protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos {get;}
+        public CursAcademicRowViewModel(
+            dtoo.CursAcademic CursAcademicDto,
+            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
+            Action<IIdEtiquetaDescripcio>? modeLookup = null)
         {
 
             ModeLookup = modeLookup;
+            TotsElsCursos = totsElsCursos;
             Model = CursAcademicDto;
             _Etiqueta = CursAcademicDto.Etiqueta;
             _Descripcio = CursAcademicDto.Descripcio;
@@ -83,6 +90,11 @@ namespace UI.ER.ViewModels.ViewModels
             var data = (await bl.Toggle(Id)).Data!;
 
             DTO2ModelView(data);
+
+            TotsElsCursos
+                .Where(x=>x.Id != data.Id)
+                .ToList()
+                .ForEach(x=>x.EsActiu = false);
         }
 
         private void DTO2ModelView(dtoo.CursAcademic data)

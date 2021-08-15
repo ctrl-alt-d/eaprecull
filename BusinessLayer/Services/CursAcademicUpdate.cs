@@ -57,6 +57,7 @@ namespace BusinessLayer.Services
         {
             model.AnyInici = parm.AnyInici;
             model.EsActiu = parm.EsActiu;
+            model.Nom = $"{parm.AnyInici}-{parm.AnyInici+1}";
             return Task.CompletedTask;
         }
     }
