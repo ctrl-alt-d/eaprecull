@@ -1,14 +1,16 @@
 using System.Threading.Tasks;
 using CommonInterfaces;
+using DTO.i;
 using DTO.o.Interfaces;
 
 namespace BusinessLayer.Abstract.Generic
 {
-    public interface IGet<TDTOo>
+    public interface ISet<TParm, TDTOo>
         :IBLOperation
-            where TDTOo: IDTOo, IEtiquetaDescripcio
-        
+            where TDTOo : IDTOo, IEtiquetaDescripcio
+            where TParm : IDtoi
     {
+        Task<OperationResults<TDTOo>> FromPredicate(TParm request);
         Task<OperationResult<TDTOo>> FromId(int id);
     }
 }

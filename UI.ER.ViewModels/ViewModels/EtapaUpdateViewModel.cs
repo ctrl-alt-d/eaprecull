@@ -17,7 +17,7 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected virtual IEtapaUpdate BLUpdate() => SuperContext.GetBLOperation<IEtapaUpdate>();
-        protected virtual IEtapaGetSet BLGet() => SuperContext.GetBLOperation<IEtapaGetSet>();
+        protected virtual IEtapaSet BLGet() => SuperContext.GetBLOperation<IEtapaSet>();
         public EtapaUpdateViewModel(int id)
         {
             Id = id;

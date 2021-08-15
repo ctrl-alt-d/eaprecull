@@ -15,11 +15,11 @@ using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
-    public class AlumneGetSet :
-        BLGetSet<models.Alumne, parms.EmptyParms, dtoo.Alumne>,
-        IAlumneGetSet
+    public class AlumneSet :
+        BLSet<models.Alumne, parms.EmptyParms, dtoo.Alumne>,
+        IAlumneSet
     {
-        public AlumneGetSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public AlumneSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 

@@ -12,25 +12,25 @@ namespace BusinessLayer.DI
             // Services (ToDo: per comprensió)
 
             // centres
-            services.AddTransient<ICentreGetSet, CentreGetSet>();
+            services.AddTransient<ICentreSet, CentreSet>();
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<ICentreUpdate, CentreUpdate>();
             services.AddTransient<ICentreActivaDesactiva, CentreActivaDesactiva>();
 
             // Etapas
-            services.AddTransient<IEtapaGetSet, EtapaGetSet>();
+            services.AddTransient<IEtapaSet, EtapaSet>();
             services.AddTransient<IEtapaCreate, EtapaCreate>();
             services.AddTransient<IEtapaUpdate, EtapaUpdate>();
             services.AddTransient<IEtapaActivaDesactiva, EtapaActivaDesactiva>();
    
             // alumnes
-            services.AddTransient<IAlumneGetSet, AlumneGetSet>();
+            services.AddTransient<IAlumneSet, AlumneSet>();
             services.AddTransient<IAlumneCreate, AlumneCreate>();
 
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
             services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
-            services.AddTransient<ICursAcademicGetSet, CursAcademicGetSet>();
+            services.AddTransient<ICursAcademicSet, CursAcademicSet>();
             services.AddTransient<ICursAcademicActivaDesactiva, CursAcademicActivaDesactiva>();
             
 

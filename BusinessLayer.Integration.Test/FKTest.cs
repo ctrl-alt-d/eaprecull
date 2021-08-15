@@ -30,7 +30,7 @@ namespace BusinessLayer.Integration.Test
             var centreCreate = serviceProvider.GetRequiredService<ICentreCreate>();
             var cursCreate = serviceProvider.GetRequiredService<ICursAcademicCreate>();
             var alumneCreate = serviceProvider.GetRequiredService<IAlumneCreate>();
-            var alumnes = serviceProvider.GetRequiredService<IAlumneGetSet>();
+            var alumnes = serviceProvider.GetRequiredService<IAlumneSet>();
 
             serviceProvider
                 .GetRequiredService<IDbContextFactory<AppDbContext>>()

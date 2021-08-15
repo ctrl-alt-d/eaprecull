@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
 {
-    public abstract class BLGetSet<TModel, TParm, TDTOo>
+    public abstract class BLSet<TModel, TParm, TDTOo>
         : BLOperation,
-         IGetSet<TParm, TDTOo>
+         ISet<TParm, TDTOo>
             where TDTOo : IDTOo, IEtiquetaDescripcio
             where TParm : IDtoi
             where TModel : class, IModel, IId
 
     {
-        public BLGetSet(IDbContextFactory<AppDbContext> appDbContextFactory)
+        public BLSet(IDbContextFactory<AppDbContext> appDbContextFactory)
         : base(appDbContextFactory)
         {
         }

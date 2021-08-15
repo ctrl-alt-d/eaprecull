@@ -17,7 +17,7 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected virtual ICentreUpdate BLUpdate() => SuperContext.GetBLOperation<ICentreUpdate>();
-        protected virtual ICentreGetSet BLGet() => SuperContext.GetBLOperation<ICentreGetSet>();
+        protected virtual ICentreSet BLGet() => SuperContext.GetBLOperation<ICentreSet>();
         public CentreUpdateViewModel(int id)
         {
             Id = id;

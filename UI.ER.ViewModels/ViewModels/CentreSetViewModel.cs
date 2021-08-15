@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
 
     public class CentreSetViewModel : ViewModelBase
     {
-        protected virtual ICentreGetSet BLCentres() => SuperContext.GetBLOperation<ICentreGetSet>();
+        protected virtual ICentreSet BLCentres() => SuperContext.GetBLOperation<ICentreSet>();
         private IIdEtiquetaDescripcio? _SelectedItem;
         public IIdEtiquetaDescripcio? SelectedItem
         {
