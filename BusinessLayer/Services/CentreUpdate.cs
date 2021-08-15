@@ -36,15 +36,15 @@ namespace BusinessLayer.Services
         protected override Task PreUpdate(models.Centre model, CentreUpdateParms parm)
             =>
             new RuleChecker<models.Centre, CentreUpdateParms>(model, parm)
-            .AddCheck( RuleValorsEstanInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
             .Check();
 
-        protected virtual bool RuleValorsEstanInformats(models.Centre model, CentreUpdateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(models.Centre model, CentreUpdateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom);
 
-        protected virtual Task<bool> RuleNoEstaRepetit(models.Centre model, CentreUpdateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(models.Centre model, CentreUpdateParms parm)
             =>
             GetCollection()
             .Where(x=> x.Id != model.Id)

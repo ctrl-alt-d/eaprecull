@@ -29,6 +29,7 @@ namespace BusinessLayer.DI
 
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
+            services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
             services.AddTransient<ICursAcademicGetSet, CursAcademicGetSet>();
             services.AddTransient<ICursAcademicActivaDesactiva, CursAcademicActivaDesactiva>();
             

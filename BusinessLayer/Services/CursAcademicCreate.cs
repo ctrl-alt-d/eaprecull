@@ -26,16 +26,16 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(CursAcademicCreateParms parm)
             =>
             new RuleChecker<CursAcademicCreateParms>(parm)
-            .AddCheck( RuleValorsEstanInformats, "Comprova que tens totes les dades informades" )
-            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
+            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici" )
             .Check();
 
-        protected virtual bool RuleValorsEstanInformats(CursAcademicCreateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(CursAcademicCreateParms parm)
             =>
-            parm.AnyInici > 1980
+            parm.AnyInici < 1980
             ;
 
-        protected virtual Task<bool> RuleNoEstaRepetit(CursAcademicCreateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(CursAcademicCreateParms parm)
             =>
             GetCollection()
             .AnyAsync(x => x.AnyInici == parm.AnyInici);

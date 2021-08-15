@@ -26,17 +26,17 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(EtapaCreateParms parm)
             =>
             new RuleChecker<EtapaCreateParms>(parm)
-            .AddCheck( RuleValorsEstanInformats, "Comprova que tens totes les dades informades" )
-            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
+            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tens totes les dades informades" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
             .Check();
 
-        protected virtual bool RuleValorsEstanInformats(EtapaCreateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(EtapaCreateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom) || 
             string.IsNullOrEmpty(parm.Codi)
             ;
 
-        protected virtual Task<bool> RuleNoEstaRepetit(EtapaCreateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(EtapaCreateParms parm)
             =>
             GetCollection()
             .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);

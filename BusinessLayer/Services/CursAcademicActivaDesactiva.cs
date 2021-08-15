@@ -29,7 +29,11 @@ namespace BusinessLayer.Services
             .CursAcademic
             .ToDto;
 
-        protected override async Task Post(models.CursAcademic model)
+        protected override Task Post(models.CursAcademic model)
+            =>
+            DeixaNomesUnActiu(model);
+
+        protected virtual async Task DeixaNomesUnActiu(models.CursAcademic model)
         {
             if (!model.EsActiu)
                 return;
