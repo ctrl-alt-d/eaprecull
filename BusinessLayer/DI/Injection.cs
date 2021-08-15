@@ -11,13 +11,19 @@ namespace BusinessLayer.DI
         {
             // Services (ToDo: per comprensió)
 
-            // centres
+            // centre
             services.AddTransient<ICentreSet, CentreSet>();
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<ICentreUpdate, CentreUpdate>();
             services.AddTransient<ICentreActivaDesactiva, CentreActivaDesactiva>();
 
-            // Etapas
+            // TipusActuacio
+            services.AddTransient<ITipusActuacioSet, TipusActuacioSet>();
+            services.AddTransient<ITipusActuacioCreate, TipusActuacioCreate>();
+            services.AddTransient<ITipusActuacioUpdate, TipusActuacioUpdate>();
+            services.AddTransient<ITipusActuacioActivaDesactiva, TipusActuacioActivaDesactiva>();
+
+            // Etapa
             services.AddTransient<IEtapaSet, EtapaSet>();
             services.AddTransient<IEtapaCreate, EtapaCreate>();
             services.AddTransient<IEtapaUpdate, EtapaUpdate>();
