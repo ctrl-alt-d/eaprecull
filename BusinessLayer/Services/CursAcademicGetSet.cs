@@ -26,12 +26,10 @@ namespace BusinessLayer.Services
             GetAllModels()
             .OrderBy(c => c.Nom);
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
-            =>
-            x
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
             =>
             project
             .CursAcademic
-            .ToDto(x);
+            .ToDto;
     }
 }

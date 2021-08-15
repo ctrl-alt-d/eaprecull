@@ -1,14 +1,17 @@
 ﻿using System;
-using dto = DTO.o.DTOs;
+using System.Linq.Expressions;
+using dtoo = DTO.o.DTOs;
 using models = DataModels.Models;
 
 namespace DTO.Projections
 {
     public static class Etapa
     {
-        public static dto.Etapa ToDto(this models.Etapa model)
+        public static Expression<Func<models.Etapa, dtoo.Etapa>> ToDto 
             =>
-            new dto.Etapa(
+            model
+            =>
+            new (
                 model.Id,
                 model.Codi,
                 model.Nom,

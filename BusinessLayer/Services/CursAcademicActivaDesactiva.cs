@@ -11,6 +11,7 @@ using DataModels.Models;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
@@ -21,6 +22,12 @@ namespace BusinessLayer.Services
         public CursAcademicActivaDesactiva(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
+
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
+            =>
+            project
+            .CursAcademic
+            .ToDto;
 
         protected override async Task Post(models.CursAcademic model)
         {
@@ -40,17 +47,9 @@ namespace BusinessLayer.Services
 
         }
             
-            
-
         protected override Task Pre(models.CursAcademic model)
             =>
             Task.CompletedTask;
-
-        protected override dtoo.CursAcademic ToDto(models.CursAcademic model)
-            =>
-            project
-            .CursAcademic
-            .ToDto(model);
 
     }
 }

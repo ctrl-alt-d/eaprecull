@@ -18,8 +18,8 @@ namespace DataModels.Models
         public void SetInactiu() => EsActiu = false;
 
         // IEtiquetaDescripcio
-        public string Etiqueta => Codi;
-        public string Descripcio => $"{Nom}";
+        public string Etiqueta => Nom;
+        public string Descripcio => Codi;
 
         //
         public List<Alumne> Alumnes { get; set; } = new();

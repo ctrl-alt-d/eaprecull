@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using DataModels.Models;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System;
 
 namespace BusinessLayer.Services
 {
@@ -16,6 +18,12 @@ namespace BusinessLayer.Services
         BLCreate<models.Alumne, parms.AlumneCreateParms, dtoo.Alumne>,
         IAlumneCreate
     {
+        protected override Expression<Func<Alumne, dtoo.Alumne>> ToDto
+            =>
+            project
+            .Alumne
+            .ToDto;
+
         public AlumneCreate(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
@@ -47,10 +55,6 @@ namespace BusinessLayer.Services
             .CompletedTask;
 
         
-        protected override dtoo.Alumne ToDto(models.Alumne parm)
-            =>
-            project
-            .Alumne
-            .ToDto(parm);
+
     }
 }

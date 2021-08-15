@@ -29,10 +29,8 @@ namespace BusinessLayer.Services
 
         protected override Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
             =>
-            x
-            =>
             project
             .Etapa
-            .ToDto(x);
+            .ToDto;
     }
 }

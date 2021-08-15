@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
@@ -36,7 +37,7 @@ namespace BusinessLayer.Common
         protected abstract Task PreUpdate(TModel model, TParm parm );
         protected abstract Task UpdateModel(TModel model, TParm parm );
         protected abstract Task PostUpdate(TModel model, TParm parm );
-        protected abstract TDTOo ToDto(TModel model );
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto {get;}
 
         public virtual async Task<OperationResult<TDTOo>> Update(
             TParm parm
@@ -55,7 +56,9 @@ namespace BusinessLayer.Common
                 //
                 await GetContext().SaveChangesAsync();
                 //
-                return new( ToDto(model) );
+                var dto = await Model2Dto(model);
+                //
+                return new(dto);
             } 
             catch (BrokenRuleException br)
             {
@@ -66,5 +69,13 @@ namespace BusinessLayer.Common
                 throw new BrokenRuleException($"Error intern no esperat.", e);
             }
         }
+
+        protected virtual Task<TDTOo> Model2Dto(TModel model)
+            =>
+            GetCollection()
+            .Where(x => x.Id == model.Id)
+            .Select(ToDto)
+            .FirstAsync();
+
     }
 }

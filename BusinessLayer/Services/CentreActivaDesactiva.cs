@@ -10,6 +10,7 @@ using DataLayer;
 using DataModels.Models;
 using System.Threading.Tasks;
 using System;
+using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
@@ -21,6 +22,11 @@ namespace BusinessLayer.Services
         {
         }
 
+        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto
+            =>
+            project
+            .Centre
+            .ToDto;
         protected override Task Post(models.Centre model)
             =>
             Task.CompletedTask;
@@ -29,11 +35,7 @@ namespace BusinessLayer.Services
             =>
             Task.CompletedTask;
 
-        protected override dtoo.Centre ToDto(models.Centre model)
-            =>
-            project
-            .Centre
-            .ToDto(model);
+
 
     }
 }

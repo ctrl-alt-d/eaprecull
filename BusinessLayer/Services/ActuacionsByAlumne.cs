@@ -29,11 +29,9 @@ namespace BusinessLayer.Services
 
         protected override Expression<Func<models.Actuacio, dtoo.Actuacio>> ToDto
             =>
-            x
-            =>
             project
             .Actuacio
-            .ToDto(x);
+            .ToDto;
 
     }
 }

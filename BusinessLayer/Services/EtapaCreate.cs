@@ -10,6 +10,8 @@ using DataLayer;
 using DataModels.Models;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
+using System.Linq.Expressions;
+using System;
 
 namespace BusinessLayer.Services
 {
@@ -57,11 +59,11 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override dtoo.Etapa ToDto(models.Etapa model)
+        protected override Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
             =>
             project
             .Etapa
-            .ToDto(model);
+            .ToDto;
 
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
@@ -36,8 +37,7 @@ namespace BusinessLayer.Common
         protected abstract Task PreInitialize(TParm parm );
         protected abstract Task<TModel> InitializeModel(TParm parm );
         protected abstract Task PostAdd(TModel model, TParm parm );
-        protected abstract TDTOo ToDto(TModel model );
-
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto {get;}
         public virtual async Task<OperationResult<TDTOo>> Create(
             TParm parm
             )
@@ -48,14 +48,16 @@ namespace BusinessLayer.Common
                 await PreInitialize(parm);
                 //
                 var model = await InitializeModel(parm);
-                GetContext().Add(model);                
+                GetContext().Add(model);
                 //
                 await PostAdd(model, parm);
                 //
                 await GetContext().SaveChangesAsync();
                 //
-                return new( ToDto(model) );
-            } 
+                var dto = await Model2Dto(model);
+                //
+                return new(dto);
+            }
             catch (BrokenRuleException br)
             {
                 return new OperationResult<TDTOo>(br.BrokenRules);
@@ -65,5 +67,13 @@ namespace BusinessLayer.Common
                 throw new BrokenRuleException($"Error intern no esperat.", e);
             }
         }
+
+        protected virtual Task<TDTOo> Model2Dto(TModel model)
+            =>
+            GetCollection()
+            .Where(x => x.Id == model.Id)
+            .Select(ToDto)
+            .FirstAsync();
+
     }
 }
