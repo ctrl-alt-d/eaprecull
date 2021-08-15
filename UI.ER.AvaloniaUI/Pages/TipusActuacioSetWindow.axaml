@@ -28,7 +28,7 @@
                                          VerticalAlignment="Stretch">
                                     <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
                                 </Viewbox>
-                                <TextBlock Margin="8,0" Text="Afegir un nou TipusActuacio" Classes="Subtitle2"
+                                <TextBlock Margin="8,0" Text="Afegir un nou Tipus d'Actuació" Classes="Subtitle2"
                                            VerticalAlignment="Center" />
                             </StackPanel>
                         </Template>
@@ -48,7 +48,7 @@
                         />
             <Button DockPanel.Dock="Left"
                     HorizontalAlignment="Left"
-                    Width="200"
+                    Width="270"
                     Command="{Binding Create}"
                     Classes="Outline DesarCss"  />
 
