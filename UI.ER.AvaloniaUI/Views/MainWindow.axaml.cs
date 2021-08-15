@@ -69,7 +69,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void TemplatedControl_OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            SnackbarHost.Post("Welcome to demo of Material.Avalonia!");
+            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)");
         }
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)
@@ -97,6 +97,16 @@ namespace UI.ER.AvaloniaUI.Views
             var w = new CursAcademicSetWindow()
             {
                 DataContext = new CursAcademicSetViewModel()
+            };
+
+            w.ShowDialog(this);
+        }
+
+        private void TipusActuacio_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var w = new TipusActuacioSetWindow()
+            {
+                DataContext = new TipusActuacioSetViewModel()
             };
 
             w.ShowDialog(this);
