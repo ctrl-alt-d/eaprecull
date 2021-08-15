@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime.Extensions"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="UI.ER.AvaloniaUI.Pages.CursAcademicRowUserCtrl">
+    <Design.DataContext>
+        <viewModels:CursAcademicRowViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+
+        <Style Selector="Border.Apareix">
+            <Style.Animations>
+                <Animation Duration="0:0:1"> 
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0.0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1.0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+    </UserControl.Styles>
+
+    <Border BorderBrush="White"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="6"
+            Margin="10"
+            Classes="Apareix"
+            BoxShadow="5 5 10 2 Gray">
+
+        <DockPanel>
+
+            <Button DockPanel.Dock="Left"
+                    IsVisible="{Binding ModeLookupActivat}"
+                    Command="{Binding Seleccionar}"
+                    Classes="LookupFinishedCss Flat" />
+
+            <Menu DockPanel.Dock="Right" Height="32" Padding="0" Margin="0">
+                <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
+                    <MenuItem Header="Editar" Command="{Binding Update}">
+                        <MenuItem.Icon>
+                            <avalonia:MaterialIcon Kind="Edit" Width="24" Height="24" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
+                          VerticalAlignment="Center" 
+                          IsChecked="{Binding EsActiu}"
+                          Command="{Binding DoTheThing}"
+                          DockPanel.Dock="Right"/>
+
+            <StackPanel Orientation="Vertical"
+                        DockPanel.Dock="Left">                            
+                <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
+                <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+            </StackPanel>                     
+            
+        </DockPanel>                     
+    </Border>
+
+</UserControl>    

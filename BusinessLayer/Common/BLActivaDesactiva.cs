@@ -8,6 +8,7 @@ using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Common
@@ -31,7 +32,7 @@ namespace BusinessLayer.Common
 
         protected abstract Task Pre(TModel model);
         protected abstract Task Post(TModel model);
-        protected abstract TDTOo ToDto(TModel model );
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto {get;}
 
         protected virtual async Task<OperationResult<TDTOo>> Update(
             int id,
@@ -53,7 +54,9 @@ namespace BusinessLayer.Common
                 //
                 await GetContext().SaveChangesAsync();
                 //
-                return new( ToDto(model) );
+                var dto = await Model2Dto(model);
+                //
+                return new(dto);
             } 
             catch (BrokenRuleException br)
             {
@@ -79,5 +82,13 @@ namespace BusinessLayer.Common
         {
             return Update(id);
         }
+
+        protected virtual Task<TDTOo> Model2Dto(TModel model)
+            =>
+            GetCollection()
+            .Where(x => x.Id == model.Id)
+            .Select(ToDto)
+            .FirstAsync();
+
     }
 }

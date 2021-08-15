@@ -10,6 +10,8 @@ using DataLayer;
 using DataModels.Models;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
+using System.Linq.Expressions;
+using System;
 
 namespace BusinessLayer.Services
 {
@@ -24,15 +26,15 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(CentreCreateParms parm)
             =>
             new RuleChecker<CentreCreateParms>(parm)
-            .AddCheck( RuleValorsEstanInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
             .Check();
 
-        protected virtual bool RuleValorsEstanInformats(CentreCreateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(CentreCreateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom);
 
-        protected virtual Task<bool> RuleNoEstaRepetit(CentreCreateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(CentreCreateParms parm)
             =>
             GetCollection()
             .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
@@ -54,11 +56,11 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override dtoo.Centre ToDto(models.Centre model)
+        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto
             =>
             project
             .Centre
-            .ToDto(model);
+            .ToDto;
 
     }
 }

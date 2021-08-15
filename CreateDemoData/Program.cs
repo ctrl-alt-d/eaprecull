@@ -61,7 +61,7 @@ namespace CreateDemoData
             Console.WriteLine("Creant Cursos Acadèmics!");
 
             var getset = GetBLOperation<ICursAcademicGetSet>();
-            var nhiha = (await getset.FromPredicate(new parms.EmptyParms())).Data!.Any();
+            var nhiha = (await getset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {

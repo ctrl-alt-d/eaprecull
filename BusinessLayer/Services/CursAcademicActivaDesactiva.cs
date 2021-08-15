@@ -11,6 +11,7 @@ using DataModels.Models;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace BusinessLayer.Services
 {
@@ -22,7 +23,17 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override async Task Post(models.CursAcademic model)
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
+            =>
+            project
+            .CursAcademic
+            .ToDto;
+
+        protected override Task Post(models.CursAcademic model)
+            =>
+            DeixaNomesUnActiu(model);
+
+        protected virtual async Task DeixaNomesUnActiu(models.CursAcademic model)
         {
             if (!model.EsActiu)
                 return;
@@ -40,17 +51,9 @@ namespace BusinessLayer.Services
 
         }
             
-            
-
         protected override Task Pre(models.CursAcademic model)
             =>
             Task.CompletedTask;
-
-        protected override dtoo.CursAcademic ToDto(models.CursAcademic model)
-            =>
-            project
-            .CursAcademic
-            .ToDto(model);
 
     }
 }

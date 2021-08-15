@@ -10,6 +10,8 @@ using DataLayer;
 using System.Threading.Tasks;
 using DataModels.Models;
 using System.Linq;
+using System.Linq.Expressions;
+using System;
 
 namespace BusinessLayer.Services
 {
@@ -23,8 +25,20 @@ namespace BusinessLayer.Services
 
         protected override Task PreInitialize(CursAcademicCreateParms parm)
             =>
-            Task
-            .CompletedTask;
+            new RuleChecker<CursAcademicCreateParms>(parm)
+            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici" )
+            .Check();
+
+        protected virtual bool RuleHiHaValorsNoInformats(CursAcademicCreateParms parm)
+            =>
+            parm.AnyInici < 1980
+            ;
+
+        protected virtual Task<bool> RuleEstaRepetit(CursAcademicCreateParms parm)
+            =>
+            GetCollection()
+            .AnyAsync(x => x.AnyInici == parm.AnyInici);
 
         protected override Task<models.CursAcademic> InitializeModel(CursAcademicCreateParms parm)
             =>
@@ -37,9 +51,12 @@ namespace BusinessLayer.Services
                 }
             );
 
-        protected override async Task PostAdd(CursAcademic model, CursAcademicCreateParms parm)
+        protected override Task PostAdd(CursAcademic model, CursAcademicCreateParms parm)
+            =>
+            NomesUnCursPotEstarMarcatComAcursActual(model,parm);
+
+        protected virtual async Task NomesUnCursPotEstarMarcatComAcursActual(CursAcademic model, CursAcademicCreateParms parm)
         {
-            // Només pot haver un curs actual.
             if (!parm.EsActiu)
                 return;
 
@@ -48,14 +65,13 @@ namespace BusinessLayer.Services
                 .CursosAcademics
                 .Where(c=>c!=model)
                 .ForEachAsync(c => c.EsActiu = false);
-
         }
 
-        protected override dtoo.CursAcademic ToDto(models.CursAcademic parm)
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
             =>
             project
             .CursAcademic
-            .ToDto(parm);
+            .ToDto;
 
     }
 }

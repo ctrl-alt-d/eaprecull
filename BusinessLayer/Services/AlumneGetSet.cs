@@ -30,11 +30,10 @@ namespace BusinessLayer.Services
             .OrderBy(c=>c.Nom);
 
         protected override Expression<Func<models.Alumne, dtoo.Alumne>> ToDto
-            => 
-            (x) =>
+            =>
             project
             .Alumne
-            .ToDto(x);
+            .ToDto;
 
     }
 }

@@ -10,6 +10,8 @@ using DataLayer;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
+using System.Linq.Expressions;
+using System;
 
 namespace BusinessLayer.Services
 {
@@ -28,26 +30,26 @@ namespace BusinessLayer.Services
         protected override Task PreUpdate(models.Etapa model, EtapaUpdateParms parm)
             =>
             new RuleChecker<models.Etapa, EtapaUpdateParms>(model, parm)
-            .AddCheck( RuleValorsEstanInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
+            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
             .Check();
 
-        protected virtual bool RuleValorsEstanInformats(models.Etapa model, EtapaUpdateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(models.Etapa model, EtapaUpdateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom) || 
             string.IsNullOrEmpty(parm.Codi);
 
-        protected virtual Task<bool> RuleNoEstaRepetit(models.Etapa model, EtapaUpdateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(models.Etapa model, EtapaUpdateParms parm)
             =>
             GetCollection()
             .Where(x=> x.Id != model.Id)
             .AnyAsync(x=> x.Codi == parm.Codi || x.Nom == parm.Nom);
 
-        protected override dtoo.Etapa ToDto(models.Etapa model)
+        protected override Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
             =>
             project
             .Etapa
-            .ToDto(model);
+            .ToDto;
 
         protected override Task UpdateModel(models.Etapa model, EtapaUpdateParms parm)
         {

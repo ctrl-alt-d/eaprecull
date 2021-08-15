@@ -10,6 +10,8 @@ using DataLayer;
 using DataModels.Models;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
+using System.Linq.Expressions;
+using System;
 
 namespace BusinessLayer.Services
 {
@@ -24,17 +26,17 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(EtapaCreateParms parm)
             =>
             new RuleChecker<EtapaCreateParms>(parm)
-            .AddCheck( RuleValorsEstanInformats, "Comprova que tens totes les dades informades" )
-            .AddCheck( RuleNoEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
+            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tens totes les dades informades" )
+            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
             .Check();
 
-        protected virtual bool RuleValorsEstanInformats(EtapaCreateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(EtapaCreateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom) || 
             string.IsNullOrEmpty(parm.Codi)
             ;
 
-        protected virtual Task<bool> RuleNoEstaRepetit(EtapaCreateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(EtapaCreateParms parm)
             =>
             GetCollection()
             .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
@@ -57,11 +59,11 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override dtoo.Etapa ToDto(models.Etapa model)
+        protected override Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
             =>
             project
             .Etapa
-            .ToDto(model);
+            .ToDto;
 
     }
 }
