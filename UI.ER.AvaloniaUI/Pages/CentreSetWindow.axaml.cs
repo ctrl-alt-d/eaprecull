@@ -34,7 +34,7 @@ namespace UI.ER.AvaloniaUI.Pages {
         
         private void InitializeComponent()
         {
-            AvaloniaXamlLoader.Load(this);            
+            AvaloniaXamlLoader.Load(this);           
         }
 
         private async Task CreateShowDialogAsync(InteractionContext<CentreCreateViewModel, dtoo.Centre?> interaction)

@@ -4,6 +4,7 @@ using CommonInterfaces;
 using DataLayer;
 using DataModels.Models.Interfaces;
 using DTO.i;
+using DTO.i.Interfaces;
 using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -39,13 +40,30 @@ namespace BusinessLayer.Common
             TParm request
             )
         {
+
+            var take = 200;
+            var skip = 0;
+
+            if (request is IPaginated paginatedrequest)
+            {
+                take = paginatedrequest.Take;
+                skip = paginatedrequest.Skip;
+            }
+
+            var total =
+                await
+                GetModels(request)
+                .CountAsync();
+
             var data =
                 await
                 GetModels(request)
+                .Skip(skip)
+                .Take(take)
                 .Select(ToDto)
                 .ToListAsync();
 
-            return new OperationResults<TDTOo>(data);
+            return new OperationResults<TDTOo>(data, total, take);
         }
 
         public virtual async Task<OperationResult<TDTOo>> FromId(int id)

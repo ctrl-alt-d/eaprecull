@@ -103,7 +103,22 @@ namespace UI.ER.ViewModels.ViewModels
                 .Data
                 .Select(x => new EtapaRowViewModel(x, ModeLookup));
             SourceItems.AddRange(newItems);
+            
+            //
+            PaginatedMsg = 
+                (dto.Total > dto.TakeRequested) ?
+                $"Mostrant els {newItems.Count()} primers resultats d'un total de {dto.Total}" :
+                string.Empty;
         }
+
+        // Warning
+        private string _PaginatedMsg = string.Empty;
+        public string PaginatedMsg
+        {
+            get => _PaginatedMsg;
+            set => this.RaiseAndSetIfChanged(ref _PaginatedMsg, value);
+        }
+
 
         // Filtre
         private bool _NomesActius = true;
