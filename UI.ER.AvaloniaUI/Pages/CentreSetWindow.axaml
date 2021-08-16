@@ -62,24 +62,23 @@
 
         </DockPanel>
 
-        <ItemsControl Items="{Binding BrokenRules}"
+        <ListBox Items="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"
                       Margin="10" >            
-            <ItemsControl.ItemTemplate>
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>        
+            </ListBox.ItemTemplate>
+        </ListBox>        
 
-        <ScrollViewer DockPanel.Dock="Bottom">
-            <ItemsControl Margin="10" Items="{Binding MyItems, Mode=OneWay}">            
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <pages:CentreRowUserCtrl/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ListBox DockPanel.Dock="Bottom" Margin="10" Items="{Binding MyItems, Mode=OneWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <pages:CentreRowUserCtrl/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
     </DockPanel>
 </Window>    

@@ -45,15 +45,7 @@
                     Command="{Binding Seleccionar}"
                     Classes="LookupFinishedCss Flat" />
 
-            <Menu DockPanel.Dock="Right" Height="32" Padding="0" Margin="0">
-                <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
-                    <MenuItem Header="Editar" Command="{Binding Update}">
-                        <MenuItem.Icon>
-                            <avalonia:MaterialIcon Kind="Edit" Width="24" Height="24" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </MenuItem>
-            </Menu>
+            <Button DockPanel.Dock="Right" Command="{Binding Update}">Actualitzar</Button>
 
             <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
                           VerticalAlignment="Center" 
