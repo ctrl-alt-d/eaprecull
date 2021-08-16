@@ -1,19 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
-using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 using dtoo = DTO.o.DTOs;
 using System.Reactive.Linq;
-using DynamicData.Binding;
-using DynamicData;
 using System.Linq;
 
-namespace UI.ER.AvaloniaUI.Pages {
+namespace UI.ER.AvaloniaUI.Pages
+{
     public class CentreSetWindow : ReactiveWindow<CentreSetViewModel> {
         public CentreSetWindow() {
             InitializeComponent();
@@ -34,7 +31,7 @@ namespace UI.ER.AvaloniaUI.Pages {
         
         private void InitializeComponent()
         {
-            AvaloniaXamlLoader.Load(this);           
+            AvaloniaXamlLoader.Load(this);      
         }
 
         private async Task CreateShowDialogAsync(InteractionContext<CentreCreateViewModel, dtoo.Centre?> interaction)

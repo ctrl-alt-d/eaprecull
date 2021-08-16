@@ -73,7 +73,10 @@
             </ListBox.ItemTemplate>
         </ListBox>        
 
-        <ListBox DockPanel.Dock="Bottom" Margin="0" Items="{Binding MyItems, Mode=OneWay}">
+        <ListBox DockPanel.Dock="Bottom"
+                 Margin="0"
+                 Items="{Binding MyItems, Mode=OneWay}"
+                 VirtualizationMode="Simple">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <pages:CentreRowUserCtrl/>

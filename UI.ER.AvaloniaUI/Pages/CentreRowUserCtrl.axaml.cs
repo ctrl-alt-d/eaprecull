@@ -11,6 +11,8 @@ using Avalonia.ReactiveUI;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.AvaloniaUI.Views;
 using Avalonia.LogicalTree;
+using System.Collections.Generic;
+using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -19,19 +21,24 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreRowUserCtrl()
         {
             InitializeComponent();
-            // this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
+
+            this.WhenActivated(disposables => { 
+                RegisterShowDialog(disposables); 
+            });
+        }
+
+        private void RegisterShowDialog(Action<IDisposable> disposables)
+        {
+            this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>
+                    vm.ShowDialog.RegisterHandler(UpdateShowDialogAsync) 
+                );
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);            
-        }
-
-        protected override void OnDataContextEndUpdate()
-        {
-            base.OnDataContextBeginUpdate();
-            ViewModel?.ShowDialog.RegisterHandler(UpdateShowDialogAsync);
-            
         }
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
