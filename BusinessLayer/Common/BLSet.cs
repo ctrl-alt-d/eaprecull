@@ -41,7 +41,7 @@ namespace BusinessLayer.Common
             )
         {
 
-            var take = 200;
+            var take = 2000;
             var skip = 0;
 
             if (request is IPaginated paginatedrequest)

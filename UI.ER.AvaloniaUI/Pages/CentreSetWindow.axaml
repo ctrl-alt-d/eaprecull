@@ -64,7 +64,8 @@
 
         <ListBox Items="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"
-                      Margin="10" >            
+                      Margin="10"
+                       >            
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
@@ -72,7 +73,7 @@
             </ListBox.ItemTemplate>
         </ListBox>        
 
-        <ListBox DockPanel.Dock="Bottom" Margin="10" Items="{Binding MyItems, Mode=OneWay}">
+        <ListBox DockPanel.Dock="Bottom" Margin="0" Items="{Binding MyItems, Mode=OneWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <pages:CentreRowUserCtrl/>

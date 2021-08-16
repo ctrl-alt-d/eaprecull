@@ -34,7 +34,7 @@
             BorderThickness="1"
             CornerRadius="4"
             Padding="6"
-            Margin="10"
+            Margin="5,0,20,10"
             Classes="Apareix"
             BoxShadow="5 5 10 2 Gray">
 
@@ -45,7 +45,9 @@
                     Command="{Binding Seleccionar}"
                     Classes="LookupFinishedCss Flat" />
 
-            <Button DockPanel.Dock="Right" Command="{Binding Update}">Actualitzar</Button>
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding Update}"
+                    Classes="EditarCss Flat" />
 
             <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
                           VerticalAlignment="Center" 
