@@ -114,7 +114,11 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void Alumne_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new AlumneCreateWindow(); // <--- caldrà substituir per ALumneSet. ToDo issue20
+            var w = new AlumneSetWindow()
+            {
+                DataContext = new AlumneSetViewModel()
+            };
+
             w.ShowDialog(this);
         }
 

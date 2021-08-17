@@ -19,6 +19,7 @@ namespace DTO.i.DTOs
             int? tipusActuacioId = null,
             string nomCognoms = "",
             string tags = "",
+            bool? esActiu = null,
             OrdreResultatsChoice ordreResultats = OrdreResultatsChoice.DarreraModificacio)
         {
             Take = take;
@@ -34,6 +35,7 @@ namespace DTO.i.DTOs
             TipusActuacioId = tipusActuacioId;
             NomCognoms = nomCognoms;
             Tags = tags;
+            EsActiu = esActiu;
             OrdreResultats = ordreResultats;
         }
 
@@ -72,6 +74,9 @@ namespace DTO.i.DTOs
 
         // Tags
         public string Tags {get;}
+
+        // Actiu
+        public bool? EsActiu {get; }
 
         // Ordre
         public OrdreResultatsChoice OrdreResultats {get;}

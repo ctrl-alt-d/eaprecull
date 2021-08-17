@@ -37,6 +37,7 @@ namespace BusinessLayer.Services
             query = MatchTipusActuacio(query, request);
             query = MatchNomCognoms(query, request);
             query = MatchTags(query, request);
+            query = MatchEsActiu(query, request);
             query = Ordena(query, request.OrdreResultats);
 
             return query;
@@ -170,6 +171,16 @@ namespace BusinessLayer.Services
             );
             return query;
         }
+
+        private IQueryable<Alumne> MatchEsActiu(IQueryable<Alumne> query, AlumneSearchParms request)
+        {
+            if (!request.EsActiu.HasValue)
+                return query;
+
+            return query.Where(model =>
+                model.EsActiu == request.EsActiu);
+        }
+
         //
         protected override Expression<Func<models.Alumne, dtoo.Alumne>> ToDto
             =>
