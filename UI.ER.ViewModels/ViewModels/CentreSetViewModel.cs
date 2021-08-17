@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Collections.ObjectModel;
-using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
@@ -12,30 +11,20 @@ using UI.ER.ViewModels.Common;
 using System.Windows.Input;
 using DynamicData.Binding;
 using DynamicData;
-using CommonInterfaces;
 
 namespace UI.ER.ViewModels.ViewModels
 {
 
     public class CentreSetViewModel : ViewModelBase
     {
-        protected virtual ICentreSet BLCentres() => SuperContext.GetBLOperation<ICentreSet>();
-        private IIdEtiquetaDescripcio? _SelectedItem;
-        public IIdEtiquetaDescripcio? SelectedItem
-        {
-            get => _SelectedItem;
-            set => this.RaiseAndSetIfChanged(ref _SelectedItem, value);
-        }
-
-        public Action<IIdEtiquetaDescripcio>? ModeLookup {get;}
-        public CentreSetViewModel(bool? modeLookup = null)
+        public bool ModeLookup { get; }
+        public CentreSetViewModel(bool modeLookup = false)
         {
 
-            if (modeLookup ?? false)
-                ModeLookup = (i) => this.SelectedItem = i;
+            ModeLookup = modeLookup;
 
             SourceItems
-                .ToObservableChangeSet(t=>t.Id)
+                .ToObservableChangeSet(t => t.Id)
                 .Bind(out _MyItems)
                 .Subscribe();
 
@@ -55,7 +44,8 @@ namespace UI.ER.ViewModels.ViewModels
 
                 var data = await ShowDialog.Handle(update);
 
-                if (data != null) {
+                if (data != null)
+                {
                     var item = new CentreRowViewModel(data, ModeLookup);
                     SourceItems.Insert(0, item);
                 }
@@ -71,8 +61,6 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadCentres(bool nomesActius)
         {
-            // Nota: aquesta tasca triga molt, la UX és pobra 
-            // https://stackoverflow.com/questions/68740471/update-ui-inside-a-suscribed-task.
             SourceItems.Clear();
             await OmplirAmbElsNousValors(nomesActius);
         }
@@ -80,17 +68,17 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task OmplirAmbElsNousValors(bool nomesActius)
         {
             // Preparar paràmetres al backend
-            var esActiu = nomesActius ? true : (bool?)null;            
+            var esActiu = nomesActius ? true : (bool?)null;
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = BLCentres();
+            using var bl = SuperContext.GetBLOperation<ICentreSet>();
             var dto = await bl.FromPredicate(parms);
 
             // 
             BrokenRules.Clear();
-            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
-            
+            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
+
 
             // Ha fallat la petició
             if (dto.Data == null)
@@ -105,7 +93,7 @@ namespace UI.ER.ViewModels.ViewModels
             SourceItems.AddRange(newItems);
 
             //
-            PaginatedMsg = 
+            PaginatedMsg =
                 (dto.Total > dto.TakeRequested) ?
                 $"Mostrant els {newItems.Count()} primers resultats d'un total de {dto.Total}" :
                 string.Empty;

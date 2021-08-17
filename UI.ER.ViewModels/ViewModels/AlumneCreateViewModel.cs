@@ -21,7 +21,7 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual IAlumneCreate BLCreate() => SuperContext.GetBLOperation<IAlumneCreate>();
         public AlumneCreateViewModel()
         {
-            SubmitCommand = ReactiveCommand.CreateFromTask(() => CreateData());
+            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
 
             // --- configura lookup --
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -37,18 +37,18 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
-/*
-        public string Nom { get; set; } = string.Empty;
-        public string Cognoms { get; set; } = string.Empty;
-        public DateTime? DataNaixement { get; set; }
-        public Centre? CentreActual { get; set; }
-        public CursAcademic CursDarreraActualitacioDades { get; set; } = default!;
-        public Etapa? EtapaActual { get; set; }
-        public DateTime? DataInformeNESENEE { get; set; }
-        public string ObservacionsNESENEE { get; set; } = string.Empty;
-        public DateTime? DataInformeNESENoNEE { get; set; }
-        public string ObservacionsNESENoNEE { get; set; } = string.Empty;
-*/
+        /*
+                public string Nom { get; set; } = string.Empty;
+                public string Cognoms { get; set; } = string.Empty;
+                public DateTime? DataNaixement { get; set; }
+                public Centre? CentreActual { get; set; }
+                public CursAcademic CursDarreraActualitacioDades { get; set; } = default!;
+                public Etapa? EtapaActual { get; set; }
+                public DateTime? DataInformeNESENEE { get; set; }
+                public string ObservacionsNESENEE { get; set; } = string.Empty;
+                public DateTime? DataInformeNESENoNEE { get; set; }
+                public string ObservacionsNESENoNEE { get; set; } = string.Empty;
+        */
         public string _Nom = string.Empty;
         public string Nom
         {
@@ -63,17 +63,17 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _Cognoms, value);
         }
 
-        protected virtual int? CentreId {get; set;}
+        protected virtual int? CentreId { get; set; }
         public string _CentreTxt = string.Empty;
         public string CentreTxt
         {
             get => _CentreTxt;
             set => this.RaiseAndSetIfChanged(ref _CentreTxt, value);
-        }        
+        }
 
         private void DTO2ModelView(dtoo.Alumne? data)
         {
-            if (data==null) return;
+            if (data == null) return;
 
             Nom = data.Nom;
             Cognoms = data.Cognoms;
@@ -106,7 +106,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // actualitzar dades amb el resultat
             DTO2ModelView(data);
-            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
+            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
 
             SuccessfullySaved = data != null && !dto.BrokenRules.Any();
 

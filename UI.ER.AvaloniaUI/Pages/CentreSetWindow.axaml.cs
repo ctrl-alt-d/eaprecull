@@ -15,34 +15,35 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreSetWindow() {
             InitializeComponent();
                         
-            this.WhenActivated(d => {
-
-                // Crear nou item
-                d(ViewModel!.ShowDialog.RegisterHandler(CreateShowDialogAsync));
-
-                // Tancar la finestra si seleccionen item
-                d(ViewModel
-                    .WhenAnyValue(x => x.SelectedItem)
-                    .Where(s => s != null)
-                    .Select(x => x)
-                    .Subscribe(x=>Close(x)));
+            this.WhenActivated(disposables => {
+                RegisterShowCreateDialog(disposables);
             });
         }
-        
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);      
-        }
 
-        private async Task CreateShowDialogAsync(InteractionContext<CentreCreateViewModel, dtoo.Centre?> interaction)
+        private void RegisterShowCreateDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm => vm.ShowDialog.RegisterHandler(DoShowCreateDialog))
+            );
+
+        private void InitializeComponent()
+            =>
+            AvaloniaXamlLoader.Load(this);      
+        
+        private Window GetWindow()
+            =>
+            (Window)this.VisualRoot;
+
+        private async Task DoShowCreateDialog(InteractionContext<CentreCreateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreCreateWindow()
             {
                 DataContext = interaction.Input
             };
 
-            var window = (Window)this.VisualRoot;
-            var result = await dialog.ShowDialog<dtoo.Centre?>(window);
+            var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
             interaction.SetOutput(result);
             
         }

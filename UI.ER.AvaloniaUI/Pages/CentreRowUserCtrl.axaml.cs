@@ -13,6 +13,7 @@ using UI.ER.AvaloniaUI.Views;
 using Avalonia.LogicalTree;
 using System.Collections.Generic;
 using System;
+using System.Reactive;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -23,42 +24,50 @@ namespace UI.ER.AvaloniaUI.Pages
             InitializeComponent();
 
             this.WhenActivated(disposables => { 
-                RegisterShowDialog(disposables); 
+                RegisterShowUpdateDialog(disposables); 
+                RegisterCloseOnSelect(disposables); 
             });
-        }
 
-        private void RegisterShowDialog(Action<IDisposable> disposables)
-        {
-            this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>
-                    vm.ShowDialog.RegisterHandler(UpdateShowDialogAsync) 
-                );
+
         }
 
         private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);            
-        }
+            =>
+            AvaloniaXamlLoader.Load(this);
+        private Window GetWindow() 
+            =>
+            (Window)this.VisualRoot;
 
-        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-        {
-            base.OnAttachedToVisualTree(e);
-        }
-
-        private async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
+        // -- Show Dialog --
+        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+            );        
+        protected virtual async Task DoShowUpdateDialog(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreUpdateWindow()
             {
                 DataContext = interaction.Input
             };
 
-            var window = (Window)this.VisualRoot;
-
-            var result = await dialog.ShowDialog<dtoo.Centre?>(window);
+            var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
 
             interaction.SetOutput(result);
             ( this.Parent as ListBoxItem)!.Focus();
         }
+
+        // -- Select Row
+        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(GetWindow().Close))
+            );
+
+
     }
 }

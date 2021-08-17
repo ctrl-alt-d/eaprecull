@@ -41,24 +41,35 @@
         <DockPanel>
 
             <Button DockPanel.Dock="Left"
-                    IsVisible="{Binding ModeLookupActivat}"
-                    Command="{Binding Seleccionar}"
+                    IsVisible="{Binding ModeLookup}"
+                    Command="{Binding SeleccionarCommand}"
                     Classes="LookupFinishedCss Flat" />
 
             <Button DockPanel.Dock="Right"
-                    Command="{Binding Update}"
+                    Command="{Binding UpdateCommand}"
                     Classes="EditarCss Flat" />
 
             <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
                           VerticalAlignment="Center" 
                           IsChecked="{Binding EsActiu}"
-                          Command="{Binding DoTheThing}"
+                          Command="{Binding DoActiuToggleCommand}"
                           DockPanel.Dock="Right"/>
 
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+
+                <ItemsControl Margin="10"
+                              IsVisible="{Binding BrokenRules.Count}"
+                              Items="{Binding BrokenRules}">            
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Classes="Error" Text="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
             </StackPanel>                     
             
         </DockPanel>                     
