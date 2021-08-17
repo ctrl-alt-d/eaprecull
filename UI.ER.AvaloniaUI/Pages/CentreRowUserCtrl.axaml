@@ -59,6 +59,17 @@
                         DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+
+                <ItemsControl Margin="10"
+                              IsVisible="{Binding BrokenRules.Count}"
+                              Items="{Binding BrokenRules}">            
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Classes="Error" Text="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
             </StackPanel>                     
             
         </DockPanel>                     
