@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Collections.ObjectModel;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 using UI.ER.ViewModels.Common;
 using System.Windows.Input;
 using DynamicData.Binding;
-using DynamicData;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -22,11 +20,6 @@ namespace UI.ER.ViewModels.ViewModels
         {
 
             ModeLookup = modeLookup;
-
-            SourceItems
-                .ToObservableChangeSet(t => t.Id)
-                .Bind(out _MyItems)
-                .Subscribe();
 
             // Filtre
             this
@@ -47,21 +40,19 @@ namespace UI.ER.ViewModels.ViewModels
                 if (data != null)
                 {
                     var item = new CentreRowViewModel(data, ModeLookup);
-                    SourceItems.Insert(0, item);
+                    MyItems.Insert(0, item);
                 }
             });
 
 
         }
-        public ObservableCollectionExtended<CentreRowViewModel> SourceItems { get; } = new();
-        private readonly ReadOnlyObservableCollection<CentreRowViewModel> _MyItems;
-        public ReadOnlyObservableCollection<CentreRowViewModel> MyItems => _MyItems;
+        public ObservableCollectionExtended<CentreRowViewModel> MyItems { get; } = new();
 
         public RangeObservableCollection<string> BrokenRules { get; } = new();
 
         protected virtual async void LoadCentres(bool nomesActius)
         {
-            SourceItems.Clear();
+            MyItems.Clear();
             await OmplirAmbElsNousValors(nomesActius);
         }
 
@@ -90,7 +81,7 @@ namespace UI.ER.ViewModels.ViewModels
                 .Data
                 .Select(x => new CentreRowViewModel(x, ModeLookup));
 
-            SourceItems.AddRange(newItems);
+            MyItems.AddRange(newItems);
 
             //
             PaginatedMsg =
