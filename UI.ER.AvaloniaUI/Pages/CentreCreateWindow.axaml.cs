@@ -38,7 +38,7 @@ namespace UI.ER.AvaloniaUI.Pages
 
         private void CloseIfSaved(Centre? obj)
         {
-            if (ViewModel!.SuccessfullySaved)
+            if (obj != null)
                 Close(obj);
         }
     }

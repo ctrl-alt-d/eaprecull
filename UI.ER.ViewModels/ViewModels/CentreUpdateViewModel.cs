@@ -94,9 +94,6 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(data);
             BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
 
-            // Close window?
-            SuccessfullySaved = data != null && !dto.BrokenRules.Any();
-
             //
             return data;
         }
@@ -104,13 +101,6 @@ namespace UI.ER.ViewModels.ViewModels
         public RangeObservableCollection<string> BrokenRules { get; } = new();
 
         public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
-
-        private bool _Sortir;
-        public bool SuccessfullySaved
-        {
-            get { return _Sortir; }
-            protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }
-        }
 
 
     }

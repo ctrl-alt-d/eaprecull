@@ -61,7 +61,6 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(data);
             BrokenRules2ModelView(dto.BrokenRules);
 
-            SuccessfullySaved = data != null && !dto.BrokenRules.Any();
             return data;
         }
 
@@ -69,12 +68,6 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
 
-        private bool _Sortir;
-        public bool SuccessfullySaved
-        {
-            get { return _Sortir; }
-            protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }
-        }
 
 
     }
