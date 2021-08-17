@@ -86,6 +86,9 @@ namespace DataLayer.Migrations
                     b.Property<int>("CursDarreraActualitacioDadesId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("DataDarreraModificacio")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("DataInformeNESENEE")
                         .HasColumnType("TEXT");
 
@@ -110,6 +113,10 @@ namespace DataLayer.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObservacionsNESENoNEE")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Tags")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

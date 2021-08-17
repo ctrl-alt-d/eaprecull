@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer.Migrations
 {
-    public partial class initial : Migration
+    public partial class inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,7 @@ namespace DataLayer.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Codi = table.Column<string>(type: "TEXT", nullable: false),
                     Nom = table.Column<string>(type: "TEXT", nullable: false),
+                    SonEstudisObligatoris = table.Column<bool>(type: "INTEGER", nullable: false),
                     EsActiu = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -83,6 +84,8 @@ namespace DataLayer.Migrations
                     ObservacionsNESENEE = table.Column<string>(type: "TEXT", nullable: false),
                     DataInformeNESENoNEE = table.Column<DateTime>(type: "TEXT", nullable: true),
                     ObservacionsNESENoNEE = table.Column<string>(type: "TEXT", nullable: false),
+                    DataDarreraModificacio = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Tags = table.Column<string>(type: "TEXT", nullable: false),
                     EsActiu = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

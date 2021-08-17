@@ -4,17 +4,7 @@ namespace DTO.i.DTOs
 {
     public class AlumneCreateParms : IDtoi
     {
-        public AlumneCreateParms(
-            string nom,
-            string cognoms,
-            DateTime? dataNaixement,
-            int? centreActualId,
-            int cursDarreraActualitacioDadesId,
-            int? etapaActualId,
-            DateTime? dataInformeNESENEE,
-            string observacionsNESENEE,
-            DateTime? dataInformeNESENoNEE,
-            string observacionsNESENoNEE)
+        public AlumneCreateParms(string nom, string cognoms, DateTime? dataNaixement, int? centreActualId, int cursDarreraActualitacioDadesId, int? etapaActualId, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tags)
         {
             Nom = nom;
             Cognoms = cognoms;
@@ -26,6 +16,7 @@ namespace DTO.i.DTOs
             ObservacionsNESENEE = observacionsNESENEE;
             DataInformeNESENoNEE = dataInformeNESENoNEE;
             ObservacionsNESENoNEE = observacionsNESENoNEE;
+            Tags = tags;
         }
 
         public string Nom { get; }
@@ -38,6 +29,7 @@ namespace DTO.i.DTOs
         public string ObservacionsNESENEE { get; }
         public DateTime? DataInformeNESENoNEE { get; }
         public string ObservacionsNESENoNEE { get; }
+        public string Tags { get; }
 
     }
 }

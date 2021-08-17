@@ -47,6 +47,8 @@ namespace BusinessLayer.Services
                 ObservacionsNESENEE = parm.ObservacionsNESENEE,
                 DataInformeNESENoNEE = parm.DataInformeNESENoNEE,
                 ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE,
+                Tags = parm.Tags,
+                DataDarreraModificacio = DateTime.Now,                
             };
 
         protected override Task PostAdd(Alumne model, AlumneCreateParms parm)
