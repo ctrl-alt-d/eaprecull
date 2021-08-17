@@ -1,6 +1,5 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using Material.Dialog.Interfaces;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using Avalonia.ReactiveUI;
@@ -18,24 +17,28 @@ namespace UI.ER.AvaloniaUI.Pages
         {
             this.InitializeComponent();
             
-            this.WhenActivated(d => {
-
-                // https://stackoverflow.com/questions/68747035/subscribe-to-close-but-close-only-if-item-was-saved
-                d(
-                    ViewModel!
-                    .SubmitCommand
-                    .Subscribe(CloseIfSaved)
-                );
-                
+            this.WhenActivated(disposables => { 
+                RegisterCloseIfSaved(disposables); 
             });
         }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+        // -- Close if saved --
+        protected virtual void RegisterCloseIfSaved(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>
+                    vm.SubmitCommand.Subscribe(CloseIfSaved)
+                )
+            );
 
         private void CloseIfSaved(Etapa? obj)
         {
-            if (ViewModel!.SuccessfullySaved)
+            if (obj != null)
                 Close(obj);
         }
 
-        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }
