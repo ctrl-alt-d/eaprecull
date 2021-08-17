@@ -45,6 +45,17 @@
                 </Setter>
             </Style>
 
+            <Style Selector="Button.EditarCss">
+                <Setter Property="ToolTip.Tip" Value="Editar"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <avalonia:MaterialIcon Kind="Edit" VerticalAlignment="Center" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style Selector="material|FloatingButton.Desar[IsExtended=true]">
                 <Setter Property="ToolTip.Tip" Value="Desar els canvis"/>
                 <Setter Property="Content">

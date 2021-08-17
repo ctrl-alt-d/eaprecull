@@ -52,26 +52,37 @@
                     Command="{Binding Create}"
                     Classes="Outline DesarCss"  />
 
+            <TextBlock DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10, 3, 0, 0"
+                    Width="350"
+                    Text="{Binding PaginatedMsg}"
+                    Classes="Error"  />
+
         </DockPanel>
 
-        <ItemsControl Items="{Binding BrokenRules}"
+        <ListBox Items="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"
-                      Margin="10" >            
-            <ItemsControl.ItemTemplate>
+                      Margin="10"
+                       >            
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>        
+            </ListBox.ItemTemplate>
+        </ListBox>        
 
-        <ScrollViewer DockPanel.Dock="Bottom">
-            <ItemsControl Margin="10" Items="{Binding MyItems, Mode=OneWay}">            
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <pages:CentreRowUserCtrl/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ListBox DockPanel.Dock="Bottom"
+                 Margin="0"
+                 Items="{Binding MyItems, Mode=OneWay}"
+                 VirtualizationMode="Simple">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <pages:CentreRowUserCtrl/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
     </DockPanel>
 </Window>    

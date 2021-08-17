@@ -52,6 +52,14 @@
                     Command="{Binding Create}"
                     Classes="Outline DesarCss"  />
 
+            <TextBlock DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10, 3, 0, 0"
+                    Width="350"
+                    Text="{Binding PaginatedMsg}"
+                    Classes="Error"  />
+
         </DockPanel>
 
         <ItemsControl Items="{Binding BrokenRules}"
