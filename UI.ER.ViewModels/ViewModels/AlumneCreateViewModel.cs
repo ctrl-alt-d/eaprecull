@@ -12,6 +12,7 @@ using UI.ER.ViewModels.Common;
 using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
+using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -113,7 +114,7 @@ namespace UI.ER.ViewModels.ViewModels
             return data;
         }
 
-        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
         public ReactiveCommand<Unit, dtoo.Alumne?> SubmitCommand { get; }
 

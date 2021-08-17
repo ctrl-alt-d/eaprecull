@@ -48,7 +48,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
         public ObservableCollectionExtended<TipusActuacioRowViewModel> MyItems { get; } = new();
 
-        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
         protected virtual async void LoadTipusActuacios(bool nomesActius)
         {

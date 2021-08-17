@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using UI.ER.ViewModels.Common;
 using System.Linq;
+using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -81,10 +82,10 @@ namespace UI.ER.ViewModels.ViewModels
             Estat = data.EsActiu ? "Activat" : "Desactivat";
             EsActiu = data.EsActiu;
         }
-        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
         private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
         {
-            BrokenRules.ClearSilently();
+            BrokenRules.Clear();
             BrokenRules.AddRange(brokenRules.Select(x => x.Message));
         }
 

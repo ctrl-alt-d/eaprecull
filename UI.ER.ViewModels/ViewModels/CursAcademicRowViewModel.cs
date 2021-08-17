@@ -7,51 +7,45 @@ using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
-using System;
-using DynamicData.Binding;
+using System.Collections.Generic;
+using BusinessLayer.Abstract.Exceptions;
+using UI.ER.ViewModels.Common;
 using System.Linq;
+using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class CursAcademicRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.CursAcademic Model {get;}
+        protected dtoo.CursAcademic Model { get; }
         protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos {get;}
         public CursAcademicRowViewModel(
-            dtoo.CursAcademic CursAcademicDto,
+            dtoo.CursAcademic CursAcademicDto, 
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
-            Action<IIdEtiquetaDescripcio>? modeLookup = null)
+            bool modeLookup = false)
         {
 
+            // Behavior Parm
             ModeLookup = modeLookup;
             TotsElsCursos = totsElsCursos;
+
+            // State
             Model = CursAcademicDto;
             _Etiqueta = CursAcademicDto.Etiqueta;
             _Descripcio = CursAcademicDto.Descripcio;
             _Estat = CursAcademicDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = CursAcademicDto.EsActiu;
             Id = CursAcademicDto.Id;
-            DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
-            Seleccionar = ReactiveCommand.Create( RunSeleccionar );
 
-            // ----
-            ShowDialog = new Interaction<CursAcademicUpdateViewModel, dtoo.CursAcademic?>();
-
-            Update = ReactiveCommand.CreateFromTask(async () =>
-            {
-                var update = new CursAcademicUpdateViewModel(Id);
-
-                var data = await ShowDialog.Handle(update);
-
-                if (data != null) DTO2ModelView(data);
-            });
-
+            // Behavior
+            DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
+            SeleccionarCommand = ReactiveCommand.Create(SelectRow);
+            UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
         }
 
-        public Action<IIdEtiquetaDescripcio>? ModeLookup {get; }
-        public bool ModeLookupActivat => ModeLookup != null;
-        public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
+
+        public bool ModeLookup { get; }
 
         private string _Etiqueta = string.Empty;
         public string Etiqueta
@@ -81,41 +75,56 @@ namespace UI.ER.ViewModels.ViewModels
             protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
 
-        public int Id {get;}
+        public int Id { get; }
 
-        protected async Task RunTheThing()
+        private void DTO2ModelView(dtoo.CursAcademic? data)
         {
-            using var bl = SuperContext.GetBLOperation<ICursAcademicActivaDesactiva>();
+            if (data == null)
+                return;
 
-            var data = (await bl.Toggle(Id)).Data!;
-
-            DTO2ModelView(data);
-
-            TotsElsCursos
-                .Where(x=>x.Id != data.Id)
-                .ToList()
-                .ForEach(x=>x.EsActiu = false);
-        }
-
-        private void DTO2ModelView(dtoo.CursAcademic data)
-        {
             Etiqueta = data.Etiqueta;
             Descripcio = data.Descripcio;
             Estat = data.EsActiu ? "Activat" : "Desactivat";
             EsActiu = data.EsActiu;
         }
-
-        // ----------------------
-        public ICommand Update { get; }
-        public Interaction<CursAcademicUpdateViewModel, dtoo.CursAcademic?> ShowDialog { get; }
-
-        // -----------------------
-        public ReactiveCommand<Unit, Unit> Seleccionar { get; } 
-        protected void RunSeleccionar()
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
+        private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
         {
-            ModeLookup?.Invoke(Model);
+            BrokenRules.Clear();
+            BrokenRules.AddRange(brokenRules.Select(x => x.Message));
         }
 
+        // --- Activar / Desactivar ---
+        public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
+        protected async Task RunActiuToggle()
+        {
+            using var bl = SuperContext.GetBLOperation<ICursAcademicActivaDesactiva>();
+            var dto = await bl.Toggle(Id);
+            DTO2ModelView(dto.Data);
+            BrokenRules2ModelView(dto.BrokenRules);
+
+            if (dto.Data == null)
+                return;
+
+            TotsElsCursos
+                .Where(x=>x.Id != dto.Data.Id)
+                .ToList()
+                .ForEach(x=>x.EsActiu = false);
+        }
+
+        // --- Obrir Finestra Edició ---
+        public ICommand UpdateCommand { get; }
+        public Interaction<CursAcademicUpdateViewModel, dtoo.CursAcademic?> ShowUpdateDialog { get; } = new();
+        private async Task ShowUpdateDialogHandle()
+        {
+            var update = new CursAcademicUpdateViewModel(Id);
+            var data = await ShowUpdateDialog.Handle(update);
+            if (data != null) DTO2ModelView(data);
+        }
+
+        // --- Seleccionar si estem en mode lookup ---
+        public ReactiveCommand<Unit, dtoo.CursAcademic> SeleccionarCommand { get; }
+        private dtoo.CursAcademic SelectRow() => Model;
 
     }
 }

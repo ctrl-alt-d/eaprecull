@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Collections.ObjectModel;
-using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
@@ -11,35 +9,17 @@ using System.Threading.Tasks;
 using UI.ER.ViewModels.Common;
 using System.Windows.Input;
 using DynamicData.Binding;
-using DynamicData;
-using CommonInterfaces;
 
 namespace UI.ER.ViewModels.ViewModels
 {
 
     public class CursAcademicSetViewModel : ViewModelBase
     {
-        protected virtual ICursAcademicSet BLCursAcademics() => SuperContext.GetBLOperation<ICursAcademicSet>();
-        private IIdEtiquetaDescripcio? _SelectedItem;
-        public IIdEtiquetaDescripcio? SelectedItem
-        {
-            get => _SelectedItem;
-            set => this.RaiseAndSetIfChanged(ref _SelectedItem, value);
-        }
-
-        public Action<IIdEtiquetaDescripcio>? ModeLookup {get;}
-        public CursAcademicSetViewModel(bool? modeLookup = null)
+        public bool ModeLookup { get; }
+        public CursAcademicSetViewModel(bool modeLookup = false)
         {
 
-            if (modeLookup ?? false)
-                ModeLookup = (i) => this.SelectedItem = i;
-
-            SourceItems
-                .ToObservableChangeSet(t=>t.Id)
-                // .Filter(x=> !NomesActius || x.EsActiu == NomesActius)
-                .Bind(out _MyItems)
-                .Subscribe();
-
+            ModeLookup = modeLookup;
 
             // Filtre
             this
@@ -57,43 +37,39 @@ namespace UI.ER.ViewModels.ViewModels
 
                 var data = await ShowDialog.Handle(update);
 
-                if (data != null) {
-                    var item = new CursAcademicRowViewModel(data, SourceItems, ModeLookup);
-                    SourceItems.Insert(0, item);
+                if (data != null)
+                {
+                    var item = new CursAcademicRowViewModel(data, MyItems, ModeLookup);
+                    MyItems.Insert(0, item);
                 }
             });
 
 
         }
-        public ObservableCollectionExtended<CursAcademicRowViewModel> SourceItems { get; } = new();
-        private readonly ReadOnlyObservableCollection<CursAcademicRowViewModel> _MyItems;
-        public ReadOnlyObservableCollection<CursAcademicRowViewModel> MyItems => _MyItems;
+        public ObservableCollectionExtended<CursAcademicRowViewModel> MyItems { get; } = new();
 
-
-        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
         protected virtual async void LoadCursAcademics(bool nomesActius)
         {
-            // Nota: aquesta tasca triga molt, la UX és pobra 
-            // https://stackoverflow.com/questions/68740471/update-ui-inside-a-suscribed-task.
-            SourceItems.Clear();
+            MyItems.Clear();
             await OmplirAmbElsNousValors(nomesActius);
         }
 
         private async Task OmplirAmbElsNousValors(bool nomesActius)
         {
             // Preparar paràmetres al backend
-            var esActiu = nomesActius ? true : (bool?)null;            
+            var esActiu = nomesActius ? true : (bool?)null;
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = BLCursAcademics();
+            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(parms);
 
             // 
             BrokenRules.Clear();
-            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
-            
+            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
+
 
             // Ha fallat la petició
             if (dto.Data == null)
@@ -103,11 +79,12 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new CursAcademicRowViewModel(x, SourceItems, ModeLookup));
-            SourceItems.AddRange(newItems);
+                .Select(x => new CursAcademicRowViewModel(x, MyItems, ModeLookup));
+
+            MyItems.AddRange(newItems);
 
             //
-            PaginatedMsg = 
+            PaginatedMsg =
                 (dto.Total > dto.TakeRequested) ?
                 $"Mostrant els {newItems.Count()} primers resultats d'un total de {dto.Total}" :
                 string.Empty;
@@ -120,7 +97,6 @@ namespace UI.ER.ViewModels.ViewModels
             get => _PaginatedMsg;
             set => this.RaiseAndSetIfChanged(ref _PaginatedMsg, value);
         }
-
 
         // Filtre
         private bool _NomesActius = false;

@@ -9,6 +9,7 @@ using UI.ER.ViewModels.Common;
 using System.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
+using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -42,7 +43,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
         private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
         {
-            BrokenRules.ClearSilently();
+            BrokenRules.Clear();
             BrokenRules.AddRange(brokenRules.Select(x => x.Message));
         }
         public virtual async Task<dtoo.Centre?> CreateData()
@@ -64,7 +65,7 @@ namespace UI.ER.ViewModels.ViewModels
             return data;
         }
 
-        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
         public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
 

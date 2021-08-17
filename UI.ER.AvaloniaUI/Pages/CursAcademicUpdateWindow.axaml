@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.CursAcademicUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nou CursAcademic"        
+        Title="Edició dades CursAcademic"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
@@ -20,7 +20,6 @@
         </StackPanel.Styles>                
 
         <NumericUpDown Value="{Binding AnyInici}" Increment="1"/>
-
         <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
