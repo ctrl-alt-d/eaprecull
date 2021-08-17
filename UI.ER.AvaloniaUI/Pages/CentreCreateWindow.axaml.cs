@@ -17,22 +17,29 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreCreateWindow()
         {
             this.InitializeComponent();
-            this.WhenActivated(d => {
-
-                // Tancar la finestra.
-                d(
-                    ViewModel!
-                    .SubmitCommand
-                    .Subscribe(CloseIfSaved));
-                    
-            });                    
+            
+            this.WhenActivated(disposables => { 
+                RegisterCloseIfSaved(disposables); 
+            });
         }
+
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+        // -- Close if saved --
+        protected virtual void RegisterCloseIfSaved(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>
+                    vm.SubmitCommand.Subscribe(CloseIfSaved)
+                )
+            );
 
         private void CloseIfSaved(Centre? obj)
         {
             if (ViewModel!.SuccessfullySaved)
                 Close(obj);
         }
-        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

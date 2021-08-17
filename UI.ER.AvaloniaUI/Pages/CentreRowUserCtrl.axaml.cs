@@ -21,25 +21,24 @@ namespace UI.ER.AvaloniaUI.Pages
         public CentreRowUserCtrl()
         {
             InitializeComponent();
-        }
 
-        protected virtual void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);            
             this.WhenActivated(disposables => { 
                 RegisterShowDialog(disposables); 
             });
         }
 
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+        // -- Show Dialog --
         protected virtual void RegisterShowDialog(Action<IDisposable> disposables)
             =>
-            this
-            .WhenAnyValue(x=>x.ViewModel)
-            .Subscribe(vm=>
-                vm.ShowDialog.RegisterHandler(UpdateShowDialogAsync) 
-            );
-
-
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>
+                    vm.ShowDialog.RegisterHandler(UpdateShowDialogAsync) 
+                )
+            );        
         protected virtual async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreUpdateWindow()
