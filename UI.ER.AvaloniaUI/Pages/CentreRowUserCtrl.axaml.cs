@@ -24,45 +24,50 @@ namespace UI.ER.AvaloniaUI.Pages
             InitializeComponent();
 
             this.WhenActivated(disposables => { 
-                RegisterShowDialog(disposables); 
+                RegisterShowUpdateDialog(disposables); 
                 RegisterCloseOnSelect(disposables); 
             });
 
 
         }
 
-        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+        private void InitializeComponent()
+            =>
+            AvaloniaXamlLoader.Load(this);
+        private Window GetWindow() 
+            =>
+            (Window)this.VisualRoot;
 
         // -- Show Dialog --
-        protected virtual void RegisterShowDialog(Action<IDisposable> disposables)
+        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
             =>
             disposables(
                 this
                 .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>
-                    vm.ShowUpdateDialog.RegisterHandler(UpdateShowDialogAsync) 
-                )
+                .Subscribe(vm=>vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
             );        
-        protected virtual async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
+        protected virtual async Task DoShowUpdateDialog(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreUpdateWindow()
             {
                 DataContext = interaction.Input
             };
 
-            var result = await dialog.ShowDialog<dtoo.Centre?>(MyVisualRoot());
+            var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
 
             interaction.SetOutput(result);
             ( this.Parent as ListBoxItem)!.Focus();
         }
 
         // -- Select Row
-        private Window MyVisualRoot() => (Window)this.VisualRoot;
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)
             =>
-            this
-            .WhenAnyValue(x=>x.ViewModel)
-            .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(MyVisualRoot().Close));
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(GetWindow().Close))
+            );
+
 
     }
 }

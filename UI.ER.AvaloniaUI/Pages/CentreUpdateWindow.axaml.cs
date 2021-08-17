@@ -1,6 +1,5 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using Material.Dialog.Interfaces;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using Avalonia.ReactiveUI;
