@@ -13,6 +13,7 @@ using UI.ER.AvaloniaUI.Views;
 using Avalonia.LogicalTree;
 using System.Collections.Generic;
 using System;
+using System.Reactive;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -24,7 +25,10 @@ namespace UI.ER.AvaloniaUI.Pages
 
             this.WhenActivated(disposables => { 
                 RegisterShowDialog(disposables); 
+                RegisterCloseOnSelect(disposables); 
             });
+
+
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
@@ -46,12 +50,19 @@ namespace UI.ER.AvaloniaUI.Pages
                 DataContext = interaction.Input
             };
 
-            var window = (Window)this.VisualRoot;
-
-            var result = await dialog.ShowDialog<dtoo.Centre?>(window);
+            var result = await dialog.ShowDialog<dtoo.Centre?>(MyVisualRoot());
 
             interaction.SetOutput(result);
             ( this.Parent as ListBoxItem)!.Focus();
         }
+
+        // -- Select Row
+        private Window MyVisualRoot() => (Window)this.VisualRoot;
+        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
+            =>
+            this
+            .WhenAnyValue(x=>x.ViewModel)
+            .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(MyVisualRoot().Close));
+
     }
 }

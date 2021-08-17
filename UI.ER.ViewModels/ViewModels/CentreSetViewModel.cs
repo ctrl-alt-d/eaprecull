@@ -20,19 +20,11 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreSetViewModel : ViewModelBase
     {
         protected virtual ICentreSet BLCentres() => SuperContext.GetBLOperation<ICentreSet>();
-        private IIdEtiquetaDescripcio? _SelectedItem;
-        public IIdEtiquetaDescripcio? SelectedItem
-        {
-            get => _SelectedItem;
-            set => this.RaiseAndSetIfChanged(ref _SelectedItem, value);
-        }
-
-        public Action<IIdEtiquetaDescripcio>? ModeLookup {get;}
-        public CentreSetViewModel(bool? modeLookup = null)
+        public bool ModeLookup {get;}
+        public CentreSetViewModel(bool modeLookup = false)
         {
 
-            if (modeLookup ?? false)
-                ModeLookup = (i) => this.SelectedItem = i;
+            ModeLookup = modeLookup;
 
             SourceItems
                 .ToObservableChangeSet(t=>t.Id)

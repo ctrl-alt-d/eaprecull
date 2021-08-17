@@ -41,8 +41,8 @@
         <DockPanel>
 
             <Button DockPanel.Dock="Left"
-                    IsVisible="{Binding ModeLookupActivat}"
-                    Command="{Binding Seleccionar}"
+                    IsVisible="{Binding ModeLookup}"
+                    Command="{Binding SeleccionarCommand}"
                     Classes="LookupFinishedCss Flat" />
 
             <Button DockPanel.Dock="Right"

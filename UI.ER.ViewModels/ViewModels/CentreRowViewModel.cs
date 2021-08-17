@@ -15,7 +15,7 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected dtoo.Centre Model {get;}
-        public CentreRowViewModel(dtoo.Centre centreDto, Action<IIdEtiquetaDescripcio>? modeLookup = null)
+        public CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup = false)
         {
 
             ModeLookup = modeLookup;
@@ -26,7 +26,7 @@ namespace UI.ER.ViewModels.ViewModels
             _EsActiu = centreDto.EsActiu;
             Id = centreDto.Id;
             DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
-            Seleccionar = ReactiveCommand.Create( RunSeleccionar );
+            SeleccionarCommand = ReactiveCommand.Create( () => SelectRow());
 
             // ----
             ShowDialog = new Interaction<CentreUpdateViewModel, dtoo.Centre?>();
@@ -42,8 +42,8 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
-        public Action<IIdEtiquetaDescripcio>? ModeLookup {get; }
-        public bool ModeLookupActivat => ModeLookup != null;
+        
+        public bool ModeLookup {get; }
         public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
 
         private string _Etiqueta = string.Empty;
@@ -98,12 +98,11 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowDialog { get; }
 
         // -----------------------
-        public ReactiveCommand<Unit, Unit> Seleccionar { get; } 
-        protected void RunSeleccionar()
+        public ReactiveCommand<Unit, dtoo.Centre> SeleccionarCommand { get; } 
+        private dtoo.Centre SelectRow()
         {
-            ModeLookup?.Invoke(Model);
+            return Model;
         }
-
 
     }
 }

@@ -20,12 +20,6 @@ namespace UI.ER.AvaloniaUI.Pages
                 // Crear nou item
                 d(ViewModel!.ShowDialog.RegisterHandler(CreateShowDialogAsync));
 
-                // Tancar la finestra si seleccionen item
-                d(ViewModel
-                    .WhenAnyValue(x => x.SelectedItem)
-                    .Where(s => s != null)
-                    .Select(x => x)
-                    .Subscribe(x=>Close(x)));
             });
         }
         
