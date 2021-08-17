@@ -1,19 +1,11 @@
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using BusinessLayer.Abstract;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
-using UI.ER.AvaloniaUI.Services;
-using UI.ER.AvaloniaUI.Views;
-using Avalonia.LogicalTree;
-using System.Collections.Generic;
 using System;
-using System.Reactive;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -55,8 +47,7 @@ namespace UI.ER.AvaloniaUI.Pages
 
             var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
 
-            interaction.SetOutput(result);
-            ( this.Parent as ListBoxItem)!.Focus();
+            interaction.SetOutput(result);        
         }
 
         // -- Select Row

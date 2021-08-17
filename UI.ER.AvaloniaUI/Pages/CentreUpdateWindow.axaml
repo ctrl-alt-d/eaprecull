@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.CentreUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nou centre"        
+        Title="Edició dades Centre"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
