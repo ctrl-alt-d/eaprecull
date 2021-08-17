@@ -46,13 +46,13 @@
                     Classes="LookupFinishedCss Flat" />
 
             <Button DockPanel.Dock="Right"
-                    Command="{Binding Update}"
+                    Command="{Binding UpdateCommand}"
                     Classes="EditarCss Flat" />
 
             <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
                           VerticalAlignment="Center" 
                           IsChecked="{Binding EsActiu}"
-                          Command="{Binding DoTheThing}"
+                          Command="{Binding DoActiuToggleCommand}"
                           DockPanel.Dock="Right"/>
 
             <StackPanel Orientation="Vertical"

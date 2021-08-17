@@ -7,44 +7,39 @@ using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
-using System;
+using System.Collections.Generic;
+using BusinessLayer.Abstract.Exceptions;
+using UI.ER.ViewModels.Common;
+using System.Linq;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Centre Model {get;}
+        protected dtoo.Centre Model { get; }
         public CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup = false)
         {
 
+            // Behavior Parm
             ModeLookup = modeLookup;
+
+            // State
             Model = centreDto;
             _Etiqueta = centreDto.Etiqueta;
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = centreDto.EsActiu;
             Id = centreDto.Id;
-            DoTheThing = ReactiveCommand.CreateFromTask( RunTheThing );
-            SeleccionarCommand = ReactiveCommand.Create( () => SelectRow());
 
-            // ----
-            ShowDialog = new Interaction<CentreUpdateViewModel, dtoo.Centre?>();
-
-            Update = ReactiveCommand.CreateFromTask(async () =>
-            {
-                var update = new CentreUpdateViewModel(Id);
-
-                var data = await ShowDialog.Handle(update);
-
-                if (data != null) DTO2ModelView(data);
-            });
-
+            // Behavior
+            DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
+            SeleccionarCommand = ReactiveCommand.Create(SelectRow);
+            UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
         }
 
-        
-        public bool ModeLookup {get; }
-        public ReactiveCommand<Unit, Unit> DoTheThing { get; } 
+
+        public bool ModeLookup { get; }
 
         private string _Etiqueta = string.Empty;
         public string Etiqueta
@@ -74,35 +69,48 @@ namespace UI.ER.ViewModels.ViewModels
             protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
 
-        public int Id {get;}
+        public int Id { get; }
 
-        protected async Task RunTheThing()
+        private void DTO2ModelView(dtoo.Centre? data)
         {
-            using var bl = SuperContext.GetBLOperation<ICentreActivaDesactiva>();
+            if (data == null)
+                return;
 
-            var data = (await bl.Toggle(Id)).Data!;
-
-            DTO2ModelView(data);
-        }
-
-        private void DTO2ModelView(dtoo.Centre data)
-        {
             Etiqueta = data.Etiqueta;
             Descripcio = data.Descripcio;
             Estat = data.EsActiu ? "Activat" : "Desactivat";
             EsActiu = data.EsActiu;
         }
-
-        // ----------------------
-        public ICommand Update { get; }
-        public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowDialog { get; }
-
-        // -----------------------
-        public ReactiveCommand<Unit, dtoo.Centre> SeleccionarCommand { get; } 
-        private dtoo.Centre SelectRow()
+        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
         {
-            return Model;
+            BrokenRules.ClearSilently();
+            BrokenRules.AddRange(brokenRules.Select(x => x.Message));
         }
+
+        // --- Activar / Desactivar ---
+        public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
+        protected async Task RunActiuToggle()
+        {
+            using var bl = SuperContext.GetBLOperation<ICentreActivaDesactiva>();
+            var dto = await bl.Toggle(Id);
+            DTO2ModelView(dto.Data);
+            BrokenRules2ModelView(dto.BrokenRules);
+        }
+
+        // --- Obrir Finestra Edició ---
+        public ICommand UpdateCommand { get; }
+        public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowUpdateDialog { get; } = new();
+        private async Task ShowUpdateDialogHandle()
+        {
+            var update = new CentreUpdateViewModel(Id);
+            var data = await ShowUpdateDialog.Handle(update);
+            if (data != null) DTO2ModelView(data);
+        }
+
+        // --- Seleccionar si estem en mode lookup ---
+        public ReactiveCommand<Unit, dtoo.Centre> SeleccionarCommand { get; }
+        private dtoo.Centre SelectRow() => Model;
 
     }
 }

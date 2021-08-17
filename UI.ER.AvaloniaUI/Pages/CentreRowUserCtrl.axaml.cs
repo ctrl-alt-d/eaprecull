@@ -40,7 +40,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 this
                 .WhenAnyValue(x=>x.ViewModel)
                 .Subscribe(vm=>
-                    vm.ShowDialog.RegisterHandler(UpdateShowDialogAsync) 
+                    vm.ShowUpdateDialog.RegisterHandler(UpdateShowDialogAsync) 
                 )
             );        
         protected virtual async Task UpdateShowDialogAsync(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
