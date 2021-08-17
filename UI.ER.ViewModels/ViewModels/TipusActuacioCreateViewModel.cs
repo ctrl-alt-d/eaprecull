@@ -1,25 +1,24 @@
 using System.Reactive;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
-using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
-using System.Reactive.Concurrency;
 using dtoi = DTO.i.DTOs;
-using System.ComponentModel;
 using UI.ER.ViewModels.Common;
 using System.Linq;
+using System.Collections.Generic;
+using BusinessLayer.Abstract.Exceptions;
+using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class TipusActuacioCreateViewModel : ViewModelBase
     {
 
-        protected virtual ITipusActuacioCreate BLCreate() => SuperContext.GetBLOperation<ITipusActuacioCreate>();
         public TipusActuacioCreateViewModel()
         {
-            SubmitCommand = ReactiveCommand.CreateFromTask(() => CreateData());
+            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
         }
 
         public string _Codi = string.Empty;
@@ -37,12 +36,16 @@ namespace UI.ER.ViewModels.ViewModels
 
         private void DTO2ModelView(dtoo.TipusActuacio? data)
         {
-            if (data==null) return;
+            if (data == null) return;
 
             Codi = data.Codi;
             Nom = data.Nom;
         }
-
+        private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
+        {
+            BrokenRules.Clear();
+            BrokenRules.AddRange(brokenRules.Select(x => x.Message));
+        }
         public virtual async Task<dtoo.TipusActuacio?> CreateData()
         {
             BrokenRules.Clear();
@@ -51,30 +54,22 @@ namespace UI.ER.ViewModels.ViewModels
             var parms = new dtoi.TipusActuacioCreateParms(Codi, Nom, true);
 
             // cridar backend
-            using var bl = BLCreate();
+            using var bl = SuperContext.GetBLOperation<ITipusActuacioCreate>();
             var dto = await bl.Create(parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
             DTO2ModelView(data);
-            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
-
-            SuccessfullySaved = data != null && !dto.BrokenRules.Any();
+            BrokenRules2ModelView(dto.BrokenRules);
 
             return data;
         }
 
-        public RangeObservableCollection<string> BrokenRules { get; } = new();
+        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
         public ReactiveCommand<Unit, dtoo.TipusActuacio?> SubmitCommand { get; }
 
-        private bool _Sortir;
-        public bool SuccessfullySaved
-        {
-            get { return _Sortir; }
-            protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }
-        }
-       
+
 
     }
 }

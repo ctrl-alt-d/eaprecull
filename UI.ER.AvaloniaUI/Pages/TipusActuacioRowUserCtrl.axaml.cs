@@ -1,15 +1,11 @@
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using BusinessLayer.Abstract;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
-using UI.ER.AvaloniaUI.Services;
-using UI.ER.AvaloniaUI.Views;
+using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -18,25 +14,51 @@ namespace UI.ER.AvaloniaUI.Pages
         public TipusActuacioRowUserCtrl()
         {
             InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
+
+            this.WhenActivated(disposables => { 
+                RegisterShowUpdateDialog(disposables); 
+                RegisterCloseOnSelect(disposables); 
+            });
+
+
         }
 
         private void InitializeComponent()
-        {
+            =>
             AvaloniaXamlLoader.Load(this);
-        }
+        private Window GetWindow() 
+            =>
+            (Window)this.VisualRoot;
 
-        private async Task UpdateShowDialogAsync(InteractionContext<TipusActuacioUpdateViewModel, dtoo.TipusActuacio?> interaction)
+        // -- Show Dialog --
+        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+            );        
+        protected virtual async Task DoShowUpdateDialog(InteractionContext<TipusActuacioUpdateViewModel, dtoo.TipusActuacio?> interaction)
         {
             var dialog = new TipusActuacioUpdateWindow()
             {
                 DataContext = interaction.Input
             };
 
-            var window = (Window)this.VisualRoot;
-            var result = await dialog.ShowDialog<dtoo.TipusActuacio?>(window);
-            interaction.SetOutput(result);
-            
+            var result = await dialog.ShowDialog<dtoo.TipusActuacio?>(GetWindow());
+
+            interaction.SetOutput(result);            
         }
+
+        // -- Select Row
+        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(GetWindow().Close))
+            );
+
+
     }
 }

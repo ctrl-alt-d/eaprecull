@@ -1,15 +1,11 @@
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using BusinessLayer.Abstract;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
-using UI.ER.AvaloniaUI.Services;
-using UI.ER.AvaloniaUI.Views;
+using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -18,25 +14,51 @@ namespace UI.ER.AvaloniaUI.Pages
         public EtapaRowUserCtrl()
         {
             InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(UpdateShowDialogAsync)));
+
+            this.WhenActivated(disposables => { 
+                RegisterShowUpdateDialog(disposables); 
+                RegisterCloseOnSelect(disposables); 
+            });
+
+
         }
 
         private void InitializeComponent()
-        {
+            =>
             AvaloniaXamlLoader.Load(this);
-        }
+        private Window GetWindow() 
+            =>
+            (Window)this.VisualRoot;
 
-        private async Task UpdateShowDialogAsync(InteractionContext<EtapaUpdateViewModel, dtoo.Etapa?> interaction)
+        // -- Show Dialog --
+        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+            );        
+        protected virtual async Task DoShowUpdateDialog(InteractionContext<EtapaUpdateViewModel, dtoo.Etapa?> interaction)
         {
             var dialog = new EtapaUpdateWindow()
             {
                 DataContext = interaction.Input
             };
 
-            var window = (Window)this.VisualRoot;
-            var result = await dialog.ShowDialog<dtoo.Etapa?>(window);
-            interaction.SetOutput(result);
-            
+            var result = await dialog.ShowDialog<dtoo.Etapa?>(GetWindow());
+
+            interaction.SetOutput(result);        
         }
+
+        // -- Select Row
+        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(GetWindow().Close))
+            );
+
+
     }
 }

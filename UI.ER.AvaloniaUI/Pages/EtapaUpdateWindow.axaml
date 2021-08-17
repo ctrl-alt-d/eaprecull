@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.EtapaUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nou Etapa"        
+        Title="Edició dades Etapa"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
@@ -30,7 +30,7 @@
              wpf:TextFieldAssist.Label="Codi" />
 
         <CheckBox Content="Són estudis obligatòris?" IsChecked="{Binding SonEstudisObligatoris}"/>
-
+        
         <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -44,3 +44,5 @@
     </StackPanel>
 
 </Window>
+
+

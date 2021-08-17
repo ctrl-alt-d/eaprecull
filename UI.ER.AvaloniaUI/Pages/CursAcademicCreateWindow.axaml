@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.CursAcademicCreateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nova CursAcademic"        
+        Title="Alta nou Curs Acadèmic"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
