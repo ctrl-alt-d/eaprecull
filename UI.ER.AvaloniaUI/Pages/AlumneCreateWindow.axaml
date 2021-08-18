@@ -20,18 +20,29 @@
 
         </StackPanel.Styles>                
 
+        <DockPanel>
 
-        <TextBox Text="{Binding Nom}"
-             UseFloatingWatermark="True"
-             Classes="Filled"
-             wpf:TextFieldAssist.Label="Nom" />
+            <TextBox DockPanel.Dock="Left"
+                     MinWidth="300"
+                     Text="{Binding Nom}"
+                     Margin="10,0,10,0"
+                     UseFloatingWatermark="True"
+                     Classes="Filled"
+                     wpf:TextFieldAssist.Label="Nom" />
 
-        <TextBox Text="{Binding Cognoms}"
-             UseFloatingWatermark="True"
-             Classes="Filled"
-             wpf:TextFieldAssist.Label="Cognoms" />
+            <TextBox DockPanel.Dock="Left"
+                     Text="{Binding Cognoms}"
+                     Margin="10,0,10,0"
+                     MinWidth="350"
+                     UseFloatingWatermark="True"
+                     Classes="Filled"
+                     wpf:TextFieldAssist.Label="Cognoms" />
 
-        <StackPanel Orientation="Horizontal">
+        </DockPanel>
+
+        <DatePicker Header="Date of birth" Margin="10,0,10,0" />
+
+        <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
             <TextBox Text="{Binding CentreTxt}"
                      Width="250"
                      UseFloatingWatermark="True"
@@ -39,11 +50,11 @@
                      IsReadOnly="true"
                      Focusable="false"
                      wpf:TextFieldAssist.Label="Centre actual" />
-            <Button Command="{Binding CentreLookup}"
+            <Button Command="{Binding CentreLookupCommand}"
                     Classes="LookupCss Flat"  />
         </StackPanel>
 
-        <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
+        <ItemsControl Margin="10,0,10,0" Items="{Binding BrokenRules}">            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Classes="Error" Text="{Binding}"/>
@@ -51,7 +62,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}"/>
+        <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,0,10,0"/>
 
     </StackPanel>
 

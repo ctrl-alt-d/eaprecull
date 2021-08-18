@@ -84,9 +84,11 @@ namespace DataLayer.Migrations
                     ObservacionsNESENEE = table.Column<string>(type: "TEXT", nullable: false),
                     DataInformeNESENoNEE = table.Column<DateTime>(type: "TEXT", nullable: true),
                     ObservacionsNESENoNEE = table.Column<string>(type: "TEXT", nullable: false),
-                    DataDarreraModificacio = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Tags = table.Column<string>(type: "TEXT", nullable: false),
-                    EsActiu = table.Column<bool>(type: "INTEGER", nullable: false)
+                    EsActiu = table.Column<bool>(type: "INTEGER", nullable: false),
+                    NombreTotalDactuacions = table.Column<int>(type: "INTEGER", nullable: false),
+                    DataDarreraActuacio = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DataDarreraModificacio = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
