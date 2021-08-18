@@ -13,8 +13,7 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public class AlumneSetWindow : ReactiveWindow<AlumneSetViewModel> {
         public AlumneSetWindow() {
-            InitializeComponent();
-                        
+            InitializeComponent();                        
             this.WhenActivated(disposables => {
                 RegisterShowCreateDialog(disposables);
             });

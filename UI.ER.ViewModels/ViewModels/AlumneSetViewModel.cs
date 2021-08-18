@@ -2,6 +2,7 @@
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
+using dtoi = DTO.i.DTOs;
 using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
@@ -26,15 +27,20 @@ namespace UI.ER.ViewModels.ViewModels
                 .WhenAnyValue(x=>x.NomCognomsCentre)
                 .Throttle(TimeSpan.FromMilliseconds(400));
 
+            var OrdreAlfabeticObserver =
+                this
+                .WhenAnyValue(x=>x.OrdreAlfabetic);
+
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .CombineLatest(
                         NomCognomsCentreObserver,
-                        (nomesActius, nomCognomsCentre) => 
-                        (nomesActius, nomCognomsCentre)
+                        OrdreAlfabeticObserver,
+                        (nomesActius, nomCognomsCentre, ordreAlfabetic) => 
+                        (nomesActius, nomCognomsCentre, ordreAlfabetic)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(t => LoadAlumnes(t.nomesActius, t.nomCognomsCentre))
+                .Subscribe(t => LoadAlumnes(t.nomesActius, t.nomCognomsCentre, t.ordreAlfabetic))
                 ;
 
             // Create
@@ -59,20 +65,30 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        protected virtual async void LoadAlumnes(bool nomesActius, string nomCognomsCentre)
+        protected virtual async void LoadAlumnes(bool nomesActius, string nomCognomsCentre, bool ordreAlfabetic)
         {
             Loading = true;
             MyItems.Clear();
-            await OmplirAmbElsNousValors(nomesActius, nomCognomsCentre);
+            await OmplirAmbElsNousValors(nomesActius, nomCognomsCentre, ordreAlfabetic);
         }
 
-        private async Task OmplirAmbElsNousValors(bool nomesActius, string nomCognomsCentre)
+        private async Task OmplirAmbElsNousValors(bool nomesActius, string nomCognomsCentre, bool ordreAlfabetic)
         {
             // Preparar paràmetres al backend
-            var esActiu = nomesActius ? true : (bool?)null;
+            var esActiu = 
+                nomesActius ? 
+                true : 
+                (bool?)null;
+                
+            var ordre = 
+                ordreAlfabetic ?
+                dtoi.AlumneSearchParms.OrdreResultatsChoice.CognomsNom :
+                dtoi.AlumneSearchParms.OrdreResultatsChoice.DarreraModificacio ;
+
             var parms = new DTO.i.DTOs.AlumneSearchParms(
                 esActiu: esActiu,
-                nomCognomsCentre: nomCognomsCentre
+                nomCognomsCentre: nomCognomsCentre,
+                ordreResultats: ordre
             );
 
             // Petició al backend            
@@ -128,6 +144,12 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
         }
 
+        private bool _OrdreAlfabetic = false;
+        public bool OrdreAlfabetic
+        {
+            get => _OrdreAlfabetic;
+            set => this.RaiseAndSetIfChanged(ref _OrdreAlfabetic, value);
+        }
 
         private string _NomCognomsCentre = string.Empty;
         public string NomCognomsCentre
