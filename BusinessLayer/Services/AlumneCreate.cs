@@ -48,6 +48,7 @@ namespace BusinessLayer.Services
                 DataInformeNESENoNEE = parm.DataInformeNESENoNEE,
                 ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE,
                 Tags = parm.Tags,
+                EsActiu = true,
                 DataDarreraModificacio = DateTime.Now,                
             };
 

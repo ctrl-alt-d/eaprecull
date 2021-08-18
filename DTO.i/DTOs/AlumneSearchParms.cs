@@ -33,7 +33,7 @@ namespace DTO.i.DTOs
             AmbDataInformePosteriorA = ambDataInformePosteriorA;
             EtapaId = etapaId;
             TipusActuacioId = tipusActuacioId;
-            NomCognoms = nomCognoms;
+            NomCognomsCentre = nomCognoms;
             Tags = tags;
             EsActiu = esActiu;
             OrdreResultats = ordreResultats;
@@ -70,7 +70,7 @@ namespace DTO.i.DTOs
         public int? TipusActuacioId {get;}
 
         // Nom - Cognoms
-        public string NomCognoms {get;}
+        public string NomCognomsCentre {get;}
 
         // Tags
         public string Tags {get;}

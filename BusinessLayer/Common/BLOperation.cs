@@ -30,10 +30,11 @@ namespace BusinessLayer.Common
         protected ValueTask<TTarget> Perfection<TTarget>(int id)
             where TTarget: class, IModel
         {
-            return
+            var model =
                 GetContext()
                 .Set<TTarget>()
                 .FindAsync(id);
+            return model;
         }
 
         protected async ValueTask<TTarget?> Perfection<TTarget>(int? id)
@@ -42,10 +43,12 @@ namespace BusinessLayer.Common
             if (!id.HasValue) 
                 return (TTarget?) null;
 
-            return 
+            var model = 
                 await GetContext()
                 .Set<TTarget>()
                 .FindAsync(id);
+            
+            return model;
         }
 
         //

@@ -35,7 +35,7 @@ namespace BusinessLayer.Services
             query = MatchDataInformePosteriorA(query, request);
             query = MatchEtapa(query, request);
             query = MatchTipusActuacio(query, request);
-            query = MatchNomCognoms(query, request);
+            query = MatchNomCognomsCentre(query, request);
             query = MatchTags(query, request);
             query = MatchEsActiu(query, request);
             query = Ordena(query, request.OrdreResultats);
@@ -144,17 +144,19 @@ namespace BusinessLayer.Services
                 model.Actuacions.Any(a => a.TipusActuacio != null && a.TipusActuacio.Id == request.TipusActuacioId));
         }
 
-        private IQueryable<Alumne> MatchNomCognoms(IQueryable<Alumne> query, AlumneSearchParms request)
+        private IQueryable<Alumne> MatchNomCognomsCentre(IQueryable<Alumne> query, AlumneSearchParms request)
         {
-            if (!string.IsNullOrWhiteSpace(request.NomCognoms))
+            if (!string.IsNullOrWhiteSpace(request.NomCognomsCentre))
                 return query;
 
-            var tokens = request.NomCognoms.Split().Select(x => x.Trim()).ToList();
+            var tokens = request.NomCognomsCentre.Split().Select(x => x.Trim()).ToList();
 
             tokens.ForEach(token =>
                 query.Where(model =>
+                    ( model.CentreActual != null && model.CentreActual.Nom.Contains(token) ) ||
                     model.Nom.Contains(token) ||
-                    model.Cognoms.Contains(token))
+                    model.Cognoms.Contains(token)
+                )
             );
             return query;
         }

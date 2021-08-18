@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq.Expressions;
 using System;
+using DataModels.Models;
 
 namespace BusinessLayer.Services
 {
@@ -52,12 +53,21 @@ namespace BusinessLayer.Services
 
             
 
-        protected override Task UpdateModel(models.Alumne model, AlumneUpdateParms parm)
+        protected override async Task UpdateModel(models.Alumne model, AlumneUpdateParms parm)
         {
             model.Nom = parm.Nom;
-            model.EsActiu = parm.EsActiu;
             model.Cognoms = parm.Cognoms;
-            return Task.CompletedTask;
+            model.DataNaixement = parm.DataNaixement;
+            model.CentreActual = await Perfection<Centre>(parm.CentreActualId);
+            model.CursDarreraActualitacioDades = await Perfection<CursAcademic>(parm.CursDarreraActualitacioDadesId);
+            model.EtapaActual = await Perfection<Etapa>(parm.EtapaActualId);
+            model.DataInformeNESENEE = parm.DataInformeNESENEE;
+            model.ObservacionsNESENEE = parm.ObservacionsNESENEE;
+            model.DataInformeNESENoNEE = parm.DataInformeNESENoNEE;
+            model.ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE;
+            model.EsActiu = parm.EsActiu;
+            model.Tags = parm.Tags;
+            model.DataDarreraModificacio = DateTime.Now;            
         }
     }
 }
