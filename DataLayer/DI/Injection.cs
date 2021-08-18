@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,10 @@ namespace DataLayer.DI
             services
             .AddDbContextFactory<AppDbContext>(
                 options =>
-                    options.ConfigureAppDbContext()
+                    options
+                    .ConfigureAppDbContext()
+                    // .LogTo(Console.WriteLine)
+                    // .EnableSensitiveDataLogging()
             );
 
             var serviceProvider = services.BuildServiceProvider();

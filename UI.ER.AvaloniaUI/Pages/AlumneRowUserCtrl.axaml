@@ -8,9 +8,9 @@
              xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="UI.ER.AvaloniaUI.Pages.CentreRowUserCtrl">
+             x:Class="UI.ER.AvaloniaUI.Pages.AlumneRowUserCtrl">
     <Design.DataContext>
-        <viewModels:CentreRowViewModel />
+        <viewModels:AlumneRowViewModel />
     </Design.DataContext>
 
     <UserControl.Styles>
@@ -56,11 +56,25 @@
                           DockPanel.Dock="Right"/>
 
             <StackPanel Orientation="Vertical"
-                        DockPanel.Dock="Left">                            
-                <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
-                
+                        DockPanel.Dock="Left">     
 
-                <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+                <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding CursDarreraActualitzacio}">
+                    <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Kind="AlertOutline" Width="10" Height="10" 
+                                           Foreground="Red"
+                                           IsVisible="{Binding Desactualitzat}"
+                                           Margin="0,0,10,0"
+                                        />
+                    <TextBlock Width="10" Height="10" IsVisible="{Binding !Desactualitzat}" Margin="0,0,10,0"/>
+
+                    <TextBlock Classes="Body1"  Text="{Binding Etiqueta}" MinWidth="350"/>
+
+                    <TextBlock Classes="Body2"  Text="{Binding CentreActual}"/>
+                </StackPanel>
+
+                <TextBlock Classes="Overline" Text="{Binding Descripcio}">
+
+                </TextBlock>
 
                 <ItemsControl Margin="10"
                               IsVisible="{Binding BrokenRules.Count}"

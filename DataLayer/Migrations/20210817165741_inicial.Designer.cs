@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210805131219_initial")]
-    partial class initial
+    [Migration("20210817165741_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,9 @@ namespace DataLayer.Migrations
                     b.Property<int>("CursDarreraActualitacioDadesId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("DataDarreraModificacio")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("DataInformeNESENEE")
                         .HasColumnType("TEXT");
 
@@ -112,6 +115,10 @@ namespace DataLayer.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObservacionsNESENoNEE")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Tags")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -185,6 +192,9 @@ namespace DataLayer.Migrations
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("SonEstudisObligatoris")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

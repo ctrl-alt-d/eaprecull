@@ -1,11 +1,13 @@
 using System;
+using CommonInterfaces;
 
 namespace DTO.i.DTOs
 {
-    public class AlumneCreateParms : IDtoi
+    public class AlumneUpdateParms : IDtoi, IId
     {
-        public AlumneCreateParms(string nom, string cognoms, DateTime? dataNaixement, int? centreActualId, int cursDarreraActualitacioDadesId, int? etapaActualId, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tags)
+        public AlumneUpdateParms(int id, string nom, string cognoms, DateTime? dataNaixement, int? centreActualId, int cursDarreraActualitacioDadesId, int? etapaActualId, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tags, bool esActiu)
         {
+            Id = id;
             Nom = nom;
             Cognoms = cognoms;
             DataNaixement = dataNaixement;
@@ -17,8 +19,10 @@ namespace DTO.i.DTOs
             DataInformeNESENoNEE = dataInformeNESENoNEE;
             ObservacionsNESENoNEE = observacionsNESENoNEE;
             Tags = tags;
+            EsActiu = esActiu;
         }
 
+        public int Id { get; }
         public string Nom { get; }
         public string Cognoms { get; }
         public DateTime? DataNaixement { get; }
@@ -30,6 +34,7 @@ namespace DTO.i.DTOs
         public DateTime? DataInformeNESENoNEE { get; }
         public string ObservacionsNESENoNEE { get; }
         public string Tags { get; }
+        public bool EsActiu {get; }
 
     }
 }

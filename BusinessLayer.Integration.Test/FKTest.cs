@@ -64,12 +64,14 @@ namespace BusinessLayer.Integration.Test
                 dataInformeNESENEE: null,
                 observacionsNESENEE: string.Empty,
                 dataInformeNESENoNEE: null,
-                observacionsNESENoNEE: string.Empty
+                observacionsNESENoNEE: string.Empty,
+                tags: "#costabrava"
 
             );
             var createalumeresult = await alumneCreate.Create(createalumneparms);
 
-            var results = await alumnes.FromPredicate(new DTO.i.DTOs.EmptyParms());
+            var searchParms = new DTO.i.DTOs.AlumneSearchParms();
+            var results = await alumnes.FromPredicate(searchParms);
             var result = results.Data.First();
 
 

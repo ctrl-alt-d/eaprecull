@@ -35,18 +35,19 @@ namespace CreateDemoData
         {
             await CreaCentre();
             await CreaCursAcademic();
+            await CreateAlumne();
         }
 
         private static async Task CreaCentre()
         {
             Console.WriteLine("Creant Centres!");
 
-            var blset = GetBLOperation<ICentreSet>();
+            using var blset = GetBLOperation<ICentreSet>();
             var nhiha = (await blset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {
-                var crea = GetBLOperation<ICentreCreate>();
+                using var crea = GetBLOperation<ICentreCreate>();
                 await crea.Create(new parms.CentreCreateParms("M1", "Les Melies", true));
                 await crea.Create(new parms.CentreCreateParms("M2", "Cendrassos", true));
                 for (var i =0; i<20; i++)
@@ -60,16 +61,54 @@ namespace CreateDemoData
         {
             Console.WriteLine("Creant Cursos Acadèmics!");
 
-            var blset = GetBLOperation<ICursAcademicSet>();
+            using var blset = GetBLOperation<ICursAcademicSet>();
             var nhiha = (await blset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {
-                var crea = GetBLOperation<ICursAcademicCreate>();
+                using var crea = GetBLOperation<ICursAcademicCreate>();
                 await crea.Create(new parms.CursAcademicCreateParms(2020, false));
                 await crea.Create(new parms.CursAcademicCreateParms(2021, true));
                 await crea.Create(new parms.CursAcademicCreateParms(2022, false));
             }
+        }
+
+
+        private static async Task CreateAlumne()
+        {
+            Console.WriteLine("Creant Alumnes!");
+
+            using var blset = GetBLOperation<IAlumneSet>();
+            var nhiha = (await blset.FromPredicate(new parms.AlumneSearchParms())).Data!.Any();
+
+            using var blcentresset = GetBLOperation<ICentreSet>();
+            var centres = await blcentresset.FromPredicate(new parms.EsActiuParms(null));
+
+            using var blcursos = GetBLOperation<ICursAcademicSet>();
+            var cursos = await blcursos.FromPredicate(new parms.EsActiuParms(null));
+
+            using var crea = GetBLOperation<IAlumneCreate>();
+
+            if (!nhiha)
+            for (int i=0;i<2500; i++)
+            {
+                var createParm =
+                    new parms.AlumneCreateParms(
+                        $"Pepe {i}",
+                        $"Escobar {i}",
+                        DateTime.Now.AddYears(-10),
+                        centres.Data![i%centres.Data.Count()].Id,
+                        cursos.Data![i%cursos.Data.Count()].Id,
+                        null,
+                        DateTime.Now,
+                        "hola",
+                        null,
+                        "",
+                        "#hola"
+                    );
+
+                await crea.Create(createParm);
+            }        
         }
 
     }

@@ -18,6 +18,8 @@ namespace DataModels.Models
         public string ObservacionsNESENEE { get; set; } = string.Empty;
         public DateTime? DataInformeNESENoNEE { get; set; }
         public string ObservacionsNESENoNEE { get; set; } = string.Empty;
+        public DateTime? DataDarreraModificacio { get; set; }
+        public string Tags { get; set; } = string.Empty;
 
         // IActiu
         public bool EsActiu { get; set; }

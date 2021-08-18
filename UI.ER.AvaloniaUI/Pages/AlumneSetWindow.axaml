@@ -1,0 +1,122 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+        xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
+        x:Class="UI.ER.AvaloniaUI.Pages.AlumneSetWindow"
+        HorizontalContentAlignment="Stretch"
+        Title="Alumnes"        
+        Width="1000" Height="700" MinWidth="720"
+        WindowStartupLocation="CenterOwner"
+        >
+    <Design.DataContext>
+        <viewModels:AlumnesViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+
+        <DockPanel.Styles>
+            <Style Selector="Button.DesarCss">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <StackPanel Orientation="Horizontal" Height="24">
+                                <Viewbox Stretch="Fill"                                            
+                                         VerticalAlignment="Stretch">
+                                    <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
+                                </Viewbox>
+                                <TextBlock Margin="8,0" Text="Afegir un nou Alumne" Classes="Subtitle2"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </DockPanel.Styles>   
+
+        <DockPanel Margin="10"
+                   DockPanel.Dock="Top">
+
+            <ToggleSwitch DockPanel.Dock="Right"
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding NomesActius}"
+                        Content="Filtrar només actius"
+                        Margin="0 5 0 5"
+                        Classes="LeftHeader"
+                        />
+            <Button DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    Margin="10,0,0,0"
+                    Width="200"
+                    Command="{Binding Create}"
+                    Classes="Outline DesarCss"  />
+
+            <TextBlock DockPanel.Dock="Left"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10, 3, 0, 0"
+                    Width="350"
+                    Text="{Binding PaginatedMsg}"
+                    Classes="Error"  />
+
+        </DockPanel>
+
+        <DockPanel Margin="10"
+            DockPanel.Dock="Top">
+
+            <ToggleSwitch DockPanel.Dock="Right"                        
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding OrdreAlfabetic}"
+                        Content="Ordena per ordre alfabètic"
+                        Margin="0 5 0 5"
+                        Classes="LeftHeader"
+                        />
+
+            <TextBox Text="{Binding NomCognomsCentre}"
+                     DockPanel.Dock="Left"
+                     BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                     BorderThickness="1" Classes="Solo"
+                     Watermark="Cerca alumnes per nom, cognoms o centre"
+                     wpf:TextFieldAssist.CornerRadius="32" Margin="8">
+                <TextBox.InnerLeftContent>
+                    <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
+                        <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Kind="Magnify" Width="20" Height="20" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    </Border>
+                </TextBox.InnerLeftContent>
+            </TextBox>
+
+        </DockPanel>
+
+        <TextBlock Text="Carregant dades ..." 
+                   Margin="10"
+                   IsVisible="{Binding Loading}" Classes="Subtitle2"
+                    />
+
+        <ListBox Items="{Binding BrokenRules}"
+                      DockPanel.Dock="Bottom"
+                      Margin="10"
+                       >            
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>        
+
+        <ListBox DockPanel.Dock="Bottom"
+                 Margin="0"
+                 Items="{Binding MyItems, Mode=OneWay}"
+                 VirtualizationMode="Simple">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <pages:AlumneRowUserCtrl/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </DockPanel>
+</Window>    

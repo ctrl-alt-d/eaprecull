@@ -32,6 +32,8 @@ namespace BusinessLayer.DI
             // alumnes
             services.AddTransient<IAlumneSet, AlumneSet>();
             services.AddTransient<IAlumneCreate, AlumneCreate>();
+            services.AddTransient<IAlumneUpdate, AlumneUpdate>();
+            services.AddTransient<IAlumneActivaDesactiva, AlumneActivaDesactiva>();
 
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
