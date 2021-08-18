@@ -6,7 +6,6 @@ using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Common;
 using System.Windows.Input;
 using DynamicData.Binding;
 
@@ -22,10 +21,20 @@ namespace UI.ER.ViewModels.ViewModels
             ModeLookup = modeLookup;
 
             // Filtre
+            var NomCognomsCentreObserver =
+                this
+                .WhenAnyValue(x=>x.NomCognomsCentre)
+                .Throttle(TimeSpan.FromMilliseconds(400));
+
             this
                 .WhenAnyValue(x => x.NomesActius)
+                .CombineLatest(
+                        NomCognomsCentreObserver,
+                        (nomesActius, nomCognomsCentre) => 
+                        (nomesActius, nomCognomsCentre)
+                )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(nomesActius => LoadAlumnes(nomesActius))
+                .Subscribe(t => LoadAlumnes(t.nomesActius, t.nomCognomsCentre))
                 ;
 
             // Create
@@ -50,17 +59,20 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        protected virtual async void LoadAlumnes(bool nomesActius)
+        protected virtual async void LoadAlumnes(bool nomesActius, string nomCognomsCentre)
         {
             MyItems.Clear();
-            await OmplirAmbElsNousValors(nomesActius);
+            await OmplirAmbElsNousValors(nomesActius, nomCognomsCentre);
         }
 
-        private async Task OmplirAmbElsNousValors(bool nomesActius)
+        private async Task OmplirAmbElsNousValors(bool nomesActius, string nomCognomsCentre)
         {
             // Preparar paràmetres al backend
             var esActiu = nomesActius ? true : (bool?)null;
-            var parms = new DTO.i.DTOs.AlumneSearchParms(esActiu: esActiu);
+            var parms = new DTO.i.DTOs.AlumneSearchParms(
+                esActiu: esActiu,
+                nomCognomsCentre: nomCognomsCentre
+            );
 
             // Petició al backend            
             using var bl = SuperContext.GetBLOperation<IAlumneSet>();
@@ -104,6 +116,13 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _NomesActius;
             set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
+        }
+
+        private string _NomCognomsCentre = string.Empty;
+        public string NomCognomsCentre
+        {
+            get => _NomCognomsCentre;
+            set => this.RaiseAndSetIfChanged(ref _NomCognomsCentre, value);
         }
 
         // Crear item

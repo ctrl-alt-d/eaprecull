@@ -146,13 +146,13 @@ namespace BusinessLayer.Services
 
         private IQueryable<Alumne> MatchNomCognomsCentre(IQueryable<Alumne> query, AlumneSearchParms request)
         {
-            if (!string.IsNullOrWhiteSpace(request.NomCognomsCentre))
+            if (string.IsNullOrWhiteSpace(request.NomCognomsCentre))
                 return query;
 
             var tokens = request.NomCognomsCentre.Split().Select(x => x.Trim()).ToList();
 
             tokens.ForEach(token =>
-                query.Where(model =>
+                query = query.Where(model =>
                     ( model.CentreActual != null && model.CentreActual.Nom.Contains(token) ) ||
                     model.Nom.Contains(token) ||
                     model.Cognoms.Contains(token)
@@ -163,13 +163,13 @@ namespace BusinessLayer.Services
 
         private IQueryable<Alumne> MatchTags(IQueryable<Alumne> query, AlumneSearchParms request)
         {
-            if (!string.IsNullOrWhiteSpace(request.Tags))
+            if (string.IsNullOrWhiteSpace(request.Tags))
                 return query;
 
             var tokens = request.Tags.Split().Select(x => x.Trim()).ToList();
 
             tokens.ForEach(token =>
-                query.Where(model => model.Tags.Contains(token))
+                query = query.Where(model => model.Tags.Contains(token))
             );
             return query;
         }

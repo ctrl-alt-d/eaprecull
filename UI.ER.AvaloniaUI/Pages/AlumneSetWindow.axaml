@@ -62,6 +62,26 @@
 
         </DockPanel>
 
+        <DockPanel Margin="10"
+            DockPanel.Dock="Top">
+
+            <TextBox Text="{Binding NomCognomsCentre}" 
+                     BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                     BorderThickness="1" Classes="Solo"
+                     Watermark="Cerca alumnes per nom, cognoms o centre"
+                     wpf:TextFieldAssist.CornerRadius="32" Margin="8">
+                <TextBox.InnerLeftContent>
+                    <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
+                        <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Kind="Magnify" Width="20" Height="20" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    </Border>
+                </TextBox.InnerLeftContent>
+            </TextBox>
+
+
+        </DockPanel>
+
+
         <ListBox Items="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"
                       Margin="10"
