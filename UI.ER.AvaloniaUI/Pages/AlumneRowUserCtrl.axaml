@@ -56,9 +56,25 @@
                           DockPanel.Dock="Right"/>
 
             <StackPanel Orientation="Vertical"
-                        DockPanel.Dock="Left">                            
-                <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
-                <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+                        DockPanel.Dock="Left">     
+
+                <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding CursDarreraActualitzacio}">
+                    <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Kind="AlertOutline" Width="10" Height="10" 
+                                           Foreground="Red"
+                                           IsVisible="{Binding Desactualitzat}"
+                                           Margin="0,0,10,0"
+                                        />
+                    <TextBlock Width="10" Height="10" IsVisible="{Binding !Desactualitzat}" Margin="0,0,10,0"/>
+
+                    <TextBlock Classes="Body1"  Text="{Binding Etiqueta}" MinWidth="350"/>
+
+                    <TextBlock Classes="Body2"  Text="{Binding CentreActual}"/>
+                </StackPanel>
+
+                <TextBlock Classes="Overline" Text="{Binding Descripcio}">
+
+                </TextBlock>
 
                 <ItemsControl Margin="10"
                               IsVisible="{Binding BrokenRules.Count}"

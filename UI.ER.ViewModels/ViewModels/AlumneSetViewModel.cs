@@ -49,12 +49,13 @@ namespace UI.ER.ViewModels.ViewModels
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
                 var update = new AlumneCreateViewModel();
-
                 var data = await ShowDialog.Handle(update);
+                var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new dtoi.EsActiuParms(true));
+                var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
                 if (data != null)
                 {
-                    var item = new AlumneRowViewModel(data, ModeLookup);
+                    var item = new AlumneRowViewModel(data, cursActual, ModeLookup);
                     MyItems.Insert(0, item);
                 }
             });
@@ -104,11 +105,15 @@ namespace UI.ER.ViewModels.ViewModels
             if (dto.Data == null)
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
+            //
+            var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new dtoi.EsActiuParms(true));
+            var cursActual = cursActual_dto.Data?.FirstOrDefault();
+
             // Tenim els resultats
             var newItems =
                 dto
                 .Data
-                .Select(x => new AlumneRowViewModel(x, ModeLookup));
+                .Select(x => new AlumneRowViewModel(x, cursActual, ModeLookup));
 
             MyItems.AddRange(newItems);
 

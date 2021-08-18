@@ -18,20 +18,19 @@ namespace UI.ER.ViewModels.ViewModels
     public class AlumneRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Alumne Model { get; }
-        public AlumneRowViewModel(dtoo.Alumne AlumneDto, bool modeLookup = false)
+        protected dtoo.Alumne Model { get; set;}
+        protected readonly dtoo.CursAcademic? CursActual;
+        public AlumneRowViewModel(dtoo.Alumne data, dtoo.CursAcademic? cursActual, bool modeLookup = false)
         {
 
             // Behavior Parm
             ModeLookup = modeLookup;
+            Id = data.Id;
+            Model = data;
+            CursActual = cursActual;
 
             // State
-            Model = AlumneDto;
-            _Etiqueta = AlumneDto.Etiqueta;
-            _Descripcio = AlumneDto.Descripcio;
-            _Estat = AlumneDto.EsActiu ? "Activat" : "Desactivat";
-            _EsActiu = AlumneDto.EsActiu;
-            Id = AlumneDto.Id;
+            DTO2ModelView(data);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -49,11 +48,11 @@ namespace UI.ER.ViewModels.ViewModels
             protected set { this.RaiseAndSetIfChanged(ref _Etiqueta, value); }
         }
 
-        private string _Estat = string.Empty;
-        public string Estat
+        private bool _Desactualitzat;
+        public bool Desactualitzat
         {
-            get { return _Estat; }
-            protected set { this.RaiseAndSetIfChanged(ref _Estat, value); }
+            get { return _Desactualitzat; }
+            protected set { this.RaiseAndSetIfChanged(ref _Desactualitzat, value); }
         }
 
         private string _Descripcio = string.Empty;
@@ -61,6 +60,20 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get { return _Descripcio; }
             protected set { this.RaiseAndSetIfChanged(ref _Descripcio, value); }
+        }
+
+        private string _CentreActual = string.Empty;
+        public string CentreActual
+        {
+            get { return _CentreActual; }
+            protected set { this.RaiseAndSetIfChanged(ref _CentreActual, value); }
+        }
+
+        private string _CursDarreraActualitzacio = string.Empty;
+        public string CursDarreraActualitzacio
+        {
+            get { return _CursDarreraActualitzacio; }
+            protected set { this.RaiseAndSetIfChanged(ref _CursDarreraActualitzacio, value); }
         }
 
         private bool _EsActiu;
@@ -72,16 +85,20 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.Alumne? data)
+        private void DTO2ModelView(dtoo.Alumne? AlumneDto)
         {
-            if (data == null)
+            if (AlumneDto == null)
                 return;
 
-            Etiqueta = data.Etiqueta;
-            Descripcio = data.Descripcio;
-            Estat = data.EsActiu ? "Activat" : "Desactivat";
-            EsActiu = data.EsActiu;
+            Model = AlumneDto;
+            Etiqueta = AlumneDto.Etiqueta;
+            Descripcio = AlumneDto.Descripcio;
+            CentreActual = AlumneDto.CentreActual?.Etiqueta ?? "** Sense centre assignat **";
+            Desactualitzat = CursActual != null && AlumneDto.CursDarreraActualitacioDades.Id != CursActual.Id;
+            EsActiu = AlumneDto.EsActiu;
+            CursDarreraActualitzacio = $"Curs darrera actualització de dades: {AlumneDto.CursDarreraActualitacioDades.Descripcio}";
         }
+
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
         private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
         {

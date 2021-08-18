@@ -58,6 +58,8 @@
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
+                
+
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
 
                 <ItemsControl Margin="10"
