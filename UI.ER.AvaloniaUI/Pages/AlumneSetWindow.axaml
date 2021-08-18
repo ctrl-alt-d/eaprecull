@@ -81,6 +81,10 @@
 
         </DockPanel>
 
+        <TextBlock Text="Carregant dades ..." 
+                   Margin="10"
+                   IsVisible="{Binding Loading}" Classes="Subtitle2"
+                    />
 
         <ListBox Items="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"

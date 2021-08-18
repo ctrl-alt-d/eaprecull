@@ -61,6 +61,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadAlumnes(bool nomesActius, string nomCognomsCentre)
         {
+            Loading = true;
             MyItems.Clear();
             await OmplirAmbElsNousValors(nomesActius, nomCognomsCentre);
         }
@@ -100,6 +101,8 @@ namespace UI.ER.ViewModels.ViewModels
                 (dto.Total > dto.TakeRequested) ?
                 $"Mostrant els {newItems.Count()} primers resultats d'un total de {dto.Total}" :
                 string.Empty;
+
+            Loading = false;
         }
 
         // Warning
@@ -111,12 +114,20 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // Filtre
+        private bool _Loading = true;
+        public bool Loading
+        {
+            get => _Loading;
+            set => this.RaiseAndSetIfChanged(ref _Loading, value);
+        }
+
         private bool _NomesActius = true;
         public bool NomesActius
         {
             get => _NomesActius;
             set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
         }
+
 
         private string _NomCognomsCentre = string.Empty;
         public string NomCognomsCentre
