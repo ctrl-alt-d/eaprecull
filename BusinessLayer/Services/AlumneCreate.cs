@@ -11,6 +11,7 @@ using DataModels.Models;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System;
+using System.Linq;
 
 namespace BusinessLayer.Services
 {
@@ -30,8 +31,20 @@ namespace BusinessLayer.Services
 
         protected override Task PreInitialize(AlumneCreateParms parm)
             =>
-            Task
-            .CompletedTask;
+            new RuleChecker<AlumneCreateParms>(parm)
+            .AddCheck( RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu." )
+            .Check();
+
+        protected virtual async Task<bool> RuleNoHiHaCapCursActiu(AlumneCreateParms _)
+            =>
+            !
+            await (
+                GetContext()
+                .CursosAcademics
+                .Where(x => x.EsActiu)
+                .AnyAsync()
+            );
+
 
         protected override async Task<models.Alumne> InitializeModel(AlumneCreateParms parm)
             =>

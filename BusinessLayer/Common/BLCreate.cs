@@ -64,7 +64,9 @@ namespace BusinessLayer.Common
             } 
             catch (Exception e)
             {
-                throw new BrokenRuleException($"Error intern no esperat.", e);
+                // throw new BrokenRuleException($"Error intern no esperat.", e);
+                var bre = new BrokenRuleException($"Error intern no esperat {e.Message}", e);
+                return new OperationResult<TDTOo>(bre.BrokenRules);
             }
         }
 

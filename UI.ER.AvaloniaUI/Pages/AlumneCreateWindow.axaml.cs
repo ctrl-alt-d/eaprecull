@@ -1,6 +1,5 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using Material.Dialog.Interfaces;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using Avalonia.ReactiveUI;
@@ -20,7 +19,8 @@ namespace UI.ER.AvaloniaUI.Pages
         public OperationResult<dtoo.Alumne> Result { get; set; } = default!;
         public AlumneCreateWindow()
         {
-            this.DataContext = new AlumneCreateViewModel(); // ToDo: issue20. Això anirà al dataset.
+            this.DataContext = new AlumneCreateViewModel();
+            
             this.InitializeComponent();
             
             this.WhenActivated(d => {
@@ -34,6 +34,8 @@ namespace UI.ER.AvaloniaUI.Pages
 
                 // Lookup Centre
                 d(ViewModel!.ShowCentreLookup.RegisterHandler(CentreLookupShowDialogAsync));
+                d(ViewModel!.ShowEtapaActualLookup.RegisterHandler(EtapaActualLookupShowDialogAsync));
+                d(ViewModel!.ShowCursDarreraActualitacioDadesLookup.RegisterHandler(CursDarreraActualitacioDadesLookupShowDialogAsync));
             });
         }
 
@@ -56,8 +58,31 @@ namespace UI.ER.AvaloniaUI.Pages
             var window = (Window)this.VisualRoot;
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
             interaction.SetOutput(result);
-            
-            
         }
+
+
+        private async Task EtapaActualLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
+        {
+            var dialog = new EtapaSetWindow()
+            {
+                DataContext = new EtapaSetViewModel(modeLookup: true)
+            };
+
+            var window = (Window)this.VisualRoot;
+            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+            interaction.SetOutput(result);
+        }
+        private async Task CursDarreraActualitacioDadesLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
+        {
+            var dialog = new CursAcademicSetWindow()
+            {
+                DataContext = new CursAcademicSetViewModel(modeLookup: true)
+            };
+
+            var window = (Window)this.VisualRoot;
+            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+            interaction.SetOutput(result);
+        }
+
     }
 }

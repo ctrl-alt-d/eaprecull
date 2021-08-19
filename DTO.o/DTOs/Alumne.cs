@@ -21,7 +21,8 @@ namespace DTO.o.DTOs
             string observacionsNESENoNEE,
             bool esActiu,
             string etiqueta,
-            string descripcio)
+            string descripcio,
+            string tags)
         {
             Id = id;
             Nom = non;
@@ -37,21 +38,23 @@ namespace DTO.o.DTOs
             EsActiu = esActiu;
             Etiqueta = etiqueta;
             Descripcio = descripcio;
+            Tags = tags;
         }
 
         public int Id { get; set; }
-        public string Nom { get; }= string.Empty;
-        public string Cognoms { get; }= string.Empty;
+        public string Nom { get; }
+        public string Cognoms { get; }
         public DateTime? DataNaixement { get; set; }
         public IIdEtiquetaDescripcio? CentreActual { get; set; }
-        public IIdEtiquetaDescripcio CursDarreraActualitacioDades { get; }= default!;
+        public IIdEtiquetaDescripcio CursDarreraActualitacioDades { get; }
         public IIdEtiquetaDescripcio? EtapaActual { get; set; }
         public DateTime? DataInformeNESENEE { get; set; }
-        public string ObservacionsNESENEE { get; }= string.Empty;
+        public string ObservacionsNESENEE { get; }
         public DateTime? DataInformeNESENoNEE { get; set; }
-        public string ObservacionsNESENoNEE { get; }= string.Empty;
+        public string ObservacionsNESENoNEE { get; }
         public bool EsActiu { get; set; }
-        public string Etiqueta{ get; }= string.Empty;
-        public string Descripcio { get; }= string.Empty;
+        public string Etiqueta{ get; }
+        public string Descripcio { get; }
+        public string Tags { get; }
     }
 }

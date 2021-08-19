@@ -39,6 +39,7 @@ namespace BusinessLayer.Services
             new RuleChecker<models.Alumne, AlumneUpdateParms>(model, parm)
             .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
             .AddCheck( RuleEstaRepetit, "Ja existeix un altre Alumne amb aquest mateix nom o codi" )
+            .AddCheck( RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu." )
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(models.Alumne model, AlumneUpdateParms parm)
@@ -51,7 +52,15 @@ namespace BusinessLayer.Services
             .Where(x=> x.Id != model.Id)
             .AnyAsync(x=> x.Cognoms == parm.Cognoms || x.Nom == parm.Nom);
 
-            
+        protected virtual async Task<bool> RuleNoHiHaCapCursActiu(models.Alumne m, AlumneUpdateParms p)
+            =>
+            !
+            await (
+                GetContext()
+                .CursosAcademics
+                .Where(x => x.EsActiu)
+                .AnyAsync()
+            );
 
         protected override async Task UpdateModel(models.Alumne model, AlumneUpdateParms parm)
         {
