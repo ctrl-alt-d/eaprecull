@@ -213,7 +213,20 @@ namespace UI.ER.ViewModels.ViewModels
             Cognoms = data.Cognoms;
             CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
 
+                DataNaixement = data.DataNaixement;
+                CentreId = data.CentreActual?.Id;
+                CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
+                EtapaActualId = data.EtapaActual?.Id;
+                DataInformeNESENEE =  data.DataInformeNESENEE;
+                ObservacionsNESENEE = data.ObservacionsNESENEE;
+                DataInformeNESENoNEE = data.DataInformeNESENoNEE;
+                ObservacionsNESENoNEE= data.ObservacionsNESENoNEE;
+                Tags= data.Tags;
+
         }
+
+        //
+        
 
         public virtual async Task<dtoo.Alumne?> CreateData()
         {

@@ -25,7 +25,8 @@ namespace DTO.Projections
                 model.ObservacionsNESENoNEE,
                 model.EsActiu,
                 model.Etiqueta,
-                model.Descripcio                
+                model.Descripcio,
+                model.Tags
             );
     }
 }

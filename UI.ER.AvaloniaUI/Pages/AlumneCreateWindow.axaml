@@ -11,136 +11,143 @@
         WindowStartupLocation="CenterOwner"
         >
 
-    <StackPanel Orientation="Vertical"
-                Margin="16, 16">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical"
+                    Margin="16, 16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- 0 -->
+                <!-- 0 -->
 
-            <TextBox Grid.Row="0" Grid.Column="0" Margin="10,0,10,0"
-                        MinWidth="300"
-                        Text="{Binding Nom}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Nom" />
+                <TextBox Grid.Row="0" Grid.Column="0" Margin="10,5,10,5"
+                            MinWidth="300"
+                            Text="{Binding Nom}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Nom" />
 
-            <TextBox Grid.Row="0" Grid.Column="1" Margin="10,0,10,0"
-                        Text="{Binding Cognoms}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Cognoms" />
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding Cognoms}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Cognoms" />
 
-            <!-- 1 -->
+                <!-- 1 -->
 
-            <TextBox Grid.Row="1" Grid.Column="0" Margin="10,0,10,0"
-                        Text="{Binding DataNaixementTxt}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Data naixement. (dd.mm.aaaa)" />
+                <TextBox Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding DataNaixementTxt}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Data naixement. (dd.mm.aaaa)" />
 
-            <TextBox Grid.Row="1" Grid.Column="1" Margin="10,0,10,0"
-                        Text="{Binding Tags}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Tags (paraules clau per cercar)" />
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding Tags}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Tags (paraules clau per cercar)" />
 
-            <!-- 2 -->
+                <!-- 2 -->
 
-            <StackPanel Grid.Row="2" Grid.Column="0" Margin="10,0,10,0"
-                        Orientation="Horizontal" >
-                <TextBox Text="{Binding CursDarreraActualitacioDadesTxt}"
-                        Width="250"
-                        UseFloatingWatermark="True"
-                        Classes="Classic Textbox"
-                        IsReadOnly="true"
-                        Focusable="false"
-                        wpf:TextFieldAssist.Label="CursDarreraActualitacioDades actual" />
-                <Button Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
-                        Classes="LookupCss Flat"  />
-            </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5"
+                            Orientation="Horizontal" >
+                    <TextBox Text="{Binding CursDarreraActualitacioDadesTxt}"
+                            Width="250"
+                            UseFloatingWatermark="True"
+                            Classes="Classic Textbox"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="CursDarreraActualitacioDades actual" />
+                    <Button Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                </StackPanel>
 
 
-            <!-- 3 -->
 
-            <StackPanel Grid.Row="3" Grid.Column="0" Margin="10,0,10,0"
-                        Orientation="Horizontal" >
-                <TextBox Text="{Binding EtapaActualTxt}"
-                        Width="250"
-                        UseFloatingWatermark="True"
-                        Classes="Classic Textbox"
-                        IsReadOnly="true"
-                        Focusable="false"
-                        wpf:TextFieldAssist.Label="EtapaActual actual" />
-                <Button Command="{Binding EtapaActualLookupCommand}"
-                        Classes="LookupCss Flat"  />
-            </StackPanel>
+                <!-- 3 -->
 
-            <StackPanel Grid.Row="3" Grid.Column="1" Margin="10,0,10,0"
-                        Orientation="Horizontal" >
-                <TextBox Text="{Binding CentreTxt}"
-                        Width="250"
-                        UseFloatingWatermark="True"
-                        Classes="Classic Textbox"
-                        IsReadOnly="true"
-                        Focusable="false"
-                        wpf:TextFieldAssist.Label="Centre actual" />
-                <Button Command="{Binding CentreLookupCommand}"
-                        Classes="LookupCss Flat"  />
-            </StackPanel>
+                <StackPanel Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
+                            Orientation="Horizontal" >
+                    <TextBox Text="{Binding EtapaActualTxt}"
+                            Width="250"
+                            UseFloatingWatermark="True"
+                            Classes="Classic Textbox"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="EtapaActual actual" />
+                    <Button Command="{Binding EtapaActualLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                </StackPanel>
 
-            <!-- 4 -->
+                <StackPanel Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
+                            Orientation="Horizontal" >
+                    <TextBox Text="{Binding CentreTxt}"
+                            Width="250"
+                            UseFloatingWatermark="True"
+                            Classes="Classic Textbox"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="Centre actual" />
+                    <Button Command="{Binding CentreLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                </StackPanel>
 
-            <TextBox Grid.Row="4" Grid.Column="0" Margin="10,0,10,0"
-                        Text="{Binding DataInformeNESENEETxt}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Data informe NESE NEET (dd.mm.aaaa)" />
+                <!-- 4 -->
 
-            <TextBox Grid.Row="4" Grid.Column="1" Margin="10,0,10,0"
-                        Text="{Binding ObservacionsNESENEE}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Observacions NESE NEET" />
+                <TextBox Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding DataInformeNESENEETxt}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Data informe NESE NEET (dd.mm.aaaa)" />
 
-            <!-- 5 -->
+                <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding ObservacionsNESENEE}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Observacions NESE NEET" />
 
-            <TextBox Grid.Row="5" Grid.Column="0" Margin="10,0,10,0"
-                        Text="{Binding DataInformeNESENoNEETxt}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Data informe NESE NO NEET (dd.mm.aaaa)" />
+                <!-- 5 -->
 
-            <TextBox Grid.Row="5" Grid.Column="1" Margin="10,0,10,0"
-                        Text="{Binding ObservacionsNESENEE}"
-                        UseFloatingWatermark="True"
-                        Classes="Filled"
-                        wpf:TextFieldAssist.Label="Observacions NESE NO NEET" />
+                <TextBox Grid.Row="5" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding DataInformeNESENoNEETxt}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Data informe NESE NO NEET (dd.mm.aaaa)" />
 
-        </Grid>
+                <TextBox Grid.Row="5" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding ObservacionsNESENoNEE}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Observacions NESE NO NEET" />
 
-        <ItemsControl Margin="10,0,10,0" Items="{Binding BrokenRules}">            
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Classes="Error" Text="{Binding}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            </Grid>
 
-        <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,0,10,0"/>
+            <ItemsControl Margin="10,5,10,5" Items="{Binding BrokenRules}">            
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="Error" Text="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-    </StackPanel>
+            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,5,10,5"/>
 
+        </StackPanel>
+
+    </ScrollViewer>
 </Window>
