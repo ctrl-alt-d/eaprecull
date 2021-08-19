@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Reactive.Linq;
 using DynamicData.Binding;
 using System;
+using ReactiveUI.Validation.Extensions;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -23,12 +24,24 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual IAlumneCreate BLCreate() => SuperContext.GetBLOperation<IAlumneCreate>();
         public AlumneCreateViewModel()
         {
-            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
+
+            var canExecute = this.IsValid();
+
+            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, canExecute);
 
             // --- configura lookup --
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
-            CentreLookupCommand = ReactiveCommand.CreateFromTask( DoCentreLookup );
+            CentreLookupCommand = ReactiveCommand.CreateFromTask(DoCentreLookup);
 
+            // --- Local validations
+            this.ValidationRule(
+                x => x.DataNaixementTxt,
+                value => StringDateConverter.NullableDataCorrecte(value),
+                "Comprova el format de la data: dd.mm.aaaa");
+
+            this
+                .WhenAnyValue(x=>x.DataNaixementTxt)
+                .Subscribe(x=> this.DataNaixement = StringDateConverter.ConvertBack(x) );
         }
 
         //
@@ -53,6 +66,13 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _DataNaixement;
             set => this.RaiseAndSetIfChanged(ref _DataNaixement, value);
+        }
+
+        public string _DataNaixementTxt = string.Empty;
+        public string DataNaixementTxt
+        {
+            get => _DataNaixementTxt;
+            set => this.RaiseAndSetIfChanged(ref _DataNaixementTxt, value);
         }
 
         //

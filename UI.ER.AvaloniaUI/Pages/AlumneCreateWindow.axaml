@@ -11,7 +11,6 @@
         WindowStartupLocation="CenterOwner"
         >
 
-
     <StackPanel Orientation="Vertical"
                 Margin="16, 16"
                 >
@@ -40,7 +39,15 @@
 
         </DockPanel>
 
-        <DatePicker Header="Date of birth" Margin="10,0,10,0" />
+        <DockPanel LastChildFill="False">
+            <TextBox DockPanel.Dock="Left"
+                        Text="{Binding DataNaixementTxt}"
+                        Margin="10,0,10,0"
+                        Width="300"
+                        UseFloatingWatermark="True"
+                        Classes="Filled"
+                        wpf:TextFieldAssist.Label="Data naixement. (dd.mm.aaaa)" />
+        </DockPanel>
 
         <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
             <TextBox Text="{Binding CentreTxt}"
