@@ -7,7 +7,7 @@
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneCreateWindow"
         HorizontalContentAlignment="Stretch"
         Title="Alta nou Alumne"        
-        Width="800" Height="500" MinWidth="720"
+        Width="1000" Height="900" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
 
@@ -25,14 +25,13 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="350" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <!-- 0 -->
 
                 <TextBox Grid.Row="0" Grid.Column="0" Margin="10,5,10,5"
-                            MinWidth="300"
                             Text="{Binding Nom}"
                             UseFloatingWatermark="True"
                             Classes="Filled"
@@ -60,18 +59,24 @@
 
                 <!-- 2 -->
 
-                <StackPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5"
-                            Orientation="Horizontal" >
+                <Grid Grid.Row="2" Grid.Column="0" Margin="10,5,10,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                     <TextBox Text="{Binding CursDarreraActualitacioDadesTxt}"
-                            Width="250"
+                            Grid.Column="0" 
                             UseFloatingWatermark="True"
                             Classes="Classic Textbox"
                             IsReadOnly="true"
                             Focusable="false"
-                            wpf:TextFieldAssist.Label="CursDarreraActualitacioDades actual" />
-                    <Button Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
+                            wpf:TextFieldAssist.Label="Curs Darrera Actualitació Dades" />
+                    <Button Grid.Column="1" Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
                             Classes="LookupCss Flat"  />
-                </StackPanel>
+                    <Button Grid.Column="2" Command="{Binding CursDarreraActualitacioDadesClearCommand}"
+                            Classes="ClearCss Flat"  />
+                </Grid>
 
 
 

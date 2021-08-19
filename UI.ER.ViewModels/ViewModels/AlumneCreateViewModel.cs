@@ -34,6 +34,7 @@ namespace UI.ER.ViewModels.ViewModels
             // --- configura lookup CursDarreraActualitacioDades ---
             ShowCursDarreraActualitacioDadesLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             CursDarreraActualitacioDadesLookupCommand = ReactiveCommand.CreateFromTask(DoCursDarreraActualitacioDadesLookup);
+            CursDarreraActualitacioDadesClearCommand = ReactiveCommand.CreateFromTask(DoCursDarreraActualitacioDadesClear);
 
             // --- configura lookup EtapaActual ---
             ShowEtapaActualLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -303,6 +304,14 @@ namespace UI.ER.ViewModels.ViewModels
                 CursDarreraActualitacioDadesTxt = data.Etiqueta;
                 CursDarreraActualitacioDadesId = data.Id;
             }
+        }
+
+        public ICommand CursDarreraActualitacioDadesClearCommand {get; }
+        private async Task DoCursDarreraActualitacioDadesClear()
+        {
+            CursDarreraActualitacioDadesTxt = "";
+            CursDarreraActualitacioDadesId = null;
+            await Task.CompletedTask;
         }
 
         // --- EtapaActual ---

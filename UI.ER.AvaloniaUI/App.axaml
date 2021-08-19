@@ -25,10 +25,23 @@
 
             <Style Selector="Button.LookupCss">
                 <Setter Property="ToolTip.Tip" Value="Obrir pantalla de selecció"/>
+                <Setter Property="Margin" Value="0"/>
                 <Setter Property="Content">
                     <Setter.Value>
                         <Template>
                             <avalonia:MaterialIcon Kind="CardSearchOutline" VerticalAlignment="Center" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style Selector="Button.ClearCss">
+                <Setter Property="ToolTip.Tip" Value="Esborrar selecció"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <avalonia:MaterialIcon Kind="Close" VerticalAlignment="Center" />
                         </Template>
                     </Setter.Value>
                 </Setter>
