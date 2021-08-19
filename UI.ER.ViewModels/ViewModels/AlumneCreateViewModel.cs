@@ -25,23 +25,73 @@ namespace UI.ER.ViewModels.ViewModels
         public AlumneCreateViewModel()
         {
 
-            var canExecute = this.IsValid();
+            RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);    
 
-            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, canExecute);
+            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, this.IsValid() );
 
-            // --- configura lookup --
+            // --- configura lookup Centre ---
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             CentreLookupCommand = ReactiveCommand.CreateFromTask(DoCentreLookup);
 
-            // --- Local validations
+            // --- configura lookup CursDarreraActualitacioDades ---
+            ShowCursDarreraActualitacioDadesLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
+            CursDarreraActualitacioDadesLookupCommand = ReactiveCommand.CreateFromTask(DoCursDarreraActualitacioDadesLookup);
+
+            // --- configura lookup EtapaActual ---
+            ShowEtapaActualLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
+            EtapaActualLookupCommand = ReactiveCommand.CreateFromTask(DoEtapaActualLookup);
+
+            SetValidations();
+            DealWithDates();
+
+
+        }
+
+        protected virtual async void LoadDadesInicials()
+        {
+            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
+            var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
+            var cursActual = dto.Data?.FirstOrDefault();
+            CursDarreraActualitacioDadesId = cursActual?.Id;
+            CursDarreraActualitacioDadesTxt = cursActual?.Etiqueta ?? "* Cal entrar els cursos acadèmics *";
+        }
+
+        private void DealWithDates()
+        {
+            this
+                .WhenAnyValue(x => x.DataNaixementTxt)
+                .Subscribe(x => this.DataNaixement = StringDateConverter.ConvertBack(x));
+
+            this
+                .WhenAnyValue(x => x.DataInformeNESENEETxt)
+                .Subscribe(x => this.DataInformeNESENEE = StringDateConverter.ConvertBack(x));
+
+            this
+                .WhenAnyValue(x => x.DataInformeNESENoNEETxt)
+                .Subscribe(x => this.DataInformeNESENoNEE = StringDateConverter.ConvertBack(x));
+        }
+
+        private void SetValidations()
+        {
             this.ValidationRule(
                 x => x.DataNaixementTxt,
                 value => StringDateConverter.NullableDataCorrecte(value),
                 "Comprova el format de la data: dd.mm.aaaa");
 
-            this
-                .WhenAnyValue(x=>x.DataNaixementTxt)
-                .Subscribe(x=> this.DataNaixement = StringDateConverter.ConvertBack(x) );
+            this.ValidationRule(
+                x => x.DataInformeNESENEETxt,
+                value => StringDateConverter.NullableDataCorrecte(value),
+                "Comprova el format de la data: dd.mm.aaaa");
+
+            this.ValidationRule(
+                x => x.DataInformeNESENoNEETxt,
+                value => StringDateConverter.NullableDataCorrecte(value),
+                "Comprova el format de la data: dd.mm.aaaa");
+
+            this.ValidationRule(
+                x => x.CursDarreraActualitacioDadesId,
+                value => value.HasValue,
+                "Cal informar el curs de la darrera actualització de dades (Cal que hi hagi un curs acadèmic activat)");
         }
 
         //
@@ -85,7 +135,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        protected virtual int CursDarreraActualitacioDadesId { get; set; }
+        protected virtual int? CursDarreraActualitacioDadesId { get; set; }
         public string _CursDarreraActualitacioDadesTxt = string.Empty;
         public string CursDarreraActualitacioDadesTxt
         {
@@ -110,6 +160,13 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENEE, value);
         }
 
+        public string _DataInformeNESENEETxt = string.Empty;
+        public string DataInformeNESENEETxt
+        {
+            get => _DataInformeNESENEETxt;
+            set => this.RaiseAndSetIfChanged(ref _DataInformeNESENEETxt, value);
+        }
+
         //
         public string _ObservacionsNESENEE = string.Empty;
         public string ObservacionsNESENEE
@@ -126,6 +183,12 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEE, value);
         }
 
+        public string _DataInformeNESENoNEETxt = string.Empty;
+        public string DataInformeNESENoNEETxt
+        {
+            get => _DataInformeNESENoNEETxt;
+            set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEETxt, value);
+        }
         //
         public string _ObservacionsNESENoNEE = string.Empty;
         public string ObservacionsNESENoNEE
@@ -162,7 +225,7 @@ namespace UI.ER.ViewModels.ViewModels
                 Cognoms,
                 DataNaixement,
                 CentreId,
-                CursDarreraActualitacioDadesId,
+                CursDarreraActualitacioDadesId!.Value,
                 EtapaActualId,
                 DataInformeNESENEE,
                 ObservacionsNESENEE,
@@ -187,7 +250,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ReactiveCommand<Unit, dtoo.Alumne?> SubmitCommand { get; }
 
-        // ----------------------
+        // --- Centre ---
         public ICommand CentreLookupCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCentreLookup { get; }
         private async Task DoCentreLookup()
@@ -197,6 +260,32 @@ namespace UI.ER.ViewModels.ViewModels
             {
                 CentreTxt = data.Etiqueta;
                 CentreId = data.Id;
+            }
+        }
+
+        // --- CursDarreraActualitacioDades ---
+        public ICommand CursDarreraActualitacioDadesLookupCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCursDarreraActualitacioDadesLookup { get; }
+        private async Task DoCursDarreraActualitacioDadesLookup()
+        {
+            var data = await ShowCursDarreraActualitacioDadesLookup.Handle(Unit.Default);
+            if (data != null)
+            {
+                CursDarreraActualitacioDadesTxt = data.Etiqueta;
+                CursDarreraActualitacioDadesId = data.Id;
+            }
+        }
+
+        // --- EtapaActual ---
+        public ICommand EtapaActualLookupCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowEtapaActualLookup { get; }
+        private async Task DoEtapaActualLookup()
+        {
+            var data = await ShowEtapaActualLookup.Handle(Unit.Default);
+            if (data != null)
+            {
+                EtapaActualTxt = data.Etiqueta;
+                EtapaActualId = data.Id;
             }
         }
 
