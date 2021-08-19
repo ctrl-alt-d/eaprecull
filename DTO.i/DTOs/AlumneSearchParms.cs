@@ -17,7 +17,7 @@ namespace DTO.i.DTOs
             DateTime? ambDataInformePosteriorA = null,
             int? etapaId = null,
             int? tipusActuacioId = null,
-            string nomCognomsCentre = "",
+            string nomCognomsTagCentre = "",
             string tags = "",
             bool? esActiu = null,
             OrdreResultatsChoice ordreResultats = OrdreResultatsChoice.DarreraModificacio)
@@ -33,7 +33,7 @@ namespace DTO.i.DTOs
             AmbDataInformePosteriorA = ambDataInformePosteriorA;
             EtapaId = etapaId;
             TipusActuacioId = tipusActuacioId;
-            NomCognomsCentre = nomCognomsCentre;
+            NomCognomsTagCentre = nomCognomsTagCentre;
             Tags = tags;
             EsActiu = esActiu;
             OrdreResultats = ordreResultats;
@@ -70,7 +70,7 @@ namespace DTO.i.DTOs
         public int? TipusActuacioId {get;}
 
         // Nom - Cognoms
-        public string NomCognomsCentre {get;}
+        public string NomCognomsTagCentre {get;}
 
         // Tags
         public string Tags {get;}

@@ -75,11 +75,11 @@
                         Classes="LeftHeader"
                         />
 
-            <TextBox Text="{Binding NomCognomsCentre}"
+            <TextBox Text="{Binding NomCognomsTagCentre}"
                      DockPanel.Dock="Left"
                      BorderBrush="{DynamicResource PrimaryHueMidBrush}"
                      BorderThickness="1" Classes="Solo"
-                     Watermark="Cerca alumnes per nom, cognoms o centre"
+                     Watermark="Cerca alumnes per nom, cognoms, centre i tags"
                      wpf:TextFieldAssist.CornerRadius="32" Margin="8">
                 <TextBox.InnerLeftContent>
                     <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">

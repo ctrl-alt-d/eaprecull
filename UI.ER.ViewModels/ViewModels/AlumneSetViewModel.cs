@@ -24,7 +24,7 @@ namespace UI.ER.ViewModels.ViewModels
             // Filtre
             var NomCognomsCentreObserver =
                 this
-                .WhenAnyValue(x=>x.NomCognomsCentre)
+                .WhenAnyValue(x=>x.NomCognomsTagCentre)
                 .Throttle(TimeSpan.FromMilliseconds(400));
 
             var OrdreAlfabeticObserver =
@@ -36,11 +36,11 @@ namespace UI.ER.ViewModels.ViewModels
                 .CombineLatest(
                         NomCognomsCentreObserver,
                         OrdreAlfabeticObserver,
-                        (nomesActius, nomCognomsCentre, ordreAlfabetic) => 
-                        (nomesActius, nomCognomsCentre, ordreAlfabetic)
+                        (nomesActius, NomCognomsTagCentre, ordreAlfabetic) => 
+                        (nomesActius, NomCognomsTagCentre, ordreAlfabetic)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(t => LoadAlumnes(t.nomesActius, t.nomCognomsCentre, t.ordreAlfabetic))
+                .Subscribe(t => LoadAlumnes(t.nomesActius, t.NomCognomsTagCentre, t.ordreAlfabetic))
                 ;
 
             // Create
@@ -66,14 +66,14 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        protected virtual async void LoadAlumnes(bool nomesActius, string nomCognomsCentre, bool ordreAlfabetic)
+        protected virtual async void LoadAlumnes(bool nomesActius, string NomCognomsTagCentre, bool ordreAlfabetic)
         {
             Loading = true;
             MyItems.Clear();
-            await OmplirAmbElsNousValors(nomesActius, nomCognomsCentre, ordreAlfabetic);
+            await OmplirAmbElsNousValors(nomesActius, NomCognomsTagCentre, ordreAlfabetic);
         }
 
-        private async Task OmplirAmbElsNousValors(bool nomesActius, string nomCognomsCentre, bool ordreAlfabetic)
+        private async Task OmplirAmbElsNousValors(bool nomesActius, string NomCognomsTagCentre, bool ordreAlfabetic)
         {
             // Preparar paràmetres al backend
             var esActiu = 
@@ -88,7 +88,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             var parms = new DTO.i.DTOs.AlumneSearchParms(
                 esActiu: esActiu,
-                nomCognomsCentre: nomCognomsCentre,
+                nomCognomsTagCentre: NomCognomsTagCentre,
                 ordreResultats: ordre
             );
 
@@ -157,7 +157,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         private string _NomCognomsCentre = string.Empty;
-        public string NomCognomsCentre
+        public string NomCognomsTagCentre
         {
             get => _NomCognomsCentre;
             set => this.RaiseAndSetIfChanged(ref _NomCognomsCentre, value);
