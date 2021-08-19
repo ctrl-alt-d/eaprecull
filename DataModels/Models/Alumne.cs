@@ -18,7 +18,6 @@ namespace DataModels.Models
         public string ObservacionsNESENEE { get; set; } = string.Empty;
         public DateTime? DataInformeNESENoNEE { get; set; }
         public string ObservacionsNESENoNEE { get; set; } = string.Empty;
-        public DateTime? DataDarreraModificacio { get; set; }
         public string Tags { get; set; } = string.Empty;
 
         // IActiu
@@ -33,6 +32,11 @@ namespace DataModels.Models
             $"{EtapaActual?.Etiqueta ?? ""} {_NESEEE_txt}{_NESENoEE_txt}";
         public string _NESEEE_txt => DataInformeNESENEE != null ? " [NESE NEE]" : "";
         public string _NESENoEE_txt => DataInformeNESENoNEE != null ? " [NESE No NEE]" : "";
+
+        // Caches
+        public int NombreTotalDactuacions {get; set;}
+        public DateTime? DataDarreraActuacio {get; set;}
+        public DateTime DataDarreraModificacio { get; set; } = DateTime.Now;
 
         //
         public List<Actuacio> Actuacions { get; set; } = new();

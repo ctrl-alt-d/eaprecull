@@ -13,6 +13,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using DynamicData.Binding;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -26,30 +27,11 @@ namespace UI.ER.ViewModels.ViewModels
 
             // --- configura lookup --
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
-            CentreLookup = ReactiveCommand.CreateFromTask(async () =>
-            {
-                var data = await ShowCentreLookup.Handle(Unit.Default);
-                if (data != null)
-                {
-                    CentreTxt = data.Etiqueta;
-                    CentreId = data.Id;
-                }
-            });
+            CentreLookupCommand = ReactiveCommand.CreateFromTask( DoCentreLookup );
 
         }
 
-        /*
-                public string Nom { get; set; } = string.Empty;
-                public string Cognoms { get; set; } = string.Empty;
-                public DateTime? DataNaixement { get; set; }
-                public Centre? CentreActual { get; set; }
-                public CursAcademic CursDarreraActualitacioDades { get; set; } = default!;
-                public Etapa? EtapaActual { get; set; }
-                public DateTime? DataInformeNESENEE { get; set; }
-                public string ObservacionsNESENEE { get; set; } = string.Empty;
-                public DateTime? DataInformeNESENoNEE { get; set; }
-                public string ObservacionsNESENoNEE { get; set; } = string.Empty;
-        */
+        //
         public string _Nom = string.Empty;
         public string Nom
         {
@@ -57,6 +39,7 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _Nom, value);
         }
 
+        //
         public string _Cognoms = string.Empty;
         public string Cognoms
         {
@@ -64,6 +47,15 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _Cognoms, value);
         }
 
+        //
+        public DateTime? _DataNaixement;
+        public DateTime? DataNaixement
+        {
+            get => _DataNaixement;
+            set => this.RaiseAndSetIfChanged(ref _DataNaixement, value);
+        }
+
+        //
         protected virtual int? CentreId { get; set; }
         public string _CentreTxt = string.Empty;
         public string CentreTxt
@@ -72,6 +64,64 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _CentreTxt, value);
         }
 
+        //
+        protected virtual int CursDarreraActualitacioDadesId { get; set; }
+        public string _CursDarreraActualitacioDadesTxt = string.Empty;
+        public string CursDarreraActualitacioDadesTxt
+        {
+            get => _CursDarreraActualitacioDadesTxt;
+            set => this.RaiseAndSetIfChanged(ref _CursDarreraActualitacioDadesTxt, value);
+        }
+
+        //
+        protected virtual int? EtapaActualId { get; set; }
+        public string _EtapaActualTxt = string.Empty;
+        public string EtapaActualTxt
+        {
+            get => _EtapaActualTxt;
+            set => this.RaiseAndSetIfChanged(ref _EtapaActualTxt, value);
+        }
+
+        //
+        public DateTime? _DataInformeNESENEE;
+        public DateTime? DataInformeNESENEE
+        {
+            get => _DataInformeNESENEE;
+            set => this.RaiseAndSetIfChanged(ref _DataInformeNESENEE, value);
+        }
+
+        //
+        public string _ObservacionsNESENEE = string.Empty;
+        public string ObservacionsNESENEE
+        {
+            get => _ObservacionsNESENEE;
+            set => this.RaiseAndSetIfChanged(ref _ObservacionsNESENEE, value);
+        }
+
+        //
+        public DateTime? _DataInformeNESENoNEE;
+        public DateTime? DataInformeNESENoNEE
+        {
+            get => _DataInformeNESENoNEE;
+            set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEE, value);
+        }
+
+        //
+        public string _ObservacionsNESENoNEE = string.Empty;
+        public string ObservacionsNESENoNEE
+        {
+            get => _ObservacionsNESENoNEE;
+            set => this.RaiseAndSetIfChanged(ref _ObservacionsNESENoNEE, value);
+        }
+
+        //
+        public string _Tags = string.Empty;
+        public string Tags
+        {
+            get => _Tags;
+            set => this.RaiseAndSetIfChanged(ref _Tags, value);
+        }
+        //
         private void DTO2ModelView(dtoo.Alumne? data)
         {
             if (data == null) return;
@@ -90,15 +140,15 @@ namespace UI.ER.ViewModels.ViewModels
             var parms = new dtoi.AlumneCreateParms(
                 Nom,
                 Cognoms,
-                null,
+                DataNaixement,
                 CentreId,
-                1,
-                1,
-                null,
-                "",
-                null,
-                "",
-                ""
+                CursDarreraActualitacioDadesId,
+                EtapaActualId,
+                DataInformeNESENEE,
+                ObservacionsNESENEE,
+                DataInformeNESENoNEE,
+                ObservacionsNESENoNEE,
+                Tags
             );
 
             // cridar backend
@@ -110,8 +160,6 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(data);
             BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
 
-            SuccessfullySaved = data != null && !dto.BrokenRules.Any();
-
             return data;
         }
 
@@ -119,17 +167,20 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ReactiveCommand<Unit, dtoo.Alumne?> SubmitCommand { get; }
 
-        private bool _Sortir;
-        public bool SuccessfullySaved
+        // ----------------------
+        public ICommand CentreLookupCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCentreLookup { get; }
+        private async Task DoCentreLookup()
         {
-            get { return _Sortir; }
-            protected set { this.RaiseAndSetIfChanged(ref _Sortir, value); }
+            var data = await ShowCentreLookup.Handle(Unit.Default);
+            if (data != null)
+            {
+                CentreTxt = data.Etiqueta;
+                CentreId = data.Id;
+            }
         }
 
-        // ----------------------
-        public ICommand CentreLookup { get; }
-        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCentreLookup { get; }
-
+        // ----
 
 
     }
