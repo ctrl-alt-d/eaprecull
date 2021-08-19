@@ -75,7 +75,7 @@
                         Classes="LeftHeader"
                         />
 
-            <TextBox Text="{Binding NomCognomsCentre}"
+            <TextBox Text="{Binding NomCognomsTagCentre}"
                      DockPanel.Dock="Left"
                      BorderBrush="{DynamicResource PrimaryHueMidBrush}"
                      BorderThickness="1" Classes="Solo"

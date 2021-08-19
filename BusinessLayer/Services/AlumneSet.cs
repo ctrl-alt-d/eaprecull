@@ -26,6 +26,11 @@ namespace BusinessLayer.Services
         protected override IQueryable<models.Alumne> GetModels(parms.AlumneSearchParms request)
         {
             var query = GetAllModels();
+
+            //
+            query = MatchNomCognomsTagCentre(query, request);
+
+            //
             query = MatchCentre(query, request);
             query = MatchDarreraModificacioAnteriorA(query, request);
             query = MatchDarreraModificacioPosteriorA(query, request);
@@ -35,7 +40,6 @@ namespace BusinessLayer.Services
             query = MatchDataInformePosteriorA(query, request);
             query = MatchEtapa(query, request);
             query = MatchTipusActuacio(query, request);
-            query = MatchNomCognomsCentre(query, request);
             query = MatchTags(query, request);
             query = MatchEsActiu(query, request);
             query = Ordena(query, request.OrdreResultats);
@@ -144,18 +148,19 @@ namespace BusinessLayer.Services
                 model.Actuacions.Any(a => a.TipusActuacio != null && a.TipusActuacio.Id == request.TipusActuacioId));
         }
 
-        private IQueryable<Alumne> MatchNomCognomsCentre(IQueryable<Alumne> query, AlumneSearchParms request)
+        private IQueryable<Alumne> MatchNomCognomsTagCentre(IQueryable<Alumne> query, AlumneSearchParms request)
         {
-            if (string.IsNullOrWhiteSpace(request.NomCognomsCentre))
+            if (string.IsNullOrWhiteSpace(request.NomCognomsTagCentre))
                 return query;
 
-            var tokens = request.NomCognomsCentre.Split().Select(x => x.Trim()).ToList();
+            var tokens = request.NomCognomsTagCentre.Split().Select(x => x.Trim()).ToList();
 
             tokens.ForEach(token =>
                 query = query.Where(model =>
                     ( model.CentreActual != null && model.CentreActual.Nom.Contains(token) ) ||
                     model.Nom.Contains(token) ||
-                    model.Cognoms.Contains(token)
+                    model.Cognoms.Contains(token) ||
+                    model.Tags.Contains(token)
                 )
             );
             return query;

@@ -7,8 +7,6 @@ using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using dtoi = DTO.i.DTOs;
-using System.ComponentModel;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -43,8 +41,6 @@ namespace UI.ER.ViewModels.ViewModels
 
             SetValidations();
             DealWithDates();
-
-
         }
 
         protected virtual async void LoadDadesInicials()
@@ -53,7 +49,7 @@ namespace UI.ER.ViewModels.ViewModels
             var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
-            CursDarreraActualitacioDadesTxt = cursActual?.Etiqueta ?? "* Cal entrar els cursos acadèmics *";
+            CursDarreraActualitacioDadesTxt = cursActual?.Etiqueta ?? string.Empty;
         }
 
         private void DealWithDates()
@@ -89,9 +85,29 @@ namespace UI.ER.ViewModels.ViewModels
                 "Comprova el format de la data: dd.mm.aaaa");
 
             this.ValidationRule(
-                x => x.CursDarreraActualitacioDadesId,
-                value => value.HasValue,
+                x => x.CursDarreraActualitacioDadesTxt,
+                value => !string.IsNullOrEmpty( value ),
                 "Cal informar el curs de la darrera actualització de dades (Cal que hi hagi un curs acadèmic activat)");
+
+            this.ValidationRule(
+                x => x.CentreTxt,
+                value => !string.IsNullOrEmpty( value ),
+                "Cal informar el Centre on cursa estudis");
+
+            this.ValidationRule(
+                x => x.Nom,
+                value => !string.IsNullOrEmpty( value ),
+                "Cal informar el nom de l'alumne");
+
+            this.ValidationRule(
+                x => x.Cognoms,
+                value => !string.IsNullOrEmpty( value ),
+                "Cal informar els Cognoms de l'alumne");
+
+            this.ValidationRule(
+                x => x.EtapaActualTxt,
+                value => !string.IsNullOrEmpty( value ),
+                "Cal informar l'etapa d'estudis actual");
         }
 
         //
@@ -213,15 +229,15 @@ namespace UI.ER.ViewModels.ViewModels
             Cognoms = data.Cognoms;
             CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
 
-                DataNaixement = data.DataNaixement;
-                CentreId = data.CentreActual?.Id;
-                CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
-                EtapaActualId = data.EtapaActual?.Id;
-                DataInformeNESENEE =  data.DataInformeNESENEE;
-                ObservacionsNESENEE = data.ObservacionsNESENEE;
-                DataInformeNESENoNEE = data.DataInformeNESENoNEE;
-                ObservacionsNESENoNEE= data.ObservacionsNESENoNEE;
-                Tags= data.Tags;
+            DataNaixement = data.DataNaixement;
+            CentreId = data.CentreActual?.Id;
+            CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
+            EtapaActualId = data.EtapaActual?.Id;
+            DataInformeNESENEE =  data.DataInformeNESENEE;
+            ObservacionsNESENEE = data.ObservacionsNESENEE;
+            DataInformeNESENoNEE = data.DataInformeNESENoNEE;
+            ObservacionsNESENoNEE= data.ObservacionsNESENoNEE;
+            Tags= data.Tags;
 
         }
 
