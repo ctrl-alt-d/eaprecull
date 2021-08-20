@@ -32,7 +32,7 @@ namespace UI.ER.AvaloniaUI.Pages
                     .Subscribe(CloseIfSaved)
                 );
 
-                // Lookup Centre
+                // Lookups
                 d(ViewModel!.ShowCentreLookup.RegisterHandler(CentreLookupShowDialogAsync));
                 d(ViewModel!.ShowEtapaActualLookup.RegisterHandler(EtapaActualLookupShowDialogAsync));
                 d(ViewModel!.ShowCursDarreraActualitacioDadesLookup.RegisterHandler(CursDarreraActualitacioDadesLookupShowDialogAsync));

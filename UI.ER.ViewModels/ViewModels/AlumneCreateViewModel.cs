@@ -30,14 +30,17 @@ namespace UI.ER.ViewModels.ViewModels
             // --- configura lookup Centre ---
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             CentreLookupCommand = ReactiveCommand.CreateFromTask(DoCentreLookup);
+            CentreClearCommand = ReactiveCommand.CreateFromTask(DoCentreClear);
 
             // --- configura lookup CursDarreraActualitacioDades ---
             ShowCursDarreraActualitacioDadesLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             CursDarreraActualitacioDadesLookupCommand = ReactiveCommand.CreateFromTask(DoCursDarreraActualitacioDadesLookup);
+            CursDarreraActualitacioDadesClearCommand = ReactiveCommand.CreateFromTask(DoCursDarreraActualitacioDadesClear);
 
             // --- configura lookup EtapaActual ---
             ShowEtapaActualLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             EtapaActualLookupCommand = ReactiveCommand.CreateFromTask(DoEtapaActualLookup);
+            EtapaActualClearCommand = ReactiveCommand.CreateFromTask(DoEtapaActualClear);
 
             SetValidations();
             DealWithDates();
@@ -90,11 +93,6 @@ namespace UI.ER.ViewModels.ViewModels
                 "Cal informar el curs de la darrera actualització de dades (Cal que hi hagi un curs acadèmic activat)");
 
             this.ValidationRule(
-                x => x.CentreTxt,
-                value => !string.IsNullOrEmpty( value ),
-                "Cal informar el Centre on cursa estudis");
-
-            this.ValidationRule(
                 x => x.Nom,
                 value => !string.IsNullOrEmpty( value ),
                 "Cal informar el nom de l'alumne");
@@ -104,10 +102,6 @@ namespace UI.ER.ViewModels.ViewModels
                 value => !string.IsNullOrEmpty( value ),
                 "Cal informar els Cognoms de l'alumne");
 
-            this.ValidationRule(
-                x => x.EtapaActualTxt,
-                value => !string.IsNullOrEmpty( value ),
-                "Cal informar l'etapa d'estudis actual");
         }
 
         //
@@ -291,6 +285,14 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId = data.Id;
             }
         }
+        public ICommand CentreClearCommand {get; }
+        private async Task DoCentreClear()
+        {
+            CentreTxt = "";
+            CentreId = null;
+            await Task.CompletedTask;
+        }
+
 
         // --- CursDarreraActualitacioDades ---
         public ICommand CursDarreraActualitacioDadesLookupCommand { get; }
@@ -305,6 +307,14 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
+        public ICommand CursDarreraActualitacioDadesClearCommand {get; }
+        private async Task DoCursDarreraActualitacioDadesClear()
+        {
+            CursDarreraActualitacioDadesTxt = "";
+            CursDarreraActualitacioDadesId = null;
+            await Task.CompletedTask;
+        }
+
         // --- EtapaActual ---
         public ICommand EtapaActualLookupCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowEtapaActualLookup { get; }
@@ -316,6 +326,14 @@ namespace UI.ER.ViewModels.ViewModels
                 EtapaActualTxt = data.Etiqueta;
                 EtapaActualId = data.Id;
             }
+        }
+
+        public ICommand EtapaActualClearCommand {get; }
+        private async Task DoEtapaActualClear()
+        {
+            EtapaActualTxt = "";
+            EtapaActualId = null;
+            await Task.CompletedTask;
         }
 
         // ----
