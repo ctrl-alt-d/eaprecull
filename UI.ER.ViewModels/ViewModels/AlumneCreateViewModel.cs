@@ -306,6 +306,7 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
+        // --- Darrera actualització dades
         public ICommand CursDarreraActualitacioDadesClearCommand {get; }
         private async Task DoCursDarreraActualitacioDadesClear()
         {
