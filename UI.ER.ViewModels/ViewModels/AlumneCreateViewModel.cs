@@ -30,6 +30,7 @@ namespace UI.ER.ViewModels.ViewModels
             // --- configura lookup Centre ---
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             CentreLookupCommand = ReactiveCommand.CreateFromTask(DoCentreLookup);
+            CentreClearCommand = ReactiveCommand.CreateFromTask(DoCentreClear);
 
             // --- configura lookup CursDarreraActualitacioDades ---
             ShowCursDarreraActualitacioDadesLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -39,6 +40,7 @@ namespace UI.ER.ViewModels.ViewModels
             // --- configura lookup EtapaActual ---
             ShowEtapaActualLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
             EtapaActualLookupCommand = ReactiveCommand.CreateFromTask(DoEtapaActualLookup);
+            EtapaActualClearCommand = ReactiveCommand.CreateFromTask(DoEtapaActualClear);
 
             SetValidations();
             DealWithDates();
@@ -292,6 +294,14 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId = data.Id;
             }
         }
+        public ICommand CentreClearCommand {get; }
+        private async Task DoCentreClear()
+        {
+            CentreTxt = "";
+            CentreId = null;
+            await Task.CompletedTask;
+        }
+
 
         // --- CursDarreraActualitacioDades ---
         public ICommand CursDarreraActualitacioDadesLookupCommand { get; }
@@ -306,7 +316,6 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
-        // --- Darrera actualització dades
         public ICommand CursDarreraActualitacioDadesClearCommand {get; }
         private async Task DoCursDarreraActualitacioDadesClear()
         {
@@ -326,6 +335,14 @@ namespace UI.ER.ViewModels.ViewModels
                 EtapaActualTxt = data.Etiqueta;
                 EtapaActualId = data.Id;
             }
+        }
+
+        public ICommand EtapaActualClearCommand {get; }
+        private async Task DoEtapaActualClear()
+        {
+            EtapaActualTxt = "";
+            EtapaActualId = null;
+            await Task.CompletedTask;
         }
 
         // ----
