@@ -12,6 +12,7 @@ using System.Reactive;
 using CommonInterfaces;
 using Avalonia.Controls;
 
+
 namespace UI.ER.AvaloniaUI.Pages
 {
     public class AlumneUpdateWindow : ReactiveWindow<AlumneUpdateViewModel>

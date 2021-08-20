@@ -93,11 +93,6 @@ namespace UI.ER.ViewModels.ViewModels
                 "Cal informar el curs de la darrera actualització de dades (Cal que hi hagi un curs acadèmic activat)");
 
             this.ValidationRule(
-                x => x.CentreTxt,
-                value => !string.IsNullOrEmpty( value ),
-                "Cal informar el Centre on cursa estudis");
-
-            this.ValidationRule(
                 x => x.Nom,
                 value => !string.IsNullOrEmpty( value ),
                 "Cal informar el nom de l'alumne");
@@ -107,10 +102,6 @@ namespace UI.ER.ViewModels.ViewModels
                 value => !string.IsNullOrEmpty( value ),
                 "Cal informar els Cognoms de l'alumne");
 
-            this.ValidationRule(
-                x => x.EtapaActualTxt,
-                value => !string.IsNullOrEmpty( value ),
-                "Cal informar l'etapa d'estudis actual");
         }
 
         //

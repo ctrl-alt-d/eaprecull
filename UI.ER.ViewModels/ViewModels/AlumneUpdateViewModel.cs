@@ -61,14 +61,14 @@ namespace UI.ER.ViewModels.ViewModels
                 .Subscribe(t => MissatgeAlertaSet(t.actualitat, t.actual));
         }
 
-        protected virtual async void MissatgeAlertaSet(string actualitat, string actual)
+        protected virtual void MissatgeAlertaSet(string actualitat, string actual)
         {
             MissatgeAlertaCursTxt = string.Empty;
             if (string.IsNullOrWhiteSpace(actualitat)) return;
             if (string.IsNullOrWhiteSpace(actual)) return;
             if (actual != actualitat)
-                MissatgeAlertaCursTxt = $"Dades actualitzades el curs {actualitat}";
-            await Task.CompletedTask;
+                MissatgeAlertaCursTxt = $"Estem treballant amb el curs {actual}. " +
+                " Les dades relatives a centre i etapa poden estar desactualitzades.";
         }
 
         protected virtual async void LoadDadesInicials()
@@ -118,11 +118,6 @@ namespace UI.ER.ViewModels.ViewModels
                 "Cal informar el curs de la darrera actualització de dades (Cal que hi hagi un curs acadèmic activat)");
 
             this.ValidationRule(
-                x => x.CentreTxt,
-                value => !string.IsNullOrEmpty(value),
-                "Cal informar el Centre on cursa estudis");
-
-            this.ValidationRule(
                 x => x.Nom,
                 value => !string.IsNullOrEmpty(value),
                 "Cal informar el nom de l'alumne");
@@ -132,10 +127,6 @@ namespace UI.ER.ViewModels.ViewModels
                 value => !string.IsNullOrEmpty(value),
                 "Cal informar els Cognoms de l'alumne");
 
-            this.ValidationRule(
-                x => x.EtapaActualTxt,
-                value => !string.IsNullOrEmpty(value),
-                "Cal informar l'etapa d'estudis actual");
         }
 
         public int Id { get; }
@@ -273,9 +264,10 @@ namespace UI.ER.ViewModels.ViewModels
             // Update UI
             BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
             DTO2ModelView(dto.Data);
+            await LoadDadesCursActual();
         }
 
-        protected virtual async void LoadDadesCursActual()
+        protected virtual async Task LoadDadesCursActual()
         {
             using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));

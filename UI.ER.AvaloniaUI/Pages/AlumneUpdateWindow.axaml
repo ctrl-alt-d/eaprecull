@@ -59,64 +59,89 @@
 
                 <!-- 2 -->
 
-                <Grid Grid.Row="2" Grid.Column="0" Margin="10,5,10,5">
+                <Grid Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" 
+                      ToolTip.Tip="{Binding MissatgeAlertaCursTxt}" >
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+                    <avalonia:MaterialIcon Grid.Column="0"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Kind="AlertOutline" Width="10" Height="10" 
+                                           Foreground="Red"
+                                           IsVisible="{Binding MissatgeAlertaCursTxt, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Margin="0,0,10,0"
+                                        />
                     <TextBox Text="{Binding CursDarreraActualitacioDadesTxt}"
-                            Grid.Column="0" 
+                            Grid.Column="1" 
                             UseFloatingWatermark="True"
                             Classes="Classic Textbox"
                             IsReadOnly="true"
                             Focusable="false"
                             wpf:TextFieldAssist.Label="Curs Darrera Actualitació Dades" />
-                    <Button Grid.Column="1" Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
+                    <Button Grid.Column="2" Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
                             Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding CursDarreraActualitacioDadesClearCommand}"
+                    <Button Grid.Column="3" Command="{Binding CursDarreraActualitacioDadesClearCommand}"
                             Classes="ClearCss Flat"  />
                 </Grid>
 
 
-
                 <!-- 3 -->
 
-                <Grid Grid.Row="3" Grid.Column="0" Margin="10,5,10,5">
+                <Grid Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
+                      ToolTip.Tip="{Binding MissatgeAlertaCursTxt}" >
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+                    <avalonia:MaterialIcon Grid.Column="0"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Kind="AlertOutline" Width="10" Height="10" 
+                                           Foreground="Red"
+                                           IsVisible="{Binding MissatgeAlertaCursTxt, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Margin="0,0,10,0"
+                                        />
                     <TextBox Text="{Binding EtapaActualTxt}"
-                            Grid.Column="0" 
+                            Grid.Column="1" 
                             UseFloatingWatermark="True"
                             Classes="Classic Textbox"
                             IsReadOnly="true"
                             Focusable="false"
                             wpf:TextFieldAssist.Label="Etapa que cursa l'alumne" />
-                    <Button Grid.Column="1" Command="{Binding EtapaActualLookupCommand}"
+                    <Button Grid.Column="2" Command="{Binding EtapaActualLookupCommand}"
                             Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding EtapaActualClearCommand}"
+                    <Button Grid.Column="3" Command="{Binding EtapaActualClearCommand}"
                             Classes="ClearCss Flat"  />
                 </Grid>
 
                 <Grid Grid.Row="3" Grid.Column="1" Margin="10,5,10,5">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+                    <avalonia:MaterialIcon Grid.Column="0"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Kind="AlertOutline" Width="10" Height="10" 
+                                           Foreground="Red"
+                                           IsVisible="{Binding MissatgeAlertaCursTxt, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Margin="0,0,10,0"
+                                        />
                     <TextBox Text="{Binding CentreTxt}"
-                            Grid.Column="0" 
+                            Grid.Column="1" 
                             UseFloatingWatermark="True"
                             Classes="Classic Textbox"
                             IsReadOnly="true"
                             Focusable="false"
                             wpf:TextFieldAssist.Label="Centre on estudia l'alumne" />
-                    <Button Grid.Column="1" Command="{Binding CentreLookupCommand}"
+                    <Button Grid.Column="2" Command="{Binding CentreLookupCommand}"
                             Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding CentreClearCommand}"
+                    <Button Grid.Column="3" Command="{Binding CentreClearCommand}"
                             Classes="ClearCss Flat"  />
                 </Grid>
 
