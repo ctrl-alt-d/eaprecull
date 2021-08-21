@@ -13,8 +13,8 @@ namespace DTO.i.DTOs
             int? tipusActuacioId = null,
             int? cursActuacioId = null,
             int? centreId = null,
-            DateTime? ambDarreraModificacioAnteriorA = null,
-            DateTime? ambDarreraModificacioPosteriorA = null)
+            DateTime? ambDataActuacioAnteriorA = null,
+            DateTime? ambDataActuacioPosteriorA = null)
         {
             Take = take;
             Skip = skip;
@@ -23,14 +23,14 @@ namespace DTO.i.DTOs
             TipusActuacioId = tipusActuacioId;
             CursActuacioId = cursActuacioId;
             CentreId = centreId;
-            AmbDarreraModificacioAnteriorA = ambDarreraModificacioAnteriorA;
-            AmbDarreraModificacioPosteriorA = ambDarreraModificacioPosteriorA;
+            AmbDataActuacioAnteriorA = ambDataActuacioAnteriorA;
+            AmbDataActuacioPosteriorA = ambDataActuacioPosteriorA;
         }
 
         public int Take {get;}
         public int Skip {get;}
 
-        // SearchString: Alumne, Centre, TagsAlumne, Descripcio
+        // SearchString: Alumne (nom, cognoms i tag), Centre, Descripcio, Tipus act, Curs.
         public string SearchString {get;}
 
         // Alumne
@@ -46,8 +46,8 @@ namespace DTO.i.DTOs
         public int? CentreId {get;}
 
         // Data Actuació
-        public DateTime? AmbDarreraModificacioAnteriorA {get;}
-        public DateTime? AmbDarreraModificacioPosteriorA {get;}
+        public DateTime? AmbDataActuacioAnteriorA {get;}
+        public DateTime? AmbDataActuacioPosteriorA {get;}
 
     }
 }
