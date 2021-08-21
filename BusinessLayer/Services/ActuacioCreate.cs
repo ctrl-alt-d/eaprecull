@@ -50,11 +50,10 @@ namespace BusinessLayer.Services
             );
 
         protected override Task PostAdd(Actuacio model, ActuacioCreateParms parm)
-            =>
-            Task
-            .CompletedTask;
-
-        
+        {
+            model.Alumne.NombreTotalDactuacions++;
+            return Task.CompletedTask;
+        }
 
     }
 }
