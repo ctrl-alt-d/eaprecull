@@ -122,6 +122,16 @@ namespace UI.ER.AvaloniaUI.Views
             w.ShowDialog(this);
         }
 
+        private void Actuacio_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var w = new ActuacioSetWindow()
+            {
+                DataContext = new ActuacioSetViewModel()
+            };
+
+            w.ShowDialog(this);
+        }
+
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
             SnackbarHost.Post("See ya next time, user!");
