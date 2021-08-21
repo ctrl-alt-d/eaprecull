@@ -235,8 +235,8 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public int _MinutsDuradaActuacio;
-        public int MinutsDuradaActuacio
+        public double _MinutsDuradaActuacio;
+        public double MinutsDuradaActuacio
         {
             get => _MinutsDuradaActuacio;
             set => this.RaiseAndSetIfChanged(ref _MinutsDuradaActuacio, value);
@@ -296,7 +296,7 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId!.Value,
                 EtapaAlMomentDeLactuacioId!.Value,
                 NivellAlMomentDeLactuacio,
-                MinutsDuradaActuacio ,
+                Convert.ToInt32(MinutsDuradaActuacio),
                 DescripcioActuacio 
             );
 

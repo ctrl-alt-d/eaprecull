@@ -49,12 +49,6 @@
                     Command="{Binding UpdateCommand}"
                     Classes="EditarCss Flat" />
 
-            <ToggleSwitch ToolTip.Tip="Activar / Desactivar"
-                          VerticalAlignment="Center" 
-                          IsChecked="{Binding EsActiu}"
-                          Command="{Binding DoActiuToggleCommand}"
-                          DockPanel.Dock="Right"/>
-
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
