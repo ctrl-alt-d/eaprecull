@@ -20,7 +20,7 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected virtual IActuacioCreate BLCreate() => SuperContext.GetBLOperation<IActuacioCreate>();
-        public ActuacioCreateViewModel(int? alumneId)
+        public ActuacioCreateViewModel(int? alumneId = null)
         {
 
             RxApp.MainThreadScheduler.Schedule(() => LoadDadesInicials(alumneId));    

@@ -16,15 +16,13 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected dtoo.Actuacio Model { get; set;}
-        protected readonly dtoo.CursAcademic? CursActual;
-        public ActuacioRowViewModel(dtoo.Actuacio data, dtoo.CursAcademic? cursActual, bool modeLookup = false)
+        public ActuacioRowViewModel(dtoo.Actuacio data, bool modeLookup = false)
         {
 
             // Behavior Parm
             ModeLookup = modeLookup;
             Id = data.Id;
             Model = data;
-            CursActual = cursActual;
 
             // State
             DTO2ModelView(data);
