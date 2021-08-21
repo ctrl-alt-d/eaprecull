@@ -4,7 +4,7 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioSetByAlumne: ISet<parms.GetActuacioByAlumneParms, dtoo.Actuacio>
+    public interface IActuacioSet: ISet<parms.ActuacioSearchParms, dtoo.Actuacio>
     {        
     }
 
