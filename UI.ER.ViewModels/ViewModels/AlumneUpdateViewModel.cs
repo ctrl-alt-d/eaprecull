@@ -289,6 +289,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (data == null) return;
 
             Nom = data.Nom;
+            
             Cognoms = data.Cognoms;
 
             DataNaixement = data.DataNaixement;
@@ -305,10 +306,15 @@ namespace UI.ER.ViewModels.ViewModels
             NivellActual = data.NivellActual;
 
             DataInformeNESENEE = data.DataInformeNESENEE;
+
             ObservacionsNESENEE = data.ObservacionsNESENEE;
+
             DataInformeNESENoNEE = data.DataInformeNESENoNEE;
+
             ObservacionsNESENoNEE = data.ObservacionsNESENoNEE;
+
             Tags = data.Tags;
+
             EsActiu = data.EsActiu;
 
         }

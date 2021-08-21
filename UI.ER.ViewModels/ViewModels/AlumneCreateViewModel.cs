@@ -229,20 +229,31 @@ namespace UI.ER.ViewModels.ViewModels
             if (data == null) return;
 
             Nom = data.Nom;
+            
             Cognoms = data.Cognoms;
-            CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
 
             DataNaixement = data.DataNaixement;
-            CentreId = data.CentreActual?.Id;
-            CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
-            EtapaActualId = data.EtapaActual?.Id;
-            NivellActual = data.NivellActual;
-            DataInformeNESENEE =  data.DataInformeNESENEE;
-            ObservacionsNESENEE = data.ObservacionsNESENEE;
-            DataInformeNESENoNEE = data.DataInformeNESENoNEE;
-            ObservacionsNESENoNEE= data.ObservacionsNESENoNEE;
-            Tags= data.Tags;
 
+            CentreId = data.CentreActual?.Id;
+            CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
+
+            CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
+            CursDarreraActualitacioDadesTxt = data.CursDarreraActualitacioDades?.Etiqueta ?? string.Empty;
+
+            EtapaActualId = data.EtapaActual?.Id;
+            EtapaActualTxt = data.EtapaActual?.Etiqueta ?? string.Empty;
+
+            NivellActual = data.NivellActual;
+
+            DataInformeNESENEE = data.DataInformeNESENEE;
+
+            ObservacionsNESENEE = data.ObservacionsNESENEE;
+
+            DataInformeNESENoNEE = data.DataInformeNESENoNEE;
+
+            ObservacionsNESENoNEE = data.ObservacionsNESENoNEE;
+
+            Tags = data.Tags;
         }
 
         //
