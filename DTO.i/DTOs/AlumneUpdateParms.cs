@@ -5,7 +5,7 @@ namespace DTO.i.DTOs
 {
     public class AlumneUpdateParms : IDtoi, IId
     {
-        public AlumneUpdateParms(int id, string nom, string cognoms, DateTime? dataNaixement, int? centreActualId, int cursDarreraActualitacioDadesId, int? etapaActualId, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tags, bool esActiu)
+        public AlumneUpdateParms(int id, string nom, string cognoms, DateTime? dataNaixement, int? centreActualId, int cursDarreraActualitacioDadesId, int? etapaActualId, string nivellActual, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tags, bool esActiu)
         {
             Id = id;
             Nom = nom;
@@ -14,6 +14,7 @@ namespace DTO.i.DTOs
             CentreActualId = centreActualId;
             CursDarreraActualitacioDadesId = cursDarreraActualitacioDadesId;
             EtapaActualId = etapaActualId;
+            NivellActual = nivellActual;
             DataInformeNESENEE = dataInformeNESENEE;
             ObservacionsNESENEE = observacionsNESENEE;
             DataInformeNESENoNEE = dataInformeNESENoNEE;
@@ -29,6 +30,7 @@ namespace DTO.i.DTOs
         public int? CentreActualId { get; }
         public int CursDarreraActualitacioDadesId { get; }
         public int? EtapaActualId { get; }
+        public string NivellActual {get; }
         public DateTime? DataInformeNESENEE { get; }
         public string ObservacionsNESENEE { get; }
         public DateTime? DataInformeNESENoNEE { get; }

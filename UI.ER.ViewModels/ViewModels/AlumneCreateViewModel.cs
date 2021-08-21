@@ -162,6 +162,15 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _EtapaActualTxt, value);
         }
 
+
+        //
+        public string _NivellActual = string.Empty;
+        public string NivellActual
+        {
+            get => _NivellActual;
+            set => this.RaiseAndSetIfChanged(ref _NivellActual, value);
+        }
+
         //
         public DateTime? _DataInformeNESENEE;
         public DateTime? DataInformeNESENEE
@@ -227,6 +236,7 @@ namespace UI.ER.ViewModels.ViewModels
             CentreId = data.CentreActual?.Id;
             CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
             EtapaActualId = data.EtapaActual?.Id;
+            NivellActual = data.NivellActual;
             DataInformeNESENEE =  data.DataInformeNESENEE;
             ObservacionsNESENEE = data.ObservacionsNESENEE;
             DataInformeNESENoNEE = data.DataInformeNESENoNEE;
@@ -250,6 +260,7 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId,
                 CursDarreraActualitacioDadesId!.Value,
                 EtapaActualId,
+                NivellActual,
                 DataInformeNESENEE,
                 ObservacionsNESENEE,
                 DataInformeNESENoNEE,

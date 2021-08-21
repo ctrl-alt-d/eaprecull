@@ -100,6 +100,7 @@ namespace CreateDemoData
                         centres.Data![i%centres.Data.Count()].Id,
                         cursos.Data![i%cursos.Data.Count()].Id,
                         null,
+                        (i % 5).ToString(),
                         DateTime.Now,
                         "hola",
                         null,

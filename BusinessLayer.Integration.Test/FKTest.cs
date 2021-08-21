@@ -61,6 +61,7 @@ namespace BusinessLayer.Integration.Test
                 centreActualId: createcentreresult.Data.Id,
                 cursDarreraActualitacioDadesId: createcursresult.Data.Id,
                 etapaActualId: null,
+                nivellActual: "1r",
                 dataInformeNESENEE: null,
                 observacionsNESENEE: string.Empty,
                 dataInformeNESENoNEE: null,

@@ -7,7 +7,7 @@
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneCreateWindow"
         HorizontalContentAlignment="Stretch"
         Title="Alta nou Alumne"        
-        Width="1000" Height="900" MinWidth="720"
+        Width="1100" Height="600" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
 
@@ -78,7 +78,11 @@
                             Classes="ClearCss Flat"  />
                 </Grid>
 
-
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding NivellActual}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Nivell actual (exs: 1, 1r, AO, ...)" />
 
                 <!-- 3 -->
 

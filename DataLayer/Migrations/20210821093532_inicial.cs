@@ -80,6 +80,7 @@ namespace DataLayer.Migrations
                     CentreActualId = table.Column<int>(type: "INTEGER", nullable: true),
                     CursDarreraActualitacioDadesId = table.Column<int>(type: "INTEGER", nullable: false),
                     EtapaActualId = table.Column<int>(type: "INTEGER", nullable: true),
+                    NivellActual = table.Column<string>(type: "TEXT", nullable: false),
                     DataInformeNESENEE = table.Column<DateTime>(type: "TEXT", nullable: true),
                     ObservacionsNESENEE = table.Column<string>(type: "TEXT", nullable: false),
                     DataInformeNESENoNEE = table.Column<DateTime>(type: "TEXT", nullable: true),
