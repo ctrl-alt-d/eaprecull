@@ -12,5 +12,6 @@ namespace BusinessLayer.Abstract.Generic
     {
         Task<OperationResults<TDTOo>> FromPredicate(TParm request);
         Task<OperationResult<TDTOo>> FromId(int id);
+        Task<IntOperationResult> CountFromPredicate(TParm request);
     }
 }

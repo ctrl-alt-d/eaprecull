@@ -7,10 +7,16 @@ using Avalonia.Interactivity;
 using Material.Styles;
 using UI.ER.AvaloniaUI.Pages;
 using UI.ER.ViewModels.ViewModels;
+using Avalonia.ReactiveUI;
+using System;
+using ReactiveUI;
+using System.Threading.Tasks;
+using System.Reactive;
+using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Views
 {
-    public class MainWindow : Window
+    public class MainWindow : ReactiveWindow<AppStatusViewModel>
     {
         #region Control fields
         private ToggleButton NavDrawerSwitch = default!;
@@ -21,9 +27,38 @@ namespace UI.ER.AvaloniaUI.Views
 
         public MainWindow()
         {
+
+            DataContext = new AppStatusViewModel();
+
+            this.WhenActivated(disposables => { 
+                RegisterShowAlumneDialog(disposables); 
+            });
+
             InitializeComponent();
             this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
+
         }
+
+        protected virtual void RegisterShowAlumneDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
+            );        
+        protected virtual async Task DoShowAlumneLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
+        {
+            var dialog = new AlumneSetWindow()
+            {
+                DataContext = new AlumneSetViewModel(modeLookup: false)
+            };
+            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+            interaction.SetOutput(result);        
+        }
+
+        private Window GetWindow() 
+            =>
+            (Window)this.VisualRoot;
 
         private void InitializeComponent()
         {
