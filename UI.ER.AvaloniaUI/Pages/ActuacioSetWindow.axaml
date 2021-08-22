@@ -20,6 +20,8 @@
 
         <DockPanel.Styles>
             <Style Selector="Button.DesarCss">
+                <Setter Property="HotKey" Value="Ctrl++" />
+                <Setter Property="ToolTip.Tip" Value="Utilitza ^+ com a drecera de teclat" />
                 <Setter Property="Content">
                     <Setter.Value>
                         <Template>
@@ -28,7 +30,7 @@
                                          VerticalAlignment="Stretch">
                                     <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
                                 </Viewbox>
-                                <TextBlock Margin="8,0" Text="Afegir un nou Actuacio" Classes="Subtitle2"
+                                <TextBlock Margin="8,0" Text="Afegir una nova Actuació" Classes="Subtitle2"
                                            VerticalAlignment="Center" />
                             </StackPanel>
                         </Template>

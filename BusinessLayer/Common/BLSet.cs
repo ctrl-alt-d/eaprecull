@@ -66,6 +66,18 @@ namespace BusinessLayer.Common
             return new OperationResults<TDTOo>(data, total, take);
         }
 
+        public virtual async Task<IntOperationResult> CountFromPredicate(
+            TParm request
+            )
+        {
+            var total =
+                await
+                GetModels(request)
+                .CountAsync();
+
+            return new IntOperationResult(total);
+        }        
+
         public virtual async Task<OperationResult<TDTOo>> FromId(int id)
         {
             var data =

@@ -38,6 +38,7 @@ namespace BusinessLayer.Services
             query = MatchDataNaixementPosteriorA(query, request);
             query = MatchDataInformeAnteriorA(query, request);
             query = MatchDataInformePosteriorA(query, request);
+            query = MatchCursActualitzacio(query, request);
             query = MatchEtapa(query, request);
             query = MatchTipusActuacio(query, request);
             query = MatchTags(query, request);
@@ -139,6 +140,14 @@ namespace BusinessLayer.Services
                 model.EtapaActual.Id == request.EtapaId);
         }
 
+        private IQueryable<Alumne> MatchCursActualitzacio(IQueryable<Alumne> query, AlumneSearchParms request)
+        {
+            if (!request.CursDarreraActualitacioDadesId.HasValue)
+                return query;
+
+            return query.Where(model =>
+                model.CursDarreraActualitacioDades.Id == request.CursDarreraActualitacioDadesId);
+        }
         private IQueryable<Alumne> MatchTipusActuacio(IQueryable<Alumne> query, AlumneSearchParms request)
         {
             if (!request.TipusActuacioId.HasValue)

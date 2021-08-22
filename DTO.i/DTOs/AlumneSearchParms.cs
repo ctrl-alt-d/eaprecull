@@ -16,6 +16,7 @@ namespace DTO.i.DTOs
             DateTime? ambDataInformeAnteriorA = null,
             DateTime? ambDataInformePosteriorA = null,
             int? etapaId = null,
+            int? cursDarreraActualitacioDadesId = null,
             int? tipusActuacioId = null,
             string nomCognomsTagCentre = "",
             string tags = "",
@@ -32,6 +33,7 @@ namespace DTO.i.DTOs
             AmbDataInformeAnteriorA = ambDataInformeAnteriorA;
             AmbDataInformePosteriorA = ambDataInformePosteriorA;
             EtapaId = etapaId;
+            CursDarreraActualitacioDadesId = cursDarreraActualitacioDadesId;
             TipusActuacioId = tipusActuacioId;
             NomCognomsTagCentre = nomCognomsTagCentre;
             Tags = tags;
@@ -65,6 +67,8 @@ namespace DTO.i.DTOs
 
         // Etapa
         public int? EtapaId {get;}
+        //
+        public int? CursDarreraActualitacioDadesId {get; }
 
         // Tipus Actuació
         public int? TipusActuacioId {get;}

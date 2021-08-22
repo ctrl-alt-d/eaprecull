@@ -20,6 +20,8 @@
 
         <DockPanel.Styles>
             <Style Selector="Button.DesarCss">
+                <Setter Property="HotKey" Value="Ctrl++" />
+                <Setter Property="ToolTip.Tip" Value="Utilitza ^+ com a drecera de teclat" />
                 <Setter Property="Content">
                     <Setter.Value>
                         <Template>
