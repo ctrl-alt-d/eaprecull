@@ -265,7 +265,6 @@ namespace UI.ER.ViewModels.ViewModels
         {
             if (data == null) return;
 
-
             AlumneTxt = data.Alumne.Etiqueta;
             AlumneId = data.Alumne.Id;
 
