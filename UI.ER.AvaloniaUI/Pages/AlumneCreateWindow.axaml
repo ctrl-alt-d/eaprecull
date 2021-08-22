@@ -68,7 +68,7 @@
                     <TextBox Text="{Binding CursDarreraActualitacioDadesTxt}"
                             Grid.Column="0" 
                             UseFloatingWatermark="True"
-                            Classes="Classic Textbox"
+                            Classes="Filled"
                             IsReadOnly="true"
                             Focusable="false"
                             wpf:TextFieldAssist.Label="Curs Darrera Actualitació Dades" />
@@ -95,7 +95,7 @@
                     <TextBox Text="{Binding EtapaActualTxt}"
                             Grid.Column="0" 
                             UseFloatingWatermark="True"
-                            Classes="Classic Textbox"
+                            Classes="Filled"
                             IsReadOnly="true"
                             Focusable="false"
                             wpf:TextFieldAssist.Label="Etapa que cursa l'alumne" />
@@ -114,7 +114,7 @@
                     <TextBox Text="{Binding CentreTxt}"
                             Grid.Column="0" 
                             UseFloatingWatermark="True"
-                            Classes="Classic Textbox"
+                            Classes="Filled"
                             IsReadOnly="true"
                             Focusable="false"
                             wpf:TextFieldAssist.Label="Centre on estudia l'alumne" />
