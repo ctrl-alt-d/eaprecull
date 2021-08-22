@@ -105,7 +105,7 @@ namespace UI.ER.ViewModels.ViewModels
             Desactualitzat = CursActual != null && AlumneDto.CursDarreraActualitacioDades.Id != CursActual.Id;
             EsActiu = AlumneDto.EsActiu;
             CursDarreraActualitzacio = $"Curs darrera actualització de dades: {AlumneDto.CursDarreraActualitacioDades.Descripcio}";
-            NumActuacionsTxt = $"Nombre d'actuacions: {AlumneDto.NombreActuacions}";
+            NumActuacionsTxt =  $"{AlumneDto.NombreActuacions} x ";
         }
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();

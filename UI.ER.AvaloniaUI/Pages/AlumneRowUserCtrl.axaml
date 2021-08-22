@@ -59,7 +59,10 @@
                     Command="{Binding ActuacioSetCommand}"
                     ToolTip.Tip="Actuacions alumne"
                     Classes="Flat" >
+                <StackPanel Orientation="Horizontal">
+                <TextBlock Classes="Body2" Text="{Binding NumActuacionsTxt}" />
                 <avalonia:MaterialIcon Kind="BookOpenVariant" VerticalAlignment="Center" />
+                </StackPanel>
             </Button>                 
 
             <StackPanel Orientation="Vertical"
@@ -80,8 +83,6 @@
                 </StackPanel>
 
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}" Margin="0,5,0,0"/>
-
-                <TextBlock Classes="Overline" Text="{Binding NumActuacionsTxt}" Margin="0,3,0,0" />
 
                 <ItemsControl Margin="10"
                               IsVisible="{Binding BrokenRules.Count}"
