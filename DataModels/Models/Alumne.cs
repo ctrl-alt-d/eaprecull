@@ -14,6 +14,7 @@ namespace DataModels.Models
         public Centre? CentreActual { get; set; }
         public CursAcademic CursDarreraActualitacioDades { get; set; } = default!;
         public Etapa? EtapaActual { get; set; }
+        public string NivellActual { get; set; } = string.Empty;
         public DateTime? DataInformeNESENEE { get; set; }
         public string ObservacionsNESENEE { get; set; } = string.Empty;
         public DateTime? DataInformeNESENoNEE { get; set; }

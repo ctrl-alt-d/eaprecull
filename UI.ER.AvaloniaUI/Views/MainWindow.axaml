@@ -112,6 +112,12 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
 
+                                <MenuItem Header="Actuacio" Click="Actuacio_OnClick">
+                                    <MenuItem.Icon>
+                                        <avalonia:MaterialIcon Kind="BookOpenVariant" Width="24" Height="24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
                                 <Separator />
                                 <MenuItem Header="Sortir" Click="GoodbyeButtonMenuItem_OnClick">
                                     <MenuItem.Icon>

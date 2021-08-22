@@ -56,6 +56,7 @@ namespace BusinessLayer.Services
                 CentreActual = await Perfection<Centre>(parm.CentreActualId),
                 CursDarreraActualitacioDades = await Perfection<CursAcademic>(parm.CursDarreraActualitacioDadesId),
                 EtapaActual = await Perfection<Etapa>(parm.EtapaActualId),
+                NivellActual = parm.NivellActual,
                 DataInformeNESENEE = parm.DataInformeNESENEE,
                 ObservacionsNESENEE = parm.ObservacionsNESENEE,
                 DataInformeNESENoNEE = parm.DataInformeNESENoNEE,

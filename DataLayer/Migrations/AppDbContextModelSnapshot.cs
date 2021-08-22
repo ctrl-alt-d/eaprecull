@@ -107,6 +107,10 @@ namespace DataLayer.Migrations
                     b.Property<int?>("EtapaActualId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("NivellActual")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("TEXT");

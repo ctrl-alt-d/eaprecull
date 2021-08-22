@@ -19,6 +19,7 @@ namespace DTO.Projections
                 model.CentreActual,
                 model.CursDarreraActualitacioDades,
                 model.EtapaActual,
+                model.NivellActual,
                 model.DataInformeNESENEE,
                 model.ObservacionsNESENEE,
                 model.DataInformeNESENoNEE,

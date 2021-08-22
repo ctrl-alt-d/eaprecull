@@ -1,0 +1,163 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        x:Class="UI.ER.AvaloniaUI.Pages.ActuacioCreateWindow"
+        HorizontalContentAlignment="Stretch"
+        Title="Alta nou Actuacio"        
+        Width="1100" Height="700" MinWidth="720"
+        WindowStartupLocation="CenterOwner"
+        >
+
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical"
+                    Margin="16, 16">
+            <Grid ColumnDefinitions="1*,1*"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" >
+
+                <!-- 0 -->
+
+                <TextBox Grid.Row="0" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding MomentDeLactuacioTxt}"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Data de l'actuació (format d.m.aaaa)" />
+
+                <Grid Grid.Row="0" Grid.Column="1" Margin="10,5,10,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding CursActuacioTxt}"
+                            Grid.Column="0" 
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="Curs de l'actuació" />
+                    <Button Grid.Column="1" Command="{Binding CursActuacioLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                    <Button Grid.Column="2" Command="{Binding CursActuacioClearCommand}"
+                            Classes="ClearCss Flat"  />
+                </Grid>
+
+                <!-- 1 -->
+
+                <Grid Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
+                      ColumnDefinitions="*,auto,auto">
+                    <TextBox Text="{Binding TipusActuacioTxt}"
+                            Grid.Column="0" 
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="Tipus d'actuació" />
+                    <Button Grid.Column="1" Command="{Binding TipusActuacioLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                    <Button Grid.Column="2" Command="{Binding TipusActuacioClearCommand}"
+                            Classes="ClearCss Flat"  />
+                </Grid>
+
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,10,5"
+                               UseFloatingWatermark="True"
+                               Classes="Filled"
+                               wpf:TextFieldAssist.Label="Minuts emprats"
+                               Text="{Binding MinutsDuradaActuacioTxt}"/>
+
+
+                <!-- 2 -->
+
+                <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,5,10,5"
+                            Text="{Binding ObservacionsTipusActuacio}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Observacions sobre el tipus d'actuació" />
+
+
+                <!-- 3 -->
+
+                <Grid Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
+                      ColumnDefinitions="*,auto,auto">
+                    <TextBox Text="{Binding AlumneTxt}"
+                            Grid.Column="0" 
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="Alumne" />
+                    <Button Grid.Column="1" Command="{Binding AlumneLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                    <Button Grid.Column="2" Command="{Binding AlumneClearCommand}"
+                            Classes="ClearCss Flat"  />
+                </Grid>
+
+                <Grid Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
+                      ColumnDefinitions="*,auto,auto">
+                    <TextBox Text="{Binding CentreTxt}"
+                            Grid.Column="0" 
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="Centre de l'alumne al moment de l'actuació" />
+                    <Button Grid.Column="1" Command="{Binding CentreLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                    <Button Grid.Column="2" Command="{Binding CentreClearCommand}"
+                            Classes="ClearCss Flat"  />
+                </Grid>
+
+                <!-- 4 -->
+
+                <Grid Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
+                      ColumnDefinitions="*,auto,auto">
+                    <TextBox Text="{Binding EtapaAlMomentDeLactuacioTxt}"
+                            Grid.Column="0" 
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            IsReadOnly="true"
+                            Focusable="false"
+                            wpf:TextFieldAssist.Label="Etapa al moment de l'actuació" />
+                    <Button Grid.Column="1" Command="{Binding EtapaAlMomentDeLactuacioLookupCommand}"
+                            Classes="LookupCss Flat"  />
+                    <Button Grid.Column="2" Command="{Binding EtapaAlMomentDeLactuacioClearCommand}"
+                            Classes="ClearCss Flat"  />
+                </Grid>
+                
+                <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
+                    Text="{Binding NivellAlMomentDeLactuacio}"
+                    UseFloatingWatermark="True"
+                    Classes="Filled"
+                    wpf:TextFieldAssist.Label="Nivell al moment de l'actuació (ex: 1r)" />
+
+                <!-- 5 -->
+
+                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,5,10,5"
+                            Text="{Binding DescripcioActuacio}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            UseFloatingWatermark="True"
+                            Classes="Filled"
+                            wpf:TextFieldAssist.Label="Descripció de l'actuació" />
+
+
+            </Grid>
+
+            <ItemsControl Margin="10,5,10,5" Items="{Binding BrokenRules}">            
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="Error" Text="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,5,10,5"/>
+
+        </StackPanel>
+
+    </ScrollViewer>
+</Window>

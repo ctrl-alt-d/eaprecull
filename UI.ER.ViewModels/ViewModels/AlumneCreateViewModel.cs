@@ -162,6 +162,15 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _EtapaActualTxt, value);
         }
 
+
+        //
+        public string _NivellActual = string.Empty;
+        public string NivellActual
+        {
+            get => _NivellActual;
+            set => this.RaiseAndSetIfChanged(ref _NivellActual, value);
+        }
+
         //
         public DateTime? _DataInformeNESENEE;
         public DateTime? DataInformeNESENEE
@@ -220,19 +229,31 @@ namespace UI.ER.ViewModels.ViewModels
             if (data == null) return;
 
             Nom = data.Nom;
+            
             Cognoms = data.Cognoms;
-            CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
 
             DataNaixement = data.DataNaixement;
-            CentreId = data.CentreActual?.Id;
-            CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
-            EtapaActualId = data.EtapaActual?.Id;
-            DataInformeNESENEE =  data.DataInformeNESENEE;
-            ObservacionsNESENEE = data.ObservacionsNESENEE;
-            DataInformeNESENoNEE = data.DataInformeNESENoNEE;
-            ObservacionsNESENoNEE= data.ObservacionsNESENoNEE;
-            Tags= data.Tags;
 
+            CentreId = data.CentreActual?.Id;
+            CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
+
+            CursDarreraActualitacioDadesId = data.CursDarreraActualitacioDades?.Id;
+            CursDarreraActualitacioDadesTxt = data.CursDarreraActualitacioDades?.Etiqueta ?? string.Empty;
+
+            EtapaActualId = data.EtapaActual?.Id;
+            EtapaActualTxt = data.EtapaActual?.Etiqueta ?? string.Empty;
+
+            NivellActual = data.NivellActual;
+
+            DataInformeNESENEE = data.DataInformeNESENEE;
+
+            ObservacionsNESENEE = data.ObservacionsNESENEE;
+
+            DataInformeNESENoNEE = data.DataInformeNESENoNEE;
+
+            ObservacionsNESENoNEE = data.ObservacionsNESENoNEE;
+
+            Tags = data.Tags;
         }
 
         //
@@ -250,6 +271,7 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId,
                 CursDarreraActualitacioDadesId!.Value,
                 EtapaActualId,
+                NivellActual,
                 DataInformeNESENEE,
                 ObservacionsNESENEE,
                 DataInformeNESENoNEE,

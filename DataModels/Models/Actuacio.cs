@@ -7,6 +7,38 @@ namespace DataModels.Models
 
     public class Actuacio : IIdEtiquetaDescripcio, IModel
     {
+        public Actuacio()
+        {
+        }
+
+        public Actuacio(Alumne alumne, TipusActuacio tipusActuacio, string observacionsTipusActuacio, DateTime momentDeLactuacio, CursAcademic cursActuacio, Centre centreAlMomentDeLactuacio, Etapa etapaAlMomentDeLactuacio, string nivellAlMomentDeLactuacio, int minutsDuradaActuacio, string descripcioActuacio)
+        {
+            Alumne = alumne;
+            TipusActuacio = tipusActuacio;
+            ObservacionsTipusActuacio = observacionsTipusActuacio;
+            MomentDeLactuacio = momentDeLactuacio;
+            CursActuacio = cursActuacio;
+            CentreAlMomentDeLactuacio = centreAlMomentDeLactuacio;
+            EtapaAlMomentDeLactuacio = etapaAlMomentDeLactuacio;
+            NivellAlMomentDeLactuacio = nivellAlMomentDeLactuacio;
+            MinutsDuradaActuacio = minutsDuradaActuacio;
+            DescripcioActuacio = descripcioActuacio;
+        }
+
+        public void SetMainData(Alumne alumne, TipusActuacio tipusActuacio, string observacionsTipusActuacio, DateTime momentDeLactuacio, CursAcademic cursActuacio, Centre centreAlMomentDeLactuacio, Etapa etapaAlMomentDeLactuacio, string nivellAlMomentDeLactuacio, int minutsDuradaActuacio, string descripcioActuacio)
+        {
+            Alumne = alumne;
+            TipusActuacio = tipusActuacio;
+            ObservacionsTipusActuacio = observacionsTipusActuacio;
+            MomentDeLactuacio = momentDeLactuacio;
+            CursActuacio = cursActuacio;
+            CentreAlMomentDeLactuacio = centreAlMomentDeLactuacio;
+            EtapaAlMomentDeLactuacio = etapaAlMomentDeLactuacio;
+            NivellAlMomentDeLactuacio = nivellAlMomentDeLactuacio;
+            MinutsDuradaActuacio = minutsDuradaActuacio;
+            DescripcioActuacio = descripcioActuacio;
+        }
+
         public int Id { get; set; }
         public Alumne Alumne { get; set; } = default!;
         public TipusActuacio TipusActuacio { get; set; } = default!;
