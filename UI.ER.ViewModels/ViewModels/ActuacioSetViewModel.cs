@@ -44,7 +44,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new ActuacioCreateViewModel();
+                var update = new ActuacioCreateViewModel(alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
                 var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();

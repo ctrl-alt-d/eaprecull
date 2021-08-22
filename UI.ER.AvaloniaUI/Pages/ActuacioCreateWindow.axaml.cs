@@ -11,6 +11,8 @@ using CommonInterfaces;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using System.Reactive;
+using Avalonia;
+using Avalonia.Input;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -22,6 +24,7 @@ namespace UI.ER.AvaloniaUI.Pages
             this.DataContext = new ActuacioCreateViewModel();
             
             this.InitializeComponent();
+            this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
             
             this.WhenActivated(d => {
 

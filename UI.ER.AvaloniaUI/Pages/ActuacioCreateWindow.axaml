@@ -25,13 +25,13 @@
                             Classes="Filled"
                             wpf:TextFieldAssist.Label="Data de l'actuació (format d.m.aaaa)" />
 
-                <Grid Grid.Row="0" Grid.Column="1" Margin="10,5,10,5">
+                <Grid Grid.Row="0" Grid.Column="1"  Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding CursActuacioTxt}"
+                    <TextBox Text="{Binding CursActuacioTxt}" Margin="10,5,10,5"
                             Grid.Column="0" 
                             UseFloatingWatermark="True"
                             Classes="Filled"
@@ -46,9 +46,9 @@
 
                 <!-- 1 -->
 
-                <Grid Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
-                      ColumnDefinitions="*,auto,auto">
-                    <TextBox Text="{Binding TipusActuacioTxt}"
+                <Grid Grid.Row="1" Grid.Column="0" 
+                      ColumnDefinitions="*,auto,auto" Margin="0">
+                    <TextBox Text="{Binding TipusActuacioTxt}" Margin="10,5,10,5"
                             Grid.Column="0" 
                             UseFloatingWatermark="True"
                             Classes="Filled"
