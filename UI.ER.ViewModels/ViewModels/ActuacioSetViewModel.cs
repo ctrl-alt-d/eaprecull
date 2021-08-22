@@ -16,10 +16,11 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioSetViewModel : ViewModelBase
     {
         public bool ModeLookup { get; }
-        public ActuacioSetViewModel(bool modeLookup = false)
+        public ActuacioSetViewModel(bool modeLookup = false, int? alumneId = null )
         {
 
             ModeLookup = modeLookup;
+            AlumneId = alumneId;
 
             // Filtre
             var SearchStringObserver =
@@ -54,7 +55,6 @@ namespace UI.ER.ViewModels.ViewModels
                     MyItems.Insert(0, item);
                 }
             });
-
 
         }
         public ObservableCollectionExtended<ActuacioRowViewModel> MyItems { get; } = new();

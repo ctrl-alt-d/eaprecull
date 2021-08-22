@@ -6,6 +6,8 @@ using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using Avalonia.ReactiveUI;
 using System;
+using System.Reactive;
+using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -16,7 +18,8 @@ namespace UI.ER.AvaloniaUI.Pages
             InitializeComponent();
 
             this.WhenActivated(disposables => { 
-                RegisterShowUpdateDialog(disposables); 
+                RegisterShowUpdateDialog(disposables);
+                RegisterShowActuacioDialog(disposables); 
                 RegisterCloseOnSelect(disposables); 
             });
 
@@ -47,6 +50,24 @@ namespace UI.ER.AvaloniaUI.Pages
 
             var result = await dialog.ShowDialog<dtoo.Alumne?>(GetWindow());
 
+            interaction.SetOutput(result);        
+        }
+
+        // -- Show actuacions
+        protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+            );        
+        protected virtual async Task DoShowActuacioLookup(InteractionContext<ActuacioSetViewModel, IIdEtiquetaDescripcio?> interaction)
+        {
+            var dialog = new ActuacioSetWindow()
+            {
+                DataContext =interaction.Input
+            };
+            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
             interaction.SetOutput(result);        
         }
 

@@ -12,6 +12,7 @@ using BusinessLayer.Abstract.Exceptions;
 using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using System.Reactive.Concurrency;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -36,6 +37,7 @@ namespace UI.ER.ViewModels.ViewModels
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
             SeleccionarCommand = ReactiveCommand.Create(SelectRow);
             UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
+            ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
         }
 
 
@@ -124,6 +126,27 @@ namespace UI.ER.ViewModels.ViewModels
             var update = new AlumneUpdateViewModel(Id);
             var data = await ShowUpdateDialog.Handle(update);
             if (data != null) DTO2ModelView(data);
+        }
+
+        // --- Obrir Finestra Actuacions ---
+        public ICommand ActuacioSetCommand { get; }
+        public Interaction<ActuacioSetViewModel, IIdEtiquetaDescripcio?> ShowActuacioSetDialog { get; } = new();
+        private async Task ShowActuacioSetDialogHandle()
+        {
+            var vm = new ActuacioSetViewModel(alumneId: Id);
+            var data = await ShowActuacioSetDialog.Handle(vm);
+            RxApp.MainThreadScheduler.Schedule(ReLoadData);
+        }
+        private async void ReLoadData()
+        {
+            BrokenRules.Clear();
+            using var blAlumneSet = SuperContext.GetBLOperation<IAlumneSet>();
+            var dto = await blAlumneSet.FromId(Model.Id);
+            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
+            if (dto.Data == null) return;
+            var data = dto.Data!;
+            Model = data;
+            DTO2ModelView(data);
         }
 
         // --- Seleccionar si estem en mode lookup ---

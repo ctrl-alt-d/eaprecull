@@ -55,6 +55,13 @@
                           Command="{Binding DoActiuToggleCommand}"
                           DockPanel.Dock="Right"/>
 
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding ActuacioSetCommand}"
+                    ToolTip.Tip="Actuacions alumne"
+                    Classes="Flat" >
+                <avalonia:MaterialIcon Kind="BookOpenVariant" VerticalAlignment="Center" />
+            </Button>                 
+
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">     
 
