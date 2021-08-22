@@ -80,14 +80,14 @@ namespace BusinessLayer.Services
 
         private IQueryable<Actuacio> MatchAlumne(IQueryable<Actuacio> query, ActuacioSearchParms request)
         {
-            if (!request.TipusActuacioId.HasValue)
+            if (!request.AlumneId.HasValue)
                 return query;
 
             return query.Where(model => model.Alumne.Id == request.AlumneId);
         }
         private IQueryable<Actuacio> MatchCursActuacio(IQueryable<Actuacio> query, ActuacioSearchParms request)
         {
-            if (!request.TipusActuacioId.HasValue)
+            if (!request.CursActuacioId.HasValue)
                 return query;
 
             return query.Where(model => model.CursActuacio.Id == request.CursActuacioId);

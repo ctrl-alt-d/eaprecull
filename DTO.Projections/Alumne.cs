@@ -27,7 +27,8 @@ namespace DTO.Projections
                 model.EsActiu,
                 model.Etiqueta,
                 model.Descripcio,
-                model.Tags
+                model.Tags,
+                model.NombreTotalDactuacions
             );
     }
 }
