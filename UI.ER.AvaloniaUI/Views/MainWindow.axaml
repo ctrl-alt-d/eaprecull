@@ -146,22 +146,35 @@
                                 </Style>
                             </Carousel.Styles>
 
-                            <WrapPanel Margin="10,10,10,10">
+                            <WrapPanel Margin="10,40,10,10" HorizontalAlignment="Center">
 
-                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top">
+                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
                                     <StackPanel>
                                         <StackPanel Margin="8">
-                                            <TextBlock Classes="Headline6" Text="{Binding TotalALumnes}" HorizontalAlignment="Center"/>
-                                            
-                                                
+                                            <avalonia:MaterialIcon HorizontalAlignment="Center"
+                                                                    Classes="Headline6"
+                                                                    Kind="School" Width="24" Height="24" 
+                                                                    />
+                                            <TextBlock Classes="Headline6" Text="{Binding TotalALumnes}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding TotalALumnesActualitzats}" HorizontalAlignment="Center"/>
-
                                             <Button  assist:ButtonAssist.CornerRadius="16"  Margin="0,12,0,0" Content="Gestiona alumnes" Command="{Binding AlumneSetCommand}" HorizontalAlignment="Center" />    
-
                                         </StackPanel>
                                     </StackPanel>
                                 </styles:Card>
 
+                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
+                                    <StackPanel>
+                                        <StackPanel Margin="8">
+                                            <avalonia:MaterialIcon HorizontalAlignment="Center"
+                                                                    Classes="Headline6"
+                                                                    Kind="BookOpenVariant" Width="24" Height="24" 
+                                                                    />
+                                            <TextBlock Classes="Headline6" Text="{Binding TotalActuacions}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                                            <TextBlock Classes="Body2" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding TotalActuacionsCursActual}" HorizontalAlignment="Center"/>
+                                            <Button  assist:ButtonAssist.CornerRadius="16"  Margin="0,12,0,0" Content="Gestiona actuacions" Command="{Binding ActuacioSetCommand}" HorizontalAlignment="Center" />    
+                                        </StackPanel>
+                                    </StackPanel>
+                                </styles:Card>
 
                             </WrapPanel>
 

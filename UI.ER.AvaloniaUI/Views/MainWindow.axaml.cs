@@ -32,6 +32,7 @@ namespace UI.ER.AvaloniaUI.Views
 
             this.WhenActivated(disposables => { 
                 RegisterShowAlumneDialog(disposables); 
+                RegisterShowActuacioDialog(disposables); 
             });
 
             InitializeComponent();
@@ -51,6 +52,23 @@ namespace UI.ER.AvaloniaUI.Views
             var dialog = new AlumneSetWindow()
             {
                 DataContext = new AlumneSetViewModel(modeLookup: false)
+            };
+            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+            interaction.SetOutput(result);        
+        }
+
+        protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+            );        
+        protected virtual async Task DoShowActuacioLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
+        {
+            var dialog = new ActuacioSetWindow()
+            {
+                DataContext = new ActuacioSetViewModel(modeLookup: false)
             };
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
             interaction.SetOutput(result);        

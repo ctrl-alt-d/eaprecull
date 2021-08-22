@@ -18,7 +18,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public AppStatusViewModel()
         {
-            RxApp.MainThreadScheduler.Schedule(LoadData);            
+            RxApp.MainThreadScheduler.Schedule(LoadData);
             ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
             AlumneSetCommand = ReactiveCommand.CreateFromTask(ShowAlumneSetDialogHandle);
 
@@ -41,7 +41,8 @@ namespace UI.ER.ViewModels.ViewModels
             using var blCursAcademicSet = SuperContext.GetBLOperation<ICursAcademicSet>();
 
             var dtoCursActual = await blCursAcademicSet.FromPredicate(new DTO.i.DTOs.EsActiuParms(true));
-            if ( dtoCursActual.Data == null || !dtoCursActual.Data.Any() ) {
+            if (dtoCursActual.Data == null || !dtoCursActual.Data.Any())
+            {
 
                 CursActual = "No hi ha dades";
                 BrokenRules.AddRange(dtoCursActual.BrokenRules);
@@ -50,15 +51,21 @@ namespace UI.ER.ViewModels.ViewModels
             var cursActual = dtoCursActual.Data?.FirstOrDefault();
 
             var nTotalActuacions = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms());
-            var nTotalActuacionsCursActual = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms(cursActuacioId:cursActual?.Id));
+            var nTotalActuacionsCursActual = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms(cursActuacioId: cursActual?.Id));
             var nAlumnes = await blAlumneSet.CountFromPredicate(new DTO.i.DTOs.AlumneSearchParms());
             var nAlumnesActualitzats = await blAlumneSet.CountFromPredicate(new DTO.i.DTOs.AlumneSearchParms(cursDarreraActualitacioDadesId: cursActual?.Id));
-            
-            TotalActuacions = nTotalActuacions.Data?.ToString("N0") ?? "N/A";
-            TotalActuacionsCursActual = nTotalActuacions.Data?.ToString("N0") ?? "N/A";
+
+            var nTotalActuacionsTxt = nTotalActuacions.Data?.ToString("N0");
+            TotalActuacions = nTotalActuacionsTxt != null ? $"{nTotalActuacionsTxt} Actuacions" : "0 Actuacions=";
+
+            var nTotalActuacionsCursActualTxt = nTotalActuacions.Data?.ToString("N0");
+            TotalActuacionsCursActual = 
+                nTotalActuacionsCursActual != null && cursActual != null ? 
+                $"({nTotalActuacionsCursActualTxt} durant el curs {cursActual?.Nom})" : 
+                "";
 
             var nAlumnesTxt = nAlumnes.Data?.ToString("N0");
-            TotalALumnes = nAlumnesTxt!= null ? $"{nAlumnesTxt} Alumnes" : "N/A Alumnes :(";
+            TotalALumnes = nAlumnesTxt != null ? $"{nAlumnesTxt} Alumnes" : "N/A Alumnes :(";
 
             var nAlumnesActualitzatsTxt = nAlumnesActualitzats.Data?.ToString("N0");
             TotalALumnesActualitzats = nAlumnesActualitzatsTxt != null ? $"({nAlumnesActualitzatsTxt} actualitzats)" : "N/A";
@@ -109,7 +116,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task ShowActuacioSetDialogHandle()
         {
             var data = await ShowActuacioSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);                        
+            RxApp.MainThreadScheduler.Schedule(LoadData);
         }
 
         // ---
@@ -118,7 +125,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task ShowAlumneSetDialogHandle()
         {
             var data = await ShowAlumneSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);                        
+            RxApp.MainThreadScheduler.Schedule(LoadData);
         }
 
 
