@@ -7,7 +7,7 @@ namespace DTO.o.DTOs
 {    
     public class Alumne : IIdEtiquetaDescripcio, IActiu, IDTOo
     {
-        public Alumne(int id, string nom, string cognoms, DateTime? dataNaixement, IIdEtiquetaDescripcio? centreActual, IIdEtiquetaDescripcio cursDarreraActualitacioDades, IIdEtiquetaDescripcio? etapaActual, string nivellActual, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, bool esActiu, string etiqueta, string descripcio, string tags)
+        public Alumne(int id, string nom, string cognoms, DateTime? dataNaixement, IIdEtiquetaDescripcio? centreActual, IIdEtiquetaDescripcio cursDarreraActualitacioDades, IIdEtiquetaDescripcio? etapaActual, string nivellActual, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, bool esActiu, string etiqueta, string descripcio, string tags, int nombreActuacions)
         {
             Id = id;
             Nom = nom;
@@ -25,6 +25,7 @@ namespace DTO.o.DTOs
             Etiqueta = etiqueta;
             Descripcio = descripcio;
             Tags = tags;
+            NombreActuacions = nombreActuacions;
         }
 
         public int Id { get; set; }
@@ -43,5 +44,6 @@ namespace DTO.o.DTOs
         public string Etiqueta{ get; }
         public string Descripcio { get; }
         public string Tags { get; }
+        public int NombreActuacions { get;  }
     }
 }

@@ -77,6 +77,12 @@ namespace UI.ER.ViewModels.ViewModels
             get { return _CursDarreraActualitzacio; }
             protected set { this.RaiseAndSetIfChanged(ref _CursDarreraActualitzacio, value); }
         }
+        private string _NumActuacionsTxt = string.Empty;
+        public string NumActuacionsTxt
+        {
+            get { return _NumActuacionsTxt; }
+            protected set { this.RaiseAndSetIfChanged(ref _NumActuacionsTxt, value); }
+        }
 
         private bool _EsActiu;
         public bool EsActiu
@@ -99,6 +105,7 @@ namespace UI.ER.ViewModels.ViewModels
             Desactualitzat = CursActual != null && AlumneDto.CursDarreraActualitacioDades.Id != CursActual.Id;
             EsActiu = AlumneDto.EsActiu;
             CursDarreraActualitzacio = $"Curs darrera actualització de dades: {AlumneDto.CursDarreraActualitacioDades.Descripcio}";
+            NumActuacionsTxt = $"Nombre d'actuacions: {AlumneDto.NombreActuacions}";
         }
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
