@@ -116,6 +116,10 @@ namespace UI.ER.ViewModels.ViewModels
             this
                 .WhenAnyValue(x => x.MomentDeLactuacioTxt)
                 .Subscribe(x => this.MomentDeLactuacio = StringDateConverter.ConvertBack(x));
+
+            this
+                .WhenAnyValue(x => x.MinutsDuradaActuacioTxt)
+                .Subscribe(x => this.MinutsDuradaActuacio = StringIntConverter.ConvertBack(x));
         }
 
         private void SetValidations()
@@ -149,6 +153,11 @@ namespace UI.ER.ViewModels.ViewModels
                 x => x.NivellAlMomentDeLactuacio,
                 value => !string.IsNullOrEmpty( value ),
                 "Cal informar el nivell de l'alumne al moment de l'actuació");
+
+            this.ValidationRule(
+                x => x.MinutsDuradaActuacioTxt,
+                value => StringIntConverter.IntCorrecte(value),
+                "Cal posar un número (ex: 120)");
 
         }
 
@@ -230,8 +239,15 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public double _MinutsDuradaActuacio;
-        public double MinutsDuradaActuacio
+        public string _MinutsDuradaActuacioTxt = StringIntConverter.Convert(default);
+        public string MinutsDuradaActuacioTxt
+        {
+            get => _MinutsDuradaActuacioTxt;
+            set => this.RaiseAndSetIfChanged(ref _MinutsDuradaActuacioTxt, value);
+        }
+
+        public int _MinutsDuradaActuacio;
+        public int MinutsDuradaActuacio
         {
             get => _MinutsDuradaActuacio;
             set => this.RaiseAndSetIfChanged(ref _MinutsDuradaActuacio, value);
@@ -249,6 +265,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             if (data == null) return;
 
+
             AlumneTxt = data.Alumne.Etiqueta;
             AlumneId = data.Alumne.Id;
 
@@ -256,7 +273,9 @@ namespace UI.ER.ViewModels.ViewModels
             TipusActuacioId = data.TipusActuacio.Id;
 
             ObservacionsTipusActuacio = data.ObservacionsTipusActuacio;
+
             MomentDeLactuacio = data.MomentDeLactuacio;
+            MomentDeLactuacioTxt = data.MomentDeLactuacio.ToString("d.M.yyyy"); // Limitacions avalonia
 
             CursActuacioId = data.CursActuacio.Id;
             CursActuacioTxt = data.CursActuacio.Etiqueta;
@@ -270,6 +289,7 @@ namespace UI.ER.ViewModels.ViewModels
             NivellAlMomentDeLactuacio = data.NivellAlMomentDeLactuacio;
 
             MinutsDuradaActuacio = data.MinutsDuradaActuacio;
+            MinutsDuradaActuacioTxt = StringIntConverter.Convert( data.MinutsDuradaActuacio );  // Limitacions avalonia
 
             DescripcioActuacio = data.DescripcioActuacio;
         }

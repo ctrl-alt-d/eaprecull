@@ -19,11 +19,9 @@ namespace UI.ER.AvaloniaUI.Services
 
         public static DateTime? ConvertBack(string value)
         {
-            DateTime result = default;
-
             var valueTxt = value?.ToString()?.Trim() ?? "";
 
-            bool success = DateTime.TryParseExact(valueTxt, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out result);
+            bool success = DateTime.TryParseExact(valueTxt, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime result);
 
             if (success)
                 return result;
@@ -38,7 +36,8 @@ namespace UI.ER.AvaloniaUI.Services
                 return true;
             }
 
-            bool success = DateTime.TryParseExact(value, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _);
+            var valueTxt = value?.ToString()?.Trim() ?? "";
+            bool success = DateTime.TryParseExact(valueTxt, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _);
             return success;
         }
     }

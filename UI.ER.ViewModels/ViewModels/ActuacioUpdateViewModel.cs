@@ -19,13 +19,13 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioUpdateViewModel : ViewModelBase
     {
 
-        protected virtual IActuacioCreate BLCreate() => SuperContext.GetBLOperation<IActuacioCreate>();
+        protected virtual IActuacioUpdate BLUpdate() => SuperContext.GetBLOperation<IActuacioUpdate>();
         public ActuacioUpdateViewModel(int id)
         {
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);    
 
-            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, this.IsValid() );
+            SubmitCommand = ReactiveCommand.CreateFromTask(UpdateData, this.IsValid() );
 
             // --- configura lookup Alumne ---
             ShowAlumneLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -117,6 +117,10 @@ namespace UI.ER.ViewModels.ViewModels
             this
                 .WhenAnyValue(x => x.MomentDeLactuacioTxt)
                 .Subscribe(x => this.MomentDeLactuacio = StringDateConverter.ConvertBack(x));
+
+            this
+                .WhenAnyValue(x => x.MinutsDuradaActuacioTxt)
+                .Subscribe(x => this.MinutsDuradaActuacio = StringIntConverter.ConvertBack(x));
         }
 
         private void SetValidations()
@@ -150,6 +154,11 @@ namespace UI.ER.ViewModels.ViewModels
                 x => x.NivellAlMomentDeLactuacio,
                 value => !string.IsNullOrEmpty( value ),
                 "Cal informar el nivell de l'alumne al moment de l'actuació");
+
+            this.ValidationRule(
+                x => x.MinutsDuradaActuacioTxt,
+                value => StringIntConverter.IntCorrecte(value),
+                "Cal posar un número (ex: 120)");
 
         }
 
@@ -235,8 +244,15 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public double _MinutsDuradaActuacio;
-        public double MinutsDuradaActuacio
+        public string _MinutsDuradaActuacioTxt = "0";
+        public string MinutsDuradaActuacioTxt
+        {
+            get => _MinutsDuradaActuacioTxt;
+            set => this.RaiseAndSetIfChanged(ref _MinutsDuradaActuacioTxt, value);
+        }
+
+        public int _MinutsDuradaActuacio;
+        public int MinutsDuradaActuacio
         {
             get => _MinutsDuradaActuacio;
             set => this.RaiseAndSetIfChanged(ref _MinutsDuradaActuacio, value);
@@ -261,7 +277,9 @@ namespace UI.ER.ViewModels.ViewModels
             TipusActuacioId = data.TipusActuacio.Id;
 
             ObservacionsTipusActuacio = data.ObservacionsTipusActuacio;
+
             MomentDeLactuacio = data.MomentDeLactuacio;
+            MomentDeLactuacioTxt = StringDateConverter.Convert( data.MomentDeLactuacio ); // Limitacions avalonia
 
             CursActuacioId = data.CursActuacio.Id;
             CursActuacioTxt = data.CursActuacio.Etiqueta;
@@ -275,6 +293,7 @@ namespace UI.ER.ViewModels.ViewModels
             NivellAlMomentDeLactuacio = data.NivellAlMomentDeLactuacio;
 
             MinutsDuradaActuacio = data.MinutsDuradaActuacio;
+            MinutsDuradaActuacioTxt = StringIntConverter.Convert( data.MinutsDuradaActuacio );  // Limitacions avalonia
 
             DescripcioActuacio = data.DescripcioActuacio;
         }
@@ -282,12 +301,13 @@ namespace UI.ER.ViewModels.ViewModels
         //
         
 
-        public virtual async Task<dtoo.Actuacio?> CreateData()
+        public virtual async Task<dtoo.Actuacio?> UpdateData()
         {
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.ActuacioCreateParms(
+            var parms = new dtoi.ActuacioUpdateParms(
+                Id,
                 AlumneId!.Value ,
                 TipusActuacioId!.Value ,
                 ObservacionsTipusActuacio ,
@@ -296,13 +316,13 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId!.Value,
                 EtapaAlMomentDeLactuacioId!.Value,
                 NivellAlMomentDeLactuacio,
-                Convert.ToInt32(MinutsDuradaActuacio),
+                MinutsDuradaActuacio,
                 DescripcioActuacio 
             );
 
             // cridar backend
-            using var bl = BLCreate();
-            var dto = await bl.Create(parms);
+            using var bl = BLUpdate();
+            var dto = await bl.Update(parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
