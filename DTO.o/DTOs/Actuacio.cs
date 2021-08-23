@@ -38,16 +38,16 @@ namespace DTO.o.DTOs
         }
 
         public int Id { get; }
-        public IIdEtiquetaDescripcio Alumne { get;  } = default!;
-        public IIdEtiquetaDescripcio TipusActuacio { get;  } = default!;
-        public string ObservacionsTipusActuacio { get;  } = string.Empty;
+        public IIdEtiquetaDescripcio Alumne { get;  } 
+        public IIdEtiquetaDescripcio TipusActuacio { get;  } 
+        public string ObservacionsTipusActuacio { get;  } 
         public DateTime MomentDeLactuacio { get;  }
-        public IIdEtiquetaDescripcio CursActuacio { get;  } = default!;
-        public IIdEtiquetaDescripcio CentreAlMomentDeLactuacio { get;  } = default!;
-        public IIdEtiquetaDescripcio EtapaAlMomentDeLactuacio { get;  } = default!;
-        public string NivellAlMomentDeLactuacio { get;  } = string.Empty;
+        public IIdEtiquetaDescripcio CursActuacio { get;  } 
+        public IIdEtiquetaDescripcio CentreAlMomentDeLactuacio { get;  } 
+        public IIdEtiquetaDescripcio EtapaAlMomentDeLactuacio { get;  } 
+        public string NivellAlMomentDeLactuacio { get;  } 
         public int MinutsDuradaActuacio { get;  }
-        public string DescripcioActuacio { get;  } = string.Empty;
+        public string DescripcioActuacio { get;  } 
 
         // IEtiquetaDescripcio
         public string Etiqueta {get; }
