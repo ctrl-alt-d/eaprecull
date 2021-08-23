@@ -43,15 +43,17 @@ namespace BusinessLayer.Services
 
         public async Task<OperationResult<ImportAllResult>> Run(string path)
         {
+            //
             var result = new ImportAllResult();
 
-            var extractor = new ExtractData(path);
-            var data = extractor.Run();
+            //
+            var data = new ExtractData(path).Run();
 
             // Centres
             var dictCentre = await ExtreureCentres(result, data);
 
             // Cursos
+            var dictCursos = await ExtreureCursos(result, data);
 
             // Etapes
 
@@ -72,13 +74,14 @@ namespace BusinessLayer.Services
             var centreActius =
                 data
                 .Select(x => x.CentreActual)
+                .Where(x => !string.IsNullOrEmpty(x))
                 .Distinct()
                 .ToList();
 
             foreach (var item in centreActius)
             {
                 var parms = new CentreCreateParms(
-                    codi: "**codi**",
+                    codi: item,
                     nom: item,
                     esActiu: true
                 );
@@ -90,6 +93,7 @@ namespace BusinessLayer.Services
             var centreNoActius =
                 data
                 .Select(x => x.CentreActuacio)
+                .Where(x => !string.IsNullOrEmpty(x))
                 .Where(x => !centreActius.Contains(x))
                 .Distinct()
                 .ToList();
@@ -97,7 +101,7 @@ namespace BusinessLayer.Services
             foreach (var item in centreNoActius)
             {
                 var parms = new CentreCreateParms(
-                    codi: "**codi**",
+                    codi: item,
                     nom: item,
                     esActiu: false
                 );
@@ -108,5 +112,36 @@ namespace BusinessLayer.Services
 
             return dictCentre;
         }
+
+        private async Task< Dictionary<string, dtoo.CursAcademic> > ExtreureCursos(ImportAllResult result, List<ActuacioDataRow> data)
+        {
+            Dictionary<string, dtoo.CursAcademic> dictCurs = new();
+
+            var cursos =
+                data
+                .Select(x => x.CursActuacio)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .Select(x => ( anyTxt: x.Substring(0,4), curs: x))
+                .Select(x => ( anyInici: Convert.ToInt32(x.anyTxt), x.curs) )
+                .Distinct()
+                .OrderBy(x => x.anyInici)
+                .ToList();
+
+            var darrer = cursos.Last();
+
+            foreach (var item in cursos)
+            {
+                var parms = new CursAcademicCreateParms(
+                    anyInici: item.anyInici,
+                    esActiu: item.anyInici == darrer.anyInici
+                );
+                var dto = await blCursAcademic.Create(parms);
+                dictCurs.Add(item.curs, dto.Data!);
+                result.NumCursosAcademics++;
+            }
+
+            return dictCurs;
+        }
+
     }
 }
