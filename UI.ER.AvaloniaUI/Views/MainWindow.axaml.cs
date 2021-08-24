@@ -33,6 +33,7 @@ namespace UI.ER.AvaloniaUI.Views
             this.WhenActivated(disposables => { 
                 RegisterShowAlumneDialog(disposables); 
                 RegisterShowActuacioDialog(disposables); 
+                RegisterShowCursAcademicDialog(disposables); 
             });
 
             InitializeComponent();
@@ -40,6 +41,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         }
 
+        //
         protected virtual void RegisterShowAlumneDialog(Action<IDisposable> disposables)
             =>
             disposables(
@@ -57,6 +59,7 @@ namespace UI.ER.AvaloniaUI.Views
             interaction.SetOutput(result);        
         }
 
+        //
         protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
             =>
             disposables(
@@ -69,6 +72,24 @@ namespace UI.ER.AvaloniaUI.Views
             var dialog = new ActuacioSetWindow()
             {
                 DataContext = new ActuacioSetViewModel(modeLookup: false)
+            };
+            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+            interaction.SetOutput(result);        
+        }
+
+        //
+        protected virtual void RegisterShowCursAcademicDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
+            );        
+        protected virtual async Task DoShowCursAcademicLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
+        {
+            var dialog = new CursAcademicSetWindow()
+            {
+                DataContext = new CursAcademicSetViewModel(modeLookup: false)
             };
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
             interaction.SetOutput(result);        
