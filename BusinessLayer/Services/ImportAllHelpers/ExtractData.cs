@@ -61,6 +61,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
                     row.Cell((int)ActuacioDataRow.Camps.DataInformeNESENoNEE).IsEmpty() ? null : row.Cell((int)ActuacioDataRow.Camps.DataInformeNESENoNEE).GetDateTime(),
                     row.Cell((int)ActuacioDataRow.Camps.ObservacionsNESENoNEE).GetString(),
                     row.Cell((int)ActuacioDataRow.Camps.TipusActuacio).GetString(),
+                    row.Cell((int)ActuacioDataRow.Camps.ObservacionsTipusActuacio).GetString(),
                     row.Cell((int)ActuacioDataRow.Camps.MomentDeLactuacio).GetDateTime(),
                     row.Cell((int)ActuacioDataRow.Camps.CursActuacio).GetString(),
                     row.Cell((int)ActuacioDataRow.Camps.CentreActuacio).GetString(),
