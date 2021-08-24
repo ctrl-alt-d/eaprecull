@@ -46,6 +46,9 @@ namespace BusinessLayer.DI
             services.AddTransient<IActuacioCreate, ActuacioCreate>();
             services.AddTransient<IActuacioUpdate, ActuacioUpdate>();
 
+            // altres
+            services.AddTransient<IImportAll, ImportAll>();
+
             return services;
         }        
     }

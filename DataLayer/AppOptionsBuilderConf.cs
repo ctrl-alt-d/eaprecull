@@ -4,21 +4,45 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer
 {
-    public static class AppOptionsBuilderConf 
+    public static class AppOptionsBuilderConf
     {
-        public static string dataSource => Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "siteDB.db");
-        public static string ConnectionString => $"Data Source={dataSource}";
-        public static DbContextOptionsBuilder<AppDbContext> ConfigureAppDbContext(this DbContextOptionsBuilder<AppDbContext> optionsBuilder )
+        private static string? _path;
+        public static string dataSource
         {
-            System.Console.WriteLine(  "Path de la base de dades: " + dataSource );
-            return 
+            get
+            {
+                if (_path != null) return _path;
+
+                var directori = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
+
+#if (DEBUG)
+                // En mode debug a la carpeta de documents.
+                directori = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EapRecullData");
+#endif
+
+                if (!Directory.Exists(directori))
+                {
+                    Directory.CreateDirectory(directori);
+                    var recordatoriCopies = Path.Combine(directori, "@@ Recorda Fer Copies Periodiques Del Fitxer BaseDeDades @@");
+                    File.Create(recordatoriCopies);
+                }
+                _path = Path.Combine(directori, "BaseDeDades.db");
+                return _path;
+            }
+        }
+
+        public static string ConnectionString => $"Data Source={dataSource}";
+        public static DbContextOptionsBuilder<AppDbContext> ConfigureAppDbContext(this DbContextOptionsBuilder<AppDbContext> optionsBuilder)
+        {
+            System.Console.WriteLine("Path de la base de dades: " + dataSource);
+            return
                 optionsBuilder
                 .UseSqlite(ConnectionString);
         }
-        public static DbContextOptionsBuilder ConfigureAppDbContext(this DbContextOptionsBuilder optionsBuilder )
+        public static DbContextOptionsBuilder ConfigureAppDbContext(this DbContextOptionsBuilder optionsBuilder)
         {
-            System.Console.WriteLine(  "Path de la base de dades: " + dataSource );
-            return 
+            System.Console.WriteLine("Path de la base de dades: " + dataSource);
+            return
                 optionsBuilder
                 .UseSqlite(ConnectionString);
         }
