@@ -52,7 +52,7 @@ namespace DataModels.Models
         public string DescripcioActuacio { get; set; } = string.Empty;
 
         // IEtiquetaDescripcio
-        public string Etiqueta => $"{MomentDeLactuacio} {Alumne.Etiqueta}";
-        public string Descripcio => $"{TipusActuacio.Etiqueta}";
+        public string Etiqueta => $"{MomentDeLactuacio.ToString("d.M.yyyy")} - {Alumne.Etiqueta}";
+        public string Descripcio => $"{TipusActuacio.Etiqueta}: {ObservacionsTipusActuacio} \n{DescripcioActuacio.LeftAmbPuntsSuspensius(20)}";
     }
 }

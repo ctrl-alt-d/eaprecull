@@ -4,7 +4,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
 {
     public class ActuacioDataRow
     {
-        public ActuacioDataRow(string nom, string cognoms, DateTime dataNaixement, string centreActual, string etapaActual, string nivellActual, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tipusActuacio, string observacionsTipusActuacio, DateTime momentDeLactuacio, string cursActuacio, string centreActuacio, string etapaActuacio, string nivellActuacio, int duradaActuacio, string descripcioActuacio)
+        public ActuacioDataRow(string nom, string cognoms, DateTime dataNaixement, string centreActual, string etapaActual, string nivellActual, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, string tipusActuacio, string observacionsTipusActuacio, DateTime momentDeLactuacio, string cursActuacio, string centreActuacio, string etapaActuacio, string nivellActuacio, int duradaActuacio, string descripcioActuacio, string acords)
         {
             Nom = nom;
             Cognoms = cognoms;
@@ -25,29 +25,31 @@ namespace BusinessLayer.Services.ImportAllHelpers
             NivellActuacio = nivellActuacio;
             DuradaActuacio = duradaActuacio;
             DescripcioActuacio = descripcioActuacio;
+            Acords = acords;
         }
 
         public enum Camps: int
         {
-            Nom = 1,
-            Cognoms,
-            DataNaixement,
-            CentreActual,
-            EtapaActual,
-            NuvellActual,
-            DataInformeNESENEE,
-            ObservacionsNESENEE,
-            DataInformeNESENoNEE,
-            ObservacionsNESENoNEE,
-            TipusActuacio,
-            ObservacionsTipusActuacio,
-            MomentDeLactuacio,
-            CursActuacio,
-            CentreActuacio,
-            EtapaActuacio,
-            NivellActuacio,
-            DuradaActuacio,
-            DescripcioActuacio,
+            Nom = 4,
+            Cognoms = 3,
+            DataNaixement = 2,
+            CentreActual = 20,
+            EtapaActual = 21,
+            NivellActual = 22,
+            DataInformeNESENEE = 23,
+            ObservacionsNESENEE = 24,
+            DataInformeNESENoNEE = 25,
+            ObservacionsNESENoNEE = 26,
+            TipusActuacio = 10,
+            ObservacionsTipusActuacio = 11,
+            MomentDeLactuacio = 6,
+            CursActuacio = 5,
+            CentreActuacio = 7,
+            EtapaActuacio = 27,
+            NivellActuacio = 9,
+            DuradaActuacio = 15,
+            DescripcioActuacio = 12,
+            Acords = 13
         };
 
         public string Nom { get; }
@@ -69,6 +71,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
         public string NivellActuacio { get; }
         public int DuradaActuacio { get; }
         public string DescripcioActuacio { get; }
+        public string Acords { get; }
 
     }
 

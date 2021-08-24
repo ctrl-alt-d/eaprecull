@@ -13,6 +13,7 @@ namespace ImportData
 {
     class Program
     {
+        private static string FILENAME = "Importacio.xlsx";
         private static ServiceProvider? _ServiceProvider;
         public static ServiceProvider GetServiceProvider()
         {
@@ -62,7 +63,7 @@ Actuacions importades: {resultat.Data!.NumActuacions}
             {
                 throw new Exception($"No trobo la carpeta: {directori}");
             }
-            var path = Path.Combine(directori, "import.xlst");
+            var path = Path.Combine(directori, FILENAME);
 
             if (!File.Exists(path))
             {
