@@ -120,8 +120,9 @@ namespace UI.ER.ViewModels.ViewModels
             //
             PaginatedMsg =
                 (dto.Total > dto.TakeRequested) ?
-                $"Mostrant els {newItems.Count()} primers resultats d'un total de {dto.Total}" :
-                string.Empty;
+                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats" :
+                $"Seleccionats {newItems.Count()} items";
+
 
             Loading = false;
         }

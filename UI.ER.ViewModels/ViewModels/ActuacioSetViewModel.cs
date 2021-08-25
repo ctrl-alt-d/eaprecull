@@ -68,6 +68,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // Preparar paràmetres al backend
             var parms = new DTO.i.DTOs.ActuacioSearchParms(
+                take: 200,
                 searchString: searchString,
                 alumneId: alumneId
             );
@@ -100,8 +101,8 @@ namespace UI.ER.ViewModels.ViewModels
             //
             PaginatedMsg =
                 (dto.Total > dto.TakeRequested) ?
-                $"Mostrant els {newItems.Count()} primers resultats d'un total de {dto.Total}" :
-                string.Empty;
+                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats" :
+                $"Seleccionats {newItems.Count()} items";
 
             Loading = false;
         }

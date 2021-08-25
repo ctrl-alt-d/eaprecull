@@ -55,7 +55,7 @@
                     Margin="10, 3, 0, 0"
                     Width="350"
                     Text="{Binding PaginatedMsg}"
-                    Classes="Error"  />
+                    Foreground="Blue"  />
 
         </DockPanel>
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CommonInterfaces;
 using DataModels.Models.Interfaces;
 
@@ -53,6 +54,24 @@ namespace DataModels.Models
 
         // IEtiquetaDescripcio
         public string Etiqueta => $"{MomentDeLactuacio.ToString("d.M.yyyy")} - {Alumne.Etiqueta}";
-        public string Descripcio => $"{TipusActuacio.Etiqueta}: {ObservacionsTipusActuacio} \n\n{DescripcioActuacio}";
+        public string Descripcio => $"{TipusActuacio.Etiqueta}: {ObservacionsTipusActuacio} \n\n{DescripcioActuacio5primeresLinies()}";
+
+        private string DescripcioActuacio5primeresLinies()
+        {
+            int N = 5;
+            var splited = DescripcioActuacio.Split("\n").ToList();
+            var n = splited.Count;
+            var take = n == N+1? n: N;
+            var msg = n > N+1 ? $"\n( {n-N} línies més ... )" : "";
+
+            splited.AddRange(
+                new [] {"","","","","",""}
+            );
+
+            return string.Join(
+                "\n",
+                splited.Take(take)
+            ) + msg;
+        }
     }
 }
