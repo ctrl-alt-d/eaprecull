@@ -86,6 +86,8 @@
                     <TextBlock Classes="Body2"  Text="{Binding CentreActual}"/>
                 </StackPanel>
 
+                <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatInformeAlumne}" Margin="0,5,0,0"/>
+
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}" Margin="0,5,0,0"/>
 
                 <ItemsControl Margin="10"

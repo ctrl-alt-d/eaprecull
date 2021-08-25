@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class AlumneRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Alumne Model { get; set;}
+        protected dtoo.Alumne Model { get; set; }
         protected readonly dtoo.CursAcademic? CursActual;
         public AlumneRowViewModel(dtoo.Alumne data, dtoo.CursAcademic? cursActual, bool modeLookup = false)
         {
@@ -79,6 +79,14 @@ namespace UI.ER.ViewModels.ViewModels
             get { return _CursDarreraActualitzacio; }
             protected set { this.RaiseAndSetIfChanged(ref _CursDarreraActualitzacio, value); }
         }
+
+        private string _ResultatInformeAlumne = string.Empty;
+        public string ResultatInformeAlumne
+        {
+            get { return _ResultatInformeAlumne; }
+            protected set { this.RaiseAndSetIfChanged(ref _ResultatInformeAlumne, value); }
+        }
+
         private string _NumActuacionsTxt = string.Empty;
         public string NumActuacionsTxt
         {
@@ -107,7 +115,7 @@ namespace UI.ER.ViewModels.ViewModels
             Desactualitzat = CursActual != null && AlumneDto.CursDarreraActualitacioDades.Id != CursActual.Id;
             EsActiu = AlumneDto.EsActiu;
             CursDarreraActualitzacio = $"Curs darrera actualització de dades: {AlumneDto.CursDarreraActualitacioDades.Descripcio}";
-            NumActuacionsTxt =  $"{AlumneDto.NombreActuacions} x ";
+            NumActuacionsTxt = $"{AlumneDto.NombreActuacions} x ";
         }
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
@@ -151,7 +159,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
             using var blAlumneSet = SuperContext.GetBLOperation<IAlumneSet>();
             var dto = await blAlumneSet.FromId(Model.Id);
-            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
+            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
             if (dto.Data == null) return;
             var data = dto.Data!;
             Model = data;
@@ -166,8 +174,13 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> GeneraInformeCommand { get; }
         private async Task DoGeneraInforme()
         {
+            ResultatInformeAlumne = "";
             using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
-            await bl.Run(Id);
+            var resultat = await bl.Run(Id);
+            ResultatInformeAlumne = 
+                resultat.Data != null?
+                $"Fitxer desat a: {resultat.Data}" :
+                "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x=>x.Message));
         }
 
     }
