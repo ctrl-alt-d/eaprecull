@@ -293,6 +293,7 @@ namespace UI.ER.ViewModels.ViewModels
             Cognoms = data.Cognoms;
 
             DataNaixement = data.DataNaixement;
+            DataNaixementTxt = StringDateConverter.Convert(data.DataNaixement);
 
             CentreId = data.CentreActual?.Id;
             CentreTxt = data.CentreActual?.Etiqueta ?? string.Empty;
@@ -306,10 +307,12 @@ namespace UI.ER.ViewModels.ViewModels
             NivellActual = data.NivellActual;
 
             DataInformeNESENEE = data.DataInformeNESENEE;
+            DataInformeNESENEETxt = StringDateConverter.Convert(data.DataInformeNESENEE);
 
             ObservacionsNESENEE = data.ObservacionsNESENEE;
 
             DataInformeNESENoNEE = data.DataInformeNESENoNEE;
+            DataInformeNESENEETxt = StringDateConverter.Convert(data.DataInformeNESENoNEE);
 
             ObservacionsNESENoNEE = data.ObservacionsNESENoNEE;
 

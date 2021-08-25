@@ -45,7 +45,7 @@
             <Button DockPanel.Dock="Left"
                     HorizontalAlignment="Left"
                     Margin="10,0,0,0"
-                    Width="300"
+                    Width="350"
                     Command="{Binding Create}"
                     Classes="Outline DesarCss"  />
 
@@ -55,7 +55,7 @@
                     Margin="10, 3, 0, 0"
                     Width="350"
                     Text="{Binding PaginatedMsg}"
-                    Classes="Error"  />
+                    Foreground="Blue"  />
 
         </DockPanel>
 

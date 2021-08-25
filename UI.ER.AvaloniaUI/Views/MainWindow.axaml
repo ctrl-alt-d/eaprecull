@@ -47,12 +47,8 @@
                                     <Setter Property="IsEnabled" Value="{Binding $self.Content.IsEnabled}" />
                                 </Style>
                             </ListBox.Styles>
-                            <TextBlock Classes="Body2" Text="Centres" />
-                            <TextBlock Classes="Body2" Text="Cursos acadèmics" />
-                            <TextBlock Classes="Body2" Text="Inici" />
-                            <TextBlock Classes="Body2" Text="Alumnes" />                            
-                            <TextBlock Classes="Body2" Text="Etapes" />
-                            <TextBlock Classes="Body2" Text="Tipus d'acutacions" />
+                            <TextBlock Classes="Body2" Text="Gestió" />
+                            <TextBlock Classes="Body2" Text="Llicència" />
                         </ListBox>
                     </StackPanel>
                 </ScrollViewer>
@@ -89,7 +85,7 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Etapas" Click="Etapa_OnClick">
+                                <MenuItem Header="Etapes" Click="Etapa_OnClick">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="StairsUp" Width="24" Height="24" />
                                     </MenuItem.Icon>
@@ -176,7 +172,27 @@
                                     </StackPanel>
                                 </styles:Card>
 
+                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
+                                    <StackPanel>
+                                        <StackPanel Margin="8">
+                                            <avalonia:MaterialIcon HorizontalAlignment="Center"
+                                                                    Classes="Headline6"
+                                                                    Kind="CalendarCheck" Width="24" Height="24" 
+                                                                    />
+                                            <TextBlock Classes="Headline6" Text="{Binding CursActual}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                                            <TextBlock Classes="Body2" Foreground="Red" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>
+                                            <Button  assist:ButtonAssist.CornerRadius="16"  Margin="0,12,0,0" Content="Gestiona cursos acadèmics" Command="{Binding CursAcademicSetCommand}" HorizontalAlignment="Center" />    
+                                        </StackPanel>
+                                    </StackPanel>
+                                </styles:Card>
+
                             </WrapPanel>
+
+                            <ScrollViewer>
+                                <TextBlock>
+                                    Llicència: MIT                            
+                                </TextBlock>
+                            </ScrollViewer>
 
                             
                         </Carousel>

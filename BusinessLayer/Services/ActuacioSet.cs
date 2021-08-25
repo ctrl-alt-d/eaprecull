@@ -113,8 +113,9 @@ namespace BusinessLayer.Services
                     (model.Alumne.CentreActual != null && model.Alumne.CentreActual.Nom.Contains(token)) ||
                     (model.Alumne.CentreActual != null && model.Alumne.CentreActual.Codi.Contains(token)) ||
 
-                    // descripcio
-                    model.Descripcio.Contains(token) ||
+                    // descripcions
+                    model.ObservacionsTipusActuacio.Contains(token) ||
+                    model.DescripcioActuacio.Contains(token) ||
 
                     // tipus actuacio
                     model.TipusActuacio.Nom.Contains(token) ||

@@ -15,24 +15,29 @@ namespace UI.ER.ViewModels.ViewModels
 {
     public class AppStatusViewModel : ViewModelBase
     {
-
+        private readonly string SPACE = " ";
+        private readonly string NA = "N/A";
         public AppStatusViewModel()
         {
             RxApp.MainThreadScheduler.Schedule(LoadData);
             ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
             AlumneSetCommand = ReactiveCommand.CreateFromTask(ShowAlumneSetDialogHandle);
+            CursAcademicSetCommand = ReactiveCommand.CreateFromTask(ShowCursAcademicSetDialogHandle);
 
         }
 
         private async void LoadData()
         {
+            
+
             BrokenRules.Clear();
 
-            CursActual = "N/A";
-            TotalActuacions = "N/A";
-            TotalActuacionsCursActual = "N/A";
-            TotalALumnes = "N/A";
-            TotalALumnesActualitzats = "N/A";
+            CursActual = NA;
+            CursActualWarning = SPACE;
+            TotalActuacions = NA;
+            TotalActuacionsCursActual = NA;
+            TotalALumnes = NA;
+            TotalALumnesActualitzats = NA;
 
 
 
@@ -40,35 +45,35 @@ namespace UI.ER.ViewModels.ViewModels
             using var blAlumneSet = SuperContext.GetBLOperation<IAlumneSet>();
             using var blCursAcademicSet = SuperContext.GetBLOperation<ICursAcademicSet>();
 
-            var dtoCursActual = await blCursAcademicSet.FromPredicate(new DTO.i.DTOs.EsActiuParms(true));
-            if (dtoCursActual.Data == null || !dtoCursActual.Data.Any())
+            var dtoCursActual = await blCursAcademicSet.GetCursActiu();
+
+            var dtoCursCorrecte = await blCursAcademicSet.ElCursPerDefecteEsCorresponAmbLaDataActual();
+            if (! (dtoCursCorrecte ?? false))
             {
+                CursActualWarning = "Revisa el curs activat!";
+            }
 
-                CursActual = "No hi ha dades";
-                BrokenRules.AddRange(dtoCursActual.BrokenRules);
-            };
-
-            var cursActual = dtoCursActual.Data?.FirstOrDefault();
-
+            var cursActual = dtoCursActual.Data;
+            CursActual = cursActual?.Nom ?? NA;
             var nTotalActuacions = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms());
             var nTotalActuacionsCursActual = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms(cursActuacioId: cursActual?.Id));
             var nAlumnes = await blAlumneSet.CountFromPredicate(new DTO.i.DTOs.AlumneSearchParms());
             var nAlumnesActualitzats = await blAlumneSet.CountFromPredicate(new DTO.i.DTOs.AlumneSearchParms(cursDarreraActualitacioDadesId: cursActual?.Id));
 
             var nTotalActuacionsTxt = nTotalActuacions.Data?.ToString("N0");
-            TotalActuacions = nTotalActuacionsTxt != null ? $"{nTotalActuacionsTxt} Actuacions" : "0 Actuacions=";
+            TotalActuacions = nTotalActuacionsTxt != null ? $"{nTotalActuacionsTxt} Actuacions" : NA;
 
             var nTotalActuacionsCursActualTxt = nTotalActuacions.Data?.ToString("N0");
             TotalActuacionsCursActual = 
                 nTotalActuacionsCursActual != null && cursActual != null ? 
                 $"({nTotalActuacionsCursActualTxt} durant el curs {cursActual?.Nom})" : 
-                "";
+                SPACE;
 
             var nAlumnesTxt = nAlumnes.Data?.ToString("N0");
-            TotalALumnes = nAlumnesTxt != null ? $"{nAlumnesTxt} Alumnes" : "N/A Alumnes :(";
+            TotalALumnes = nAlumnesTxt != null ? $"{nAlumnesTxt} Alumnes" : NA;
 
             var nAlumnesActualitzatsTxt = nAlumnesActualitzats.Data?.ToString("N0");
-            TotalALumnesActualitzats = nAlumnesActualitzatsTxt != null ? $"({nAlumnesActualitzatsTxt} actualitzats)" : "N/A";
+            TotalALumnesActualitzats = nAlumnesActualitzatsTxt != null ? $"({nAlumnesActualitzatsTxt} actualitzats)" : NA;
 
         }
 
@@ -79,6 +84,13 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _CursActual;
             set => this.RaiseAndSetIfChanged(ref _CursActual, value);
+        }
+
+        public string _CursActualWarning = string.Empty;
+        public string CursActualWarning
+        {
+            get => _CursActualWarning;
+            set => this.RaiseAndSetIfChanged(ref _CursActualWarning, value);
         }
 
         public string _TotalActuacions = string.Empty;
@@ -125,6 +137,16 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task ShowAlumneSetDialogHandle()
         {
             var data = await ShowAlumneSetDialog.Handle(Unit.Default);
+            RxApp.MainThreadScheduler.Schedule(LoadData);
+        }
+
+
+        // ---
+        public ICommand CursAcademicSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCursAcademicSetDialog { get; } = new();
+        private async Task ShowCursAcademicSetDialogHandle()
+        {
+            var data = await ShowCursAcademicSetDialog.Handle(Unit.Default);
             RxApp.MainThreadScheduler.Schedule(LoadData);
         }
 
