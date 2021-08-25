@@ -6,7 +6,7 @@ namespace BusinessLayer.Abstract.Services
 {
     public interface IAlumneInforme: IBLOperation
     {
-        Task<StringOperationResult> Run(string? path, int alumneId);
+        Task<StringOperationResult> Run(int alumneId, string? path = null);
     }
 
 }

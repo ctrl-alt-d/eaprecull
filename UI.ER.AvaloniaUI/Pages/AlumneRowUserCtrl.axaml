@@ -64,6 +64,10 @@
                 <avalonia:MaterialIcon Kind="BookOpenVariant" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>                 
+ 
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding GeneraInformeCommand}"
+                    Classes="InformeCss Flat" />
 
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">     

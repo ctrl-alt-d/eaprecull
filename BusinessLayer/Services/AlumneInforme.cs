@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,25 +14,28 @@ using SharpDocx;
 
 namespace BusinessLayer.Services
 {
+
     public class AlumneInforme : BLOperation, IAlumneInforme
     {
+
         public AlumneInforme(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        public async Task<StringOperationResult> Run(string? path, int alumneId)
+        public async Task<StringOperationResult> Run(int alumneId, string? path = null)
         {
             try
             {
-                Alumne dades = await GetDadesAlumne(alumneId);
+                var dades = await GetDadesAlumne(alumneId);
 
                 if (dades == null) throw new BrokenRuleException("Alumne no trobat");
 
                 var cognomsnom = $"{dades.Cognoms}_{dades.Nom}".Replace(" ", "_");
 
                 path ??= CalculaPath(cognomsnom);
+                var templatepath = GetTemplatesPath("AlumneInforme.cs.docx");
 
-                var document = DocumentFactory.Create(GetTemplatesPath("AlumneInforme.cs.docx"));
+                var document = DocumentFactory.Create(templatepath, dades,forceCompile: true);
                 document.Generate(path);
 
 
@@ -42,6 +46,11 @@ namespace BusinessLayer.Services
 
                 return new StringOperationResult(e.BrokenRules);
             }
+            catch (Exception e)
+            {
+                var msg = e.Message;
+                return new StringOperationResult(new List<BrokenRule>() { new BrokenRule(msg)});
+            }
 
             return new StringOperationResult(path);
         }
@@ -50,6 +59,7 @@ namespace BusinessLayer.Services
             =>
             GetContext()
             .Alumnes
+            .Include(a => a.Actuacions.OrderByDescending(x=>x.MomentDeLactuacio))
             .Include(a => a.Actuacions).ThenInclude(a => a.CursActuacio)
             .Include(a => a.Actuacions).ThenInclude(a => a.CentreAlMomentDeLactuacio)
             .Include(a => a.Actuacions).ThenInclude(a => a.EtapaAlMomentDeLactuacio)
@@ -72,13 +82,13 @@ namespace BusinessLayer.Services
 
             if (!Directory.Exists(directori))
             {
-                throw new Exception($"No trobo la carpeta: {directori}");
+                Directory.CreateDirectory(directori);
             }
             var path = Path.Combine(directori, filename);
 
-            if (!File.Exists(path))
+            while (File.Exists(path))
             {
-                throw new Exception($"No trobat el fitxer {path}");
+                path = path.Replace(".docx", "_nou.docx");
             }
 
             return path;

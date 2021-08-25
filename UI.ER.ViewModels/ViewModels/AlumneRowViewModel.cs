@@ -38,6 +38,8 @@ namespace UI.ER.ViewModels.ViewModels
             SeleccionarCommand = ReactiveCommand.Create(SelectRow);
             UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
             ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
+            GeneraInformeCommand = ReactiveCommand.CreateFromTask(DoGeneraInforme);
+
         }
 
 
@@ -159,6 +161,14 @@ namespace UI.ER.ViewModels.ViewModels
         // --- Seleccionar si estem en mode lookup ---
         public ReactiveCommand<Unit, dtoo.Alumne> SeleccionarCommand { get; }
         private dtoo.Alumne SelectRow() => Model;
+
+        // --- Generar informe ---
+        public ReactiveCommand<Unit, Unit> GeneraInformeCommand { get; }
+        private async Task DoGeneraInforme()
+        {
+            using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
+            await bl.Run(Id);
+        }
 
     }
 }
