@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.ActuacioCreateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nou Actuacio"        
+        Title="Alta nova Actuacio"        
         Width="1100" Height="700" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >

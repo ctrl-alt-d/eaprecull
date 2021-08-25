@@ -53,6 +53,6 @@ namespace DataModels.Models
 
         // IEtiquetaDescripcio
         public string Etiqueta => $"{MomentDeLactuacio.ToString("d.M.yyyy")} - {Alumne.Etiqueta}";
-        public string Descripcio => $"{TipusActuacio.Etiqueta}: {ObservacionsTipusActuacio} \n{DescripcioActuacio.LeftAmbPuntsSuspensius(20)}";
+        public string Descripcio => $"{TipusActuacio.Etiqueta}: {ObservacionsTipusActuacio} \n\n{DescripcioActuacio}";
     }
 }
