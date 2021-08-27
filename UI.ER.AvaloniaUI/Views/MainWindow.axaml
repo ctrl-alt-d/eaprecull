@@ -189,9 +189,35 @@
                             </WrapPanel>
 
                             <ScrollViewer>
-                                <TextBlock>
-                                    Llicència: MIT                            
-                                </TextBlock>
+                                <Border BorderBrush="White"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="30"
+                                        Margin="30,30,30,30"
+                                        Classes="Apareix"
+                                        BoxShadow="5 5 10 2 Gray">
+
+                                    <TextBlock>
+Llicència EAPRecull: MIT
+
+Codi font: https://github.com/ctrl-alt-d/eaprecull
+
+Aquest programari no envia (ni recull) dades a Internet. 
+
+Feu servir aquest program sota la vostra responsabilitat.
+
+Programari lliure inclòs a EAPRecull:
+
+    * https://github.com/egonl/SharpDocx
+    * https://github.com/AvaloniaUI/Avalonia
+    * https://github.com/AvaloniaCommunity/material.avalonia
+    * https://github.com/ClosedXML/ClosedXML
+    * DotNet
+
+Incidències, propostes de millora, etc són benvingudes: https://github.com/ctrl-alt-d/eaprecull/issues/new
+
+                                    </TextBlock>
+                                </Border>
                             </ScrollViewer>
 
                             

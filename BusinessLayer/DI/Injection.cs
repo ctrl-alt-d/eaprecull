@@ -35,6 +35,9 @@ namespace BusinessLayer.DI
             services.AddTransient<IAlumneUpdate, AlumneUpdate>();
             services.AddTransient<IAlumneActivaDesactiva, AlumneActivaDesactiva>();
 
+            // alumnes - reports
+            services.AddTransient<IAlumneInforme, AlumneInforme>();
+
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
             services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
@@ -47,7 +50,7 @@ namespace BusinessLayer.DI
             services.AddTransient<IActuacioUpdate, ActuacioUpdate>();
 
             // altres
-            services.AddTransient<IImportAll, ImportAll>();
+            services.AddTransient<IImportAll, ImportAll>();            
 
             return services;
         }        

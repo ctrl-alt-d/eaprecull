@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
+using UI.ER.AvaloniaUI.Services;
+using BusinessLayer.Abstract.Services;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -97,6 +99,7 @@ namespace UI.ER.ViewModels.ViewModels
         // --- Seleccionar si estem en mode lookup ---
         public ReactiveCommand<Unit, dtoo.Actuacio> SeleccionarCommand { get; }
         private dtoo.Actuacio SelectRow() => Model;
+
 
     }
 }

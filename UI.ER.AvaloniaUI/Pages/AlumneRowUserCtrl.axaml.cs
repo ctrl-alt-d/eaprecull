@@ -21,6 +21,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 RegisterShowUpdateDialog(disposables);
                 RegisterShowActuacioDialog(disposables); 
                 RegisterCloseOnSelect(disposables); 
+                RegisterInformeActuacions(disposables);
             });
 
 
@@ -81,5 +82,23 @@ namespace UI.ER.AvaloniaUI.Pages
             );
 
 
+        // -- Infoem Actuacions
+        private void RegisterInformeActuacions(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x=>x.ViewModel)
+                .Subscribe(vm=>vm.GeneraInformeCommand.Subscribe(ObraFileExplorer))
+            );
+
+        private void ObraFileExplorer(dtoo.SaveResult? saveResult)
+        {
+            if (saveResult == null) return;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo() {
+                FileName = saveResult.FolderPath,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+        }
     }
 }

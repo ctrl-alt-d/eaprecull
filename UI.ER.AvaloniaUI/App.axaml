@@ -58,6 +58,17 @@
                 </Setter>
             </Style>
 
+            <Style Selector="Button.InformeCss">
+                <Setter Property="ToolTip.Tip" Value="Generar informe"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <avalonia:MaterialIcon Kind="FileWordBox" VerticalAlignment="Center" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <Style Selector="Button.EditarCss">
                 <Setter Property="ToolTip.Tip" Value="Editar"/>
                 <Setter Property="Content">

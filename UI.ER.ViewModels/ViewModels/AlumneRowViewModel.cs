@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
 using System.Reactive.Concurrency;
@@ -19,7 +18,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class AlumneRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Alumne Model { get; set;}
+        protected dtoo.Alumne Model { get; set; }
         protected readonly dtoo.CursAcademic? CursActual;
         public AlumneRowViewModel(dtoo.Alumne data, dtoo.CursAcademic? cursActual, bool modeLookup = false)
         {
@@ -38,6 +37,8 @@ namespace UI.ER.ViewModels.ViewModels
             SeleccionarCommand = ReactiveCommand.Create(SelectRow);
             UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
             ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
+            GeneraInformeCommand = ReactiveCommand.CreateFromTask(DoGeneraInforme);
+
         }
 
 
@@ -77,6 +78,14 @@ namespace UI.ER.ViewModels.ViewModels
             get { return _CursDarreraActualitzacio; }
             protected set { this.RaiseAndSetIfChanged(ref _CursDarreraActualitzacio, value); }
         }
+
+        private string _ResultatInformeAlumne = string.Empty;
+        public string ResultatInformeAlumne
+        {
+            get { return _ResultatInformeAlumne; }
+            protected set { this.RaiseAndSetIfChanged(ref _ResultatInformeAlumne, value); }
+        }
+
         private string _NumActuacionsTxt = string.Empty;
         public string NumActuacionsTxt
         {
@@ -105,7 +114,7 @@ namespace UI.ER.ViewModels.ViewModels
             Desactualitzat = CursActual != null && AlumneDto.CursDarreraActualitacioDades.Id != CursActual.Id;
             EsActiu = AlumneDto.EsActiu;
             CursDarreraActualitzacio = $"Curs darrera actualització de dades: {AlumneDto.CursDarreraActualitacioDades.Descripcio}";
-            NumActuacionsTxt =  $"{AlumneDto.NombreActuacions} x ";
+            NumActuacionsTxt = $"{AlumneDto.NombreActuacions} x ";
         }
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
@@ -149,7 +158,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
             using var blAlumneSet = SuperContext.GetBLOperation<IAlumneSet>();
             var dto = await blAlumneSet.FromId(Model.Id);
-            BrokenRules.AddRange(dto.BrokenRules.Select(x=>x.Message));
+            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
             if (dto.Data == null) return;
             var data = dto.Data!;
             Model = data;
@@ -159,6 +168,21 @@ namespace UI.ER.ViewModels.ViewModels
         // --- Seleccionar si estem en mode lookup ---
         public ReactiveCommand<Unit, dtoo.Alumne> SeleccionarCommand { get; }
         private dtoo.Alumne SelectRow() => Model;
+
+        // --- Generar informe ---
+        public ReactiveCommand<Unit, dtoo.SaveResult?> GeneraInformeCommand { get; }
+        private async Task<dtoo.SaveResult?> DoGeneraInforme()
+        {
+            ResultatInformeAlumne = "";
+            using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
+            var resultat = await bl.Run(Id);
+            ResultatInformeAlumne = 
+                resultat.Data != null?
+                $"Fitxer desat a: {resultat.Data.FullPath}" :
+                "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x=>x.Message));
+
+            return resultat.Data;
+        }
 
     }
 }

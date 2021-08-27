@@ -24,5 +24,11 @@
     <ProjectReference Include="..\UI.ER.ViewModels\UI.ER.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+      <ContentWithTargetPath Include="..\BusinessLayer\Assets\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+      </ContentWithTargetPath>
+  </ItemGroup>
 
 </Project>
