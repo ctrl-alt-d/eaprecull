@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
 using System.Reactive.Concurrency;
@@ -171,16 +170,18 @@ namespace UI.ER.ViewModels.ViewModels
         private dtoo.Alumne SelectRow() => Model;
 
         // --- Generar informe ---
-        public ReactiveCommand<Unit, Unit> GeneraInformeCommand { get; }
-        private async Task DoGeneraInforme()
+        public ReactiveCommand<Unit, dtoo.SaveResult?> GeneraInformeCommand { get; }
+        private async Task<dtoo.SaveResult?> DoGeneraInforme()
         {
             ResultatInformeAlumne = "";
             using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
             var resultat = await bl.Run(Id);
             ResultatInformeAlumne = 
                 resultat.Data != null?
-                $"Fitxer desat a: {resultat.Data}" :
+                $"Fitxer desat a: {resultat.Data.FullPath}" :
                 "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x=>x.Message));
+
+            return resultat.Data;
         }
 
     }

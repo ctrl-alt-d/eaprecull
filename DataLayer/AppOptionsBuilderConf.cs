@@ -34,14 +34,12 @@ namespace DataLayer
         public static string ConnectionString => $"Data Source={dataSource}";
         public static DbContextOptionsBuilder<AppDbContext> ConfigureAppDbContext(this DbContextOptionsBuilder<AppDbContext> optionsBuilder)
         {
-            System.Console.WriteLine("Path de la base de dades: " + dataSource);
             return
                 optionsBuilder
                 .UseSqlite(ConnectionString);
         }
         public static DbContextOptionsBuilder ConfigureAppDbContext(this DbContextOptionsBuilder optionsBuilder)
         {
-            System.Console.WriteLine("Path de la base de dades: " + dataSource);
             return
                 optionsBuilder
                 .UseSqlite(ConnectionString);

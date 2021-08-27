@@ -9,6 +9,7 @@ using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using DataLayer;
 using DataModels.Models;
+using dtoo = DTO.o.DTOs;
 using Microsoft.EntityFrameworkCore;
 using SharpDocx;
 
@@ -22,7 +23,7 @@ namespace BusinessLayer.Services
         {
         }
 
-        public async Task<StringOperationResult> Run(int alumneId, string? path = null)
+        public async Task<OperationResult<dtoo.SaveResult>> Run(int alumneId)
         {
             try
             {
@@ -32,27 +33,32 @@ namespace BusinessLayer.Services
 
                 var cognomsnom = $"{dades.Cognoms}_{dades.Nom}".Replace(" ", "_");
 
-                path ??= CalculaPath(cognomsnom);
+                var (path, filename, folder) = CalculaPath(cognomsnom);
                 var templatepath = GetTemplatesPath("AlumneInforme.cs.docx");
 
                 var document = DocumentFactory.Create(templatepath, dades,forceCompile: true);
                 document.Generate(path);
 
-
+                return new (
+                    new dtoo.SaveResult(
+                        path,
+                        filename,
+                        folder
+                    )
+                );
 
             }
             catch (BrokenRuleException e)
             {
 
-                return new StringOperationResult(e.BrokenRules);
+                return new (e.BrokenRules);
             }
             catch (Exception e)
             {
                 var msg = e.Message;
-                return new StringOperationResult(new List<BrokenRule>() { new BrokenRule(msg)});
+                return new (new List<BrokenRule>() { new BrokenRule(msg)});
             }
 
-            return new StringOperationResult(path);
         }
 
         private Task<Alumne> GetDadesAlumne(int alumneId)
@@ -69,29 +75,31 @@ namespace BusinessLayer.Services
             .Where(a => a.Id == alumneId)
             .FirstOrDefaultAsync();
 
-        private static string CalculaPath(string prefixfilename)
+        private static (string path, string filename, string folder) CalculaPath(string prefixfilename)
         {
 
             var filename = $"{prefixfilename}-{DateTime.Now.ToString("yyyyMMdd")}.docx";
-            var directori = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
+            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
 
 #if (DEBUG)
             // En mode debug a la carpeta de documents.
-            directori = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EapRecullReports");
+            folder = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EapRecullReports");
 #endif
 
-            if (!Directory.Exists(directori))
+            if (!Directory.Exists(folder))
             {
-                Directory.CreateDirectory(directori);
-            }
-            var path = Path.Combine(directori, filename);
-
-            while (File.Exists(path))
-            {
-                path = path.Replace(".docx", "_nou.docx");
+                Directory.CreateDirectory(folder);
             }
 
-            return path;
+            var path = string.Empty;
+            while (true)
+            {                
+                path = Path.Combine(folder, filename);
+                if (!File.Exists(path)) break;
+                filename = filename.Replace(".docx", "_nou.docx");
+            }
+
+            return (path, filename, folder);
         }
 
         private static string GetTemplatesPath(string template)
