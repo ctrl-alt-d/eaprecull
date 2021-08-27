@@ -10,7 +10,8 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0
+        dotnet-version: '6.0.x'
+        include-prerelease: true
     - name: Build for Linux
       run: (cd UI.ER.AvaloniaUI/; dotnet publish -r linux-x64 --configuration ReleaseComplete /p:PublishSingleFile=true)      
     - name: Build for Windows
