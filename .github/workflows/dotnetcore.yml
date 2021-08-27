@@ -1,6 +1,8 @@
 name: .NET Core
 
 on: [push]
+    tags:
+      - "v20*"
 
 jobs:
   build:
@@ -18,11 +20,13 @@ jobs:
       run: (cd UI.ER.AvaloniaUI/; dotnet publish -r win-x64 --configuration ReleaseComplete /p:PublishSingleFile=true)
     - name: Upload artifact - Linux
       uses: actions/upload-artifact@v1.0.0
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         name: WINEAPRecull
         path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/win-x64/publish
     - name: Upload artifact - Windows
       uses: actions/upload-artifact@v1.0.0
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         name: LINEAPRecull
         path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/linux-x64/publish
