@@ -1,0 +1,43 @@
+name: .NET Core
+
+on:
+  push:
+    tags:
+      - "v20*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+        include-prerelease: true
+    - name: Build for Linux
+      run: (cd UI.ER.AvaloniaUI/; dotnet publish -r linux-x64 --configuration ReleaseComplete /p:PublishSingleFile=true)      
+    - name: Build for Windows
+      run: (cd UI.ER.AvaloniaUI/; dotnet publish -r win-x64 --configuration ReleaseComplete /p:PublishSingleFile=true)
+    - name: Upload artifact - Linux
+      uses: actions/upload-artifact@v1.0.0
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: WINEAPRecull
+        path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/win-x64/publish
+    - name: Upload artifact - Windows
+      uses: actions/upload-artifact@v1.0.0
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: LINEAPRecull
+        path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/linux-x64/publish
+    - name: Make Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/win-x64/publish
+          UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/linux-x64/publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
