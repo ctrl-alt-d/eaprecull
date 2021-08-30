@@ -59,7 +59,7 @@
             </Style>
 
             <Style Selector="Button.InformeCss">
-                <Setter Property="ToolTip.Tip" Value="Generar informe"/>
+                <Setter Property="ToolTip.Tip" Value="Word d'actuacions"/>
                 <Setter Property="Content">
                     <Setter.Value>
                         <Template>

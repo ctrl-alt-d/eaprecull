@@ -35,8 +35,9 @@ namespace BusinessLayer.Services
 
                 var (path, filename, folder) = CalculaPath(cognomsnom);
                 var templatepath = GetTemplatesPath("AlumneInforme.cs.docx");
+                var document = DocumentFactory.Create(templatepath, dades);
 
-                var document = DocumentFactory.Create(templatepath, dades,forceCompile: true);
+
                 document.Generate(path);
 
                 return new (
@@ -56,6 +57,7 @@ namespace BusinessLayer.Services
             catch (Exception e)
             {
                 var msg = e.Message;
+                System.Console.WriteLine(e.StackTrace);
                 return new (new List<BrokenRule>() { new BrokenRule(msg)});
             }
 
@@ -79,7 +81,10 @@ namespace BusinessLayer.Services
         {
 
             var filename = $"{prefixfilename}-{DateTime.Now.ToString("yyyyMMdd")}.docx";
-            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
+
+            var binPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            var folder = Path.Combine(binPath, "Reports");
 
 #if (DEBUG)
             // En mode debug a la carpeta de documents.
