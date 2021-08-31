@@ -31,14 +31,18 @@ namespace BusinessLayer.Services
         }
 
         protected override Task PostUpdate(models.Actuacio model, ActuacioUpdateParms parm)
-            =>
-            Task.CompletedTask;
+        {
+            AlumnePrevi.NombreTotalDactuacions --;
+            model.Alumne.NombreTotalDactuacions++;
+            return Task.CompletedTask;
+        }
+            
 
-        protected override Task PreUpdate(models.Actuacio model, ActuacioUpdateParms parm)
-            =>
-            Task.CompletedTask;
-
-
+        protected override async Task PreUpdate(models.Actuacio model, ActuacioUpdateParms parm)
+        {
+            await GetContext().Entry(model).Reference(m=>m.Alumne).LoadAsync();
+            AlumnePrevi = model.Alumne;
+        }
 
         protected override async Task UpdateModel(models.Actuacio model, ActuacioUpdateParms parm)
         =>
@@ -54,5 +58,7 @@ namespace BusinessLayer.Services
                 minutsDuradaActuacio: parm.MinutsDuradaActuacio,
                 descripcioActuacio: parm.DescripcioActuacio
             );
+
+        protected Alumne AlumnePrevi {get; set; } = default!;
     }
 }
