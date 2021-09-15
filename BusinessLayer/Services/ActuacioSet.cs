@@ -38,6 +38,8 @@ namespace BusinessLayer.Services
             query = MatchMatchDataActuacioAnteriorA(query, request);
             query = MatchDataActuacioPosteriorA(query, request);
 
+            query = query.OrderByDescending(x=>x.MomentDeLactuacio);
+
             return query;
         }
 
