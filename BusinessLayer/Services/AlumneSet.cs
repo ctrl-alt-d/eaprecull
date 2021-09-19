@@ -58,7 +58,7 @@ namespace BusinessLayer.Services
                     .ThenBy(x => x.Nom),
                 AlumneSearchParms.OrdreResultatsChoice.DarreraModificacio =>
                     alumnes
-                    .OrderBy(x => x.DataDarreraModificacio),
+                    .OrderByDescending(x => x.DataDarreraModificacio),
                 _ => alumnes
             };
 
