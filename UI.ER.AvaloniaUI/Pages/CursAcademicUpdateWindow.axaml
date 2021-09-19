@@ -19,6 +19,7 @@
         <StackPanel.Styles>
         </StackPanel.Styles>                
 
+        <TextBlock Classes="Body1"  Text="Introdueix l'any d'inici del curs (ex: 2030)"/>
         <NumericUpDown Value="{Binding AnyInici}" Increment="1"/>
         <ItemsControl Margin="10" Items="{Binding BrokenRules}">            
             <ItemsControl.ItemTemplate>

@@ -63,7 +63,7 @@ namespace UI.ER.ViewModels.ViewModels
             var nTotalActuacionsTxt = nTotalActuacions.Data?.ToString("N0");
             TotalActuacions = nTotalActuacionsTxt != null ? $"{nTotalActuacionsTxt} Actuacions" : NA;
 
-            var nTotalActuacionsCursActualTxt = nTotalActuacions.Data?.ToString("N0");
+            var nTotalActuacionsCursActualTxt = nTotalActuacionsCursActual.Data?.ToString("N0");
             TotalActuacionsCursActual = 
                 nTotalActuacionsCursActual != null && cursActual != null ? 
                 $"({nTotalActuacionsCursActualTxt} durant el curs {cursActual?.Nom})" : 

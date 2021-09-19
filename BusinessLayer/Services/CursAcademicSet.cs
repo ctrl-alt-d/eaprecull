@@ -28,7 +28,7 @@ namespace BusinessLayer.Services
             =>
             GetAllModels()
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
-            .OrderBy(c => c.Nom);
+            .OrderByDescending(c => c.AnyInici);
 
         public async Task<bool?> ElCursPerDefecteEsCorresponAmbLaDataActual()
         {
@@ -39,7 +39,7 @@ namespace BusinessLayer.Services
             
             if (cursActiu == null ) return null;
 
-            return cursActiu.AnyInici == DateTime.Now.AddMonths(-9).Year;
+            return cursActiu.AnyInici == DateTime.Now.AddMonths(-8).Year;
         }
 
         public async Task<OperationResult<dtoo.CursAcademic>> GetCursActiu()

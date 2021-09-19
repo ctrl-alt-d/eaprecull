@@ -171,7 +171,7 @@
                             Text="{Binding DataInformeNESENEETxt}"
                             UseFloatingWatermark="True"
                             Classes="Filled"
-                            wpf:TextFieldAssist.Label="Data informe NESE NEET (dd.mm.aaaa)" />
+                            wpf:TextFieldAssist.Label="Data informe NESE NEE (dd.mm.aaaa)" />
 
                 <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
                             Text="{Binding ObservacionsNESENEE}"
@@ -179,7 +179,7 @@
                             TextWrapping="Wrap"
                             UseFloatingWatermark="True"
                             Classes="Filled"
-                            wpf:TextFieldAssist.Label="Observacions NESE NEET" />
+                            wpf:TextFieldAssist.Label="Observacions NESE NEE" />
 
                 <!-- 5 -->
 
@@ -187,7 +187,7 @@
                             Text="{Binding DataInformeNESENoNEETxt}"
                             UseFloatingWatermark="True"
                             Classes="Filled"
-                            wpf:TextFieldAssist.Label="Data informe NESE NO NEET (dd.mm.aaaa)" />
+                            wpf:TextFieldAssist.Label="Data informe NESE NO NEE (dd.mm.aaaa)" />
 
                 <TextBox Grid.Row="5" Grid.Column="1" Margin="10,5,10,5"
                             Text="{Binding ObservacionsNESENoNEE}"
@@ -195,7 +195,7 @@
                             TextWrapping="Wrap"
                             UseFloatingWatermark="True"
                             Classes="Filled"
-                            wpf:TextFieldAssist.Label="Observacions NESE NO NEET" />
+                            wpf:TextFieldAssist.Label="Observacions NESE NO NEE" />
 
             </Grid>
 

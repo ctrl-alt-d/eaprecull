@@ -70,6 +70,7 @@ namespace BusinessLayer.Services
             model.CentreActual = await Perfection<Centre>(parm.CentreActualId);
             model.CursDarreraActualitacioDades = await Perfection<CursAcademic>(parm.CursDarreraActualitacioDadesId);
             model.EtapaActual = await Perfection<Etapa>(parm.EtapaActualId);
+            model.NivellActual = parm.NivellActual;
             model.DataInformeNESENEE = parm.DataInformeNESENEE;
             model.ObservacionsNESENEE = parm.ObservacionsNESENEE;
             model.DataInformeNESENoNEE = parm.DataInformeNESENoNEE;
