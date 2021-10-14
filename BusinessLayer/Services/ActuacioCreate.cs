@@ -49,10 +49,16 @@ namespace BusinessLayer.Services
                 descripcioActuacio: parm.DescripcioActuacio
             );
 
-        protected override Task PostAdd(Actuacio model, ActuacioCreateParms parm)
+        protected override async Task PostAdd(Actuacio model, ActuacioCreateParms parm)
         {
+            // Recuperar alumne
+            await LoadReference(model,m=>m.Alumne);
+
+            // incrementar número actuacions
             model.Alumne.NombreTotalDactuacions++;
-            return Task.CompletedTask;
+
+            // "touch" per tal que aparegui el primer
+            model.Alumne.DataDarreraModificacio = DateTime.Now;
         }
 
     }

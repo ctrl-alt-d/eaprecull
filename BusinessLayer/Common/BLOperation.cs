@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataLayer;
 using DataModels.Models.Interfaces;
@@ -18,7 +19,7 @@ namespace BusinessLayer.Common
         private AppDbContext? _DbContext;
         private bool disposedValue;
 
-        protected AppDbContext GetContext()
+        protected virtual AppDbContext GetContext()
         {
             _DbContext ??=
                 AppDbContextFactory
@@ -27,7 +28,7 @@ namespace BusinessLayer.Common
             return _DbContext;
         }
 
-        protected ValueTask<TTarget> Perfection<TTarget>(int id)
+        protected virtual ValueTask<TTarget> Perfection<TTarget>(int id)
             where TTarget: class, IModel
         {
             var model =
@@ -37,7 +38,7 @@ namespace BusinessLayer.Common
             return model;
         }
 
-        protected async ValueTask<TTarget?> Perfection<TTarget>(int? id)
+        protected virtual async ValueTask<TTarget?> Perfection<TTarget>(int? id)
             where TTarget: class, IModel
         {
             if (!id.HasValue) 
@@ -50,6 +51,12 @@ namespace BusinessLayer.Common
             
             return model;
         }
+
+        protected virtual Task LoadReference<TTarget, TProperty>(TTarget model, Expression<Func<TTarget, TProperty>> propertyExpression)
+            where TTarget: class, IModel
+            where TProperty : class, IModel
+            =>
+            GetContext().Entry(model).Reference(propertyExpression).LoadAsync();
 
         //
         protected virtual void Dispose(bool disposing)

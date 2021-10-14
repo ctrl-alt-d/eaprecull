@@ -30,17 +30,10 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Task PostUpdate(models.Actuacio model, ActuacioUpdateParms parm)
-        {
-            AlumnePrevi.NombreTotalDactuacions --;
-            model.Alumne.NombreTotalDactuacions++;
-            return Task.CompletedTask;
-        }
-            
-
+        protected Alumne AlumnePrevi {get; set; } = default!;
         protected override async Task PreUpdate(models.Actuacio model, ActuacioUpdateParms parm)
         {
-            await GetContext().Entry(model).Reference(m=>m.Alumne).LoadAsync();
+            await LoadReference(model, m=>m.Alumne);
             AlumnePrevi = model.Alumne;
         }
 
@@ -59,6 +52,19 @@ namespace BusinessLayer.Services
                 descripcioActuacio: parm.DescripcioActuacio
             );
 
-        protected Alumne AlumnePrevi {get; set; } = default!;
+        protected override async Task PostUpdate(models.Actuacio model, ActuacioUpdateParms parm)
+        {
+            // Decrementar nombre actuacions a l'alumne anterior
+            AlumnePrevi.NombreTotalDactuacions --;
+
+            // Recuperar alumne de l'actuació
+            await LoadReference(model, m=>m.Alumne);
+
+            // incrementar número actuacions a l'alumne actual
+            model.Alumne.NombreTotalDactuacions++;
+
+            // "touch" per tal que l'alumne aparegui el primer
+            model.Alumne.DataDarreraModificacio = DateTime.Now;
+        }
     }
 }
