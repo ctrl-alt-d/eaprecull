@@ -1,10 +1,10 @@
 # eaprecull
 
-Recull actuacions EAP
+Gestió d'actuacions EAP. Recull i gestiona les teves actuacions com EAP.
 
 ## Estat
 
-* Ready:
+* Production Ready:
 
 Per compilar el programa fer:
 
@@ -25,3 +25,20 @@ El generarà a la carpeta:
 ## Contribucions
 
 * Totes les contribucions són benvingudes
+
+## FAQ
+
+* Q: Puc importar dades de l' `EAP Actua` (EapActua)?
+* A: Sí, pots exportar la taula d'actuacions a `.\Dades\Importacio.xlsx` i importar-ho amb `ImportData.exe`
+
+
+* Q: Quina llicència té EAP Recull?
+* A: MIT. Fes-lo servir sota la teva responsabilitat. EAP recull utilitza llibreries que tenen les seves pròpies llicències, revisa-ho.
+
+
+* Q: EAP Recull envia alguna dada a alguna banda?
+* A: No, pots revisar el codi en aquest repo i compilar la teva versió.
+
+## ToDo
+
+* Falta generar taula de pivotació amb les actuacions realitzades, per poder fer la memòria del curs. Miraré de fer-ho abans de setmana santa 2022 si és que algú no fa abans la PR.
