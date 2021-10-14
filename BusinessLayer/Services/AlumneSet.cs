@@ -166,7 +166,7 @@ namespace BusinessLayer.Services
 
             tokens.ForEach(token =>
                 query = query.Where(model =>
-                    ( model.CentreActual != null && model.CentreActual.Nom.Contains(token) ) ||
+                    (model.CentreActual != null && model.CentreActual.Nom.Contains(token)) ||
                     model.Nom.Contains(token) ||
                     model.Cognoms.Contains(token) ||
                     model.Tags.Contains(token)

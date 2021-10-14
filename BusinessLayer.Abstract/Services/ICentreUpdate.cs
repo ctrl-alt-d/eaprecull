@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICentreUpdate: IUpdate<dtoo.Centre, parms.CentreUpdateParms>
+    public interface ICentreUpdate : IUpdate<dtoo.Centre, parms.CentreUpdateParms>
     {
     }
 }

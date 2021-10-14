@@ -5,14 +5,14 @@ using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class CursAcademic: IIdEtiquetaDescripcio, IActivable, IModel
+    public class CursAcademic : IIdEtiquetaDescripcio, IActivable, IModel
     {
-        public int Id {get; set; }
-        public int AnyInici {get; set;}
-        public string Nom {get; set;} = string.Empty;
+        public int Id { get; set; }
+        public int AnyInici { get; set; }
+        public string Nom { get; set; } = string.Empty;
 
         // IActiu
-        public bool EsActiu {get; set;}
+        public bool EsActiu { get; set; }
         public void SetActiu() => EsActiu = true;
         public void SetInactiu() => EsActiu = false;
 

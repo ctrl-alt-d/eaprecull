@@ -11,8 +11,8 @@ namespace DTO.i.DTOs
             Skip = skip;
         }
 
-        public int Take {get;}
+        public int Take { get; }
 
-        public int Skip {get;}
+        public int Skip { get; }
     }
 }

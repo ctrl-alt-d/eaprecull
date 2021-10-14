@@ -18,7 +18,7 @@ namespace BusinessLayer.Integration.Test
         public async void Test()
         {
             // arrange
-            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4,4) + ".db");
+            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
@@ -48,7 +48,7 @@ namespace BusinessLayer.Integration.Test
             var createcentreresult = await centreCreate.Create(createcentreparms);
 
             var createcursparms = new DTO.i.DTOs.CursAcademicCreateParms(
-                2021, 
+                2021,
                 true
             );
             var createcursresult = await cursCreate.Create(createcursparms);

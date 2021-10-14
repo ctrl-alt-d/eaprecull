@@ -76,14 +76,14 @@ namespace BusinessLayer.Common
                 .CountAsync();
 
             return new IntOperationResult(total);
-        }        
+        }
 
         public virtual async Task<OperationResult<TDTOo>> FromId(int id)
         {
             var data =
                 await
                 GetAllModels()
-                .Where(x=>x.Id == id)
+                .Where(x => x.Id == id)
                 .Select(ToDto)
                 .FirstOrDefaultAsync();
 

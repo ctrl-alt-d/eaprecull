@@ -28,7 +28,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
             Acords = acords;
         }
 
-        public enum Camps: int
+        public enum Camps : int
         {
             Nom = 4,
             Cognoms = 3,

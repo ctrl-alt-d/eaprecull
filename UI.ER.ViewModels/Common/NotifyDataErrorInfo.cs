@@ -6,8 +6,8 @@ namespace UI.ER.ViewModels.Common
 {
     public class NotifyDataErrorInfo : Exception, INotifyDataErrorInfo
     {
-        public NotifyDataErrorInfo(object errorData) 
-            :base(errorData?.ToString())
+        public NotifyDataErrorInfo(object errorData)
+            : base(errorData?.ToString())
         {
             ErrorData = errorData!;
             _ = ErrorsChanged;
@@ -20,7 +20,7 @@ namespace UI.ER.ViewModels.Common
 
         public IEnumerable GetErrors(string? propertyName)
         {
-            return new [] {ErrorData.ToString()};
+            return new[] { ErrorData.ToString() };
         }
 
         public override string ToString()

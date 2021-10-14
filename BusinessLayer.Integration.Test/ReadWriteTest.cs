@@ -16,7 +16,7 @@ namespace BusinessLayer.Integration.Test
         public async void WriteTest()
         {
             // arrange
-            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4,4) + ".db");
+            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
@@ -53,7 +53,7 @@ namespace BusinessLayer.Integration.Test
         public async void ReadTest()
         {
             // arrange
-            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4,4) + ".db");
+            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();

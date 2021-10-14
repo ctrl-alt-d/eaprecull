@@ -17,7 +17,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Actuacio Model { get; set;}
+        protected dtoo.Actuacio Model { get; set; }
         public ActuacioRowViewModel(dtoo.Actuacio data, bool modeLookup = false)
         {
 

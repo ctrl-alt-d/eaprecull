@@ -12,10 +12,10 @@ namespace BusinessLayer.Abstract.Exceptions
 
         public BrokenRuleException(string? message, Exception? innerException = null) : base(message, innerException)
         {
-            BrokenRules = new() {new BrokenRule(message ?? "")};
+            BrokenRules = new() { new BrokenRule(message ?? "") };
         }
 
-        public List<BrokenRule> BrokenRules {get;} = new();
+        public List<BrokenRule> BrokenRules { get; } = new();
 
     }
 }

@@ -11,16 +11,16 @@ namespace DataModels.Configuration.Configurations
         {
 
             builder
-                .HasOne(m=>m.Alumne!)
-                .WithMany(r=>r.Actuacions);
+                .HasOne(m => m.Alumne!)
+                .WithMany(r => r.Actuacions);
 
             builder
-                .HasOne(m=>m.CursActuacio!)
-                .WithMany(r=>r.Actuacions);
+                .HasOne(m => m.CursActuacio!)
+                .WithMany(r => r.Actuacions);
 
             builder
-                .HasOne(m=>m.TipusActuacio!)
-                .WithMany(r=>r.Actuacions);
+                .HasOne(m => m.TipusActuacio!)
+                .WithMany(r => r.Actuacions);
 
         }
     }

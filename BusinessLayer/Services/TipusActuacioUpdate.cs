@@ -19,7 +19,7 @@ namespace BusinessLayer.Services
         BLUpdate<models.TipusActuacio, parms.TipusActuacioUpdateParms, dtoo.TipusActuacio>,
         ITipusActuacioUpdate
     {
-        protected override Expression<Func<models.TipusActuacio, dtoo.TipusActuacio>> ToDto 
+        protected override Expression<Func<models.TipusActuacio, dtoo.TipusActuacio>> ToDto
             =>
             project
             .TipusActuacio
@@ -36,8 +36,8 @@ namespace BusinessLayer.Services
         protected override Task PreUpdate(models.TipusActuacio model, TipusActuacioUpdateParms parm)
             =>
             new RuleChecker<models.TipusActuacio, TipusActuacioUpdateParms>(model, parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre TipusActuacio amb aquest mateix nom o codi" )
+            .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre TipusActuacio amb aquest mateix nom o codi")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(models.TipusActuacio model, TipusActuacioUpdateParms parm)
@@ -47,10 +47,10 @@ namespace BusinessLayer.Services
         protected virtual Task<bool> RuleEstaRepetit(models.TipusActuacio model, TipusActuacioUpdateParms parm)
             =>
             GetCollection()
-            .Where(x=> x.Id != model.Id)
-            .AnyAsync(x=> x.Codi == parm.Codi || x.Nom == parm.Nom);
+            .Where(x => x.Id != model.Id)
+            .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
 
-            
+
 
         protected override Task UpdateModel(models.TipusActuacio model, TipusActuacioUpdateParms parm)
         {

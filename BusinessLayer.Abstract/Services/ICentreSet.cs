@@ -4,8 +4,8 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICentreSet: ISet<parms.EsActiuParms, dtoo.Centre>
-    {        
+    public interface ICentreSet : ISet<parms.EsActiuParms, dtoo.Centre>
+    {
     }
 
 }

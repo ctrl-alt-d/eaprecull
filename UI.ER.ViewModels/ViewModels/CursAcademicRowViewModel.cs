@@ -19,9 +19,9 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected dtoo.CursAcademic Model { get; }
-        protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos {get;}
+        protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos { get; }
         public CursAcademicRowViewModel(
-            dtoo.CursAcademic CursAcademicDto, 
+            dtoo.CursAcademic CursAcademicDto,
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
             bool modeLookup = false)
         {
@@ -107,9 +107,9 @@ namespace UI.ER.ViewModels.ViewModels
                 return;
 
             TotsElsCursos
-                .Where(x=>x.Id != dto.Data.Id)
+                .Where(x => x.Id != dto.Data.Id)
                 .ToList()
-                .ForEach(x=>x.EsActiu = false);
+                .ForEach(x => x.EsActiu = false);
         }
 
         // --- Obrir Finestra Edició ---

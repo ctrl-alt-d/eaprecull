@@ -11,14 +11,15 @@ using DTO.o.DTOs;
 namespace UI.ER.AvaloniaUI.Pages
 {
     public class TipusActuacioCreateWindow : ReactiveWindow<TipusActuacioCreateViewModel>
-    { 
+    {
         public OperationResult<dtoo.TipusActuacio> Result { get; set; } = default!;
         public TipusActuacioCreateWindow()
         {
             this.InitializeComponent();
-            
-            this.WhenActivated(disposables => { 
-                RegisterCloseIfSaved(disposables); 
+
+            this.WhenActivated(disposables =>
+            {
+                RegisterCloseIfSaved(disposables);
             });
         }
 
@@ -29,8 +30,8 @@ namespace UI.ER.AvaloniaUI.Pages
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm =>
                     vm.SubmitCommand.Subscribe(CloseIfSaved)
                 )
             );

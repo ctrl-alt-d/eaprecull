@@ -24,19 +24,19 @@ namespace UI.ER.ViewModels.ViewModels
             // Filtre
             var NomCognomsCentreObserver =
                 this
-                .WhenAnyValue(x=>x.NomCognomsTagCentre)
+                .WhenAnyValue(x => x.NomCognomsTagCentre)
                 .Throttle(TimeSpan.FromMilliseconds(400));
 
             var OrdreAlfabeticObserver =
                 this
-                .WhenAnyValue(x=>x.OrdreAlfabetic);
+                .WhenAnyValue(x => x.OrdreAlfabetic);
 
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .CombineLatest(
                         NomCognomsCentreObserver,
                         OrdreAlfabeticObserver,
-                        (nomesActius, NomCognomsTagCentre, ordreAlfabetic) => 
+                        (nomesActius, NomCognomsTagCentre, ordreAlfabetic) =>
                         (nomesActius, NomCognomsTagCentre, ordreAlfabetic)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -76,15 +76,15 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task OmplirAmbElsNousValors(bool nomesActius, string NomCognomsTagCentre, bool ordreAlfabetic)
         {
             // Preparar paràmetres al backend
-            var esActiu = 
-                nomesActius ? 
-                true : 
+            var esActiu =
+                nomesActius ?
+                true :
                 (bool?)null;
-                
-            var ordre = 
+
+            var ordre =
                 ordreAlfabetic ?
                 dtoi.AlumneSearchParms.OrdreResultatsChoice.CognomsNom :
-                dtoi.AlumneSearchParms.OrdreResultatsChoice.DarreraModificacio ;
+                dtoi.AlumneSearchParms.OrdreResultatsChoice.DarreraModificacio;
 
             var parms = new DTO.i.DTOs.AlumneSearchParms(
                 esActiu: esActiu,

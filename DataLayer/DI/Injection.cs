@@ -13,8 +13,8 @@ namespace DataLayer.DI
                 options =>
                     options
                     .ConfigureAppDbContext()
-                    // .LogTo(Console.WriteLine)
-                    // .EnableSensitiveDataLogging()
+            // .LogTo(Console.WriteLine)
+            // .EnableSensitiveDataLogging()
             );
 
             var serviceProvider = services.BuildServiceProvider();
@@ -26,6 +26,6 @@ namespace DataLayer.DI
                 .Migrate();
 
             return services;
-        }        
+        }
     }
 }

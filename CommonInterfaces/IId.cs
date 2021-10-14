@@ -2,6 +2,6 @@ namespace CommonInterfaces
 {
     public interface IId
     {
-        int Id {get;}
+        int Id { get; }
     }
 }

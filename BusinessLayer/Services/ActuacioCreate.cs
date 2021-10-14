@@ -43,7 +43,7 @@ namespace BusinessLayer.Services
                 momentDeLactuacio: parm.MomentDeLactuacio,
                 cursActuacio: await Perfection<CursAcademic>(parm.CursActuacioId),
                 centreAlMomentDeLactuacio: await Perfection<Centre>(parm.CentreAlMomentDeLactuacioId),
-                etapaAlMomentDeLactuacio:  await Perfection<Etapa>(parm.EtapaAlMomentDeLactuacioId),
+                etapaAlMomentDeLactuacio: await Perfection<Etapa>(parm.EtapaAlMomentDeLactuacioId),
                 nivellAlMomentDeLactuacio: parm.NivellAlMomentDeLactuacio,
                 minutsDuradaActuacio: parm.MinutsDuradaActuacio,
                 descripcioActuacio: parm.DescripcioActuacio
@@ -52,7 +52,7 @@ namespace BusinessLayer.Services
         protected override async Task PostAdd(Actuacio model, ActuacioCreateParms parm)
         {
             // Recuperar alumne
-            await LoadReference(model,m=>m.Alumne);
+            await LoadReference(model, m => m.Alumne);
 
             // incrementar número actuacions
             model.Alumne.NombreTotalDactuacions++;

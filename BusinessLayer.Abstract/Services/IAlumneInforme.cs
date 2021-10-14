@@ -5,7 +5,7 @@ using DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IAlumneInforme: IBLOperation
+    public interface IAlumneInforme : IBLOperation
     {
         Task<OperationResult<SaveResult>> Run(int alumneId);
     }

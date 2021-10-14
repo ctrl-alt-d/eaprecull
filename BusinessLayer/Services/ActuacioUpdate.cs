@@ -20,7 +20,7 @@ namespace BusinessLayer.Services
         BLUpdate<models.Actuacio, parms.ActuacioUpdateParms, dtoo.Actuacio>,
         IActuacioUpdate
     {
-        protected override Expression<Func<models.Actuacio, dtoo.Actuacio>> ToDto 
+        protected override Expression<Func<models.Actuacio, dtoo.Actuacio>> ToDto
             =>
             project
             .Actuacio
@@ -30,15 +30,15 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected Alumne AlumnePrevi {get; set; } = default!;
+        protected Alumne AlumnePrevi { get; set; } = default!;
         protected override async Task PreUpdate(models.Actuacio model, ActuacioUpdateParms parm)
         {
-            await LoadReference(model, m=>m.Alumne);
+            await LoadReference(model, m => m.Alumne);
             AlumnePrevi = model.Alumne;
         }
 
         protected override async Task UpdateModel(models.Actuacio model, ActuacioUpdateParms parm)
-        =>
+            =>
             model.SetMainData(
                 alumne: await Perfection<Alumne>(parm.AlumneId),
                 tipusActuacio: await Perfection<TipusActuacio>(parm.TipusActuacioId),
@@ -46,7 +46,7 @@ namespace BusinessLayer.Services
                 momentDeLactuacio: parm.MomentDeLactuacio,
                 cursActuacio: await Perfection<CursAcademic>(parm.CursActuacioId),
                 centreAlMomentDeLactuacio: await Perfection<Centre>(parm.CentreAlMomentDeLactuacioId),
-                etapaAlMomentDeLactuacio:  await Perfection<Etapa>(parm.EtapaAlMomentDeLactuacioId),
+                etapaAlMomentDeLactuacio: await Perfection<Etapa>(parm.EtapaAlMomentDeLactuacioId),
                 nivellAlMomentDeLactuacio: parm.NivellAlMomentDeLactuacio,
                 minutsDuradaActuacio: parm.MinutsDuradaActuacio,
                 descripcioActuacio: parm.DescripcioActuacio
@@ -55,10 +55,10 @@ namespace BusinessLayer.Services
         protected override async Task PostUpdate(models.Actuacio model, ActuacioUpdateParms parm)
         {
             // Decrementar nombre actuacions a l'alumne anterior
-            AlumnePrevi.NombreTotalDactuacions --;
+            AlumnePrevi.NombreTotalDactuacions--;
 
             // Recuperar alumne de l'actuació
-            await LoadReference(model, m=>m.Alumne);
+            await LoadReference(model, m => m.Alumne);
 
             // incrementar número actuacions a l'alumne actual
             model.Alumne.NombreTotalDactuacions++;

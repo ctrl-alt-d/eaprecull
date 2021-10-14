@@ -36,8 +36,8 @@ namespace BusinessLayer.Services
                 await
                 GetModels(new parms.EsActiuParms(true))
                 .FirstOrDefaultAsync();
-            
-            if (cursActiu == null ) return null;
+
+            if (cursActiu == null) return null;
 
             return cursActiu.AnyInici == DateTime.Now.AddMonths(-8).Year;
         }
@@ -49,18 +49,18 @@ namespace BusinessLayer.Services
                 GetModels(new parms.EsActiuParms(true))
                 .Select(ToDto)
                 .FirstOrDefaultAsync();
-            
-            
-            if (cursActiu == null )
+
+
+            if (cursActiu == null)
             {
-                var excepti = new List<BrokenRule>() { new BrokenRule("Cel definir el curs actiu") } ;
-                return new OperationResult<dtoo.CursAcademic>( excepti );
+                var excepti = new List<BrokenRule>() { new BrokenRule("Cel definir el curs actiu") };
+                return new OperationResult<dtoo.CursAcademic>(excepti);
             }
 
-            return new OperationResult<dtoo.CursAcademic>(cursActiu);            
+            return new OperationResult<dtoo.CursAcademic>(cursActiu);
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
             =>
             project
             .CursAcademic

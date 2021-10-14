@@ -15,13 +15,14 @@ using System.Reactive;
 namespace UI.ER.AvaloniaUI.Pages
 {
     public class ActuacioUpdateWindow : ReactiveWindow<ActuacioUpdateViewModel>
-    { 
+    {
         public OperationResult<dtoo.Actuacio> Result { get; set; } = default!;
         public ActuacioUpdateWindow()
         {
             this.InitializeComponent();
-            
-            this.WhenActivated(d => {
+
+            this.WhenActivated(d =>
+            {
 
                 // Tancar finestre
                 d(

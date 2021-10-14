@@ -23,7 +23,7 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
             =>
             project
             .CursAcademic
@@ -37,20 +37,20 @@ namespace BusinessLayer.Services
         {
             if (!model.EsActiu)
                 return;
-            
+
             // Si el nostre element ha passat a actiu, la resta desactivar-los
             var tots =
                 await
                 GetContext()
                 .CursosAcademics
-                .Where(x=>x != model)
+                .Where(x => x != model)
                 .ToListAsync();
 
             tots
-                .ForEach(x=>x.EsActiu=false);
+                .ForEach(x => x.EsActiu = false);
 
         }
-            
+
         protected override Task Pre(models.CursAcademic model)
             =>
             Task.CompletedTask;

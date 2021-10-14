@@ -12,9 +12,9 @@ namespace DTO.i.DTOs
             EsActiu = esActiu;
         }
 
-        public int Id {get;}
-        public int AnyInici {get; }
-        public bool EsActiu {get; }
+        public int Id { get; }
+        public int AnyInici { get; }
+        public bool EsActiu { get; }
 
     }
 }

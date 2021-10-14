@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ITipusActuacioActivaDesactiva: IActivaDesactiva<dtoo.TipusActuacio>
+    public interface ITipusActuacioActivaDesactiva : IActivaDesactiva<dtoo.TipusActuacio>
     {
     }
 }

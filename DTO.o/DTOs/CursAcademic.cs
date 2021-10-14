@@ -5,7 +5,7 @@ using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
 {
-    public class CursAcademic: IIdEtiquetaDescripcio, IDTOo, IActiu
+    public class CursAcademic : IIdEtiquetaDescripcio, IDTOo, IActiu
     {
         public CursAcademic(int id, int anyInici, string nom, bool esActiu, string etiqueta, string descripcio)
         {
@@ -17,14 +17,14 @@ namespace DTO.o.DTOs
             Descripcio = descripcio;
         }
 
-        public int Id {get;  }
-        public int AnyInici {get; }
-        public string Nom {get; } = string.Empty;
-        public bool EsActiu {get; }
+        public int Id { get; }
+        public int AnyInici { get; }
+        public string Nom { get; } = string.Empty;
+        public bool EsActiu { get; }
 
         // IEtiquetaDescripcio
-        public string Etiqueta {get; } = string.Empty;
-        public string Descripcio {get; } = string.Empty;
+        public string Etiqueta { get; } = string.Empty;
+        public string Descripcio { get; } = string.Empty;
 
         public override string ToString() => Etiqueta;
     }

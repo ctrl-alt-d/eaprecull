@@ -22,12 +22,12 @@ namespace DTO.i.DTOs
         public int TipusActuacioId { get; }
         public string ObservacionsTipusActuacio { get; }
         public DateTime MomentDeLactuacio { get; }
-        public int CursActuacioId { get; } 
-        public int CentreAlMomentDeLactuacioId { get; } 
-        public int EtapaAlMomentDeLactuacioId { get; } 
+        public int CursActuacioId { get; }
+        public int CentreAlMomentDeLactuacioId { get; }
+        public int EtapaAlMomentDeLactuacioId { get; }
         public string NivellAlMomentDeLactuacio { get; }
         public int MinutsDuradaActuacio { get; }
-        public string DescripcioActuacio { get; } 
+        public string DescripcioActuacio { get; }
 
 
     }

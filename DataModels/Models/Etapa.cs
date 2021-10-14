@@ -5,15 +5,15 @@ using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
-    public class Etapa: IIdEtiquetaDescripcio, IActivable, IModel
+    public class Etapa : IIdEtiquetaDescripcio, IActivable, IModel
     {
-        public int Id {get; set; }
-        public string Codi {get; set; } = string.Empty; // Ex: BAT, ESO
-        public string Nom {get; set; }  = string.Empty; // Ex: Batxillerat
-        public bool SonEstudisObligatoris {get; set; } 
+        public int Id { get; set; }
+        public string Codi { get; set; } = string.Empty; // Ex: BAT, ESO
+        public string Nom { get; set; } = string.Empty; // Ex: Batxillerat
+        public bool SonEstudisObligatoris { get; set; }
 
         // IActiu
-        public bool EsActiu {get; set;}
+        public bool EsActiu { get; set; }
         public void SetActiu() => EsActiu = true;
         public void SetInactiu() => EsActiu = false;
 

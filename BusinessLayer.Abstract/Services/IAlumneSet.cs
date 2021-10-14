@@ -4,8 +4,8 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IAlumneSet: ISet<parms.AlumneSearchParms, dtoo.Alumne>
-    {        
+    public interface IAlumneSet : ISet<parms.AlumneSearchParms, dtoo.Alumne>
+    {
     }
 
 }

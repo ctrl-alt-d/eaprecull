@@ -14,10 +14,10 @@ namespace DTO.i.DTOs
             EsActiu = esActiu;
         }
 
-        public int Id {get;}
+        public int Id { get; }
         public string Codi { get; }
         public string Nom { get; }
-        public bool SonEstudisObligatoris {get;} 
+        public bool SonEstudisObligatoris { get; }
         // IActiu
         public bool EsActiu { get; }
     }

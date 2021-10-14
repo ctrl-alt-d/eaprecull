@@ -15,7 +15,7 @@ using System;
 
 namespace BusinessLayer.Services
 {
-    public class CursAcademicCreate : 
+    public class CursAcademicCreate :
         BLCreate<models.CursAcademic, parms.CursAcademicCreateParms, dtoo.CursAcademic>,
         ICursAcademicCreate
     {
@@ -26,8 +26,8 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(CursAcademicCreateParms parm)
             =>
             new RuleChecker<CursAcademicCreateParms>(parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici" )
+            .AddCheck(RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(CursAcademicCreateParms parm)
@@ -47,27 +47,27 @@ namespace BusinessLayer.Services
                 {
                     AnyInici = parm.AnyInici,
                     EsActiu = parm.EsActiu,
-                    Nom = $"{parm.AnyInici}-{parm.AnyInici+1}"
+                    Nom = $"{parm.AnyInici}-{parm.AnyInici + 1}"
                 }
             );
 
         protected override Task PostAdd(CursAcademic model, CursAcademicCreateParms parm)
             =>
-            NomesUnCursPotEstarMarcatComAcursActual(model,parm);
+            NomesUnCursPotEstarMarcatComAcursActual(model, parm);
 
         protected virtual async Task NomesUnCursPotEstarMarcatComAcursActual(CursAcademic model, CursAcademicCreateParms parm)
         {
             if (!parm.EsActiu)
                 return;
 
-            await 
+            await
                 GetContext()
                 .CursosAcademics
-                .Where(c=>c!=model)
+                .Where(c => c != model)
                 .ForEachAsync(c => c.EsActiu = false);
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
             =>
             project
             .CursAcademic

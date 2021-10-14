@@ -28,7 +28,7 @@ namespace BusinessLayer.DI
             services.AddTransient<IEtapaCreate, EtapaCreate>();
             services.AddTransient<IEtapaUpdate, EtapaUpdate>();
             services.AddTransient<IEtapaActivaDesactiva, EtapaActivaDesactiva>();
-   
+
             // alumnes
             services.AddTransient<IAlumneSet, AlumneSet>();
             services.AddTransient<IAlumneCreate, AlumneCreate>();
@@ -43,16 +43,16 @@ namespace BusinessLayer.DI
             services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
             services.AddTransient<ICursAcademicSet, CursAcademicSet>();
             services.AddTransient<ICursAcademicActivaDesactiva, CursAcademicActivaDesactiva>();
-            
+
             // actuacio
             services.AddTransient<IActuacioSet, ActuacioSet>();
             services.AddTransient<IActuacioCreate, ActuacioCreate>();
             services.AddTransient<IActuacioUpdate, ActuacioUpdate>();
 
             // altres
-            services.AddTransient<IImportAll, ImportAll>();            
+            services.AddTransient<IImportAll, ImportAll>();
 
             return services;
-        }        
+        }
     }
 }

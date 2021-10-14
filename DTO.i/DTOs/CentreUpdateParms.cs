@@ -13,7 +13,7 @@ namespace DTO.i.DTOs
             EsActiu = esActiu;
         }
 
-        public int Id {get;}
+        public int Id { get; }
         public string Codi { get; }
         public string Nom { get; }
 

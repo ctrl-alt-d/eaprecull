@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICursAcademicCreate: ICreate<dtoo.CursAcademic, parms.CursAcademicCreateParms>
+    public interface ICursAcademicCreate : ICreate<dtoo.CursAcademic, parms.CursAcademicCreateParms>
     {
     }
 }

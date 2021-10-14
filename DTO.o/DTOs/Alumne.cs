@@ -4,7 +4,7 @@ using CommonInterfaces;
 using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs
-{    
+{
     public class Alumne : IIdEtiquetaDescripcio, IActiu, IDTOo
     {
         public Alumne(int id, string nom, string cognoms, DateTime? dataNaixement, IIdEtiquetaDescripcio? centreActual, IIdEtiquetaDescripcio cursDarreraActualitacioDades, IIdEtiquetaDescripcio? etapaActual, string nivellActual, DateTime? dataInformeNESENEE, string observacionsNESENEE, DateTime? dataInformeNESENoNEE, string observacionsNESENoNEE, bool esActiu, string etiqueta, string descripcio, string tags, int nombreActuacions)
@@ -35,15 +35,15 @@ namespace DTO.o.DTOs
         public IIdEtiquetaDescripcio? CentreActual { get; }
         public IIdEtiquetaDescripcio CursDarreraActualitacioDades { get; }
         public IIdEtiquetaDescripcio? EtapaActual { get; }
-        public string NivellActual {get; }
+        public string NivellActual { get; }
         public DateTime? DataInformeNESENEE { get; }
         public string ObservacionsNESENEE { get; }
-        public DateTime? DataInformeNESENoNEE { get;  }
+        public DateTime? DataInformeNESENoNEE { get; }
         public string ObservacionsNESENoNEE { get; }
         public bool EsActiu { get; }
-        public string Etiqueta{ get; }
+        public string Etiqueta { get; }
         public string Descripcio { get; }
         public string Tags { get; }
-        public int NombreActuacions { get;  }
+        public int NombreActuacions { get; }
     }
 }

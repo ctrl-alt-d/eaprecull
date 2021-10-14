@@ -18,7 +18,7 @@ namespace DTO.i.DTOs
 
         public string Codi { get; }
         public string Nom { get; }
-        public bool SonEstudisObligatoris {get;} 
+        public bool SonEstudisObligatoris { get; }
         // IActiu
         public bool EsActiu { get; }
     }

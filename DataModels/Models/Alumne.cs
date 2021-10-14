@@ -4,7 +4,7 @@ using CommonInterfaces;
 using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
-{    
+{
     public class Alumne : IIdEtiquetaDescripcio, IActivable, IModel
     {
         public int Id { get; set; }
@@ -35,8 +35,8 @@ namespace DataModels.Models
         public string _NESENoEE_txt => DataInformeNESENoNEE != null ? " [NESE No NEE]" : "";
 
         // Caches
-        public int NombreTotalDactuacions {get; set;}
-        public DateTime? DataDarreraActuacio {get; set;}
+        public int NombreTotalDactuacions { get; set; }
+        public DateTime? DataDarreraActuacio { get; set; }
         public DateTime DataDarreraModificacio { get; set; } = DateTime.Now;
 
         //

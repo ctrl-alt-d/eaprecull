@@ -4,8 +4,8 @@ using dtoo = DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IEtapaSet: ISet<parms.EsActiuParms, dtoo.Etapa>
-    {        
+    public interface IEtapaSet : ISet<parms.EsActiuParms, dtoo.Etapa>
+    {
     }
 
 }

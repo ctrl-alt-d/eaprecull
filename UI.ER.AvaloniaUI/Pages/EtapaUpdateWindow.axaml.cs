@@ -16,9 +16,10 @@ namespace UI.ER.AvaloniaUI.Pages
         public EtapaUpdateWindow()
         {
             this.InitializeComponent();
-            
-            this.WhenActivated(disposables => { 
-                RegisterCloseIfSaved(disposables); 
+
+            this.WhenActivated(disposables =>
+            {
+                RegisterCloseIfSaved(disposables);
             });
         }
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
@@ -28,8 +29,8 @@ namespace UI.ER.AvaloniaUI.Pages
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm =>
                     vm.SubmitCommand.Subscribe(CloseIfSaved)
                 )
             );

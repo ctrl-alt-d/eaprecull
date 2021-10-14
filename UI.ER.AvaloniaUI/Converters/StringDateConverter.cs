@@ -26,7 +26,7 @@ namespace UI.ER.AvaloniaUI.Converters
             if (success)
                 return result;
 
-            return (DateTime?) null;
+            return (DateTime?)null;
         }
 
 

@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ITipusActuacioCreate: ICreate<dtoo.TipusActuacio, parms.TipusActuacioCreateParms>
+    public interface ITipusActuacioCreate : ICreate<dtoo.TipusActuacio, parms.TipusActuacioCreateParms>
     {
     }
 }

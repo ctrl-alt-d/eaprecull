@@ -7,11 +7,11 @@ namespace DTO.Projections
 {
     public static class Centre
     {
-        public static Expression<Func<models.Centre, dtoo.Centre>> ToDto 
+        public static Expression<Func<models.Centre, dtoo.Centre>> ToDto
             =>
             model
             =>
-            new (
+            new(
                 model.Id, model.Codi, model.Nom, model.EsActiu, model.Etiqueta, model.Descripcio
             );
     }
