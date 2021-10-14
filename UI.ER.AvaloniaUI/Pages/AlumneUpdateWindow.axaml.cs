@@ -21,8 +21,9 @@ namespace UI.ER.AvaloniaUI.Pages
         public AlumneUpdateWindow()
         {
             this.InitializeComponent();
-            
-            this.WhenActivated(d => { 
+
+            this.WhenActivated(d =>
+            {
                 // Tancar finestre
                 d(
                     ViewModel!

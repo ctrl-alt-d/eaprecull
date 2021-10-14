@@ -10,8 +10,8 @@ namespace DTO.i.DTOs
             EsActiu = esActiu;
         }
 
-        public int AnyInici {get; }
-        public bool EsActiu {get; }
+        public int AnyInici { get; }
+        public bool EsActiu { get; }
 
     }
 }

@@ -47,43 +47,43 @@ namespace DTO.i.DTOs
             DarreraModificacio,
         }
 
-        public int Take {get;}
-        public int Skip {get;}
+        public int Take { get; }
+        public int Skip { get; }
 
         // Centre
-        public int? CentreId {get;}
+        public int? CentreId { get; }
 
         // Data Actuació
-        public DateTime? AmbDarreraModificacioAnteriorA {get;}
-        public DateTime? AmbDarreraModificacioPosteriorA {get;}
+        public DateTime? AmbDarreraModificacioAnteriorA { get; }
+        public DateTime? AmbDarreraModificacioPosteriorA { get; }
 
         // Data Naixement
-        public DateTime? AmbDataNaixementAnteriorA {get;}
-        public DateTime? AmbDataNaixementPosteriorA {get;}
+        public DateTime? AmbDataNaixementAnteriorA { get; }
+        public DateTime? AmbDataNaixementPosteriorA { get; }
 
         // Data Informe
-        public DateTime? AmbDataInformeAnteriorA {get;}
-        public DateTime? AmbDataInformePosteriorA {get;}
+        public DateTime? AmbDataInformeAnteriorA { get; }
+        public DateTime? AmbDataInformePosteriorA { get; }
 
         // Etapa
-        public int? EtapaId {get;}
+        public int? EtapaId { get; }
         //
-        public int? CursDarreraActualitacioDadesId {get; }
+        public int? CursDarreraActualitacioDadesId { get; }
 
         // Tipus Actuació
-        public int? TipusActuacioId {get;}
+        public int? TipusActuacioId { get; }
 
         // Nom - Cognoms
-        public string NomCognomsTagCentre {get;}
+        public string NomCognomsTagCentre { get; }
 
         // Tags
-        public string Tags {get;}
+        public string Tags { get; }
 
         // Actiu
-        public bool? EsActiu {get; }
+        public bool? EsActiu { get; }
 
         // Ordre
-        public OrdreResultatsChoice OrdreResultats {get;}
+        public OrdreResultatsChoice OrdreResultats { get; }
 
 
 

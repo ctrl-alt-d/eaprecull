@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICursAcademicSet: ISet<parms.EsActiuParms, dtoo.CursAcademic>
-    {        
+    public interface ICursAcademicSet : ISet<parms.EsActiuParms, dtoo.CursAcademic>
+    {
         Task<bool?> ElCursPerDefecteEsCorresponAmbLaDataActual();
 
         Task<OperationResult<dtoo.CursAcademic>> GetCursActiu();

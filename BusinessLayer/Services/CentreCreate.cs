@@ -15,7 +15,7 @@ using System;
 
 namespace BusinessLayer.Services
 {
-    public class CentreCreate : 
+    public class CentreCreate :
         BLCreate<models.Centre, parms.CentreCreateParms, dtoo.Centre>,
         ICentreCreate
     {
@@ -26,8 +26,8 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(CentreCreateParms parm)
             =>
             new RuleChecker<CentreCreateParms>(parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(CentreCreateParms parm)

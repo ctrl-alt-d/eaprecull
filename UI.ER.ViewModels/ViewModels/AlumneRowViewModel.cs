@@ -176,10 +176,10 @@ namespace UI.ER.ViewModels.ViewModels
             ResultatInformeAlumne = "";
             using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
             var resultat = await bl.Run(Id);
-            ResultatInformeAlumne = 
-                resultat.Data != null?
+            ResultatInformeAlumne =
+                resultat.Data != null ?
                 $"Fitxer desat a: {resultat.Data.FullPath}" :
-                "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x=>x.Message));
+                "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
 
             return resultat.Data;
         }

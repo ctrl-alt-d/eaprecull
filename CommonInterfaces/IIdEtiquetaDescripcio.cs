@@ -2,7 +2,7 @@
 
 namespace CommonInterfaces
 {
-    public interface IIdEtiquetaDescripcio: IId, IEtiquetaDescripcio
+    public interface IIdEtiquetaDescripcio : IId, IEtiquetaDescripcio
     {
 
     }

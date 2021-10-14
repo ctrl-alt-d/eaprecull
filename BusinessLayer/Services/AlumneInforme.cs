@@ -40,7 +40,7 @@ namespace BusinessLayer.Services
 
                 document.Generate(path);
 
-                return new (
+                return new(
                     new dtoo.SaveResult(
                         path,
                         filename,
@@ -52,13 +52,13 @@ namespace BusinessLayer.Services
             catch (BrokenRuleException e)
             {
 
-                return new (e.BrokenRules);
+                return new(e.BrokenRules);
             }
             catch (Exception e)
             {
                 var msg = e.Message;
                 System.Console.WriteLine(e.StackTrace);
-                return new (new List<BrokenRule>() { new BrokenRule(msg)});
+                return new(new List<BrokenRule>() { new BrokenRule(msg) });
             }
 
         }
@@ -67,7 +67,7 @@ namespace BusinessLayer.Services
             =>
             GetContext()
             .Alumnes
-            .Include(a => a.Actuacions.OrderByDescending(x=>x.MomentDeLactuacio))
+            .Include(a => a.Actuacions.OrderByDescending(x => x.MomentDeLactuacio))
             .Include(a => a.Actuacions).ThenInclude(a => a.CursActuacio)
             .Include(a => a.Actuacions).ThenInclude(a => a.CentreAlMomentDeLactuacio)
             .Include(a => a.Actuacions).ThenInclude(a => a.EtapaAlMomentDeLactuacio)
@@ -98,7 +98,7 @@ namespace BusinessLayer.Services
 
             var path = string.Empty;
             while (true)
-            {                
+            {
                 path = Path.Combine(folder, filename);
                 if (!File.Exists(path)) break;
                 filename = filename.Replace(".docx", "_nou.docx");

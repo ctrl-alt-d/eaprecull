@@ -30,10 +30,11 @@ namespace UI.ER.AvaloniaUI.Views
 
             DataContext = new AppStatusViewModel();
 
-            this.WhenActivated(disposables => { 
-                RegisterShowAlumneDialog(disposables); 
-                RegisterShowActuacioDialog(disposables); 
-                RegisterShowCursAcademicDialog(disposables); 
+            this.WhenActivated(disposables =>
+            {
+                RegisterShowAlumneDialog(disposables);
+                RegisterShowActuacioDialog(disposables);
+                RegisterShowCursAcademicDialog(disposables);
             });
 
             InitializeComponent();
@@ -46,9 +47,9 @@ namespace UI.ER.AvaloniaUI.Views
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>vm.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
-            );        
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm => vm.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
+            );
         protected virtual async Task DoShowAlumneLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
             var dialog = new AlumneSetWindow()
@@ -56,7 +57,7 @@ namespace UI.ER.AvaloniaUI.Views
                 DataContext = new AlumneSetViewModel(modeLookup: false)
             };
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);        
+            interaction.SetOutput(result);
         }
 
         //
@@ -64,9 +65,9 @@ namespace UI.ER.AvaloniaUI.Views
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>vm.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
-            );        
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm => vm.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+            );
         protected virtual async Task DoShowActuacioLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
             var dialog = new ActuacioSetWindow()
@@ -74,7 +75,7 @@ namespace UI.ER.AvaloniaUI.Views
                 DataContext = new ActuacioSetViewModel(modeLookup: false)
             };
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);        
+            interaction.SetOutput(result);
         }
 
         //
@@ -82,9 +83,9 @@ namespace UI.ER.AvaloniaUI.Views
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>vm.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
-            );        
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm => vm.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
+            );
         protected virtual async Task DoShowCursAcademicLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
             var dialog = new CursAcademicSetWindow()
@@ -92,10 +93,10 @@ namespace UI.ER.AvaloniaUI.Views
                 DataContext = new CursAcademicSetViewModel(modeLookup: false)
             };
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);        
+            interaction.SetOutput(result);
         }
 
-        private Window GetWindow() 
+        private Window GetWindow()
             =>
             (Window)this.VisualRoot;
 
@@ -107,7 +108,7 @@ namespace UI.ER.AvaloniaUI.Views
             NavDrawerSwitch = this.Get<ToggleButton>(nameof(NavDrawerSwitch));
 
             DrawerList = this.Get<ListBox>(nameof(DrawerList));
-            DrawerList.PointerReleased += DrawerSelectionChanged ;
+            DrawerList.PointerReleased += DrawerSelectionChanged;
             DrawerList.KeyUp += DrawerList_KeyUp;
 
             PageCarousel = this.Get<Carousel>(nameof(PageCarousel));
@@ -132,7 +133,7 @@ namespace UI.ER.AvaloniaUI.Views
                 PageCarousel.SelectedIndex = listBox.SelectedIndex;
                 //mainScroller.Offset = Vector.Zero;
                 //mainScroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                    // listBox.SelectedIndex == 5 ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto;
+                // listBox.SelectedIndex == 5 ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto;
 
             }
             catch

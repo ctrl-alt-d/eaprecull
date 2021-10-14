@@ -19,7 +19,7 @@ namespace UI.ER.AvaloniaUI.Services
         {
             var valueTxt = value?.ToString()?.Trim() ?? "";
 
-            bool success = Int32.TryParse(valueTxt,out int result);
+            bool success = Int32.TryParse(valueTxt, out int result);
 
             if (success)
                 return result;

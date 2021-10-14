@@ -16,7 +16,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioSetViewModel : ViewModelBase
     {
         public bool ModeLookup { get; }
-        public ActuacioSetViewModel(bool modeLookup = false, int? alumneId = null )
+        public ActuacioSetViewModel(bool modeLookup = false, int? alumneId = null)
         {
 
             ModeLookup = modeLookup;
@@ -25,14 +25,14 @@ namespace UI.ER.ViewModels.ViewModels
             // Filtre
             var SearchStringObserver =
                 this
-                .WhenAnyValue(x=>x.SearchString)
+                .WhenAnyValue(x => x.SearchString)
                 .Throttle(TimeSpan.FromMilliseconds(400));
 
             this
-                .WhenAnyValue(x=>x.AlumneId)
+                .WhenAnyValue(x => x.AlumneId)
                 .CombineLatest(
                         SearchStringObserver,
-                        (alumneId, searchString) => 
+                        (alumneId, searchString) =>
                         (alumneId, searchString)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)

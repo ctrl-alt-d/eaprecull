@@ -18,8 +18,8 @@ namespace BusinessLayer.Abstract
             Data = data;
         }
 
-        public int? Data {get;}
-        public List<BrokenRule> BrokenRules {get; } = new();
+        public int? Data { get; }
+        public List<BrokenRule> BrokenRules { get; } = new();
 
     }
 }

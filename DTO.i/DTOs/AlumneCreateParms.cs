@@ -26,7 +26,7 @@ namespace DTO.i.DTOs
         public int? CentreActualId { get; }
         public int CursDarreraActualitacioDadesId { get; }
         public int? EtapaActualId { get; }
-        public string NivellActual {get;}
+        public string NivellActual { get; }
         public DateTime? DataInformeNESENEE { get; }
         public string ObservacionsNESENEE { get; }
         public DateTime? DataInformeNESENoNEE { get; }

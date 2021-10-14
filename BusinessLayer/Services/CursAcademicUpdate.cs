@@ -19,7 +19,7 @@ namespace BusinessLayer.Services
         BLUpdate<models.CursAcademic, parms.CursAcademicUpdateParms, dtoo.CursAcademic>,
         ICursAcademicUpdate
     {
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto 
+        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
             =>
             project
             .CursAcademic
@@ -36,8 +36,8 @@ namespace BusinessLayer.Services
         protected override Task PreUpdate(models.CursAcademic model, CursAcademicUpdateParms parm)
             =>
             new RuleChecker<models.CursAcademic, CursAcademicUpdateParms>(model, parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici" )
+            .AddCheck(RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(models.CursAcademic model, CursAcademicUpdateParms parm)
@@ -48,16 +48,16 @@ namespace BusinessLayer.Services
         protected virtual Task<bool> RuleEstaRepetit(models.CursAcademic model, CursAcademicUpdateParms parm)
             =>
             GetCollection()
-            .Where(x=> x.Id != model.Id)
-            .AnyAsync(x=> x.AnyInici == parm.AnyInici);
+            .Where(x => x.Id != model.Id)
+            .AnyAsync(x => x.AnyInici == parm.AnyInici);
 
-            
+
 
         protected override Task UpdateModel(models.CursAcademic model, CursAcademicUpdateParms parm)
         {
             model.AnyInici = parm.AnyInici;
             model.EsActiu = parm.EsActiu;
-            model.Nom = $"{parm.AnyInici}-{parm.AnyInici+1}";
+            model.Nom = $"{parm.AnyInici}-{parm.AnyInici + 1}";
             return Task.CompletedTask;
         }
     }

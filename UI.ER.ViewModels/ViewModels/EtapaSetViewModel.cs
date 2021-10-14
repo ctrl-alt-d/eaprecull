@@ -86,7 +86,7 @@ namespace UI.ER.ViewModels.ViewModels
             //
             PaginatedMsg =
                 (dto.Total > dto.TakeRequested) ?
-                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats":
+                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats" :
                 $"Seleccionats {newItems.Count()} items";
 
         }

@@ -22,7 +22,7 @@ namespace UI.ER.ViewModels.ViewModels
             SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
         }
 
-                public double _AnyInici;
+        public double _AnyInici;
         public double AnyInici
         {
             get => _AnyInici;
@@ -45,7 +45,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CursAcademicCreateParms( Convert.ToInt32(AnyInici), true);
+            var parms = new dtoi.CursAcademicCreateParms(Convert.ToInt32(AnyInici), true);
 
             // cridar backend
             using var bl = SuperContext.GetBLOperation<ICursAcademicCreate>();

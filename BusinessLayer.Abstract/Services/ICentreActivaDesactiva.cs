@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICentreActivaDesactiva: IActivaDesactiva<dtoo.Centre>
+    public interface ICentreActivaDesactiva : IActivaDesactiva<dtoo.Centre>
     {
     }
 }

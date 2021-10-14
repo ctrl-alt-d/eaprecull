@@ -7,11 +7,11 @@ namespace DTO.Projections
 {
     public static class TipusActuacio
     {
-        public static Expression<Func<models.TipusActuacio, dtoo.TipusActuacio>> ToDto 
+        public static Expression<Func<models.TipusActuacio, dtoo.TipusActuacio>> ToDto
             =>
             model
             =>
-            new (
+            new(
               model.Id,
               model.Codi,
               model.Nom,

@@ -74,26 +74,26 @@ namespace BusinessLayer.Services
 
         private async Task DarreraModificacioAlumnes()
         {
-            System.Console.WriteLine( "Set darrera modificacio alumnes"  );
+            System.Console.WriteLine("Set darrera modificacio alumnes");
 
             var data =
                 GetContext()
                 .Alumnes
-                .Select(x => new {alumne = x, darreraModificacio = x.Actuacions.Select(a=>a.MomentDeLactuacio).OrderByDescending(a=>a).First()}) 
+                .Select(x => new { alumne = x, darreraModificacio = x.Actuacions.Select(a => a.MomentDeLactuacio).OrderByDescending(a => a).First() })
                 .ToList();
 
-            foreach(var item in data)
+            foreach (var item in data)
             {
                 item.alumne.DataDarreraModificacio = item.darreraModificacio;
             }
 
             await GetContext().SaveChangesAsync();
-            System.Console.WriteLine( "Fi Set darrera modificacio alumnes"  );
+            System.Console.WriteLine("Fi Set darrera modificacio alumnes");
         }
 
         private async Task<Dictionary<string, dtoo.Centre>> ExtreureCentres(ImportAllResult result, List<ActuacioDataRow> data)
         {
-            System.Console.WriteLine( "Inici Centres"  );
+            System.Console.WriteLine("Inici Centres");
             Dictionary<string, dtoo.Centre> d = new();
 
             var itemsActius =
@@ -133,16 +133,16 @@ namespace BusinessLayer.Services
                 var dto = await blCentre.Create(parms);
                 d.Add(item, dto.Data!);
                 result.NumCentres++;
-                if (result.NumCentres%10==0) System.Console.Write(".");
+                if (result.NumCentres % 10 == 0) System.Console.Write(".");
             }
 
-            System.Console.WriteLine( "Fi Centres"  );
+            System.Console.WriteLine("Fi Centres");
             return d;
         }
 
         private async Task<Dictionary<string, dtoo.CursAcademic>> ExtreureCursos(ImportAllResult result, List<ActuacioDataRow> data)
         {
-            System.Console.WriteLine( "Inici Cursos"  );
+            System.Console.WriteLine("Inici Cursos");
             Dictionary<string, dtoo.CursAcademic> d = new();
 
             var items =
@@ -168,16 +168,16 @@ namespace BusinessLayer.Services
                 var dto = await blCursAcademic.Create(parms);
                 d.Add(item.curs, dto.Data!);
                 result.NumCursosAcademics++;
-                if (result.NumCursosAcademics%10==0) System.Console.Write(".");
+                if (result.NumCursosAcademics % 10 == 0) System.Console.Write(".");
             }
 
-            System.Console.WriteLine( "Fi cursos"  );
+            System.Console.WriteLine("Fi cursos");
             return d;
         }
 
         private async Task<Dictionary<string, dtoo.Etapa>> ExtreureEtapes(ImportAllResult result, List<ActuacioDataRow> data)
         {
-            System.Console.WriteLine( "Inici Etapes"  );
+            System.Console.WriteLine("Inici Etapes");
             Dictionary<string, dtoo.Etapa> d = new();
 
             var etapesActuacio =
@@ -207,16 +207,16 @@ namespace BusinessLayer.Services
                 var dto = await blEtapa.Create(parms);
                 d.Add(codi, dto.Data!);
                 result.NumEtapes++;
-                if (result.NumEtapes%10==0) System.Console.Write(".");
+                if (result.NumEtapes % 10 == 0) System.Console.Write(".");
             }
 
-            System.Console.WriteLine( "Fi etapes"  );
+            System.Console.WriteLine("Fi etapes");
             return d;
         }
 
         private async Task<Dictionary<string, dtoo.TipusActuacio>> ExtreureTipusActuacio(ImportAllResult result, List<ActuacioDataRow> data)
         {
-            System.Console.WriteLine( "Inici Tipus Actuacio"  );
+            System.Console.WriteLine("Inici Tipus Actuacio");
             Dictionary<string, dtoo.TipusActuacio> d = new();
 
             var items =
@@ -225,7 +225,7 @@ namespace BusinessLayer.Services
                 .Distinct()
                 .ToList();
 
-            
+
 
             foreach (var item in items)
             {
@@ -238,10 +238,10 @@ namespace BusinessLayer.Services
                 var dto = await blTipusActuacio.Create(parms);
                 d.Add(item, dto.Data!);
                 result.NumTipusActuacio++;
-                if (result.NumTipusActuacio%10==0) System.Console.Write(".");
+                if (result.NumTipusActuacio % 10 == 0) System.Console.Write(".");
 
             }
-            System.Console.WriteLine( "Fi Tipus Actuacio"  );
+            System.Console.WriteLine("Fi Tipus Actuacio");
 
             return d;
         }
@@ -251,19 +251,19 @@ namespace BusinessLayer.Services
             Dictionary<string, dtoo.Centre> dictCentre, Dictionary<string, dtoo.CursAcademic> dictCursos, Dictionary<string, dtoo.Etapa> dictEtapes, Dictionary<string, dtoo.TipusActuacio> dictTipusActuacio
         )
         {
-            System.Console.WriteLine( "Inici Alumne"  );
+            System.Console.WriteLine("Inici Alumne");
 
             Dictionary<string, dtoo.Alumne> d = new();
 
             if (!dictCursos.Any()) return d;
 
-            var cursActual = dictCursos.Select(d=>(d.Key, d.Value)).OrderByDescending(t=>t.Value.AnyInici).Select(t=>t.Key).First();
+            var cursActual = dictCursos.Select(d => (d.Key, d.Value)).OrderByDescending(t => t.Value.AnyInici).Select(t => t.Key).First();
 
             var items =
                 data
-                .GroupBy(x =>                     
-                    x.Nom + x.Cognoms + x.DataNaixement.ToString("ddMMyyyy"),                    
-                    (k,l) => (codi: k, dto: l.OrderByDescending(x=>x.MomentDeLactuacio).First())
+                .GroupBy(x =>
+                    x.Nom + x.Cognoms + x.DataNaixement.ToString("ddMMyyyy"),
+                    (k, l) => (codi: k, dto: l.OrderByDescending(x => x.MomentDeLactuacio).First())
                 )
                 .Distinct()
                 .ToList();
@@ -274,10 +274,10 @@ namespace BusinessLayer.Services
 
                 var esCursActual = v.CursActuacio == cursActual;
 
-                var centreActual = !string.IsNullOrWhiteSpace( v.CentreActual ) ? v.CentreActual : v.CentreActuacio;
+                var centreActual = !string.IsNullOrWhiteSpace(v.CentreActual) ? v.CentreActual : v.CentreActuacio;
                 var centreId = dictCentre.GetValueOrDefault(centreActual)?.Id;
 
-                var etapaActual = !string.IsNullOrWhiteSpace( v.EtapaActual ) ? v.EtapaActual : v.EtapaActuacio;
+                var etapaActual = !string.IsNullOrWhiteSpace(v.EtapaActual) ? v.EtapaActual : v.EtapaActuacio;
                 var etapaId = dictEtapes.GetValueOrDefault(etapaActual)?.Id;
 
                 var cursActuacioId = dictCursos[v.CursActuacio].Id;
@@ -302,25 +302,25 @@ namespace BusinessLayer.Services
                 var dto = await blAlumne.Create(parms);
                 d.Add(item.codi, dto.Data!);
                 result.NumAlumnes++;
-                if (result.NumAlumnes%10==0) System.Console.Write(".");
+                if (result.NumAlumnes % 10 == 0) System.Console.Write(".");
             }
 
-            System.Console.WriteLine( "Fi alumnes"  );
+            System.Console.WriteLine("Fi alumnes");
 
-            return d;            
+            return d;
         }
 
         private async Task<Dictionary<string, dtoo.Actuacio>> ExtreuActuacions(
-            ImportAllResult result, List<ActuacioDataRow> data, 
+            ImportAllResult result, List<ActuacioDataRow> data,
             Dictionary<string, dtoo.Centre> dictCentre, Dictionary<string, dtoo.CursAcademic> dictCursos, Dictionary<string, dtoo.Etapa> dictEtapes, Dictionary<string, dtoo.TipusActuacio> dictTipusActuacio, Dictionary<string, dtoo.Alumne> dictAlumne)
         {
             Dictionary<string, dtoo.Actuacio> d = new();
 
-            System.Console.WriteLine( "Inici actuacions"  );
+            System.Console.WriteLine("Inici actuacions");
 
             if (!dictCursos.Any()) return d;
 
-            var cursActual = dictCursos.Select(d=>(d.Key, d.Value)).OrderByDescending(t=>t.Value.AnyInici).Select(t=>t.Key).First();
+            var cursActual = dictCursos.Select(d => (d.Key, d.Value)).OrderByDescending(t => t.Value.AnyInici).Select(t => t.Key).First();
 
             var items =
                 data
@@ -343,7 +343,7 @@ namespace BusinessLayer.Services
                 var centreActuacioId = dictCentre[v.CentreActuacio].Id;
 
                 //
-                var etapaActuacioId = ( dictEtapes.GetValueOrDefault(v.EtapaActuacio) ?? dictEtapes[ETAPAPERDEFECTE]).Id;
+                var etapaActuacioId = (dictEtapes.GetValueOrDefault(v.EtapaActuacio) ?? dictEtapes[ETAPAPERDEFECTE]).Id;
 
                 //
                 var cursActuacioId = dictCursos[v.CursActuacio].Id;
@@ -358,10 +358,10 @@ namespace BusinessLayer.Services
                 var tipusActuacioId = dictTipusActuacio[v.TipusActuacio].Id;
 
                 //
-                var descripcioActuacio = 
+                var descripcioActuacio =
                     v.DescripcioActuacio +
-                    (!string.IsNullOrEmpty(v.Acords)?
-                     $"\n\nACORDS: {v.Acords}":"");
+                    (!string.IsNullOrEmpty(v.Acords) ?
+                     $"\n\nACORDS: {v.Acords}" : "");
 
                 //
                 var parms = new ActuacioCreateParms(
@@ -381,11 +381,11 @@ namespace BusinessLayer.Services
 
                 //
                 result.NumActuacions++;
-                if (result.NumActuacions%10==0) System.Console.Write(".");
+                if (result.NumActuacions % 10 == 0) System.Console.Write(".");
             }
-            System.Console.WriteLine( "Fi actuacions"  );
+            System.Console.WriteLine("Fi actuacions");
 
-            return d;          
+            return d;
         }
 
     }

@@ -3,8 +3,8 @@ using DTO.o.DTOs;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioDelete: IDelete<Actuacio>
-    {        
+    public interface IActuacioDelete : IDelete<Actuacio>
+    {
     }
 
 }

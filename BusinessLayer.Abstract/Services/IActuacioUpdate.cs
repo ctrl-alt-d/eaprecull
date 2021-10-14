@@ -4,7 +4,7 @@ using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioUpdate: IUpdate<dtoo.Actuacio, parms.ActuacioUpdateParms>
+    public interface IActuacioUpdate : IUpdate<dtoo.Actuacio, parms.ActuacioUpdateParms>
     {
     }
 }

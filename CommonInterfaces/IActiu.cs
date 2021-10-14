@@ -4,6 +4,6 @@ namespace CommonInterfaces
 {
     public interface IActiu
     {
-        bool EsActiu {get;}
+        bool EsActiu { get; }
     }
 }

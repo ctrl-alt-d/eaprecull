@@ -6,7 +6,7 @@ using CommonInterfaces;
 namespace BusinessLayer.Abstract
 {
 
-    public class OperationResult<T> where T: IEtiquetaDescripcio
+    public class OperationResult<T> where T : IEtiquetaDescripcio
     {
         public OperationResult(List<BrokenRule> brokenRules)
         {
@@ -18,8 +18,8 @@ namespace BusinessLayer.Abstract
             Data = data;
         }
 
-        public T? Data {get;}
-        public List<BrokenRule> BrokenRules {get; } = new();
+        public T? Data { get; }
+        public List<BrokenRule> BrokenRules { get; } = new();
 
     }
 }

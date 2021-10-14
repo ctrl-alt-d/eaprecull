@@ -11,11 +11,14 @@ using System.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CursAcademicSetWindow : ReactiveWindow<CursAcademicSetViewModel> {
-        public CursAcademicSetWindow() {
+    public class CursAcademicSetWindow : ReactiveWindow<CursAcademicSetViewModel>
+    {
+        public CursAcademicSetWindow()
+        {
             InitializeComponent();
-                        
-            this.WhenActivated(disposables => {
+
+            this.WhenActivated(disposables =>
+            {
                 RegisterShowCreateDialog(disposables);
             });
         }
@@ -24,14 +27,14 @@ namespace UI.ER.AvaloniaUI.Pages
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
+                .WhenAnyValue(x => x.ViewModel)
                 .Subscribe(vm => vm.ShowDialog.RegisterHandler(DoShowCreateDialog))
             );
 
         private void InitializeComponent()
             =>
-            AvaloniaXamlLoader.Load(this);      
-        
+            AvaloniaXamlLoader.Load(this);
+
         private Window GetWindow()
             =>
             (Window)this.VisualRoot;
@@ -45,7 +48,7 @@ namespace UI.ER.AvaloniaUI.Pages
 
             var result = await dialog.ShowDialog<dtoo.CursAcademic?>(GetWindow());
             interaction.SetOutput(result);
-            
+
         }
     }
 }

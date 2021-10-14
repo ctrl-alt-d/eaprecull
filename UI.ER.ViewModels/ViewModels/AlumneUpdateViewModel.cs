@@ -289,7 +289,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (data == null) return;
 
             Nom = data.Nom;
-            
+
             Cognoms = data.Cognoms;
 
             DataNaixement = data.DataNaixement;

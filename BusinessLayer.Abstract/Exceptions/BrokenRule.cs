@@ -13,7 +13,7 @@ namespace BusinessLayer.Abstract.Exceptions
             Message = message;
         }
 
-        public string? Member {get;}
-        public string Message {get;}
+        public string? Member { get; }
+        public string Message { get; }
     }
 }

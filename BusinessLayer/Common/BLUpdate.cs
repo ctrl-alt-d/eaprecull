@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 namespace BusinessLayer.Common
 {
     public abstract class BLUpdate<TModel, TParm, TDTOo>
-        :BLOperation,
+        : BLOperation,
          IUpdate<TDTOo, TParm>
-            where TDTOo: IDTOo, IEtiquetaDescripcio
-            where TParm: IDtoi, IId
+            where TDTOo : IDTOo, IEtiquetaDescripcio
+            where TParm : IDtoi, IId
             where TModel : class, IModel, IId
 
     {
@@ -34,10 +34,10 @@ namespace BusinessLayer.Common
             .Set<TModel>();
 
 
-        protected abstract Task PreUpdate(TModel model, TParm parm );
-        protected abstract Task UpdateModel(TModel model, TParm parm );
-        protected abstract Task PostUpdate(TModel model, TParm parm );
-        protected abstract Expression<Func<TModel, TDTOo>> ToDto {get;}
+        protected abstract Task PreUpdate(TModel model, TParm parm);
+        protected abstract Task UpdateModel(TModel model, TParm parm);
+        protected abstract Task PostUpdate(TModel model, TParm parm);
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto { get; }
 
         public virtual async Task<OperationResult<TDTOo>> Update(
             TParm parm
@@ -59,11 +59,11 @@ namespace BusinessLayer.Common
                 var dto = await Model2Dto(model);
                 //
                 return new(dto);
-            } 
+            }
             catch (BrokenRuleException br)
             {
                 return new OperationResult<TDTOo>(br.BrokenRules);
-            } 
+            }
             catch (Exception e)
             {
                 throw new BrokenRuleException($"Error intern no esperat.", e);

@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 namespace BusinessLayer.Common
 {
     public abstract class BLCreate<TModel, TParm, TDTOo>
-        :BLOperation,
+        : BLOperation,
          ICreate<TDTOo, TParm>
-            where TDTOo: IDTOo, IEtiquetaDescripcio
-            where TParm: IDtoi
+            where TDTOo : IDTOo, IEtiquetaDescripcio
+            where TParm : IDtoi
             where TModel : class, IModel, IId
 
     {
@@ -34,10 +34,10 @@ namespace BusinessLayer.Common
             .Set<TModel>();
 
 
-        protected abstract Task PreInitialize(TParm parm );
-        protected abstract Task<TModel> InitializeModel(TParm parm );
-        protected abstract Task PostAdd(TModel model, TParm parm );
-        protected abstract Expression<Func<TModel, TDTOo>> ToDto {get;}
+        protected abstract Task PreInitialize(TParm parm);
+        protected abstract Task<TModel> InitializeModel(TParm parm);
+        protected abstract Task PostAdd(TModel model, TParm parm);
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto { get; }
         public virtual async Task<OperationResult<TDTOo>> Create(
             TParm parm
             )
@@ -61,7 +61,7 @@ namespace BusinessLayer.Common
             catch (BrokenRuleException br)
             {
                 return new OperationResult<TDTOo>(br.BrokenRules);
-            } 
+            }
             catch (Exception e)
             {
                 // throw new BrokenRuleException($"Error intern no esperat.", e);

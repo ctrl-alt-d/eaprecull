@@ -19,7 +19,7 @@ namespace BusinessLayer.Services
         BLUpdate<models.Centre, parms.CentreUpdateParms, dtoo.Centre>,
         ICentreUpdate
     {
-        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto 
+        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto
             =>
             project
             .Centre
@@ -36,8 +36,8 @@ namespace BusinessLayer.Services
         protected override Task PreUpdate(models.Centre model, CentreUpdateParms parm)
             =>
             new RuleChecker<models.Centre, CentreUpdateParms>(model, parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi" )
+            .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre centre amb aquest mateix nom o codi")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(models.Centre model, CentreUpdateParms parm)
@@ -47,10 +47,10 @@ namespace BusinessLayer.Services
         protected virtual Task<bool> RuleEstaRepetit(models.Centre model, CentreUpdateParms parm)
             =>
             GetCollection()
-            .Where(x=> x.Id != model.Id)
-            .AnyAsync(x=> x.Codi == parm.Codi || x.Nom == parm.Nom);
+            .Where(x => x.Id != model.Id)
+            .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
 
-            
+
 
         protected override Task UpdateModel(models.Centre model, CentreUpdateParms parm)
         {

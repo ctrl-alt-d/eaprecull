@@ -20,7 +20,7 @@ namespace BusinessLayer.Services
         BLUpdate<models.Alumne, parms.AlumneUpdateParms, dtoo.Alumne>,
         IAlumneUpdate
     {
-        protected override Expression<Func<models.Alumne, dtoo.Alumne>> ToDto 
+        protected override Expression<Func<models.Alumne, dtoo.Alumne>> ToDto
             =>
             project
             .Alumne
@@ -37,9 +37,9 @@ namespace BusinessLayer.Services
         protected override Task PreUpdate(models.Alumne model, AlumneUpdateParms parm)
             =>
             new RuleChecker<models.Alumne, AlumneUpdateParms>(model, parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Alumne amb aquest mateix nom, cognoms i data de naixement" )
-            .AddCheck( RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu." )
+            .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre Alumne amb aquest mateix nom, cognoms i data de naixement")
+            .AddCheck(RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu.")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(models.Alumne model, AlumneUpdateParms parm)
@@ -49,8 +49,8 @@ namespace BusinessLayer.Services
         protected virtual Task<bool> RuleEstaRepetit(models.Alumne model, AlumneUpdateParms parm)
             =>
             GetCollection()
-            .Where(x=> x.Id != model.Id)
-            .AnyAsync(x=> x.Cognoms == parm.Cognoms && x.Nom == parm.Nom && x.DataNaixement == parm.DataNaixement);
+            .Where(x => x.Id != model.Id)
+            .AnyAsync(x => x.Cognoms == parm.Cognoms && x.Nom == parm.Nom && x.DataNaixement == parm.DataNaixement);
 
         protected virtual async Task<bool> RuleNoHiHaCapCursActiu(models.Alumne m, AlumneUpdateParms p)
             =>
@@ -77,7 +77,7 @@ namespace BusinessLayer.Services
             model.ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE;
             model.EsActiu = parm.EsActiu;
             model.Tags = parm.Tags;
-            model.DataDarreraModificacio = DateTime.Now;            
+            model.DataDarreraModificacio = DateTime.Now;
         }
     }
 }

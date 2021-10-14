@@ -23,9 +23,9 @@ namespace UI.ER.ViewModels.ViewModels
         public AlumneCreateViewModel()
         {
 
-            RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);    
+            RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);
 
-            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, this.IsValid() );
+            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, this.IsValid());
 
             // --- configura lookup Centre ---
             ShowCentreLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -89,17 +89,17 @@ namespace UI.ER.ViewModels.ViewModels
 
             this.ValidationRule(
                 x => x.CursDarreraActualitacioDadesTxt,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar el curs de la darrera actualització de dades (Cal que hi hagi un curs acadèmic activat)");
 
             this.ValidationRule(
                 x => x.Nom,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar el nom de l'alumne");
 
             this.ValidationRule(
                 x => x.Cognoms,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar els Cognoms de l'alumne");
 
         }
@@ -229,7 +229,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (data == null) return;
 
             Nom = data.Nom;
-            
+
             Cognoms = data.Cognoms;
 
             DataNaixement = data.DataNaixement;
@@ -257,7 +257,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        
+
 
         public virtual async Task<dtoo.Alumne?> CreateData()
         {
@@ -307,7 +307,7 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId = data.Id;
             }
         }
-        public ICommand CentreClearCommand {get; }
+        public ICommand CentreClearCommand { get; }
         private async Task DoCentreClear()
         {
             CentreTxt = "";
@@ -329,7 +329,7 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
-        public ICommand CursDarreraActualitacioDadesClearCommand {get; }
+        public ICommand CursDarreraActualitacioDadesClearCommand { get; }
         private async Task DoCursDarreraActualitacioDadesClear()
         {
             CursDarreraActualitacioDadesTxt = "";
@@ -350,7 +350,7 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
-        public ICommand EtapaActualClearCommand {get; }
+        public ICommand EtapaActualClearCommand { get; }
         private async Task DoEtapaActualClear()
         {
             EtapaActualTxt = "";

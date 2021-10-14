@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IImportAll: IBLOperation
+    public interface IImportAll : IBLOperation
     {
         Task<OperationResult<dtoo.ImportAllResult>> Run(string path);
     }

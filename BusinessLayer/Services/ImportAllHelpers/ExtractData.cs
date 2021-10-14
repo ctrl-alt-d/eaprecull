@@ -20,7 +20,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
         {
             var dupItems = LoadItems();
             var items = RemoveDups(dupItems);
-            System.Console.WriteLine( "Fi eliminar repetits"  );
+            System.Console.WriteLine("Fi eliminar repetits");
 
             return items;
         }
@@ -36,7 +36,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
 
         private List<ActuacioDataRow> LoadItems()
         {
-            System.Console.WriteLine( "Inici llegir items de l'excel"  );
+            System.Console.WriteLine("Inici llegir items de l'excel");
             var items = new List<ActuacioDataRow>();
             var wb = new XLWorkbook(SourceFilePath);
             var ws = wb.Worksheet("Data");
@@ -85,7 +85,7 @@ namespace BusinessLayer.Services.ImportAllHelpers
                 var x = row.RowNumber();
             }
 
-            System.Console.WriteLine( "Fi llegir items de l'excel"  );
+            System.Console.WriteLine("Fi llegir items de l'excel");
             return items;
         }
     }

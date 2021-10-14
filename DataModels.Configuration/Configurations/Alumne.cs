@@ -10,16 +10,16 @@ namespace DataModels.Configuration.Configurations
         public void Configure(EntityTypeBuilder<DM.Alumne> builder)
         {
             builder
-                .HasOne(m=>m.CursDarreraActualitacioDades!)
-                .WithMany(r=>r.AlumnesActualitzats);
+                .HasOne(m => m.CursDarreraActualitacioDades!)
+                .WithMany(r => r.AlumnesActualitzats);
 
             builder
-                .HasOne(m=>m.EtapaActual!)
-                .WithMany(r=>r.Alumnes);
+                .HasOne(m => m.EtapaActual!)
+                .WithMany(r => r.Alumnes);
 
             builder
-                .HasOne(m=>m.CentreActual!)
-                .WithMany(r=>r.Alumnes);
+                .HasOne(m => m.CentreActual!)
+                .WithMany(r => r.Alumnes);
 
         }
     }

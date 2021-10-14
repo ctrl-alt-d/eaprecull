@@ -15,7 +15,7 @@ using System;
 
 namespace BusinessLayer.Services
 {
-    public class TipusActuacioCreate : 
+    public class TipusActuacioCreate :
         BLCreate<models.TipusActuacio, parms.TipusActuacioCreateParms, dtoo.TipusActuacio>,
         ITipusActuacioCreate
     {
@@ -26,8 +26,8 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(TipusActuacioCreateParms parm)
             =>
             new RuleChecker<TipusActuacioCreateParms>(parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre TipusActuacio amb aquest mateix nom o codi" )
+            .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre TipusActuacio amb aquest mateix nom o codi")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(TipusActuacioCreateParms parm)

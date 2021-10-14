@@ -17,16 +17,17 @@ using Avalonia.Input;
 namespace UI.ER.AvaloniaUI.Pages
 {
     public class AlumneCreateWindow : ReactiveWindow<AlumneCreateViewModel>
-    { 
+    {
         public OperationResult<dtoo.Alumne> Result { get; set; } = default!;
         public AlumneCreateWindow()
         {
             this.DataContext = new AlumneCreateViewModel();
-            
+
             this.InitializeComponent();
             this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
-            
-            this.WhenActivated(d => {
+
+            this.WhenActivated(d =>
+            {
 
                 // Tancar finestre
                 d(

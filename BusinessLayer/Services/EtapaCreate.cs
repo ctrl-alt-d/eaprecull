@@ -15,7 +15,7 @@ using System;
 
 namespace BusinessLayer.Services
 {
-    public class EtapaCreate : 
+    public class EtapaCreate :
         BLCreate<models.Etapa, parms.EtapaCreateParms, dtoo.Etapa>,
         IEtapaCreate
     {
@@ -26,13 +26,13 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(EtapaCreateParms parm)
             =>
             new RuleChecker<EtapaCreateParms>(parm)
-            .AddCheck( RuleHiHaValorsNoInformats, "Comprova que tens totes les dades informades" )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi" )
+            .AddCheck(RuleHiHaValorsNoInformats, "Comprova que tens totes les dades informades")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre Etapa amb aquest mateix nom o codi")
             .Check();
 
         protected virtual bool RuleHiHaValorsNoInformats(EtapaCreateParms parm)
             =>
-            string.IsNullOrEmpty(parm.Nom) || 
+            string.IsNullOrEmpty(parm.Nom) ||
             string.IsNullOrEmpty(parm.Codi)
             ;
 

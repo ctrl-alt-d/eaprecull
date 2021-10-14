@@ -27,27 +27,27 @@ namespace DTO.i.DTOs
             AmbDataActuacioPosteriorA = ambDataActuacioPosteriorA;
         }
 
-        public int Take {get;}
-        public int Skip {get;}
+        public int Take { get; }
+        public int Skip { get; }
 
         // SearchString: Alumne (nom, cognoms i tag), Centre, Descripcio, Tipus act, Curs.
-        public string SearchString {get;}
+        public string SearchString { get; }
 
         // Alumne
         public int? AlumneId { get; }
 
         // Tipus Actuació
-        public int? TipusActuacioId {get;}
+        public int? TipusActuacioId { get; }
 
         // Curs actuacio
-        public int? CursActuacioId { get; } 
+        public int? CursActuacioId { get; }
 
         // Centre
-        public int? CentreId {get;}
+        public int? CentreId { get; }
 
         // Data Actuació
-        public DateTime? AmbDataActuacioAnteriorA {get;}
-        public DateTime? AmbDataActuacioPosteriorA {get;}
+        public DateTime? AmbDataActuacioAnteriorA { get; }
+        public DateTime? AmbDataActuacioPosteriorA { get; }
 
     }
 }

@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 namespace BusinessLayer.Common
 {
     public abstract class BLActivaDesactiva<TModel, TDTOo>
-        :BLOperation,
+        : BLOperation,
          IActivaDesactiva<TDTOo>
-            where TDTOo: IDTOo, IEtiquetaDescripcio, IActiu
+            where TDTOo : IDTOo, IEtiquetaDescripcio, IActiu
             where TModel : class, IModel, IId, IActivable
 
     {
@@ -32,7 +32,7 @@ namespace BusinessLayer.Common
 
         protected abstract Task Pre(TModel model);
         protected abstract Task Post(TModel model);
-        protected abstract Expression<Func<TModel, TDTOo>> ToDto {get;}
+        protected abstract Expression<Func<TModel, TDTOo>> ToDto { get; }
 
         protected virtual async Task<OperationResult<TDTOo>> Update(
             int id,
@@ -57,11 +57,11 @@ namespace BusinessLayer.Common
                 var dto = await Model2Dto(model);
                 //
                 return new(dto);
-            } 
+            }
             catch (BrokenRuleException br)
             {
                 return new OperationResult<TDTOo>(br.BrokenRules);
-            } 
+            }
             catch (Exception e)
             {
                 throw new BrokenRuleException($"Error intern no esperat.", e);

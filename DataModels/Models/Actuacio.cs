@@ -61,11 +61,11 @@ namespace DataModels.Models
             int N = 5;
             var splited = DescripcioActuacio.Split("\n").ToList();
             var n = splited.Count;
-            var take = n == N+1? n: N;
-            var msg = n > N+1 ? $"\n( {n-N} línies més ... )" : "";
+            var take = n == N + 1 ? n : N;
+            var msg = n > N + 1 ? $"\n( {n - N} línies més ... )" : "";
 
             splited.AddRange(
-                new [] {"","","","","",""}
+                new[] { "", "", "", "", "", "" }
             );
 
             return string.Join(

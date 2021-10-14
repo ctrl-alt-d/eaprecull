@@ -15,9 +15,10 @@ namespace UI.ER.AvaloniaUI.Pages
         {
             InitializeComponent();
 
-            this.WhenActivated(disposables => { 
-                RegisterShowUpdateDialog(disposables); 
-                RegisterCloseOnSelect(disposables); 
+            this.WhenActivated(disposables =>
+            {
+                RegisterShowUpdateDialog(disposables);
+                RegisterCloseOnSelect(disposables);
             });
 
 
@@ -26,7 +27,7 @@ namespace UI.ER.AvaloniaUI.Pages
         private void InitializeComponent()
             =>
             AvaloniaXamlLoader.Load(this);
-        private Window GetWindow() 
+        private Window GetWindow()
             =>
             (Window)this.VisualRoot;
 
@@ -35,9 +36,9 @@ namespace UI.ER.AvaloniaUI.Pages
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
-            );        
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm => vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+            );
         protected virtual async Task DoShowUpdateDialog(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
         {
             var dialog = new CentreUpdateWindow()
@@ -47,7 +48,7 @@ namespace UI.ER.AvaloniaUI.Pages
 
             var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
 
-            interaction.SetOutput(result);        
+            interaction.SetOutput(result);
         }
 
         // -- Select Row
@@ -55,8 +56,8 @@ namespace UI.ER.AvaloniaUI.Pages
             =>
             disposables(
                 this
-                .WhenAnyValue(x=>x.ViewModel)
-                .Subscribe(vm=>vm.SeleccionarCommand.Subscribe(GetWindow().Close))
+                .WhenAnyValue(x => x.ViewModel)
+                .Subscribe(vm => vm.SeleccionarCommand.Subscribe(GetWindow().Close))
             );
 
 

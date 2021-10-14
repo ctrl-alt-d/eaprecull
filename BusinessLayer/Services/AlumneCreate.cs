@@ -32,8 +32,8 @@ namespace BusinessLayer.Services
         protected override Task PreInitialize(AlumneCreateParms parm)
             =>
             new RuleChecker<AlumneCreateParms>(parm)
-            .AddCheck( RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu." )
-            .AddCheck( RuleEstaRepetit, "Ja existeix un altre Alumne amb aquest mateix nom, cognoms i data de naixement" )
+            .AddCheck(RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu.")
+            .AddCheck(RuleEstaRepetit, "Ja existeix un altre Alumne amb aquest mateix nom, cognoms i data de naixement")
             .Check();
 
         protected virtual async Task<bool> RuleNoHiHaCapCursActiu(AlumneCreateParms _)
@@ -49,7 +49,7 @@ namespace BusinessLayer.Services
         protected virtual Task<bool> RuleEstaRepetit(AlumneCreateParms parm)
             =>
             GetCollection()
-            .AnyAsync(x=> x.Cognoms == parm.Cognoms && x.Nom == parm.Nom && x.DataNaixement == parm.DataNaixement);
+            .AnyAsync(x => x.Cognoms == parm.Cognoms && x.Nom == parm.Nom && x.DataNaixement == parm.DataNaixement);
 
         protected override async Task<models.Alumne> InitializeModel(AlumneCreateParms parm)
             =>
@@ -68,7 +68,7 @@ namespace BusinessLayer.Services
                 ObservacionsNESENoNEE = parm.ObservacionsNESENoNEE,
                 Tags = parm.Tags,
                 EsActiu = true,
-                DataDarreraModificacio = DateTime.Now,                
+                DataDarreraModificacio = DateTime.Now,
             };
 
         protected override Task PostAdd(Alumne model, AlumneCreateParms parm)
@@ -76,7 +76,7 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        
+
 
     }
 }

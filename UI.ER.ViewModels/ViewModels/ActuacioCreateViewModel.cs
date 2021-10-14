@@ -23,9 +23,9 @@ namespace UI.ER.ViewModels.ViewModels
         public ActuacioCreateViewModel(int? alumneId = null)
         {
 
-            RxApp.MainThreadScheduler.Schedule(() => LoadDadesInicials(alumneId));    
+            RxApp.MainThreadScheduler.Schedule(() => LoadDadesInicials(alumneId));
 
-            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, this.IsValid() );
+            SubmitCommand = ReactiveCommand.CreateFromTask(CreateData, this.IsValid());
 
             // --- configura lookup Alumne ---
             ShowAlumneLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -70,7 +70,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         private async Task OnChangeAlumne(int? alumneId)
-        {            
+        {
             AlumneId = null;
             AlumneTxt = string.Empty;
 
@@ -126,12 +126,12 @@ namespace UI.ER.ViewModels.ViewModels
         {
             this.ValidationRule(
                 x => x.AlumneTxt,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar l'alumne sobre el que es fa l'actuació");
 
             this.ValidationRule(
                 x => x.TipusActuacioTxt,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar el tipus d'actuació realitzat");
 
             this.ValidationRule(
@@ -141,17 +141,17 @@ namespace UI.ER.ViewModels.ViewModels
 
             this.ValidationRule(
                 x => x.CursActuacioTxt,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar el curs de l'actuació");
 
             this.ValidationRule(
                 x => x.EtapaAlMomentDeLactuacioTxt,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar l'etapa de l'alumne al moment de l'actuació");
 
             this.ValidationRule(
                 x => x.NivellAlMomentDeLactuacio,
-                value => !string.IsNullOrEmpty( value ),
+                value => !string.IsNullOrEmpty(value),
                 "Cal informar el nivell de l'alumne al moment de l'actuació");
 
             this.ValidationRule(
@@ -168,7 +168,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _AlumneTxt;
             set => this.RaiseAndSetIfChanged(ref _AlumneTxt, value);
-        }        
+        }
 
         //
         protected virtual int? TipusActuacioId { get; set; }
@@ -288,13 +288,13 @@ namespace UI.ER.ViewModels.ViewModels
             NivellAlMomentDeLactuacio = data.NivellAlMomentDeLactuacio;
 
             MinutsDuradaActuacio = data.MinutsDuradaActuacio;
-            MinutsDuradaActuacioTxt = StringIntConverter.Convert( data.MinutsDuradaActuacio );  // Limitacions avalonia
+            MinutsDuradaActuacioTxt = StringIntConverter.Convert(data.MinutsDuradaActuacio);  // Limitacions avalonia
 
             DescripcioActuacio = data.DescripcioActuacio;
         }
 
         //
-        
+
 
         public virtual async Task<dtoo.Actuacio?> CreateData()
         {
@@ -302,16 +302,16 @@ namespace UI.ER.ViewModels.ViewModels
 
             // preparar paràmetres
             var parms = new dtoi.ActuacioCreateParms(
-                AlumneId!.Value ,
-                TipusActuacioId!.Value ,
-                ObservacionsTipusActuacio ,
-                MomentDeLactuacio!.Value ,
-                CursActuacioId!.Value ,
+                AlumneId!.Value,
+                TipusActuacioId!.Value,
+                ObservacionsTipusActuacio,
+                MomentDeLactuacio!.Value,
+                CursActuacioId!.Value,
                 CentreId!.Value,
                 EtapaAlMomentDeLactuacioId!.Value,
                 NivellAlMomentDeLactuacio,
                 Convert.ToInt32(MinutsDuradaActuacio),
-                DescripcioActuacio 
+                DescripcioActuacio
             );
 
             // cridar backend
@@ -339,7 +339,7 @@ namespace UI.ER.ViewModels.ViewModels
             var data = await ShowAlumneLookup.Handle(Unit.Default);
             await OnChangeAlumne(data.Id);
         }
-        public ICommand AlumneClearCommand {get; }
+        public ICommand AlumneClearCommand { get; }
         private async Task DoAlumneClear()
         {
             AlumneTxt = "";
@@ -359,7 +359,7 @@ namespace UI.ER.ViewModels.ViewModels
                 TipusActuacioId = data.Id;
             }
         }
-        public ICommand TipusActuacioClearCommand {get; }
+        public ICommand TipusActuacioClearCommand { get; }
         private async Task DoTipusActuacioClear()
         {
             TipusActuacioTxt = "";
@@ -379,7 +379,7 @@ namespace UI.ER.ViewModels.ViewModels
                 CentreId = data.Id;
             }
         }
-        public ICommand CentreClearCommand {get; }
+        public ICommand CentreClearCommand { get; }
         private async Task DoCentreClear()
         {
             CentreTxt = "";
@@ -400,7 +400,7 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
-        public ICommand CursActuacioClearCommand {get; }
+        public ICommand CursActuacioClearCommand { get; }
         private async Task DoCursActuacioClear()
         {
             CursActuacioTxt = "";
@@ -421,7 +421,7 @@ namespace UI.ER.ViewModels.ViewModels
             }
         }
 
-        public ICommand EtapaAlMomentDeLactuacioClearCommand {get; }
+        public ICommand EtapaAlMomentDeLactuacioClearCommand { get; }
         private async Task DoEtapaAlMomentDeLactuacioClear()
         {
             EtapaAlMomentDeLactuacioTxt = "";

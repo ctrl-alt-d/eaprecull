@@ -28,7 +28,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         private async void LoadData()
         {
-            
+
 
             BrokenRules.Clear();
 
@@ -48,7 +48,7 @@ namespace UI.ER.ViewModels.ViewModels
             var dtoCursActual = await blCursAcademicSet.GetCursActiu();
 
             var dtoCursCorrecte = await blCursAcademicSet.ElCursPerDefecteEsCorresponAmbLaDataActual();
-            if (! (dtoCursCorrecte ?? false))
+            if (!(dtoCursCorrecte ?? false))
             {
                 CursActualWarning = "Revisa el curs activat!";
             }
@@ -64,9 +64,9 @@ namespace UI.ER.ViewModels.ViewModels
             TotalActuacions = nTotalActuacionsTxt != null ? $"{nTotalActuacionsTxt} Actuacions" : NA;
 
             var nTotalActuacionsCursActualTxt = nTotalActuacionsCursActual.Data?.ToString("N0");
-            TotalActuacionsCursActual = 
-                nTotalActuacionsCursActual != null && cursActual != null ? 
-                $"({nTotalActuacionsCursActualTxt} durant el curs {cursActual?.Nom})" : 
+            TotalActuacionsCursActual =
+                nTotalActuacionsCursActual != null && cursActual != null ?
+                $"({nTotalActuacionsCursActualTxt} durant el curs {cursActual?.Nom})" :
                 SPACE;
 
             var nAlumnesTxt = nAlumnes.Data?.ToString("N0");
