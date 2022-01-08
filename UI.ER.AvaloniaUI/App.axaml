@@ -8,6 +8,7 @@
         <themes:BundledTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="Amber"/>
     </Application.Resources>
     <Application.Styles>
+      <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
       <StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
           <Style Selector="TextBlock.Error">
                 <Setter Property="Foreground" Value="Red"/>
