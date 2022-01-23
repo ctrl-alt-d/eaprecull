@@ -53,7 +53,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 DataContext = new CentreSetViewModel(modeLookup: true)
             };
 
-            var window = (Window)this.VisualRoot;
+            var window = (Window)this.VisualRoot!;
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
             interaction.SetOutput(result);
         }
@@ -66,7 +66,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 DataContext = new EtapaSetViewModel(modeLookup: true)
             };
 
-            var window = (Window)this.VisualRoot;
+            var window = (Window)this.VisualRoot!;
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
             interaction.SetOutput(result);
         }
@@ -77,7 +77,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 DataContext = new CursAcademicSetViewModel(modeLookup: true)
             };
 
-            var window = (Window)this.VisualRoot;
+            var window = (Window)this.VisualRoot!;
             var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
             interaction.SetOutput(result);
         }

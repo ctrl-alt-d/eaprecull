@@ -98,7 +98,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private Window GetWindow()
             =>
-            (Window)this.VisualRoot;
+            (Window)this.VisualRoot!;
 
         private void InitializeComponent()
         {
