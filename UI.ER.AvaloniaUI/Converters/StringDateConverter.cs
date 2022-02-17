@@ -7,7 +7,8 @@ namespace UI.ER.AvaloniaUI.Converters
 
     public class StringDateConverter : IValueConverter
     {
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             var date = (DateTime?)value;
 
@@ -15,7 +16,7 @@ namespace UI.ER.AvaloniaUI.Converters
 
         }
 
-        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             DateTime result = default;
 
@@ -27,9 +28,7 @@ namespace UI.ER.AvaloniaUI.Converters
                 return result;
 
             return (DateTime?)null;
-        }
-
-
+        }        
     }
 
 

@@ -37,7 +37,7 @@ namespace UI.ER.AvaloniaUI.Pages
 
         private Window GetWindow()
             =>
-            (Window)this.VisualRoot;
+            (Window)this.VisualRoot!;
 
         private async Task DoShowCreateDialog(InteractionContext<CentreCreateViewModel, dtoo.Centre?> interaction)
         {

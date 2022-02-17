@@ -29,7 +29,7 @@ namespace UI.ER.AvaloniaUI.Pages
             AvaloniaXamlLoader.Load(this);
         private Window GetWindow()
             =>
-            (Window)this.VisualRoot;
+            (Window)this.VisualRoot!;
 
         // -- Show Dialog --
         protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
