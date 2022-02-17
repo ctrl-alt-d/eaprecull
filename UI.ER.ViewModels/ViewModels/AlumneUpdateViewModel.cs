@@ -312,7 +312,7 @@ namespace UI.ER.ViewModels.ViewModels
             ObservacionsNESENEE = data.ObservacionsNESENEE;
 
             DataInformeNESENoNEE = data.DataInformeNESENoNEE;
-            DataInformeNESENEETxt = StringDateConverter.Convert(data.DataInformeNESENoNEE);
+            DataInformeNESENoNEETxt = StringDateConverter.Convert(data.DataInformeNESENoNEE);
 
             ObservacionsNESENoNEE = data.ObservacionsNESENoNEE;
 
