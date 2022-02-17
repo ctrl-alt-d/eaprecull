@@ -146,6 +146,11 @@ namespace UI.ER.ViewModels.ViewModels
                 "Cal informar el curs de l'actuació");
 
             this.ValidationRule(
+                x => x.CentreTxt,
+                value => !string.IsNullOrEmpty(value),
+                "Cal informar el centre de l'alumne al moment de l'actuació");
+
+            this.ValidationRule(
                 x => x.EtapaAlMomentDeLactuacioTxt,
                 value => !string.IsNullOrEmpty(value),
                 "Cal informar l'etapa de l'alumne al moment de l'actuació");
