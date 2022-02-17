@@ -29,7 +29,7 @@ El generarà a la carpeta:
 ## FAQ
 
 * Q: Puc importar dades de l' `EAP Actua` (EapActua)?
-* A: Sí, pots exportar la taula d'actuacions a `.\Dades\Importacio.xlsx` i importar-ho amb `ImportData.exe`
+* A: Sí, pots exportar la taula d'actuacions a `.\Data\Importacio.xlsx` (worksheet `Data`) i importar-ho amb `ImportData.exe`. Un cop importat has d'informar el nom dels centres (només hi ha els codis) i també cal crear els nivells (infantil, primària, ... )
 
 
 * Q: Quina llicència té EAP Recull?
