@@ -74,7 +74,7 @@
                                       Width="32" Height="32" Padding="4">
                             <avalonia:MaterialIcon Kind="Menu" Width="24" Height="24" />
                         </ToggleButton>
-                        <TextBlock Grid.Column="2" Classes="Headline6" Text="EAP Recull 2021"
+                        <TextBlock Grid.Column="2" Classes="Headline6" Text="EAP Recull"
                                    VerticalAlignment="Center" />
                         <Menu Grid.Column="4" Height="32" Padding="0" Margin="0">
                             <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
