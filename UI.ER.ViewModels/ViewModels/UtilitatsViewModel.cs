@@ -80,17 +80,15 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<dtoo.SaveResult?> DoGeneraPivot()
         {
             ResultatPivotAlumne = "";
-            // using var bl = SuperContext.GetBLOperation<IPivot>();
-            // var resultat = await bl.Run();
-            ResultatPivotAlumne = "Fake desar";
-                // resultat.Data != null ?
-                // $"Fitxer desat a: {resultat.Data.FullPath}" :
-                // "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
+            using var bl = SuperContext.GetBLOperation<IPivotActuacions>();
+            var resultat = await bl.Run();
+            ResultatPivotAlumne =
+                resultat.Data != null ?
+                $"Fitxer desat a: {resultat.Data.FullPath}" :
+                "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
 
-            // return resultat.Data;
-
-            await Task.CompletedTask;
-            return new("/", "", "/");
+            return resultat.Data;
+            
         }
 
 
