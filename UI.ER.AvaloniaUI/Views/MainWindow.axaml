@@ -153,7 +153,7 @@
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding TotalALumnes}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding TotalALumnesActualitzats}" HorizontalAlignment="Center"/>
-                                            <Button  assist:ButtonAssist.CornerRadius="16"  Margin="0,12,0,0" Content="Gestiona alumnes" Command="{Binding AlumneSetCommand}" HorizontalAlignment="Center" />    
+                                            <Button    Margin="0,12,0,0" Content="Gestiona alumnes" Command="{Binding AlumneSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
                                 </styles:Card>
@@ -167,7 +167,7 @@
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding TotalActuacions}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding TotalActuacionsCursActual}" HorizontalAlignment="Center"/>
-                                            <Button  assist:ButtonAssist.CornerRadius="16"  Margin="0,12,0,0" Content="Gestiona actuacions" Command="{Binding ActuacioSetCommand}" HorizontalAlignment="Center" />    
+                                            <Button    Margin="0,12,0,0" Content="Gestiona actuacions" Command="{Binding ActuacioSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
                                 </styles:Card>
@@ -181,7 +181,7 @@
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding CursActual}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Foreground="Red" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>
-                                            <Button  assist:ButtonAssist.CornerRadius="16"  Margin="0,12,0,0" Content="Gestiona cursos acadèmics" Command="{Binding CursAcademicSetCommand}" HorizontalAlignment="Center" />    
+                                            <Button    Margin="0,12,0,0" Content="Gestiona cursos acadèmics" Command="{Binding CursAcademicSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
                                 </styles:Card>
