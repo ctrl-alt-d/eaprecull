@@ -10,6 +10,7 @@ using System.Reactive;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using CommonInterfaces;
+using dtoo = DTO.o.DTOs;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -22,7 +23,7 @@ namespace UI.ER.ViewModels.ViewModels
                 .WhenAnyValue(x => (x.NumTotalActuacions ?? 0 ) > 0 );
 
             RxApp.MainThreadScheduler.Schedule(LoadData);
-            PivotSetCommand = ReactiveCommand.CreateFromTask(ShowPivotSetDialogHandle, ObservaHiHaActuacions);
+            GeneraPivotCommand = ReactiveCommand.CreateFromTask(DoGeneraPivot);
         }
 
         private async void LoadData()
@@ -56,13 +57,30 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _TotalActuacions, value);
         }
 
-        // ---
-        public ICommand PivotSetCommand { get; }
-        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowPivotSetDialog { get; } = new();
-        private async Task ShowPivotSetDialogHandle()
+        private string _ResultatPivotAlumne = string.Empty;
+        public string ResultatPivotAlumne
         {
-            var data = await ShowPivotSetDialog.Handle(Unit.Default);
+            get { return _ResultatPivotAlumne; }
+            protected set { this.RaiseAndSetIfChanged(ref _ResultatPivotAlumne, value); }
         }
+
+        public ReactiveCommand<Unit, dtoo.SaveResult?> GeneraPivotCommand { get; }
+        private async Task<dtoo.SaveResult?> DoGeneraPivot()
+        {
+            ResultatPivotAlumne = "";
+            // using var bl = SuperContext.GetBLOperation<IPivot>();
+            // var resultat = await bl.Run();
+            ResultatPivotAlumne = "Fake desar";
+                // resultat.Data != null ?
+                // $"Fitxer desat a: {resultat.Data.FullPath}" :
+                // "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
+
+            // return resultat.Data;
+
+            await Task.CompletedTask;
+            return new("/", "", "/");
+        }
+
 
     }
 }
