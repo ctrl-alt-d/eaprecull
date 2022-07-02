@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        x:Class="UI.ER.AvaloniaUI.Pages.UtilitatsWindow"
+        HorizontalContentAlignment="Stretch"
+        Title="Edició de Tipus d'Actuació"        
+        Width="800" Height="500" MinWidth="720"
+        WindowStartupLocation="CenterOwner"
+        >
+
+
+    <StackPanel Orientation="Vertical"
+                Margin="16, 16"
+                >
+
+        <StackPanel.Styles> 
+        </StackPanel.Styles>                
+
+        <TextBlock 
+                Margin="10,10,10,10"
+                Classes="Subtitle1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="Utilitats"
+                Foreground="Blue"  />
+
+        <Button Margin="10,10,10,0"
+                Command="{Binding GeneraPivotCommand}"
+                Content="Exportar taula de pivotació resum actuacions"
+                Classes="PivotCss Flat" />
+        <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatInformeAlumne}" Margin="0,5,0,0"/>
+
+    </StackPanel>
+
+</Window>
