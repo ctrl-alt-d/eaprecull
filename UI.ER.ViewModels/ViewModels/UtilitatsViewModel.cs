@@ -20,7 +20,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             var ObservaHiHaActuacions =
                 this
-                .WhenAnyValue(x => (x.NumTotalActuacions ?? 0 ) > 0 );
+                .WhenAnyValue(x => x.BotoPivotActivat );
 
             RxApp.MainThreadScheduler.Schedule(LoadData);
             GeneraPivotCommand = ReactiveCommand.CreateFromTask(DoGeneraPivot);
@@ -43,11 +43,23 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<BrokenRule> BrokenRules = new();
 
+        public bool _BotoPivotActivat;
+
+        public bool BotoPivotActivat
+        {
+            get => _BotoPivotActivat;
+            set => this.RaiseAndSetIfChanged(ref _BotoPivotActivat, value);
+        }
+
         public int? _NumTotalActuacions;
         public int? NumTotalActuacions
         {
             get => _NumTotalActuacions;
-            set => this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);
+            set 
+            {
+                this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);
+                BotoPivotActivat = (_NumTotalActuacions ?? 0) > 0;
+            }
         }
 
         public string _TotalActuacions = string.Empty;
