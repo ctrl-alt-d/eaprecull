@@ -70,6 +70,17 @@
                 </Setter>
             </Style>
 
+            <Style Selector="Button.PivotCss">
+                <Setter Property="ToolTip.Tip" Value="Taula de pivotacó d'actuacions"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <avalonia:MaterialIcon Kind="MicrosoftExcel" VerticalAlignment="Center" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
+            </Style>       
+
             <Style Selector="Button.EditarCss">
                 <Setter Property="ToolTip.Tip" Value="Editar"/>
                 <Setter Property="Content">

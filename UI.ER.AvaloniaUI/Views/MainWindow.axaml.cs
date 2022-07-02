@@ -144,7 +144,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void TemplatedControl_OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            SnackbarHost.Post("EAP Recull (versió 0.2) et desitja què passis un bon dia :)");
+            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)");
         }
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)
@@ -205,6 +205,17 @@ namespace UI.ER.AvaloniaUI.Views
             };
 
             w.ShowDialog(this);
+        }
+
+
+        private void Utilitats_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var w = new UtilitatsWindow()
+            {
+                DataContext = new UtilitatsViewModel()
+            };
+
+            w.ShowDialog(this);            
         }
 
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)

@@ -13,7 +13,7 @@ namespace BusinessLayer.Abstract
             BrokenRules = brokenRules;
         }
 
-        public OperationResult(T data)
+        public OperationResult(T? data)
         {
             Data = data;
         }

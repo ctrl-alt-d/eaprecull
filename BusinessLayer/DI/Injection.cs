@@ -51,6 +51,8 @@ namespace BusinessLayer.DI
 
             // altres
             services.AddTransient<IImportAll, ImportAll>();
+            services.AddTransient<IPivotActuacions, PivotActuacions>();
+            
 
             return services;
         }
