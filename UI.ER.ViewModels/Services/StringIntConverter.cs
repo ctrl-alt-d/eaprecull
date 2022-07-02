@@ -27,7 +27,7 @@ namespace UI.ER.AvaloniaUI.Services
             return default;
         }
 
-        public static bool IntCorrecte(string value)
+        public static bool IntCorrecte(string? value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
