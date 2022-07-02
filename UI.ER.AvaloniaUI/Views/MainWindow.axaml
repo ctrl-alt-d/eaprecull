@@ -116,6 +116,15 @@
                                 </MenuItem>
 
                                 <Separator />
+
+                                <MenuItem Header="Utilitats" Click="Utilitats_OnClick">
+                                    <MenuItem.Icon>
+                                        <avalonia:MaterialIcon Kind="ChartDonutVariant" Width="24" Height="24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
+                                <Separator />
+                                
                                 <MenuItem Header="Sortir" Click="GoodbyeButtonMenuItem_OnClick">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="ExitRun" Width="24" Height="24" />

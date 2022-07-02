@@ -207,6 +207,11 @@ namespace UI.ER.AvaloniaUI.Views
             w.ShowDialog(this);
         }
 
+
+        private void Utilitats_OnClick(object? sender, RoutedEventArgs e)
+        {
+        }
+
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
             SnackbarHost.Post("See ya next time, user!");
