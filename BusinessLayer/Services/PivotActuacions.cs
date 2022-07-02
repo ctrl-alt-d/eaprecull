@@ -80,7 +80,9 @@ namespace BusinessLayer.Services
             var pivotTable1 = wsPivot.PivotTables.Add(wsPivot.Cells["A5"], dataRange, "Actuacions");
 
             // - page
-            pivotTable1.PageFields.Add(pivotTable1.Fields["Curs"]);
+            var pageField = pivotTable1.PageFields.Add(pivotTable1.Fields["Curs"]);
+            pageField.Items.Refresh();  
+            pageField.Items.SelectSingleItem(0);
 
             // - rows
             pivotTable1.RowFields.Add(pivotTable1.Fields["Centre"]);
