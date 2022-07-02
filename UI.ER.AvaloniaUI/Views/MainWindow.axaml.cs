@@ -144,7 +144,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void TemplatedControl_OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)");
+            SnackbarHost.Post("EAP Recull (versió 0.2) et desitja què passis un bon dia :)");
         }
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)

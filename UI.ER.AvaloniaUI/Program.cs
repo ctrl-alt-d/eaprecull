@@ -10,7 +10,7 @@ namespace UI.ER.AvaloniaUI
         // yet and stuff might break.
         public static void Main(string[] args) =>
             BuildAvaloniaApp()
-            .With(new X11PlatformOptions { UseGpu = false })
+            // .With(new X11PlatformOptions { UseGpu = false })
             .StartWithClassicDesktopLifetime(args)
             ;
 
