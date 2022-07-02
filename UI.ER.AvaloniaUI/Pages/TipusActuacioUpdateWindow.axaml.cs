@@ -31,7 +31,9 @@ namespace UI.ER.AvaloniaUI.Pages
                 this
                 .WhenAnyValue(x => x.ViewModel)
                 .Subscribe(vm =>
-                    vm.SubmitCommand.Subscribe(CloseIfSaved)
+                    vm!
+                    .SubmitCommand
+                    .Subscribe(CloseIfSaved)
                 )
             );
 

@@ -17,7 +17,7 @@ namespace UI.ER.AvaloniaUI.Services
 
         }
 
-        public static DateTime? ConvertBack(string value)
+        public static DateTime? ConvertBack(string? value)
         {
             var valueTxt = value?.ToString()?.Trim() ?? "";
 
@@ -29,7 +29,7 @@ namespace UI.ER.AvaloniaUI.Services
             return (DateTime?)null;
         }
 
-        public static bool NullableDataCorrecte(string value)
+        public static bool NullableDataCorrecte(string? value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {

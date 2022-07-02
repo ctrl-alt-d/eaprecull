@@ -27,7 +27,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.ShowDialog.RegisterHandler(DoShowCreateDialog))
+                .Subscribe(vm => vm!.ShowDialog.RegisterHandler(DoShowCreateDialog))
             );
 
         private void InitializeComponent()

@@ -41,7 +41,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
             );
         protected virtual async Task DoShowUpdateDialog(InteractionContext<AlumneUpdateViewModel, dtoo.Alumne?> interaction)
         {
@@ -61,7 +61,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
             );
         protected virtual async Task DoShowActuacioLookup(InteractionContext<ActuacioSetViewModel, IIdEtiquetaDescripcio?> interaction)
         {
@@ -79,7 +79,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.SeleccionarCommand.Subscribe(GetWindow().Close))
+                .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
             );
 
 
@@ -89,7 +89,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.GeneraInformeCommand.Subscribe(ObraFileExplorer))
+                .Subscribe(vm => vm!.GeneraInformeCommand.Subscribe(ObraFileExplorer))
             );
 
         private void ObraFileExplorer(dtoo.SaveResult? saveResult)

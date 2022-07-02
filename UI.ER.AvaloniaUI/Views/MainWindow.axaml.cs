@@ -48,7 +48,7 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
+                .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
             );
         protected virtual async Task DoShowAlumneLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
@@ -66,7 +66,7 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
             );
         protected virtual async Task DoShowActuacioLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
@@ -84,7 +84,7 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
+                .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
             );
         protected virtual async Task DoShowCursAcademicLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
         {
