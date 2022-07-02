@@ -207,7 +207,7 @@
                                         BoxShadow="5 5 10 2 Gray">
 
                                     <TextBlock>
-Llicència EAPRecull: MIT
+Llicència EAPRecull: MIT (Respectant la llicència dels paquets que inclou)
 
 Codi font: https://github.com/ctrl-alt-d/eaprecull
 
@@ -221,9 +221,12 @@ Programari lliure inclòs a EAPRecull:
     * https://github.com/AvaloniaUI/Avalonia
     * https://github.com/AvaloniaCommunity/material.avalonia
     * https://github.com/ClosedXML/ClosedXML
+    * https://github.com/EPPlusSoftware/EPPlus  (LicenseContext.NonCommercial x education)
     * DotNet
 
 Incidències, propostes de millora, etc són benvingudes: https://github.com/ctrl-alt-d/eaprecull/issues/new
+
+Versió 0.2
 
                                     </TextBlock>
                                 </Border>

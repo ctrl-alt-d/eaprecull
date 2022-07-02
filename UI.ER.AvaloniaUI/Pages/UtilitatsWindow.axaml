@@ -31,7 +31,7 @@
                 Command="{Binding GeneraPivotCommand}"
                 Content="Exportar taula de pivotació resum actuacions"
                 Classes="PivotCss Flat" />
-        <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatInformeAlumne}" Margin="0,5,0,0"/>
+        <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatPivotAlumne}" Margin="0,5,0,0"/>
 
     </StackPanel>
 
