@@ -63,7 +63,7 @@ namespace BusinessLayer.Services
 
         }
 
-        private Task<Alumne> GetDadesAlumne(int alumneId)
+        private Task<Alumne?> GetDadesAlumne(int alumneId)
             =>
             GetContext()
             .Alumnes

@@ -28,14 +28,20 @@ namespace BusinessLayer.Common
             return _DbContext;
         }
 
-        protected virtual ValueTask<TTarget> Perfection<TTarget>(int id)
+        protected async virtual ValueTask<TTarget> Perfection<TTarget>(int id)
             where TTarget : class, IModel
         {
             var model =
+                await 
                 GetContext()
                 .Set<TTarget>()
                 .FindAsync(id);
-            return model;
+
+            var result =
+                model ?? 
+                throw new Exception($"{typeof(TTarget).FullName} no trobat per id {id}");
+
+            return result;
         }
 
         protected virtual async ValueTask<TTarget?> Perfection<TTarget>(int? id)
@@ -52,7 +58,7 @@ namespace BusinessLayer.Common
             return model;
         }
 
-        protected virtual Task LoadReference<TTarget, TProperty>(TTarget model, Expression<Func<TTarget, TProperty>> propertyExpression)
+        protected virtual Task LoadReference<TTarget, TProperty>(TTarget model, Expression<Func<TTarget, TProperty?>> propertyExpression)
             where TTarget : class, IModel
             where TProperty : class, IModel
             =>
