@@ -167,8 +167,8 @@ namespace BusinessLayer.Services
             tokens.ForEach(token =>
                 query = query.Where(model =>
                     (model.CentreActual != null && model.CentreActual.Nom.Contains(token)) ||
-                    model.Nom.Contains(token) ||
-                    model.Cognoms.Contains(token) ||
+                    EF.Functions.Like(model.Nom, $"%{token}%") ||
+                    EF.Functions.Like(model.Cognoms, $"%{token}%") ||
                     model.Tags.Contains(token)
                 )
             );
@@ -183,7 +183,7 @@ namespace BusinessLayer.Services
             var tokens = request.Tags.Split().Select(x => x.Trim()).ToList();
 
             tokens.ForEach(token =>
-                query = query.Where(model => model.Tags.Contains(token))
+                query = query.Where(model => EF.Functions.Like(model.Tags, $"%{token}%"))
             );
             return query;
         }
