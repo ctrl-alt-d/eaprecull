@@ -39,6 +39,3 @@ El generarà a la carpeta:
 * Q: EAP Recull envia alguna dada a alguna banda?
 * A: No, pots revisar el codi en aquest repo i compilar la teva versió.
 
-## ToDo
-
-* Falta generar taula de pivotació amb les actuacions realitzades, per poder fer la memòria del curs. Miraré de fer-ho abans de setmana santa 2022 si és que algú no fa abans la PR.
