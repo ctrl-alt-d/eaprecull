@@ -107,24 +107,24 @@ namespace BusinessLayer.Services
                 query = query.Where(model => (
 
                     // alumne nom, cognoms i tags
-                    model.Alumne.Nom.Contains(token) ||
-                    model.Alumne.Cognoms.Contains(token) ||
-                    model.Alumne.Tags.Contains(token) ||
+                    EF.Functions.Like(model.Alumne.Nom, $"%{token}%") ||
+                    EF.Functions.Like(model.Alumne.Cognoms, $"%{token}%") ||
+                    EF.Functions.Like(model.Alumne.Tags, $"%{token}%") ||
 
                     // centre
-                    (model.Alumne.CentreActual != null && model.Alumne.CentreActual.Nom.Contains(token)) ||
-                    (model.Alumne.CentreActual != null && model.Alumne.CentreActual.Codi.Contains(token)) ||
+                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Nom, $"%{token}%"))||
+                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Codi, $"%{token}%"))||
 
                     // descripcions
-                    model.ObservacionsTipusActuacio.Contains(token) ||
-                    model.DescripcioActuacio.Contains(token) ||
+                    EF.Functions.Like(model.ObservacionsTipusActuacio, $"%{token}%") ||
+                    EF.Functions.Like(model.DescripcioActuacio, $"%{token}%") ||
 
                     // tipus actuacio
-                    model.TipusActuacio.Nom.Contains(token) ||
-                    model.TipusActuacio.Codi.Contains(token) ||
+                    EF.Functions.Like(model.TipusActuacio.Nom, $"%{token}%") ||
+                    EF.Functions.Like(model.TipusActuacio.Codi, $"%{token}%") ||
 
                     // curs actuacio
-                    model.CursActuacio.Nom.Contains(token)
+                    EF.Functions.Like(model.CursActuacio.Nom, $"%{token}%")
             )));
             return query;
         }
