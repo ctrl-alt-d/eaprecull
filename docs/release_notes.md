@@ -8,3 +8,8 @@ Posar número de versió.
 
 22.07.03
 Cerques cas insensitive.
+
+# 0.4
+
+22.07.06
+Desactivar alumnes x centre

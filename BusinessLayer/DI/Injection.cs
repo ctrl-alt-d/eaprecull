@@ -31,6 +31,7 @@ namespace BusinessLayer.DI
 
             // alumnes
             services.AddTransient<IAlumneSet, AlumneSet>();
+            services.AddTransient<IAlumneSyncActiuByCentre, AlumneSyncActiuByCentre>();
             services.AddTransient<IAlumneCreate, AlumneCreate>();
             services.AddTransient<IAlumneUpdate, AlumneUpdate>();
             services.AddTransient<IAlumneActivaDesactiva, AlumneActivaDesactiva>();
