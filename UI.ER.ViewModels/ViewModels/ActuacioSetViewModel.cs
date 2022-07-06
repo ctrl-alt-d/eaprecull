@@ -28,15 +28,20 @@ namespace UI.ER.ViewModels.ViewModels
                 .WhenAnyValue(x => x.SearchString)
                 .Throttle(TimeSpan.FromMilliseconds(400));
 
+            var NomesActiusObserver =
+                this
+                .WhenAnyValue(x => x.NomesActius);
+
             this
                 .WhenAnyValue(x => x.AlumneId)
                 .CombineLatest(
+                        NomesActiusObserver,
                         SearchStringObserver,
-                        (alumneId, searchString) =>
-                        (alumneId, searchString)
+                        (alumneId, nomesAlumnesActius, searchString) =>
+                        (alumneId, nomesAlumnesActius, searchString)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(t => LoadActuacioSet(t.alumneId, t.searchString))
+                .Subscribe(t => LoadActuacioSet(t.nomesAlumnesActius, t.alumneId, t.searchString))
                 ;
 
             // Create
@@ -61,16 +66,22 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        protected virtual async void LoadActuacioSet(int? alumneId, string searchString)
+        protected virtual async void LoadActuacioSet(bool nomesAlumnesActius, int? alumneId, string searchString)
         {
             Loading = true;
             MyItems.Clear();
+
+            var esActiu =
+                nomesAlumnesActius && !alumneId.HasValue ?  // si tenim id alumne el mostrem sempre
+                true :
+                (bool?)null;            
 
             // Preparar paràmetres al backend
             var parms = new DTO.i.DTOs.ActuacioSearchParms(
                 take: 200,
                 searchString: searchString,
-                alumneId: alumneId
+                alumneId: alumneId,
+                alumneEsActiu: esActiu 
             );
 
             // Petició al backend            
@@ -135,6 +146,13 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _SearchString;
             set => this.RaiseAndSetIfChanged(ref _SearchString, value);
+        }
+
+        private bool _NomesActius = true;
+        public bool NomesActius
+        {
+            get => _NomesActius;
+            set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
         }
 
         // Crear item

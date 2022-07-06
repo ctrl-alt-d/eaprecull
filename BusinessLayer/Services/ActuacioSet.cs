@@ -98,7 +98,7 @@ namespace BusinessLayer.Services
 
         private IQueryable<Actuacio> MatchAlumneEsActiu(IQueryable<Actuacio> query, ActuacioSearchParms request)
         {
-            if (!request.AlumneEsActiu.HasValue)
+            if (!request.AlumneEsActiu.HasValue ) 
                 return query;
 
             return query.Where(model => model.Alumne.EsActiu);
