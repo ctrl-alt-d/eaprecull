@@ -28,14 +28,14 @@ namespace UI.ER.ViewModels.ViewModels
                 .WhenAnyValue(x => x.SearchString)
                 .Throttle(TimeSpan.FromMilliseconds(400));
 
-            var NomesActiusObserver =
+            var NomesAlumnesActiusObserver =
                 this
-                .WhenAnyValue(x => x.NomesActius);
+                .WhenAnyValue(x => x.NomesAlumnesActius);
 
             this
                 .WhenAnyValue(x => x.AlumneId)
                 .CombineLatest(
-                        NomesActiusObserver,
+                        NomesAlumnesActiusObserver,
                         SearchStringObserver,
                         (alumneId, nomesAlumnesActius, searchString) =>
                         (alumneId, nomesAlumnesActius, searchString)
@@ -148,11 +148,11 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _SearchString, value);
         }
 
-        private bool _NomesActius = true;
-        public bool NomesActius
+        private bool _NomesAlumnesActius = true;
+        public bool NomesAlumnesActius
         {
-            get => _NomesActius;
-            set => this.RaiseAndSetIfChanged(ref _NomesActius, value);
+            get => _NomesAlumnesActius;
+            set => this.RaiseAndSetIfChanged(ref _NomesAlumnesActius, value);
         }
 
         // Crear item
