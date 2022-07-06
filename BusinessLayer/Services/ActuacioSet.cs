@@ -35,6 +35,7 @@ namespace BusinessLayer.Services
             query = MatchAlumne(query, request);
             query = MatchTipusActuacio(query, request);
             query = MatchCursActuacio(query, request);
+            query = MatchAlumneEsActiu(query, request);
             query = MatchMatchDataActuacioAnteriorA(query, request);
             query = MatchDataActuacioPosteriorA(query, request);
 
@@ -94,6 +95,15 @@ namespace BusinessLayer.Services
 
             return query.Where(model => model.CursActuacio.Id == request.CursActuacioId);
         }
+
+        private IQueryable<Actuacio> MatchAlumneEsActiu(IQueryable<Actuacio> query, ActuacioSearchParms request)
+        {
+            if (!request.AlumneEsActiu.HasValue)
+                return query;
+
+            return query.Where(model => model.Alumne.EsActiu);
+        }
+       
 
         private IQueryable<Actuacio> MatchSearchString(IQueryable<Actuacio> query, ActuacioSearchParms request)
         {
