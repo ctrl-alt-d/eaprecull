@@ -19,6 +19,11 @@
         <StackPanel.Styles> 
         </StackPanel.Styles>                
 
+        <ToggleSwitch ToolTip.Tip="Activar les operacions delicades (les que la pots liar)"
+                VerticalAlignment="Center" 
+                IsChecked="{Binding OperacionsDelicadesActivat}"
+        />
+
         <TextBlock 
                 Margin="10,10,10,10"
                 Classes="Subtitle1"
@@ -32,6 +37,14 @@
                 Content="Exportar taula de pivotació resum actuacions"
                 Classes="PivotCss Flat" />
         <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatPivotAlumne}" Margin="0,5,0,0"/>
+
+        <Button Margin="10,10,10,0"
+                Command="{Binding GeneraSyncCommand}"
+                Content="Sincronitzar 'Actiu' alumne amb 'Actiu' centre"
+                ToolTip.Tip="Cal activar les operacions delicades perquè la pots liar. Passarà tots els alumnes de centres actius a actiu i tots els alumnes de centres inactius a inactius."
+                Classes="PivotCss Flat" />
+        <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatSyncAlumne}" Margin="0,5,0,0"/>
+
 
     </StackPanel>
 
