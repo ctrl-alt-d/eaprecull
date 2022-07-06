@@ -13,3 +13,8 @@ Cerques cas insensitive.
 
 22.07.06
 Desactivar alumnes x centre
+
+# 0.5
+
+22.07.06
+Filtrar actuacions per alumnes actius

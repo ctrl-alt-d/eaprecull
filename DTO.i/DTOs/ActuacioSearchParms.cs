@@ -13,6 +13,7 @@ namespace DTO.i.DTOs
             int? tipusActuacioId = null,
             int? cursActuacioId = null,
             int? centreId = null,
+            bool? alumneEsActiu = null,
             DateTime? ambDataActuacioAnteriorA = null,
             DateTime? ambDataActuacioPosteriorA = null)
         {
@@ -23,6 +24,7 @@ namespace DTO.i.DTOs
             TipusActuacioId = tipusActuacioId;
             CursActuacioId = cursActuacioId;
             CentreId = centreId;
+            AlumneEsActiu = alumneEsActiu;
             AmbDataActuacioAnteriorA = ambDataActuacioAnteriorA;
             AmbDataActuacioPosteriorA = ambDataActuacioPosteriorA;
         }
@@ -44,6 +46,7 @@ namespace DTO.i.DTOs
 
         // Centre
         public int? CentreId { get; }
+        public bool? AlumneEsActiu { get; }
 
         // Data Actuació
         public DateTime? AmbDataActuacioAnteriorA { get; }
