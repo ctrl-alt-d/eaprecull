@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Threading.Tasks;
 using CommonInterfaces;
 using dtoo = DTO.o.DTOs;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -18,12 +19,24 @@ namespace UI.ER.ViewModels.ViewModels
     {
         public UtilitatsViewModel()
         {
+            this
+                .WhenAnyValue(x => x.NumTotalActuacions)
+                .Subscribe(x => this.BotoPivotActivat = (x ?? 0) > 0);
+
+            this
+                .WhenAnyValue(x => x.OperacionsDelicadesActivat)
+                .Subscribe(x => this.BotoPivotActivat = x);
+
             var ObservaHiHaActuacions =
                 this
                 .WhenAnyValue(x => x.BotoPivotActivat );
 
-            RxApp.MainThreadScheduler.Schedule(LoadData);
+            RxApp
+                .MainThreadScheduler
+                .Schedule(LoadData);
+
             GeneraPivotCommand = ReactiveCommand.CreateFromTask(DoGeneraPivot);
+            GeneraSyncCommand = ReactiveCommand.CreateFromTask(DoGeneraSync);
         }
 
         private async void LoadData()
@@ -43,6 +56,15 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<BrokenRule> BrokenRules = new();
 
+        public bool _OperacionsDelicadesActivat;
+        public bool OperacionsDelicadesActivat
+        {
+            get => _OperacionsDelicadesActivat;
+            set => this.RaiseAndSetIfChanged(ref _OperacionsDelicadesActivat, value);                
+        }
+
+        #region Pivot
+        // Botó pivot
         public bool _BotoPivotActivat;
 
         public bool BotoPivotActivat
@@ -51,15 +73,12 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _BotoPivotActivat, value);
         }
 
+        // Vars pivot
         public int? _NumTotalActuacions;
         public int? NumTotalActuacions
         {
             get => _NumTotalActuacions;
-            set 
-            {
-                this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);
-                BotoPivotActivat = (_NumTotalActuacions ?? 0) > 0;
-            }
+            set => this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);                
         }
 
         public string _TotalActuacions = string.Empty;
@@ -76,6 +95,8 @@ namespace UI.ER.ViewModels.ViewModels
             protected set { this.RaiseAndSetIfChanged(ref _ResultatPivotAlumne, value); }
         }
 
+        // Generar Pivot
+
         public ReactiveCommand<Unit, dtoo.SaveResult?> GeneraPivotCommand { get; }
         private async Task<dtoo.SaveResult?> DoGeneraPivot()
         {
@@ -90,6 +111,46 @@ namespace UI.ER.ViewModels.ViewModels
             return resultat.Data;
             
         }
+
+        #endregion
+
+        #region Sync Actiu
+        // Botó Sync
+        public bool _BotoSyncActivat;
+
+        public bool BotoSyncActivat
+        {
+            get => _BotoSyncActivat;
+            set => this.RaiseAndSetIfChanged(ref _BotoSyncActivat, value);
+        }
+
+        // Vars Sync
+
+        private string _ResultatSyncAlumne = string.Empty;
+        public string ResultatSyncAlumne
+        {
+            get { return _ResultatSyncAlumne; }
+            protected set { this.RaiseAndSetIfChanged(ref _ResultatSyncAlumne, value); }
+        }
+
+        // Generar Sync
+
+        public ReactiveCommand<Unit, dtoo.EtiquetaDescripcio?> GeneraSyncCommand { get; }
+        private async Task<dtoo.EtiquetaDescripcio?> DoGeneraSync()
+        {
+            ResultatSyncAlumne = "";
+            using var bl = SuperContext.GetBLOperation<IAlumneSyncActiuByCentre>();
+            var resultat = await bl.Run();
+            ResultatSyncAlumne =
+                resultat.Data != null ?
+                resultat.Data.Etiqueta :
+                "Error sincronitzant: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
+
+            return resultat.Data;            
+        }
+
+        #endregion
+
 
 
     }
