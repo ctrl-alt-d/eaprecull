@@ -25,18 +25,22 @@ namespace UI.ER.ViewModels.ViewModels
 
             this
                 .WhenAnyValue(x => x.OperacionsDelicadesActivat)
-                .Subscribe(x => this.BotoPivotActivat = x);
+                .Subscribe(x => this.BotoSyncActivat = x);
 
-            var ObservaHiHaActuacions =
+            var ObservaBotoPivotActivat =
                 this
                 .WhenAnyValue(x => x.BotoPivotActivat );
+
+            var ObservaBotoSyncActivat =
+                this
+                .WhenAnyValue(x => x.BotoSyncActivat );
 
             RxApp
                 .MainThreadScheduler
                 .Schedule(LoadData);
 
-            GeneraPivotCommand = ReactiveCommand.CreateFromTask(DoGeneraPivot);
-            GeneraSyncCommand = ReactiveCommand.CreateFromTask(DoGeneraSync);
+            GeneraPivotCommand = ReactiveCommand.CreateFromTask(DoGeneraPivot, ObservaBotoPivotActivat);
+            GeneraSyncCommand = ReactiveCommand.CreateFromTask(DoGeneraSync, ObservaBotoSyncActivat);
         }
 
         private async void LoadData()

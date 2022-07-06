@@ -32,6 +32,7 @@ namespace BusinessLayer.Services
                 await 
                 ctx
                 .Alumnes
+                .Include(a => a.CentreActual)
                 .Where(a => 
                     a.CentreActual == null || 
                     a.EsActiu != a.CentreActual!.EsActiu
