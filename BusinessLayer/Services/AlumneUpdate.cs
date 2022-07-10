@@ -80,9 +80,9 @@ namespace BusinessLayer.Services
             model.DataDarreraModificacio = DateTime.Now;
         }
 
-        protected override Task LoadUpdatableReferences(models.Alumne model)
+        protected override void ResetReferences(models.Alumne model)
             =>
-            LoadReferences(
+            ReferencesAreModify(
                 model,
                 x=>x.CentreActual,
                 x=>x.CursDarreraActualitacioDades,

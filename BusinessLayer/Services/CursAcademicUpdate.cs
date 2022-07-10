@@ -62,9 +62,7 @@ namespace BusinessLayer.Services
             return Task.CompletedTask;
         }
 
-        protected override Task LoadUpdatableReferences(CursAcademic model)
-            =>
-            Task.CompletedTask;
-
+        protected override void ResetReferences(CursAcademic model)
+        {}
     }
 }

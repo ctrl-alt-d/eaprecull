@@ -61,8 +61,7 @@ namespace BusinessLayer.Services
             return Task.CompletedTask;
         }
 
-        protected override Task LoadUpdatableReferences(Centre model)
-            =>
-            Task.CompletedTask;
+        protected override void ResetReferences(Centre model)
+        {}
     }
 }

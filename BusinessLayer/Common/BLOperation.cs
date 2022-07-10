@@ -76,6 +76,21 @@ namespace BusinessLayer.Common
                 .ToArray()
             );
         
+        protected virtual void PropertyIsModify<TTarget>(TTarget model, Expression<Func<TTarget, IModel?>> propertyExpression)
+            where TTarget : class, IModel
+            =>
+            GetContext()
+            .Entry(model)
+            .Reference(propertyExpression)
+            .IsModified = true;
+
+        protected virtual void ReferencesAreModify<TTarget>(TTarget model, params Expression<Func<TTarget, IModel?>>[] propertyExpressions)
+            where TTarget : class, IModel
+            =>
+            propertyExpressions
+            .ToList()
+            .ForEach(p => PropertyIsModify(model, p));
+
         //
         protected virtual void Dispose(bool disposing)
         {

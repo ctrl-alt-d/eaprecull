@@ -61,9 +61,8 @@ namespace BusinessLayer.Services
             return Task.CompletedTask;
         }
 
-        protected override Task LoadUpdatableReferences(TipusActuacio model)
-            =>
-            Task.CompletedTask;
+        protected override void ResetReferences(TipusActuacio model)
+        {}
 
     }
 }
