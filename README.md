@@ -9,13 +9,29 @@ Gestió d'actuacions EAP. Recull i gestiona les teves actuacions com EAP.
 Per compilar el programa fer:
 
 ```bash
-(cd UI.ER.AvaloniaUI/; dotnet publish -r win-x64 --self-contained --configuration ReleaseComplete -o ../dist )
+(
+    # Compilar
+    cd UI.ER.AvaloniaUI/;
+    dotnet publish -r win-x64 --self-contained --configuration ReleaseComplete -o ../dist; 
+
+    # Crear carpeta per exe
+    mkdir -p ../dist-exe; 
+    rm -f ../dist-exe/EAPRECULL.zip;
+
+    # Enzipar
+    cd ../dist; 
+    zip  ../dist-exe/EAPACTUA.zip * ;
+
+    # Esborrar temporals
+    cd ..;
+    rm -rf dist
+)
 ```
 
 El generarà a la carpeta:
 
 ```
-./UI.ER.AvaloniaUI/bin/ReleaseComplete/net6.0/win-x64/publish/
+./dist-exe
 ```
 
 ## Objectiu

@@ -11,6 +11,7 @@
 *.sln.docstates
 
 dist/*
+dist-exe/* 
 
 .vscode
 
