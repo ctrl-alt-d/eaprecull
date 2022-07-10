@@ -37,9 +37,9 @@ namespace BusinessLayer.Services
             AlumnePrevi = model.Alumne;
         }
 
-        protected override Task LoadUpdatableReferences(Actuacio model)
+        protected override void ResetReferences(Actuacio model)
             =>
-            LoadReferences(
+            ReferencesAreModify(
                 model,
                 x=>x.Alumne,
                 x=>x.TipusActuacio,
