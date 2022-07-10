@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.UtilitatsWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Edició de Tipus d'Actuació"        
+        Title="Utilitats addicionals"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
