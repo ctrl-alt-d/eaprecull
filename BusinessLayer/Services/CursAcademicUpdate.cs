@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq.Expressions;
 using System;
+using DataModels.Models;
 
 namespace BusinessLayer.Services
 {
@@ -60,5 +61,10 @@ namespace BusinessLayer.Services
             model.Nom = $"{parm.AnyInici}-{parm.AnyInici + 1}";
             return Task.CompletedTask;
         }
+
+        protected override Task LoadUpdatableReferences(CursAcademic model)
+            =>
+            Task.CompletedTask;
+
     }
 }

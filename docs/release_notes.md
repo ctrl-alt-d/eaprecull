@@ -18,3 +18,8 @@ Desactivar alumnes x centre
 
 22.07.06
 Filtrar actuacions per alumnes actius
+
+# 0.6
+
+22.07.10
+Fer load de references abans de l'update (issue #70)

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq.Expressions;
 using System;
+using DataModels.Models;
 
 namespace BusinessLayer.Services
 {
@@ -59,5 +60,10 @@ namespace BusinessLayer.Services
             model.Nom = parm.Nom;
             return Task.CompletedTask;
         }
+
+        protected override Task LoadUpdatableReferences(TipusActuacio model)
+            =>
+            Task.CompletedTask;
+
     }
 }
