@@ -20,7 +20,7 @@ Per compilar el programa fer:
 
     # Enzipar
     cd ../dist; 
-    zip  ../dist-exe/EAPACTUA.zip * ;
+    zip  ../dist-exe/EAPRECULL.zip * ;
 
     # Esborrar temporals
     cd ..;
