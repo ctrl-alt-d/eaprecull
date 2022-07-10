@@ -37,6 +37,7 @@ namespace BusinessLayer.Common
         protected abstract Task PreUpdate(TModel model, TParm parm);
         protected abstract Task UpdateModel(TModel model, TParm parm);
         protected abstract Task PostUpdate(TModel model, TParm parm);
+        protected abstract Task LoadUpdatableReferences(TModel model);
         protected abstract Expression<Func<TModel, TDTOo>> ToDto { get; }
 
         public virtual async Task<OperationResult<TDTOo>> Update(
@@ -47,6 +48,8 @@ namespace BusinessLayer.Common
             {
                 //
                 var model = await Perfection<TModel>(parm.Id);
+                //
+                await LoadUpdatableReferences(model);
                 //
                 await PreUpdate(model, parm);
                 //

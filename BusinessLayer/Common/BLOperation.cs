@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataLayer;
@@ -58,12 +59,23 @@ namespace BusinessLayer.Common
             return model;
         }
 
-        protected virtual Task LoadReference<TTarget, TProperty>(TTarget model, Expression<Func<TTarget, TProperty?>> propertyExpression)
+        protected virtual Task LoadReference<TTarget>(TTarget model, Expression<Func<TTarget, IModel?>> propertyExpression)
             where TTarget : class, IModel
-            where TProperty : class, IModel
             =>
-            GetContext().Entry(model).Reference(propertyExpression).LoadAsync();
+            GetContext()
+            .Entry(model)
+            .Reference(propertyExpression)
+            .LoadAsync();
 
+        protected virtual Task LoadReferences<TTarget>(TTarget model, params Expression<Func<TTarget, IModel?>>[] propertyExpressions)
+            where TTarget : class, IModel
+            =>
+            Task.WhenAll(
+                propertyExpressions
+                .Select(p => LoadReference(model, p))                
+                .ToArray()
+            );
+        
         //
         protected virtual void Dispose(bool disposing)
         {

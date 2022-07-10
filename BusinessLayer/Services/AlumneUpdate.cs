@@ -79,5 +79,13 @@ namespace BusinessLayer.Services
             model.Tags = parm.Tags;
             model.DataDarreraModificacio = DateTime.Now;
         }
+
+        protected override Task LoadUpdatableReferences(models.Alumne model)
+            =>
+            LoadReferences(
+                model,
+                x=>x.CentreActual,
+                x=>x.CursDarreraActualitacioDades,
+                x=>x.EtapaActual);
     }
 }

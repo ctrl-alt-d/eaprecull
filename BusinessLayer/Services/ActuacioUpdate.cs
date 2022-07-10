@@ -37,6 +37,17 @@ namespace BusinessLayer.Services
             AlumnePrevi = model.Alumne;
         }
 
+        protected override Task LoadUpdatableReferences(Actuacio model)
+            =>
+            LoadReferences(
+                model,
+                x=>x.Alumne,
+                x=>x.TipusActuacio,
+                x=>x.CursActuacio,
+                x=>x.CentreAlMomentDeLactuacio,
+                x=>x.EtapaAlMomentDeLactuacio
+            );
+
         protected override async Task UpdateModel(models.Actuacio model, ActuacioUpdateParms parm)
             =>
             model.SetMainData(
@@ -66,5 +77,6 @@ namespace BusinessLayer.Services
             // "touch" per tal que l'alumne aparegui el primer
             model.Alumne.DataDarreraModificacio = DateTime.Now;
         }
+
     }
 }
