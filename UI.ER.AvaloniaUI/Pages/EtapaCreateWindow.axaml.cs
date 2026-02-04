@@ -2,7 +2,7 @@ using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
 using System;
 using System.Reactive.Linq;

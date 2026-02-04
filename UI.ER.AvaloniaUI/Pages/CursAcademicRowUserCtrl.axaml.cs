@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
 using dtoo = DTO.o.DTOs;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
 
 namespace UI.ER.AvaloniaUI.Pages

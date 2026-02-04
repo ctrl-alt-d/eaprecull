@@ -132,12 +132,13 @@ El patró MVVM està **ben implementat i és consistent** entre totes les entita
 
 ## Resum de l'Estat Actual
 
-### Versions Actuals
-- **Target Framework**: `net6.0` (tots els projectes)
-- **Avalonia UI**: `0.10.15` ⚠️ Molt antiga (actual: 11.x)
-- **Material.Avalonia**: `3.0.0-rc0.92-nightly` ⚠️ Versió nightly antiga
-- **Entity Framework Core**: `6.0.6`
-- **ReactiveUI**: `18.2.5`
+### Versions Actuals ✅ MIGRAT
+- **Target Framework**: `net10.0` (tots els projectes)
+- **Avalonia UI**: `11.3.11`
+- **Material.Avalonia**: `3.13.4`
+- **Entity Framework Core**: `10.0.2`
+- **ReactiveUI**: `22.2.1` (via ReactiveUI.Avalonia)
+- **ReactiveUI.Validation**: `6.0.18`
 
 ### Projectes de la Solució (15 projectes)
 | Projecte | Tipus | Dependències Crítiques |
@@ -292,11 +293,12 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
 <PackageReference Include="Material.Avalonia" Version="3.0.0-rc0.92-nightly" />
 
-<!-- A (verificat NuGet 04/02/2026) - Opció 1: Amb Material.Avalonia -->
+<!-- A (APLICAT 04/02/2026) - Amb Material.Avalonia -->
+<!-- ⚠️ IMPORTANT: Avalonia.ReactiveUI està DEPRECAT, usar ReactiveUI.Avalonia -->
 <PackageReference Include="Avalonia" Version="11.3.11" />
 <PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
 <PackageReference Include="Avalonia.Diagnostics" Version="11.3.11" />
-<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.11" />
+<PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
 <PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
 <PackageReference Include="Material.Avalonia" Version="3.13.4" />
 
@@ -316,8 +318,8 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="ReactiveUI" Version="18.2.5" />
 <PackageReference Include="ReactiveUI.Validation" Version="3.0.1" />
 
-<!-- A (verificat NuGet 04/02/2026) -->
-<PackageReference Include="ReactiveUI" Version="22.3.1" />
+<!-- A (APLICAT 04/02/2026) -->
+<!-- ⚠️ ReactiveUI ja no cal explícitament, ve transitiu via ReactiveUI.Validation -->
 <PackageReference Include="ReactiveUI.Validation" Version="6.0.18" />
 ```
 
@@ -478,10 +480,74 @@ dotnet build
 
 ## ✅ Checklist Final
 
-- [ ] Tots els projectes compilen sense errors
-- [ ] Tots els tests passen
-- [ ] L'aplicació arrenca correctament
+- [x] Tots els projectes compilen sense errors
+- [x] Tots els tests passen (3/3)
+- [x] L'aplicació arrenca correctament
 - [ ] La interfície es veu correctament
 - [ ] Les operacions de dades funcionen
 - [ ] Les exportacions funcionen
-- [ ] No hi ha warnings crítics
+- [ ] No hi ha warnings crítics (hi ha CS8981 warnings per noms amb minúscules)
+
+---
+
+## 📦 Migració Completada (4 febrer 2026)
+
+### Canvis Realitzats
+
+#### 1. Target Framework
+Migrat de `net6.0` a `net10.0` a tots els 15 projectes.
+
+#### 2. Canvi Crític: Avalonia.ReactiveUI → ReactiveUI.Avalonia
+
+El paquet `Avalonia.ReactiveUI` ha estat **DEPRECAT** i substituït per `ReactiveUI.Avalonia`:
+
+```xml
+<!-- ABANS (DEPRECATED) -->
+<PackageReference Include="Avalonia.ReactiveUI" Version="..." />
+
+<!-- ARA -->
+<PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
+```
+
+**Canvi de namespace necessari** a tots els fitxers `.cs`:
+```csharp
+// Abans
+using Avalonia.ReactiveUI;
+
+// Ara
+using ReactiveUI.Avalonia;
+```
+
+#### 3. Paquets Actualitzats
+
+| Paquet | Versió Anterior | Versió Nova |
+|--------|-----------------|-------------|
+| Avalonia.* | 0.10.15 | 11.3.11 |
+| Material.Avalonia | 3.0.0-rc0.92 | 3.13.4 |
+| Material.Icons.Avalonia | 1.0.2 | 2.4.1 |
+| Microsoft.EntityFrameworkCore.* | 6.0.6 | 10.0.2 |
+| xUnit | 2.4.1 | 2.9.3 |
+| xUnit.runner.visualstudio | 2.4.3 | 3.1.5 |
+| Microsoft.NET.Test.Sdk | 16.11.0 | 17.14.1 |
+| ReactiveUI.Validation | 3.0.1 | 6.0.18 |
+
+### Problemes Trobats i Resolts
+
+1. **Runtime error `MissingMethodException` amb DynamicData.IObservableList.Items**
+   - **Causa**: Versió incompatible de DynamicData amb ReactiveUI antic
+   - **Solució**: Usar el nou paquet `ReactiveUI.Avalonia` que gestiona les dependències correctament
+
+2. **Runtime error `TypeLoadException` amb Splat.IEnableLogger**
+   - **Causa**: `ReactiveUI.Validation 4.0.9` incompatible amb Splat 17.x
+   - **Solució**: Actualitzar `ReactiveUI.Validation` a 6.0.18
+
+3. **Build errors amb namespace `Avalonia.ReactiveUI`**
+   - **Causa**: El nou paquet `ReactiveUI.Avalonia` usa namespace diferent
+   - **Solució**: Canviar totes les importacions de `using Avalonia.ReactiveUI;` a `using ReactiveUI.Avalonia;`
+
+### Fitxers Modificats
+
+- `UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj` - Canvi de paquets
+- `UI.ER.ViewModels/UI.ER.ViewModels.csproj` - Actualització ReactiveUI.Validation
+- `UI.ER.AvaloniaUI/Program.cs` - Canvi de namespace
+- 26 fitxers `.axaml.cs` - Canvi de `using Avalonia.ReactiveUI` a `using ReactiveUI.Avalonia`

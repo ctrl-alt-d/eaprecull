@@ -8,7 +8,7 @@ using Avalonia.Threading;
 using Material.Styles.Controls;
 using UI.ER.AvaloniaUI.Pages;
 using UI.ER.ViewModels.ViewModels;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
 using ReactiveUI;
 using System.Threading.Tasks;
