@@ -245,11 +245,11 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6" />
 <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.0" />
 
-<!-- A -->
-<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
-<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" />
-<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.6" />
+<!-- A (verificat NuGet 04/02/2026) -->
+<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
+<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2" />
+<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
 ```
 
 #### BusinessLayer
@@ -259,10 +259,10 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="EPPlus" Version="6.0.5" />
 <PackageReference Include="SharpDocx" Version="2.2.0" />
 
-<!-- A (verificar últimes versions) -->
-<PackageReference Include="ClosedXML" Version="0.104.1" />
-<PackageReference Include="EPPlus" Version="7.5.2" />
-<PackageReference Include="SharpDocx" Version="2.4.0" />
+<!-- A (verificat NuGet 04/02/2026) -->
+<PackageReference Include="ClosedXML" Version="0.105.0" />
+<PackageReference Include="EPPlus" Version="8.4.2" />
+<PackageReference Include="SharpDocx" Version="2.6.0" />
 ```
 
 #### BusinessLayer.Integration.Test
@@ -273,22 +273,12 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
 <PackageReference Include="coverlet.collector" Version="3.1.2" />
 
-<!-- A -->
-<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-<PackageReference Include="xunit" Version="2.9.2" />
-<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
-<PackageReference Include="coverlet.collector" Version="6.0.2" />
+<!-- A (verificat NuGet 04/02/2026) -->
+<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+<PackageReference Include="xunit" Version="2.9.3" />
+<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+<PackageReference Include="coverlet.collector" Version="6.0.4" />
 ```
-
-#### CmdHello
-```xml
-<!-- De -->
-<PackageReference Include="Terminal.Gui" Version="1.6.4" />
-
-<!-- A -->
-<PackageReference Include="Terminal.Gui" Version="2.0.0" />
-```
-⚠️ Terminal.Gui v2 té breaking changes significatius
 
 ### Fase 3: Actualitzar Capa UI (⚠️ Més Complex)
 
@@ -302,22 +292,22 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
 <PackageReference Include="Material.Avalonia" Version="3.0.0-rc0.92-nightly" />
 
-<!-- A (Opció 1: Amb Material.Avalonia) -->
-<PackageReference Include="Avalonia" Version="11.2.3" />
-<PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
-<PackageReference Include="Avalonia.Diagnostics" Version="11.2.3" />
-<PackageReference Include="Avalonia.ReactiveUI" Version="11.2.3" />
-<PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
-<PackageReference Include="Material.Avalonia" Version="3.9.1" />
+<!-- A (verificat NuGet 04/02/2026) - Opció 1: Amb Material.Avalonia -->
+<PackageReference Include="Avalonia" Version="11.3.11" />
+<PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
+<PackageReference Include="Avalonia.Diagnostics" Version="11.3.11" />
+<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.11" />
+<PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
+<PackageReference Include="Material.Avalonia" Version="3.13.4" />
 
 <!-- A (Opció 2: Amb Fluent Theme natiu) -->
-<PackageReference Include="Avalonia" Version="11.2.3" />
-<PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
-<PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
-<PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
-<PackageReference Include="Avalonia.Diagnostics" Version="11.2.3" />
-<PackageReference Include="Avalonia.ReactiveUI" Version="11.2.3" />
-<PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
+<PackageReference Include="Avalonia" Version="11.3.11" />
+<PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
+<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.11" />
+<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.11" />
+<PackageReference Include="Avalonia.Diagnostics" Version="11.3.11" />
+<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.11" />
+<PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
 ```
 
 #### UI.ER.ViewModels.csproj
@@ -326,9 +316,9 @@ BusinessLayer.Integration.Test/BusinessLayer.Integration.Test.csproj
 <PackageReference Include="ReactiveUI" Version="18.2.5" />
 <PackageReference Include="ReactiveUI.Validation" Version="3.0.1" />
 
-<!-- A -->
-<PackageReference Include="ReactiveUI" Version="20.1.63" />
-<PackageReference Include="ReactiveUI.Validation" Version="4.0.9" />
+<!-- A (verificat NuGet 04/02/2026) -->
+<PackageReference Include="ReactiveUI" Version="22.3.1" />
+<PackageReference Include="ReactiveUI.Validation" Version="6.0.18" />
 ```
 
 ### Fase 4: Migrar Codi Avalonia
