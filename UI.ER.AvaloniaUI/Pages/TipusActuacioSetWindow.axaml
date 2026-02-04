@@ -13,7 +13,7 @@
         WindowStartupLocation="CenterOwner"
         >
     <Design.DataContext>
-        <viewModels:TipusActuaciosViewModel />
+        <viewModels:TipusActuacioSetViewModel />
     </Design.DataContext>
 
     <DockPanel>

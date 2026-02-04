@@ -27,7 +27,7 @@ namespace UI.ER.ViewModels.ViewModels
         public int Id { get; }
         public string IdTxt => $"Centre #{Id}";
 
-        public string _Codi = string.Empty;
+        private string _Codi = string.Empty;
         public string Codi
         {
             get => _Codi;
@@ -41,7 +41,7 @@ namespace UI.ER.ViewModels.ViewModels
                 this.RaiseAndSetIfChanged(ref _Codi, value);
             }
         }
-        public string _Nom = string.Empty;
+        private string _Nom = string.Empty;
         public string Nom
         {
             get => _Nom;

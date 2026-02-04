@@ -78,14 +78,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // Vars pivot
-        public int? _NumTotalActuacions;
+        private int? _NumTotalActuacions;
         public int? NumTotalActuacions
         {
             get => _NumTotalActuacions;
             set => this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);                
         }
 
-        public string _TotalActuacions = string.Empty;
+        private string _TotalActuacions = string.Empty;
         public string TotalActuacions
         {
             get => _TotalActuacions;

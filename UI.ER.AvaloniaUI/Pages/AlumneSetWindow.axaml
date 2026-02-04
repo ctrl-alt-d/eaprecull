@@ -13,7 +13,7 @@
         WindowStartupLocation="CenterOwner"
         >
     <Design.DataContext>
-        <viewModels:AlumnesViewModel />
+        <viewModels:AlumneSetViewModel />
     </Design.DataContext>
 
     <DockPanel>

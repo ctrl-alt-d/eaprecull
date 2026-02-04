@@ -22,13 +22,13 @@ namespace UI.ER.ViewModels.ViewModels
             SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
         }
 
-        public string _Codi = string.Empty;
+        private string _Codi = string.Empty;
         public string Codi
         {
             get => _Codi;
             set => this.RaiseAndSetIfChanged(ref _Codi, value);
         }
-        public string _Nom = string.Empty;
+        private string _Nom = string.Empty;
         public string Nom
         {
             get => _Nom;

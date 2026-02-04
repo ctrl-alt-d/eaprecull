@@ -52,8 +52,10 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadCentres(bool nomesActius)
         {
+            Loading = true;
             MyItems.Clear();
             await OmplirAmbElsNousValors(nomesActius);
+            Loading = false;
         }
 
         private async Task OmplirAmbElsNousValors(bool nomesActius)
@@ -97,6 +99,14 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _PaginatedMsg;
             set => this.RaiseAndSetIfChanged(ref _PaginatedMsg, value);
+        }
+
+        // Loading
+        private bool _Loading = true;
+        public bool Loading
+        {
+            get => _Loading;
+            set => this.RaiseAndSetIfChanged(ref _Loading, value);
         }
 
         // Filtre

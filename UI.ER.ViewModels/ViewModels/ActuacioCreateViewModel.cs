@@ -168,7 +168,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? AlumneId { get; set; }
-        public string _AlumneTxt = string.Empty;
+        private string _AlumneTxt = string.Empty;
         public string AlumneTxt
         {
             get => _AlumneTxt;
@@ -177,7 +177,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? TipusActuacioId { get; set; }
-        public string _TipusActuacioTxt = string.Empty;
+        private string _TipusActuacioTxt = string.Empty;
         public string TipusActuacioTxt
         {
             get => _TipusActuacioTxt;
@@ -185,7 +185,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _ObservacionsTipusActuacio = string.Empty;
+        private string _ObservacionsTipusActuacio = string.Empty;
         public string ObservacionsTipusActuacio
         {
             get => _ObservacionsTipusActuacio;
@@ -193,14 +193,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _MomentDeLactuacio;
+        private DateTime? _MomentDeLactuacio;
         public DateTime? MomentDeLactuacio
         {
             get => _MomentDeLactuacio;
             set => this.RaiseAndSetIfChanged(ref _MomentDeLactuacio, value);
         }
 
-        public string _MomentDeLactuacioTxt = string.Empty;
+        private string _MomentDeLactuacioTxt = string.Empty;
         public string MomentDeLactuacioTxt
         {
             get => _MomentDeLactuacioTxt;
@@ -209,7 +209,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CursActuacioId { get; set; }
-        public string _CursActuacioTxt = string.Empty;
+        private string _CursActuacioTxt = string.Empty;
         public string CursActuacioTxt
         {
             get => _CursActuacioTxt;
@@ -218,7 +218,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CentreId { get; set; }
-        public string _CentreTxt = string.Empty;
+        private string _CentreTxt = string.Empty;
         public string CentreTxt
         {
             get => _CentreTxt;
@@ -227,7 +227,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? EtapaAlMomentDeLactuacioId { get; set; }
-        public string _EtapaAlMomentDeLactuacioTxt = string.Empty;
+        private string _EtapaAlMomentDeLactuacioTxt = string.Empty;
         public string EtapaAlMomentDeLactuacioTxt
         {
             get => _EtapaAlMomentDeLactuacioTxt;
@@ -236,7 +236,7 @@ namespace UI.ER.ViewModels.ViewModels
 
 
         //
-        public string _NivellAlMomentDeLactuacio = string.Empty;
+        private string _NivellAlMomentDeLactuacio = string.Empty;
         public string NivellAlMomentDeLactuacio
         {
             get => _NivellAlMomentDeLactuacio;
@@ -244,7 +244,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _MinutsDuradaActuacioTxt = StringIntConverter.Convert(default);
+        private string _MinutsDuradaActuacioTxt = StringIntConverter.Convert(default);
         public string MinutsDuradaActuacioTxt
         {
             get => _MinutsDuradaActuacioTxt;
@@ -259,7 +259,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _DescripcioActuacio = string.Empty;
+        private string _DescripcioActuacio = string.Empty;
         public string DescripcioActuacio
         {
             get => _DescripcioActuacio;

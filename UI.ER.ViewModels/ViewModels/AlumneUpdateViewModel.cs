@@ -142,7 +142,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _Nom = string.Empty;
+        private string _Nom = string.Empty;
         public string Nom
         {
             get => _Nom;
@@ -150,7 +150,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _Cognoms = string.Empty;
+        private string _Cognoms = string.Empty;
         public string Cognoms
         {
             get => _Cognoms;
@@ -158,14 +158,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _DataNaixement;
+        private DateTime? _DataNaixement;
         public DateTime? DataNaixement
         {
             get => _DataNaixement;
             set => this.RaiseAndSetIfChanged(ref _DataNaixement, value);
         }
 
-        public string _DataNaixementTxt = string.Empty;
+        private string _DataNaixementTxt = string.Empty;
         public string DataNaixementTxt
         {
             get => _DataNaixementTxt;
@@ -174,7 +174,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CentreId { get; set; }
-        public string _CentreTxt = string.Empty;
+        private string _CentreTxt = string.Empty;
         public string CentreTxt
         {
             get => _CentreTxt;
@@ -183,7 +183,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CursDarreraActualitacioDadesId { get; set; }
-        public string _CursDarreraActualitacioDadesTxt = string.Empty;
+        private string _CursDarreraActualitacioDadesTxt = string.Empty;
         public string CursDarreraActualitacioDadesTxt
         {
             get => _CursDarreraActualitacioDadesTxt;
@@ -192,7 +192,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? EtapaActualId { get; set; }
-        public string _EtapaActualTxt = string.Empty;
+        private string _EtapaActualTxt = string.Empty;
         public string EtapaActualTxt
         {
             get => _EtapaActualTxt;
@@ -200,21 +200,21 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _NivellActual = string.Empty;
+        private string _NivellActual = string.Empty;
         public string NivellActual
         {
             get => _NivellActual;
             set => this.RaiseAndSetIfChanged(ref _NivellActual, value);
         }
         //
-        public DateTime? _DataInformeNESENEE;
+        private DateTime? _DataInformeNESENEE;
         public DateTime? DataInformeNESENEE
         {
             get => _DataInformeNESENEE;
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENEE, value);
         }
 
-        public string _DataInformeNESENEETxt = string.Empty;
+        private string _DataInformeNESENEETxt = string.Empty;
         public string DataInformeNESENEETxt
         {
             get => _DataInformeNESENEETxt;
@@ -222,7 +222,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _ObservacionsNESENEE = string.Empty;
+        private string _ObservacionsNESENEE = string.Empty;
         public string ObservacionsNESENEE
         {
             get => _ObservacionsNESENEE;
@@ -230,21 +230,21 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _DataInformeNESENoNEE;
+        private DateTime? _DataInformeNESENoNEE;
         public DateTime? DataInformeNESENoNEE
         {
             get => _DataInformeNESENoNEE;
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEE, value);
         }
 
-        public string _DataInformeNESENoNEETxt = string.Empty;
+        private string _DataInformeNESENoNEETxt = string.Empty;
         public string DataInformeNESENoNEETxt
         {
             get => _DataInformeNESENoNEETxt;
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEETxt, value);
         }
         //
-        public string _ObservacionsNESENoNEE = string.Empty;
+        private string _ObservacionsNESENoNEE = string.Empty;
         public string ObservacionsNESENoNEE
         {
             get => _ObservacionsNESENoNEE;
@@ -252,7 +252,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _Tags = string.Empty;
+        private string _Tags = string.Empty;
         public string Tags
         {
             get => _Tags;
@@ -360,14 +360,14 @@ namespace UI.ER.ViewModels.ViewModels
         // ---
 
         protected virtual int? CursActualId { get; set; }
-        public string _CursActualTxt = string.Empty;
+        private string _CursActualTxt = string.Empty;
         public string CursActualTxt
         {
             get => _CursActualTxt;
             set => this.RaiseAndSetIfChanged(ref _CursActualTxt, value);
         }
 
-        public string _MissatgeAlertaCursTxt = string.Empty;
+        private string _MissatgeAlertaCursTxt = string.Empty;
         public string MissatgeAlertaCursTxt
         {
             get => _MissatgeAlertaCursTxt;

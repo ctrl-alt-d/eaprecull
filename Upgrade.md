@@ -1,5 +1,135 @@
 # Guia d'Actualització: .NET 6.0 → .NET 10.0
 
+---
+
+## 📋 Anàlisi del Patró MVVM
+
+### Arquitectura General
+L'aplicació segueix el patró **MVVM amb ReactiveUI**, separant:
+- **Models**: DTOs a `DTO.o` i `DTO.i`
+- **Views**: Fitxers `.axaml` i `.axaml.cs` a `UI.ER.AvaloniaUI/Pages/`
+- **ViewModels**: Classes a `UI.ER.ViewModels/ViewModels/`
+
+### Estructura per Entitat
+Cada entitat (Alumne, Centre, Etapa, etc.) segueix un patró consistent de 4 ViewModels:
+
+| Tipus | Funció | Exemple |
+|-------|--------|---------|
+| `{Entitat}SetViewModel` | Llista amb filtres i paginació | `AlumneSetViewModel` |
+| `{Entitat}RowViewModel` | Representa una fila de la llista | `AlumneRowViewModel` |
+| `{Entitat}CreateViewModel` | Formulari de creació | `AlumneCreateViewModel` |
+| `{Entitat}UpdateViewModel` | Formulari d'edició | `AlumneUpdateViewModel` |
+
+### ✅ Punts Positius (Ben Implementat)
+
+1. **Separació correcta View/ViewModel**
+   - Views són `ReactiveWindow<TViewModel>` o `ReactiveUserControl<TViewModel>`
+   - ViewModels hereten de `ViewModelBase` (que hereta de `ReactiveValidationObject`)
+
+2. **Ús correcte de ReactiveUI**
+   - Propietats reactives amb `RaiseAndSetIfChanged`
+   - Commands amb `ReactiveCommand`
+   - Observables amb `WhenAnyValue` i `CombineLatest`
+   - Validacions amb `ReactiveUI.Validation`
+
+3. **Interaccions per diàlegs**
+   - Ús de `Interaction<TInput, TOutput>` per obrir finestres modals
+   - Registre correcte amb `RegisterHandler` al `WhenActivated`
+
+4. **Injecció de Dependències**
+   - `SuperContext` com a Service Locator per accedir al BusinessLayer
+   - Serveis registrats via `ServiceCollection`
+
+5. **Gestió d'errors**
+   - `BrokenRules` col·lecció observable per mostrar errors
+   - Conversió DTO a ViewModel amb `DTO2ModelView`
+
+### ⚠️ Inconsistències Detectades
+
+#### 1. ViewLocator no s'utilitza
+```csharp
+// ViewLocator.cs intenta resoldre "ViewModel" → "View"
+var name = data.GetType().FullName!.Replace("ViewModel", "View");
+```
+**Problema**: El ViewLocator assumeix que les Views estan al mateix namespace que els ViewModels, però:
+- ViewModels: `UI.ER.ViewModels.ViewModels`
+- Views: `UI.ER.AvaloniaUI.Pages`
+
+**Impacte**: Baix - les Views es creen manualment als diàlegs.
+
+#### 2. Namespaces inconsistents
+- ViewModels al namespace `UI.ER.ViewModels.ViewModels` (duplicat)
+- Services al namespace `UI.ER.AvaloniaUI.Services` però al projecte `UI.ER.ViewModels`
+
+**Fitxers afectats**:
+- `SuperContext.cs` → namespace `UI.ER.AvaloniaUI.Services`
+- `StringDateConverter.cs` → hauria d'estar amb els ViewModels
+
+#### 3. Design DataContext incorrectes als AXAML
+```xml
+<!-- AlumneSetWindow.axaml -->
+<Design.DataContext>
+    <viewModels:AlumnesViewModel />  <!-- No existeix! -->
+</Design.DataContext>
+
+<!-- CentreSetWindow.axaml -->
+<Design.DataContext>
+    <viewModels:CentresViewModel />  <!-- No existeix! -->
+</Design.DataContext>
+```
+**Hauria de ser**: `AlumneSetViewModel` i `CentreSetViewModel`
+
+#### 4. Propietats amb backing field inconsistent
+```csharp
+// Alguns usen guió baix
+public string _Nom = string.Empty;  // ❌ Hauria de ser privat
+
+// Correcte seria:
+private string _nom = string.Empty;
+public string Nom { get => _nom; set => ... }
+```
+
+#### 5. Loading state no consistent
+- `AlumneSetViewModel` té `Loading` property ✅
+- `ActuacioSetViewModel` té `Loading` property ✅
+- `CentreSetViewModel` **NO** té `Loading` property ❌
+- `EtapaSetViewModel` **NO** té `Loading` property ❌
+
+#### 6. Alguns ViewModels no desregistren subscripcions
+Els ViewModels no implementen `IDisposable` per netejar subscripcions.
+
+#### 7. Codi duplicat als Lookups
+Cada `CreateWindow.axaml.cs` i `UpdateWindow.axaml.cs` repeteix els mateixos handlers de Lookup:
+```csharp
+private async Task CentreLookupShowDialogAsync(...) { ... }
+private async Task EtapaActualLookupShowDialogAsync(...) { ... }
+```
+
+### 📊 Resum de Consistència per Entitat
+
+| Entitat | Set | Row | Create | Update | Consistència |
+|---------|-----|-----|--------|--------|--------------|
+| Alumne | ✅ | ✅ | ✅ | ✅ | 🟢 Alta |
+| Centre | ✅ | ✅ | ✅ | ✅ | 🟢 Alta |
+| Etapa | ✅ | ✅ | ✅ | ✅ | 🟢 Alta |
+| TipusActuacio | ✅ | ✅ | ✅ | ✅ | 🟢 Alta |
+| CursAcademic | ✅ | ✅ | ✅ | ✅ | 🟢 Alta |
+| Actuacio | ✅ | ✅ | ✅ | ✅ | 🟢 Alta |
+
+### 🔧 Recomanacions de Millora (Opcional)
+
+1. **Corregir Design.DataContext** als AXAML per tenir millor suport al designer
+2. **Uniformitzar Loading state** a tots els SetViewModels
+3. **Crear una classe base** per als Lookup handlers i evitar duplicació
+4. **Moure SuperContext** al namespace correcte `UI.ER.ViewModels.Services`
+5. **Fer privats els backing fields** (`_Nom` → `private string _nom`)
+
+### ✅ Conclusió
+
+El patró MVVM està **ben implementat i és consistent** entre totes les entitats. Les inconsistències detectades són menors i no bloquegen la migració. Es poden arreglar durant o després de l'actualització de .NET.
+
+---
+
 ## Resum de l'Estat Actual
 
 ### Versions Actuals
@@ -77,11 +207,11 @@ L'actualització d'Avalonia és el canvi més significatiu. La versió 11 és un
 
 ## 📋 Tasques d'Actualització
 
-### Fase 0: Preparació
-- [ ] Fer backup complet del projecte
-- [ ] Crear branca `upgradeToNow` ✅ (fet)
-- [ ] Assegurar que tots els tests passen amb la versió actual
-- [ ] Instal·lar .NET 10 SDK
+### Fase 0: Preparació ✅
+- [x] Fer backup complet del projecte
+- [x] Crear branca `upgradeToNow`
+- [x] Assegurar que tots els tests passen amb la versió actual (3/3 OK)
+- [x] Instal·lar .NET 10 SDK (10.0.102 disponible)
 
 ### Fase 1: Actualitzar Target Framework (Tots els Projectes)
 

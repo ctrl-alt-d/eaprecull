@@ -13,7 +13,7 @@
         WindowStartupLocation="CenterOwner"
         >
     <Design.DataContext>
-        <viewModels:CursAcademicsViewModel />
+        <viewModels:CursAcademicSetViewModel />
     </Design.DataContext>
 
     <DockPanel>
