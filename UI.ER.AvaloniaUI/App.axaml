@@ -5,7 +5,8 @@
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              x:Class="UI.ER.AvaloniaUI.App">
     <Application.Styles>
-      <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="Amber" />
+      <!-- Modern color scheme: Indigo primary with Pink accent -->
+      <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Pink" />
       <avalonia:MaterialIconStyles />
           <Style Selector="TextBlock.Error">
                 <Setter Property="Foreground" Value="Red"/>
