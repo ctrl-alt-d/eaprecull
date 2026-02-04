@@ -22,7 +22,8 @@ namespace BusinessLayer.Services
 
         public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            // EPPlus 8+ requires using the static License property
+            ExcelPackage.License.SetNonCommercialOrganization("EAPRecull - Educational Use");
         }
 
         public async Task<OperationResult<dtoo.SaveResult>> Run()
