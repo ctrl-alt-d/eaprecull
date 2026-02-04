@@ -6,6 +6,7 @@ using ReactiveUI;
 using dtoo = DTO.o.DTOs;
 using ReactiveUI.Avalonia;
 using System;
+using System.Reactive.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -37,6 +38,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
                 {
                     var dialog = new ActuacioUpdateWindow()
@@ -56,6 +58,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
             );
 

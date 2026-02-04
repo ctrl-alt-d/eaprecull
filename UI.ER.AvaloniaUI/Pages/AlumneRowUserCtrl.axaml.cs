@@ -7,6 +7,7 @@ using dtoo = DTO.o.DTOs;
 using ReactiveUI.Avalonia;
 using System;
 using System.Reactive;
+using System.Reactive.Linq;
 using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Pages
@@ -41,6 +42,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
                 {
                     var dialog = new AlumneUpdateWindow()
@@ -59,6 +61,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
                 {
                     var dialog = new ActuacioSetWindow()
@@ -76,6 +79,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
             );
 
@@ -86,6 +90,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.GeneraInformeCommand.Subscribe(ObraFileExplorer))
             );
 
