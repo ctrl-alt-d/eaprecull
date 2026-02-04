@@ -9,7 +9,7 @@ using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class EtapaRowUserCtrl : ReactiveUserControl<EtapaRowViewModel>
+    public partial class EtapaRowUserCtrl : ReactiveUserControl<EtapaRowViewModel>
     {
         public EtapaRowUserCtrl()
         {
@@ -37,19 +37,17 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new EtapaUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.Etapa?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<EtapaUpdateViewModel, dtoo.Etapa?> interaction)
-        {
-            var dialog = new EtapaUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.Etapa?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)

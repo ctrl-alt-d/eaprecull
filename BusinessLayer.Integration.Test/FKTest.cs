@@ -1,5 +1,6 @@
 using DataLayer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using BusinessLayer.DI;
@@ -22,7 +23,9 @@ namespace BusinessLayer.Integration.Test
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt => opt.UseSqlite(ConnectionString));
+            services.AddDbContextFactory<AppDbContext>(opt => 
+                opt.UseSqlite(ConnectionString)
+                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
             services.BusinessLayerConfigureServices();
 
             var serviceProvider = services.BuildServiceProvider();

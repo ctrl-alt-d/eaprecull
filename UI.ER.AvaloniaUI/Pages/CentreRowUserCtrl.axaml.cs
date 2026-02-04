@@ -9,7 +9,7 @@ using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel>
+    public partial class CentreRowUserCtrl : ReactiveUserControl<CentreRowViewModel>
     {
         public CentreRowUserCtrl()
         {
@@ -37,19 +37,17 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new CentreUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<CentreUpdateViewModel, dtoo.Centre?> interaction)
-        {
-            var dialog = new CentreUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.Centre?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)

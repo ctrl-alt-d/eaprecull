@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
@@ -199,7 +199,7 @@
 
             </Grid>
 
-            <ItemsControl Margin="10,5,10,5" Items="{Binding BrokenRules}">            
+            <ItemsControl Margin="10,5,10,5" ItemsSource="{Binding BrokenRules}">            
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Classes="Error" Text="{Binding}"/>

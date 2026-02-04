@@ -10,7 +10,7 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class EtapaUpdateWindow : ReactiveWindow<EtapaUpdateViewModel>
+    public partial class EtapaUpdateWindow : ReactiveWindow<EtapaUpdateViewModel>
     {
         public OperationResult<dtoo.Etapa> Result { get; set; } = default!;
         public EtapaUpdateWindow()

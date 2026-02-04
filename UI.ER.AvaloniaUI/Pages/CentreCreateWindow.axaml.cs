@@ -10,7 +10,7 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CentreCreateWindow : ReactiveWindow<CentreCreateViewModel>
+    public partial class CentreCreateWindow : ReactiveWindow<CentreCreateViewModel>
     {
         public OperationResult<dtoo.Centre> Result { get; set; } = default!;
         public CentreCreateWindow()

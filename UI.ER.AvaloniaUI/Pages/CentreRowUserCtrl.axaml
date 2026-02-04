@@ -5,7 +5,7 @@
              xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:system="clr-namespace:System;assembly=System.Runtime.Extensions"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:styles="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UI.ER.AvaloniaUI.Pages.CentreRowUserCtrl">
@@ -64,7 +64,7 @@
 
                 <ItemsControl Margin="10"
                               IsVisible="{Binding BrokenRules.Count}"
-                              Items="{Binding BrokenRules}">            
+                              ItemsSource="{Binding BrokenRules}">            
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Classes="Error" Text="{Binding}"/>

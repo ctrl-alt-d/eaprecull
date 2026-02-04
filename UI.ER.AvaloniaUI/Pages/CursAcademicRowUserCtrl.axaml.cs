@@ -9,7 +9,7 @@ using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CursAcademicRowUserCtrl : ReactiveUserControl<CursAcademicRowViewModel>
+    public partial class CursAcademicRowUserCtrl : ReactiveUserControl<CursAcademicRowViewModel>
     {
         public CursAcademicRowUserCtrl()
         {
@@ -37,19 +37,17 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new CursAcademicUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.CursAcademic?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<CursAcademicUpdateViewModel, dtoo.CursAcademic?> interaction)
-        {
-            var dialog = new CursAcademicUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.CursAcademic?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)

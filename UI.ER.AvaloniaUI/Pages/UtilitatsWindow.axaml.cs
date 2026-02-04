@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class UtilitatsWindow : ReactiveWindow<UtilitatsViewModel>
+    public partial class UtilitatsWindow : ReactiveWindow<UtilitatsViewModel>
     {
         public UtilitatsWindow()
         {

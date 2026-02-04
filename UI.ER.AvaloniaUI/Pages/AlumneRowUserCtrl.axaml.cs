@@ -11,7 +11,7 @@ using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class AlumneRowUserCtrl : ReactiveUserControl<AlumneRowViewModel>
+    public partial class AlumneRowUserCtrl : ReactiveUserControl<AlumneRowViewModel>
     {
         public AlumneRowUserCtrl()
         {
@@ -41,19 +41,17 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.Alumne?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<AlumneUpdateViewModel, dtoo.Alumne?> interaction)
-        {
-            var dialog = new AlumneUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.Alumne?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Show actuacions
         protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
@@ -61,17 +59,16 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new ActuacioSetWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowActuacioLookup(InteractionContext<ActuacioSetViewModel, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new ActuacioSetWindow()
-            {
-                DataContext = interaction.Input
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)

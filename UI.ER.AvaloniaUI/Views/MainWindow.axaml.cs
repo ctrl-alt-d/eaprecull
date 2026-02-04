@@ -4,7 +4,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Material.Styles;
+using Avalonia.Threading;
+using Material.Styles.Controls;
 using UI.ER.AvaloniaUI.Pages;
 using UI.ER.ViewModels.ViewModels;
 using Avalonia.ReactiveUI;
@@ -16,15 +17,8 @@ using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Views
 {
-    public class MainWindow : ReactiveWindow<AppStatusViewModel>
+    public partial class MainWindow : ReactiveWindow<AppStatusViewModel>
     {
-        #region Control fields
-        private ToggleButton NavDrawerSwitch = default!;
-        private ListBox DrawerList = default!;
-        private Carousel PageCarousel = default!;
-        private Grid mainScroller = default!;
-        #endregion
-
         public MainWindow()
         {
 
@@ -48,17 +42,16 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
+                .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneSetWindow()
+                    {
+                        DataContext = new AlumneSetViewModel(modeLookup: false)
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowAlumneLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new AlumneSetWindow()
-            {
-                DataContext = new AlumneSetViewModel(modeLookup: false)
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         //
         protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
@@ -66,17 +59,16 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new ActuacioSetWindow()
+                    {
+                        DataContext = new ActuacioSetViewModel(modeLookup: false)
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowActuacioLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new ActuacioSetWindow()
-            {
-                DataContext = new ActuacioSetViewModel(modeLookup: false)
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         //
         protected virtual void RegisterShowCursAcademicDialog(Action<IDisposable> disposables)
@@ -84,17 +76,16 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
+                .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new CursAcademicSetWindow()
+                    {
+                        DataContext = new CursAcademicSetViewModel(modeLookup: false)
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowCursAcademicLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new CursAcademicSetWindow()
-            {
-                DataContext = new CursAcademicSetViewModel(modeLookup: false)
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         private Window GetWindow()
             =>
@@ -144,7 +135,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void TemplatedControl_OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)");
+            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)", "Root", DispatcherPriority.Normal);
         }
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)
@@ -220,7 +211,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            SnackbarHost.Post("See ya next time, user!");
+            SnackbarHost.Post("See ya next time, user!", "Root", DispatcherPriority.Normal);
         }
     }
 }

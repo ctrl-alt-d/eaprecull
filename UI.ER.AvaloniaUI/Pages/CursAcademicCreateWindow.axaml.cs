@@ -10,7 +10,7 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class CursAcademicCreateWindow : ReactiveWindow<CursAcademicCreateViewModel>
+    public partial class CursAcademicCreateWindow : ReactiveWindow<CursAcademicCreateViewModel>
     {
         public OperationResult<dtoo.CursAcademic> Result { get; set; } = default!;
         public CursAcademicCreateWindow()

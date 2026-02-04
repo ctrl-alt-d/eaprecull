@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class ActuacioSetWindow : ReactiveWindow<ActuacioSetViewModel>
+    public partial class ActuacioSetWindow : ReactiveWindow<ActuacioSetViewModel>
     {
         public ActuacioSetWindow()
         {
@@ -27,7 +27,16 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowDialog.RegisterHandler(DoShowCreateDialog))
+                .Subscribe(vm => vm!.ShowDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new ActuacioCreateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.Actuacio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
 
         private void InitializeComponent()
@@ -38,16 +47,5 @@ namespace UI.ER.AvaloniaUI.Pages
             =>
             (Window)this.VisualRoot!;
 
-        private async Task DoShowCreateDialog(InteractionContext<ActuacioCreateViewModel, dtoo.Actuacio?> interaction)
-        {
-            var dialog = new ActuacioCreateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.Actuacio?>(GetWindow());
-            interaction.SetOutput(result);
-
-        }
     }
 }

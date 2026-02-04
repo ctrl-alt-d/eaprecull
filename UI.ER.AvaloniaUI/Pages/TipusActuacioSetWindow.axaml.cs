@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class TipusActuacioSetWindow : ReactiveWindow<TipusActuacioSetViewModel>
+    public partial class TipusActuacioSetWindow : ReactiveWindow<TipusActuacioSetViewModel>
     {
         public TipusActuacioSetWindow()
         {
@@ -28,7 +28,16 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowDialog.RegisterHandler(DoShowCreateDialog))
+                .Subscribe(vm => vm!.ShowDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new TipusActuacioCreateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.TipusActuacio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
 
         private void InitializeComponent()
@@ -38,17 +47,5 @@ namespace UI.ER.AvaloniaUI.Pages
         private Window GetWindow()
             =>
             (Window)this.VisualRoot!;
-
-        private async Task DoShowCreateDialog(InteractionContext<TipusActuacioCreateViewModel, dtoo.TipusActuacio?> interaction)
-        {
-            var dialog = new TipusActuacioCreateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.TipusActuacio?>(GetWindow());
-            interaction.SetOutput(result);
-
-        }
     }
 }

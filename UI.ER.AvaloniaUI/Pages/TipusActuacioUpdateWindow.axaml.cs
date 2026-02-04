@@ -10,7 +10,7 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class TipusActuacioUpdateWindow : ReactiveWindow<TipusActuacioUpdateViewModel>
+    public partial class TipusActuacioUpdateWindow : ReactiveWindow<TipusActuacioUpdateViewModel>
     {
         public OperationResult<dtoo.TipusActuacio> Result { get; set; } = default!;
         public TipusActuacioUpdateWindow()

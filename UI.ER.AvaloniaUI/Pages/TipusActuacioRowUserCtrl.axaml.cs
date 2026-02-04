@@ -9,7 +9,7 @@ using System;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class TipusActuacioRowUserCtrl : ReactiveUserControl<TipusActuacioRowViewModel>
+    public partial class TipusActuacioRowUserCtrl : ReactiveUserControl<TipusActuacioRowViewModel>
     {
         public TipusActuacioRowUserCtrl()
         {
@@ -37,19 +37,17 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new TipusActuacioUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<dtoo.TipusActuacio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<TipusActuacioUpdateViewModel, dtoo.TipusActuacio?> interaction)
-        {
-            var dialog = new TipusActuacioUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.TipusActuacio?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)

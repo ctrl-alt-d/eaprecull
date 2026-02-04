@@ -14,7 +14,7 @@ using System.Reactive;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class ActuacioUpdateWindow : ReactiveWindow<ActuacioUpdateViewModel>
+    public partial class ActuacioUpdateWindow : ReactiveWindow<ActuacioUpdateViewModel>
     {
         public OperationResult<dtoo.Actuacio> Result { get; set; } = default!;
         public ActuacioUpdateWindow()
@@ -32,11 +32,61 @@ namespace UI.ER.AvaloniaUI.Pages
                 );
 
                 // Lookups
-                d(ViewModel!.ShowAlumneLookup.RegisterHandler(AlumneLookupShowDialogAsync));
-                d(ViewModel!.ShowTipusActuacioLookup.RegisterHandler(TipusActuacioLookupShowDialogAsync));
-                d(ViewModel!.ShowCentreLookup.RegisterHandler(CentreLookupShowDialogAsync));
-                d(ViewModel!.ShowEtapaAlMomentDeLactuacioLookup.RegisterHandler(EtapaAlMomentDeLactuacioLookupShowDialogAsync));
-                d(ViewModel!.ShowCursActuacioLookup.RegisterHandler(CursActuacioLookupShowDialogAsync));
+                d(ViewModel!.ShowAlumneLookup.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneSetWindow()
+                    {
+                        DataContext = new AlumneSetViewModel(modeLookup: true)
+                    };
+
+                    var window = (Window)this.VisualRoot!;
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+                    interaction.SetOutput(result);
+                }));
+                d(ViewModel!.ShowTipusActuacioLookup.RegisterHandler(async interaction =>
+                {
+                    var dialog = new TipusActuacioSetWindow()
+                    {
+                        DataContext = new TipusActuacioSetViewModel(modeLookup: true)
+                    };
+
+                    var window = (Window)this.VisualRoot!;
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+                    interaction.SetOutput(result);
+                }));
+                d(ViewModel!.ShowCentreLookup.RegisterHandler(async interaction =>
+                {
+                    var dialog = new CentreSetWindow()
+                    {
+                        DataContext = new CentreSetViewModel(modeLookup: true)
+                    };
+
+                    var window = (Window)this.VisualRoot!;
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+                    interaction.SetOutput(result);
+                }));
+                d(ViewModel!.ShowEtapaAlMomentDeLactuacioLookup.RegisterHandler(async interaction =>
+                {
+                    var dialog = new EtapaSetWindow()
+                    {
+                        DataContext = new EtapaSetViewModel(modeLookup: true)
+                    };
+
+                    var window = (Window)this.VisualRoot!;
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+                    interaction.SetOutput(result);
+                }));
+                d(ViewModel!.ShowCursActuacioLookup.RegisterHandler(async interaction =>
+                {
+                    var dialog = new CursAcademicSetWindow()
+                    {
+                        DataContext = new CursAcademicSetViewModel(modeLookup: true)
+                    };
+
+                    var window = (Window)this.VisualRoot!;
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
+                    interaction.SetOutput(result);
+                }));
             });
         }
 
@@ -47,69 +97,6 @@ namespace UI.ER.AvaloniaUI.Pages
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
-
-        //
-        private async Task AlumneLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new AlumneSetWindow()
-            {
-                DataContext = new AlumneSetViewModel(modeLookup: true)
-            };
-
-            var window = (Window)this.VisualRoot!;
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-            interaction.SetOutput(result);
-        }
-
-
-        //
-        private async Task TipusActuacioLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new TipusActuacioSetWindow()
-            {
-                DataContext = new TipusActuacioSetViewModel(modeLookup: true)
-            };
-
-            var window = (Window)this.VisualRoot!;
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-            interaction.SetOutput(result);
-        }
-        //
-        private async Task CentreLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new CentreSetWindow()
-            {
-                DataContext = new CentreSetViewModel(modeLookup: true)
-            };
-
-            var window = (Window)this.VisualRoot!;
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-            interaction.SetOutput(result);
-        }
-
-
-        private async Task EtapaAlMomentDeLactuacioLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new EtapaSetWindow()
-            {
-                DataContext = new EtapaSetViewModel(modeLookup: true)
-            };
-
-            var window = (Window)this.VisualRoot!;
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-            interaction.SetOutput(result);
-        }
-        private async Task CursActuacioLookupShowDialogAsync(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new CursAcademicSetWindow()
-            {
-                DataContext = new CursAcademicSetViewModel(modeLookup: true)
-            };
-
-            var window = (Window)this.VisualRoot!;
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-            interaction.SetOutput(result);
-        }
 
     }
 }
