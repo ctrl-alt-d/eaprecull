@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -19,6 +20,9 @@ namespace UI.ER.AvaloniaUI.Views
 {
     public partial class MainWindow : ReactiveWindow<AppStatusViewModel>
     {
+        private NavigationDrawer? _leftDrawer;
+        private ToggleButton? _navSwitch;
+
         public MainWindow()
         {
 
@@ -34,6 +38,31 @@ namespace UI.ER.AvaloniaUI.Views
             InitializeComponent();
             this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
 
+            // Get controls and set up two-way sync
+            _leftDrawer = this.FindControl<NavigationDrawer>("LeftDrawer");
+            _navSwitch = this.FindControl<ToggleButton>("NavDrawerSwitch");
+            
+            if (_navSwitch != null && _leftDrawer != null)
+            {
+                // Force closed state on startup
+                _leftDrawer.LeftDrawerOpened = false;
+                _navSwitch.IsChecked = false;
+                
+                // Sync toggle button changes to drawer
+                _navSwitch.IsCheckedChanged += (s, e) =>
+                {
+                    _leftDrawer.LeftDrawerOpened = _navSwitch.IsChecked ?? false;
+                };
+                
+                // Sync drawer changes back to toggle button
+                _leftDrawer.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == NavigationDrawer.LeftDrawerOpenedProperty)
+                    {
+                        _navSwitch.IsChecked = _leftDrawer.LeftDrawerOpened;
+                    }
+                };
+            }
         }
 
         //

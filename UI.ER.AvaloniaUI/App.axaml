@@ -6,6 +6,7 @@
              x:Class="UI.ER.AvaloniaUI.App">
     <Application.Styles>
       <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="Amber" />
+      <avalonia:MaterialIconStyles />
           <Style Selector="TextBlock.Error">
                 <Setter Property="Foreground" Value="Red"/>
                 <Style.Animations>                    

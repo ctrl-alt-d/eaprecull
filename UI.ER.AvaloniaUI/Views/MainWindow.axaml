@@ -25,7 +25,7 @@
 
     <controls:SnackbarHost HostName="Root" TemplateApplied="TemplatedControl_OnTemplateApplied">
         <controls:NavigationDrawer Name="LeftDrawer"
-                                 LeftDrawerOpened="{Binding ElementName=NavDrawerSwitch, Path=IsChecked, Mode=TwoWay}">
+                                 LeftDrawerOpened="False">
             <controls:NavigationDrawer.LeftDrawerContent>
                 <ScrollViewer>
                     <StackPanel>
@@ -70,14 +70,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <ToggleButton Name="NavDrawerSwitch"
-                                      Classes="Flat TransparentBack"
+                                      IsChecked="False"
+                                      Theme="{StaticResource MaterialFlatButton}"
                                       Width="32" Height="32" Padding="4">
                             <avalonia:MaterialIcon Kind="Menu" Width="24" Height="24" />
                         </ToggleButton>
                         <TextBlock Grid.Column="2" Classes="Headline6" Text="EAP Recull"
                                    VerticalAlignment="Center" />
                         <Menu Grid.Column="4" Height="32" Padding="0" Margin="0">
-                            <MenuItem Height="32" Width="32">
+                            <MenuItem Height="32" Width="32" Padding="4">
                                 <MenuItem.Header>
                                     <avalonia:MaterialIcon Kind="DotsVertical" Width="24" Height="24" />
                                 </MenuItem.Header>
