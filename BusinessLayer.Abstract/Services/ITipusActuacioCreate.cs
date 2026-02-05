@@ -1,10 +1,10 @@
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ITipusActuacioCreate : ICreate<dtoo.TipusActuacio, parms.TipusActuacioCreateParms>
+    public interface ITipusActuacioCreate : ICreate<Dtoo.TipusActuacio, Parms.TipusActuacioCreateParms>
     {
     }
 }

@@ -1,6 +1,6 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
@@ -12,7 +12,7 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class CursAcademicCreateWindow : ReactiveWindow<CursAcademicCreateViewModel>
     {
-        public OperationResult<dtoo.CursAcademic> Result { get; set; } = default!;
+        public OperationResult<Dtoo.CursAcademic> Result { get; set; } = default!;
         public CursAcademicCreateWindow()
         {
             this.InitializeComponent();

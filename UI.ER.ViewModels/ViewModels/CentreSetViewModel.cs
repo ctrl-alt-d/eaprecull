@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
@@ -29,7 +29,7 @@ namespace UI.ER.ViewModels.ViewModels
                 ;
 
             // Create
-            ShowDialog = new Interaction<CentreCreateViewModel, dtoo.Centre?>();
+            ShowDialog = new Interaction<CentreCreateViewModel, Dtoo.Centre?>();
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -62,11 +62,11 @@ namespace UI.ER.ViewModels.ViewModels
         {
             // Preparar paràmetres al backend
             var esActiu = nomesActius ? true : (bool?)null;
-            var parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
+            var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
             using var bl = SuperContext.GetBLOperation<ICentreSetAmbActuacions>();
-            var dto = await bl.FromPredicate(parms);
+            var dto = await bl.FromPredicate(Parms);
 
             // 
             BrokenRules.Clear();
@@ -81,7 +81,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Cast<dtoo.CentreAmbActuacions>()
+                .Cast<Dtoo.CentreAmbActuacions>()
                 .Select(x => new CentreRowViewModel(x, ModeLookup));
 
             MyItems.AddRange(newItems);
@@ -120,7 +120,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // Crear item
         public ICommand Create { get; }
-        public Interaction<CentreCreateViewModel, dtoo.Centre?> ShowDialog { get; }
+        public Interaction<CentreCreateViewModel, Dtoo.Centre?> ShowDialog { get; }
 
 
     }

@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
@@ -74,7 +74,7 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual async void LoadDadesInicials()
         {
             using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
-            var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
+            var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
             CursDarreraActualitacioDadesTxt = cursActual?.Etiqueta ?? string.Empty;
@@ -277,14 +277,14 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual async Task LoadDadesCursActual()
         {
             using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
-            var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
+            var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursActualId = cursActual?.Id;
             CursActualTxt = cursActual?.Etiqueta ?? string.Empty;
         }
 
 
-        private void DTO2ModelView(dtoo.Alumne? data)
+        private void DTO2ModelView(Dtoo.Alumne? data)
         {
             if (data == null) return;
 
@@ -322,13 +322,13 @@ namespace UI.ER.ViewModels.ViewModels
 
         }
 
-        public virtual async Task<dtoo.Alumne?> UpdateData()
+        public virtual async Task<Dtoo.Alumne?> UpdateData()
         {
             // Clear brokenRules
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.AlumneUpdateParms(
+            var Parms = new Dtoi.AlumneUpdateParms(
                 Id,
                 Nom,
                 Cognoms,
@@ -346,7 +346,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // cridar backend
             using var bl = SuperContext.GetBLOperation<IAlumneUpdate>();
-            var dto = await bl.Update(parms);
+            var dto = await bl.Update(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -378,7 +378,7 @@ namespace UI.ER.ViewModels.ViewModels
         // ---
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Alumne?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.Alumne?> SubmitCommand { get; }
 
 
         // --- Centre ---

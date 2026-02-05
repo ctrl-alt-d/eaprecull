@@ -1,9 +1,9 @@
 ﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -16,12 +16,12 @@ using System.Linq;
 namespace BusinessLayer.Services
 {
     public class ActuacioCreate :
-        BLCreate<models.Actuacio, parms.ActuacioCreateParms, dtoo.Actuacio>,
+        BLCreate<Models.Actuacio, Parms.ActuacioCreateParms, Dtoo.Actuacio>,
         IActuacioCreate
     {
-        protected override Expression<Func<Actuacio, dtoo.Actuacio>> ToDto
+        protected override Expression<Func<Actuacio, Dtoo.Actuacio>> ToDto
             =>
-            project
+            Project
             .Actuacio
             .ToDto;
 
@@ -34,7 +34,7 @@ namespace BusinessLayer.Services
             Task.CompletedTask;
 
 
-        protected override async Task<models.Actuacio> InitializeModel(ActuacioCreateParms parm)
+        protected override async Task<Models.Actuacio> InitializeModel(ActuacioCreateParms parm)
             =>
             new(
                 alumne: await Perfection<Alumne>(parm.AlumneId),

@@ -43,9 +43,9 @@ namespace BusinessLayer.Services.ImportAllHelpers
             var firstRowUsed = ws.FirstRowUsed();
             var lastRowUsed = ws.LastRowUsed();
 
-            var row = firstRowUsed.RowUsed().RowBelow();
+            var row = firstRowUsed!.RowUsed().RowBelow();
 
-            System.Console.WriteLine($"Last row number: {lastRowUsed.RowNumber()}");
+            System.Console.WriteLine($"Last row number: {lastRowUsed!.RowNumber()}");
 
             while (row.RowNumber() <= lastRowUsed.RowNumber())
             {

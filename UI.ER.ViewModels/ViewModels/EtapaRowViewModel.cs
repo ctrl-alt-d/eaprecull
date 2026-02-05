@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
@@ -18,8 +18,8 @@ namespace UI.ER.ViewModels.ViewModels
     public class EtapaRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Etapa Model { get; }
-        public EtapaRowViewModel(dtoo.Etapa EtapaDto, bool modeLookup = false)
+        protected Dtoo.Etapa Model { get; }
+        public EtapaRowViewModel(Dtoo.Etapa EtapaDto, bool modeLookup = false)
         {
 
             // Behavior Parm
@@ -72,7 +72,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.Etapa? data)
+        private void DTO2ModelView(Dtoo.Etapa? data)
         {
             if (data == null)
                 return;
@@ -101,7 +101,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<EtapaUpdateViewModel, dtoo.Etapa?> ShowUpdateDialog { get; } = new();
+        public Interaction<EtapaUpdateViewModel, Dtoo.Etapa?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new EtapaUpdateViewModel(Id);
@@ -110,8 +110,8 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Seleccionar si estem en mode lookup ---
-        public ReactiveCommand<Unit, dtoo.Etapa> SeleccionarCommand { get; }
-        private dtoo.Etapa SelectRow() => Model;
+        public ReactiveCommand<Unit, Dtoo.Etapa> SeleccionarCommand { get; }
+        private Dtoo.Etapa SelectRow() => Model;
 
     }
 }

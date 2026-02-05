@@ -1,15 +1,15 @@
 using BusinessLayer.Abstract.Generic;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICursAcademicSet : ISet<parms.EsActiuParms, dtoo.CursAcademic>
+    public interface ICursAcademicSet : ISet<Parms.EsActiuParms, Dtoo.CursAcademic>
     {
         Task<bool?> ElCursPerDefecteEsCorresponAmbLaDataActual();
 
-        Task<OperationResult<dtoo.CursAcademic>> GetCursActiu();
+        Task<OperationResult<Dtoo.CursAcademic>> GetCursActiu();
     }
 
 }

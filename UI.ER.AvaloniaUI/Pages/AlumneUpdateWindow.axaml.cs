@@ -1,6 +1,6 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
@@ -17,7 +17,7 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class AlumneUpdateWindow : ReactiveWindow<AlumneUpdateViewModel>
     {
-        public OperationResult<dtoo.Alumne> Result { get; set; } = default!;
+        public OperationResult<Dtoo.Alumne> Result { get; set; } = default!;
         public AlumneUpdateWindow()
         {
             this.InitializeComponent();

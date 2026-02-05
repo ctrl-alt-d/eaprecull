@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
-using dtoo = DTO.o.DTOs;
-using models = DataModels.Models;
+using Dtoo = DTO.o.DTOs;
+using Models = DataModels.Models;
 
 namespace DTO.Projections
 {
     public static class Etapa
     {
-        public static Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
+        public static Expression<Func<Models.Etapa, Dtoo.Etapa>> ToDto
             =>
             model
             =>

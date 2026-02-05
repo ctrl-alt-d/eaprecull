@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI.Avalonia;
 using System;
 using System.Reactive;
@@ -50,7 +50,7 @@ namespace UI.ER.AvaloniaUI.Pages
                         DataContext = interaction.Input
                     };
 
-                    var result = await dialog.ShowDialog<dtoo.Alumne?>(GetWindow());
+                    var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
             );
@@ -94,7 +94,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .Subscribe(vm => vm!.GeneraInformeCommand.Subscribe(ObraFileExplorer))
             );
 
-        private void ObraFileExplorer(dtoo.SaveResult? saveResult)
+        private void ObraFileExplorer(Dtoo.SaveResult? saveResult)
         {
             if (saveResult == null) return;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()

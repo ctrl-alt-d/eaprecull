@@ -1,10 +1,10 @@
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface IActuacioUpdate : IUpdate<dtoo.Actuacio, parms.ActuacioUpdateParms>
+    public interface IActuacioUpdate : IUpdate<Dtoo.Actuacio, Parms.ActuacioUpdateParms>
     {
     }
 }

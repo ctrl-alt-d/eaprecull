@@ -5,7 +5,7 @@ using Avalonia.Markup.Xaml;
 using ReactiveUI.Avalonia;
 using ReactiveUI;
 using UI.ER.ViewModels.ViewModels;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Reactive.Linq;
 using System.Linq;
 
@@ -39,7 +39,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .Subscribe(vm => vm!.GeneraPivotCommand.Subscribe(ObraFileExplorer))
             );
 
-        private void ObraFileExplorer(dtoo.SaveResult? saveResult)
+        private void ObraFileExplorer(Dtoo.SaveResult? saveResult)
         {
             if (saveResult == null) return;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()

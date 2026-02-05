@@ -38,15 +38,15 @@ namespace BusinessLayer.Integration.Test
 
 
             // act
-            var parms = new DTO.i.DTOs.CentreCreateParms(
+            var Parms = new DTO.i.DTOs.CentreCreateParms(
                 codi: "123",
                 nom: "Pepe",
                 esActiu: true
             );
-            var result = await centreCreate.Create(parms);
+            var result = await centreCreate.Create(Parms);
 
             // assert
-            var expected = parms.Nom;
+            var expected = Parms.Nom;
             Assert.Equal(expected, result.Data.Nom);
 
         }
@@ -85,8 +85,8 @@ namespace BusinessLayer.Integration.Test
             );
             var createresult = await centreCreate.Create(createparms);
 
-            var parms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
-            var results = await centres.FromPredicate(parms);
+            var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
+            var results = await centres.FromPredicate(Parms);
             var result = results.Data.First();
 
 

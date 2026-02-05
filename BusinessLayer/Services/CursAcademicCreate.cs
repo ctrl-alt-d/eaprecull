@@ -1,9 +1,9 @@
 ﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -16,7 +16,7 @@ using System;
 namespace BusinessLayer.Services
 {
     public class CursAcademicCreate :
-        BLCreate<models.CursAcademic, parms.CursAcademicCreateParms, dtoo.CursAcademic>,
+        BLCreate<Models.CursAcademic, Parms.CursAcademicCreateParms, Dtoo.CursAcademic>,
         ICursAcademicCreate
     {
         public CursAcademicCreate(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
@@ -40,10 +40,10 @@ namespace BusinessLayer.Services
             GetCollection()
             .AnyAsync(x => x.AnyInici == parm.AnyInici);
 
-        protected override Task<models.CursAcademic> InitializeModel(CursAcademicCreateParms parm)
+        protected override Task<Models.CursAcademic> InitializeModel(CursAcademicCreateParms parm)
             =>
             Task.FromResult(
-                new models.CursAcademic()
+                new Models.CursAcademic()
                 {
                     AnyInici = parm.AnyInici,
                     EsActiu = parm.EsActiu,
@@ -67,9 +67,9 @@ namespace BusinessLayer.Services
                 .ForEachAsync(c => c.EsActiu = false);
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
+        protected override Expression<Func<Models.CursAcademic, Dtoo.CursAcademic>> ToDto
             =>
-            project
+            Project
             .CursAcademic
             .ToDto;
 

@@ -1,9 +1,9 @@
 ﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -16,12 +16,12 @@ using System.Linq;
 namespace BusinessLayer.Services
 {
     public class AlumneCreate :
-        BLCreate<models.Alumne, parms.AlumneCreateParms, dtoo.Alumne>,
+        BLCreate<Models.Alumne, Parms.AlumneCreateParms, Dtoo.Alumne>,
         IAlumneCreate
     {
-        protected override Expression<Func<Alumne, dtoo.Alumne>> ToDto
+        protected override Expression<Func<Alumne, Dtoo.Alumne>> ToDto
             =>
-            project
+            Project
             .Alumne
             .ToDto;
 
@@ -51,7 +51,7 @@ namespace BusinessLayer.Services
             GetCollection()
             .AnyAsync(x => x.Cognoms == parm.Cognoms && x.Nom == parm.Nom && x.DataNaixement == parm.DataNaixement);
 
-        protected override async Task<models.Alumne> InitializeModel(AlumneCreateParms parm)
+        protected override async Task<Models.Alumne> InitializeModel(AlumneCreateParms parm)
             =>
             new()
             {

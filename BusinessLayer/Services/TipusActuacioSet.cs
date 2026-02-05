@@ -1,11 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Linq;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using System;
@@ -14,22 +14,22 @@ using System.Linq.Expressions;
 namespace BusinessLayer.Services
 {
     public class TipusActuacioSet :
-        BLSet<models.TipusActuacio, parms.EsActiuParms, dtoo.TipusActuacio>,
+        BLSet<Models.TipusActuacio, Parms.EsActiuParms, Dtoo.TipusActuacio>,
         ITipusActuacioSet
     {
         public TipusActuacioSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        protected override IQueryable<models.TipusActuacio> GetModels(parms.EsActiuParms request)
+        protected override IQueryable<Models.TipusActuacio> GetModels(Parms.EsActiuParms request)
             =>
             GetAllModels()
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
             .OrderBy(c => c.Nom);
 
-        protected override Expression<Func<models.TipusActuacio, dtoo.TipusActuacio>> ToDto
+        protected override Expression<Func<Models.TipusActuacio, Dtoo.TipusActuacio>> ToDto
             =>
-            project
+            Project
             .TipusActuacio
             .ToDto;
     }

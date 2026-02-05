@@ -1,10 +1,10 @@
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Abstract.Services
 {
-    public interface ICentreActivaDesactiva : IActivaDesactiva<dtoo.Centre>
+    public interface ICentreActivaDesactiva : IActivaDesactiva<Dtoo.Centre>
     {
     }
 }

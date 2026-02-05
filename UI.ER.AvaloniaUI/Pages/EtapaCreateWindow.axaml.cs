@@ -1,6 +1,6 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
@@ -12,7 +12,7 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class EtapaCreateWindow : ReactiveWindow<EtapaCreateViewModel>
     {
-        public OperationResult<dtoo.Etapa> Result { get; set; } = default!;
+        public OperationResult<Dtoo.Etapa> Result { get; set; } = default!;
         public EtapaCreateWindow()
         {
             this.InitializeComponent();

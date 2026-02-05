@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
-using dtoi = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Dtoi = DTO.i.DTOs;
 using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
@@ -45,13 +45,13 @@ namespace UI.ER.ViewModels.ViewModels
                 ;
 
             // Create
-            ShowDialog = new Interaction<ActuacioCreateViewModel, dtoo.Actuacio?>();
+            ShowDialog = new Interaction<ActuacioCreateViewModel, Dtoo.Actuacio?>();
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
                 var update = new ActuacioCreateViewModel(alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
-                var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new dtoi.EsActiuParms(true));
+                var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new Dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
                 if (data != null)
@@ -77,7 +77,7 @@ namespace UI.ER.ViewModels.ViewModels
                 (bool?)null;            
 
             // Preparar paràmetres al backend
-            var parms = new DTO.i.DTOs.ActuacioSearchParms(
+            var Parms = new DTO.i.DTOs.ActuacioSearchParms(
                 take: 200,
                 searchString: searchString,
                 alumneId: alumneId,
@@ -86,7 +86,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // Petició al backend            
             using var bl = SuperContext.GetBLOperation<IActuacioSet>();
-            var dto = await bl.FromPredicate(parms);
+            var dto = await bl.FromPredicate(Parms);
 
             // 
             BrokenRules.Clear();
@@ -98,7 +98,7 @@ namespace UI.ER.ViewModels.ViewModels
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             //
-            var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new dtoi.EsActiuParms(true));
+            var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
             // Tenim els resultats
@@ -157,7 +157,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // Crear item
         public ICommand Create { get; }
-        public Interaction<ActuacioCreateViewModel, dtoo.Actuacio?> ShowDialog { get; }
+        public Interaction<ActuacioCreateViewModel, Dtoo.Actuacio?> ShowDialog { get; }
 
 
     }

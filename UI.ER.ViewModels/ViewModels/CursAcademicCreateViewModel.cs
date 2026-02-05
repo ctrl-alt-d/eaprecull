@@ -1,10 +1,10 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using UI.ER.ViewModels.Common;
 using System.Linq;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _AnyInici, value);
         }
 
-        private void DTO2ModelView(dtoo.CursAcademic? data)
+        private void DTO2ModelView(Dtoo.CursAcademic? data)
         {
             if (data == null) return;
 
@@ -40,16 +40,16 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
             BrokenRules.AddRange(brokenRules.Select(x => x.Message));
         }
-        public virtual async Task<dtoo.CursAcademic?> CreateData()
+        public virtual async Task<Dtoo.CursAcademic?> CreateData()
         {
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CursAcademicCreateParms(Convert.ToInt32(AnyInici), true);
+            var Parms = new Dtoi.CursAcademicCreateParms(Convert.ToInt32(AnyInici), true);
 
             // cridar backend
             using var bl = SuperContext.GetBLOperation<ICursAcademicCreate>();
-            var dto = await bl.Create(parms);
+            var dto = await bl.Create(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -61,7 +61,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.CursAcademic?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.CursAcademic?> SubmitCommand { get; }
 
 
 

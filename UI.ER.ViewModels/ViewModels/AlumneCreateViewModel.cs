@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -49,7 +49,7 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual async void LoadDadesInicials()
         {
             using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
-            var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
+            var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
             CursDarreraActualitacioDadesTxt = cursActual?.Etiqueta ?? string.Empty;
@@ -224,7 +224,7 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _Tags, value);
         }
         //
-        private void DTO2ModelView(dtoo.Alumne? data)
+        private void DTO2ModelView(Dtoo.Alumne? data)
         {
             if (data == null) return;
 
@@ -259,12 +259,12 @@ namespace UI.ER.ViewModels.ViewModels
         //
 
 
-        public virtual async Task<dtoo.Alumne?> CreateData()
+        public virtual async Task<Dtoo.Alumne?> CreateData()
         {
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.AlumneCreateParms(
+            var Parms = new Dtoi.AlumneCreateParms(
                 Nom,
                 Cognoms,
                 DataNaixement,
@@ -281,7 +281,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // cridar backend
             using var bl = BLCreate();
-            var dto = await bl.Create(parms);
+            var dto = await bl.Create(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -293,7 +293,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Alumne?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.Alumne?> SubmitCommand { get; }
 
         // --- Centre ---
         public ICommand CentreLookupCommand { get; }

@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI.Avalonia;
 using System;
 using System.Reactive.Linq;
@@ -46,7 +46,7 @@ namespace UI.ER.AvaloniaUI.Pages
                         DataContext = interaction.Input
                     };
 
-                    var result = await dialog.ShowDialog<dtoo.Etapa?>(GetWindow());
+                    var result = await dialog.ShowDialog<Dtoo.Etapa?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
             );

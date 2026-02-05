@@ -10,7 +10,7 @@ using System.Reactive;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using CommonInterfaces;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System;
 
 namespace UI.ER.ViewModels.ViewModels
@@ -101,8 +101,8 @@ namespace UI.ER.ViewModels.ViewModels
 
         // Generar Pivot
 
-        public ReactiveCommand<Unit, dtoo.SaveResult?> GeneraPivotCommand { get; }
-        private async Task<dtoo.SaveResult?> DoGeneraPivot()
+        public ReactiveCommand<Unit, Dtoo.SaveResult?> GeneraPivotCommand { get; }
+        private async Task<Dtoo.SaveResult?> DoGeneraPivot()
         {
             ResultatPivotAlumne = "";
             using var bl = SuperContext.GetBLOperation<IPivotActuacions>();
@@ -139,8 +139,8 @@ namespace UI.ER.ViewModels.ViewModels
 
         // Generar Sync
 
-        public ReactiveCommand<Unit, dtoo.EtiquetaDescripcio?> GeneraSyncCommand { get; }
-        private async Task<dtoo.EtiquetaDescripcio?> DoGeneraSync()
+        public ReactiveCommand<Unit, Dtoo.EtiquetaDescripcio?> GeneraSyncCommand { get; }
+        private async Task<Dtoo.EtiquetaDescripcio?> DoGeneraSync()
         {
             ResultatSyncAlumne = "";
             using var bl = SuperContext.GetBLOperation<IAlumneSyncActiuByCentre>();

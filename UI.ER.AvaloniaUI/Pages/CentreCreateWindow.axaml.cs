@@ -1,6 +1,6 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
@@ -12,7 +12,7 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class CentreCreateWindow : ReactiveWindow<CentreCreateViewModel>
     {
-        public OperationResult<dtoo.Centre> Result { get; set; } = default!;
+        public OperationResult<Dtoo.Centre> Result { get; set; } = default!;
         public CentreCreateWindow()
         {
             this.InitializeComponent();

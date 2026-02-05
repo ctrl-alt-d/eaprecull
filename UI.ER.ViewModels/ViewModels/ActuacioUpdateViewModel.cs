@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -271,7 +271,7 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _DescripcioActuacio, value);
         }
         //
-        private void DTO2ModelView(dtoo.Actuacio? data)
+        private void DTO2ModelView(Dtoo.Actuacio? data)
         {
             if (data == null) return;
 
@@ -306,12 +306,12 @@ namespace UI.ER.ViewModels.ViewModels
         //
 
 
-        public virtual async Task<dtoo.Actuacio?> UpdateData()
+        public virtual async Task<Dtoo.Actuacio?> UpdateData()
         {
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.ActuacioUpdateParms(
+            var Parms = new Dtoi.ActuacioUpdateParms(
                 Id,
                 AlumneId!.Value,
                 TipusActuacioId!.Value,
@@ -327,7 +327,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // cridar backend
             using var bl = BLUpdate();
-            var dto = await bl.Update(parms);
+            var dto = await bl.Update(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -339,7 +339,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Actuacio?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.Actuacio?> SubmitCommand { get; }
 
 
         // --- Alumne ---

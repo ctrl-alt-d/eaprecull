@@ -1,8 +1,8 @@
 using BusinessLayer.Abstract.Services;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Linq;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using System;
@@ -18,9 +18,9 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
+        protected override Expression<Func<Models.CursAcademic, Dtoo.CursAcademic>> ToDto
             =>
-            project
+            Project
             .CursAcademicAmbActuacions
             .ToDto;
     }

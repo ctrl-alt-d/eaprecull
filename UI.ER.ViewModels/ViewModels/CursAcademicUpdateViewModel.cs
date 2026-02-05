@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using UI.ER.ViewModels.Common;
 using System.Linq;
 using System;
@@ -56,7 +56,7 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(dto.Data);
         }
 
-        private void DTO2ModelView(dtoo.CursAcademic? data)
+        private void DTO2ModelView(Dtoo.CursAcademic? data)
         {
             if (data == null) return;
 
@@ -64,17 +64,17 @@ namespace UI.ER.ViewModels.ViewModels
             EsActiu = data.EsActiu;
         }
 
-        public virtual async Task<dtoo.CursAcademic?> UpdateData()
+        public virtual async Task<Dtoo.CursAcademic?> UpdateData()
         {
             // Clear brokenRules
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CursAcademicUpdateParms(Id, Convert.ToInt32(AnyInici), EsActiu);
+            var Parms = new Dtoi.CursAcademicUpdateParms(Id, Convert.ToInt32(AnyInici), EsActiu);
 
             // cridar backend
             using var bl = SuperContext.GetBLOperation<ICursAcademicUpdate>();
-            var dto = await bl.Update(parms);
+            var dto = await bl.Update(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -87,7 +87,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.CursAcademic?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.CursAcademic?> SubmitCommand { get; }
 
 
     }

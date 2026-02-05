@@ -1,6 +1,6 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
@@ -18,7 +18,7 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class ActuacioCreateWindow : ReactiveWindow<ActuacioCreateViewModel>
     {
-        public OperationResult<dtoo.Actuacio> Result { get; set; } = default!;
+        public OperationResult<Dtoo.Actuacio> Result { get; set; } = default!;
         public ActuacioCreateWindow()
         {
             this.DataContext = new ActuacioCreateViewModel();

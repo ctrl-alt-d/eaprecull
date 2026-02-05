@@ -1,9 +1,9 @@
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -17,12 +17,12 @@ using DataModels.Models;
 namespace BusinessLayer.Services
 {
     public class TipusActuacioUpdate :
-        BLUpdate<models.TipusActuacio, parms.TipusActuacioUpdateParms, dtoo.TipusActuacio>,
+        BLUpdate<Models.TipusActuacio, Parms.TipusActuacioUpdateParms, Dtoo.TipusActuacio>,
         ITipusActuacioUpdate
     {
-        protected override Expression<Func<models.TipusActuacio, dtoo.TipusActuacio>> ToDto
+        protected override Expression<Func<Models.TipusActuacio, Dtoo.TipusActuacio>> ToDto
             =>
-            project
+            Project
             .TipusActuacio
             .ToDto;
 
@@ -30,22 +30,22 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Task PostUpdate(models.TipusActuacio model, TipusActuacioUpdateParms parm)
+        protected override Task PostUpdate(Models.TipusActuacio model, TipusActuacioUpdateParms parm)
             =>
             Task.CompletedTask;
 
-        protected override Task PreUpdate(models.TipusActuacio model, TipusActuacioUpdateParms parm)
+        protected override Task PreUpdate(Models.TipusActuacio model, TipusActuacioUpdateParms parm)
             =>
-            new RuleChecker<models.TipusActuacio, TipusActuacioUpdateParms>(model, parm)
+            new RuleChecker<Models.TipusActuacio, TipusActuacioUpdateParms>(model, parm)
             .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
             .AddCheck(RuleEstaRepetit, "Ja existeix un altre TipusActuacio amb aquest mateix nom o codi")
             .Check();
 
-        protected virtual bool RuleHiHaValorsNoInformats(models.TipusActuacio model, TipusActuacioUpdateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(Models.TipusActuacio model, TipusActuacioUpdateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom);
 
-        protected virtual Task<bool> RuleEstaRepetit(models.TipusActuacio model, TipusActuacioUpdateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(Models.TipusActuacio model, TipusActuacioUpdateParms parm)
             =>
             GetCollection()
             .Where(x => x.Id != model.Id)
@@ -53,7 +53,7 @@ namespace BusinessLayer.Services
 
 
 
-        protected override Task UpdateModel(models.TipusActuacio model, TipusActuacioUpdateParms parm)
+        protected override Task UpdateModel(Models.TipusActuacio model, TipusActuacioUpdateParms parm)
         {
             model.Codi = parm.Codi;
             model.EsActiu = parm.EsActiu;
