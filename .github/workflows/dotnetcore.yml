@@ -25,12 +25,12 @@ jobs:
     - name: Create ZIP for Linux
       run: |
         cd UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/linux-x64/publish
-        zip -r ../../../../../EAPRecull-Linux-x64.zip .
+        zip -r ../../../../../../EAPRecull-Linux-x64.zip .
     
     - name: Create ZIP for Windows
       run: |
         cd UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/win-x64/publish
-        zip -r ../../../../../EAPRecull-Windows-x64.zip .
+        zip -r ../../../../../../EAPRecull-Windows-x64.zip .
     
     - name: Upload artifact - Linux
       uses: actions/upload-artifact@v4
@@ -49,8 +49,8 @@ jobs:
       with:
         generate_release_notes: true
         files: |
-          UI.ER.AvaloniaUI/bin/ReleaseComplete/EAPRecull-Windows-x64.zip
-          UI.ER.AvaloniaUI/bin/ReleaseComplete/EAPRecull-Linux-x64.zip
+          EAPRecull-Windows-x64.zip
+          EAPRecull-Linux-x64.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
