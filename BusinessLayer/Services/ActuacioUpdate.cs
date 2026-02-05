@@ -1,9 +1,9 @@
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -17,12 +17,12 @@ using DataModels.Models;
 namespace BusinessLayer.Services
 {
     public class ActuacioUpdate :
-        BLUpdate<models.Actuacio, parms.ActuacioUpdateParms, dtoo.Actuacio>,
+        BLUpdate<Models.Actuacio, Parms.ActuacioUpdateParms, Dtoo.Actuacio>,
         IActuacioUpdate
     {
-        protected override Expression<Func<models.Actuacio, dtoo.Actuacio>> ToDto
+        protected override Expression<Func<Models.Actuacio, Dtoo.Actuacio>> ToDto
             =>
-            project
+            Project
             .Actuacio
             .ToDto;
 
@@ -31,7 +31,7 @@ namespace BusinessLayer.Services
         }
 
         protected Alumne AlumnePrevi { get; set; } = default!;
-        protected override async Task PreUpdate(models.Actuacio model, ActuacioUpdateParms parm)
+        protected override async Task PreUpdate(Models.Actuacio model, ActuacioUpdateParms parm)
         {
             await LoadReference(model, m => m.Alumne);
             AlumnePrevi = model.Alumne;
@@ -48,7 +48,7 @@ namespace BusinessLayer.Services
                 x=>x.EtapaAlMomentDeLactuacio
             );
 
-        protected override async Task UpdateModel(models.Actuacio model, ActuacioUpdateParms parm)
+        protected override async Task UpdateModel(Models.Actuacio model, ActuacioUpdateParms parm)
             =>
             model.SetMainData(
                 alumne: await Perfection<Alumne>(parm.AlumneId),
@@ -63,7 +63,7 @@ namespace BusinessLayer.Services
                 descripcioActuacio: parm.DescripcioActuacio
             );
 
-        protected override async Task PostUpdate(models.Actuacio model, ActuacioUpdateParms parm)
+        protected override async Task PostUpdate(Models.Actuacio model, ActuacioUpdateParms parm)
         {
             // Decrementar nombre actuacions a l'alumne anterior
             AlumnePrevi.NombreTotalDactuacions--;

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assist="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
@@ -23,20 +23,20 @@
         </Style>
     </Window.Styles>
 
-    <styles:SnackbarHost HostName="Root" TemplateApplied="TemplatedControl_OnTemplateApplied">
-        <styles:NavigationDrawer Name="LeftDrawer"
-                                 LeftDrawerOpened="{Binding ElementName=NavDrawerSwitch, Path=IsChecked, Mode=TwoWay}">
-            <styles:NavigationDrawer.LeftDrawerContent>
+    <controls:SnackbarHost HostName="Root" TemplateApplied="TemplatedControl_OnTemplateApplied">
+        <controls:NavigationDrawer Name="LeftDrawer"
+                                 LeftDrawerOpened="False">
+            <controls:NavigationDrawer.LeftDrawerContent>
                 <ScrollViewer>
                     <StackPanel>
-                        <styles:ColorZone Mode="Accent" Height="180">
+                        <controls:ColorZone Mode="Accent" Height="180">
                             <StackPanel>
                                 <Image Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Top"
                                        Source="avares://UI.ER.AvaloniaUI/Assets/FavIcon_200x.png" Margin="0,0,0,-8" />
                                 <TextBlock Classes="Headline6" Text="EAP Recull" HorizontalAlignment="Center" />
                                 <TextBlock Classes="Subtitle1" Text="By @ctrl.alt.d" HorizontalAlignment="Center" />
                             </StackPanel>
-                        </styles:ColorZone>
+                        </controls:ColorZone>
                         <ListBox Classes="Drawer" Name="DrawerList"
                                  Focusable="{Binding ElementName=LeftDrawer, Path=LeftDrawerOpened}">
                             <ListBox.Styles>
@@ -52,9 +52,9 @@
                         </ListBox>
                     </StackPanel>
                 </ScrollViewer>
-            </styles:NavigationDrawer.LeftDrawerContent>
+            </controls:NavigationDrawer.LeftDrawerContent>
             <DockPanel LastChildFill="true">
-                <styles:ColorZone Name="PART_AppBarContainer" 
+                <controls:ColorZone Name="PART_AppBarContainer" 
                                   VerticalAlignment="Top"
                                   HorizontalAlignment="Stretch"
                                   DockPanel.Dock="Top"
@@ -70,14 +70,18 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <ToggleButton Name="NavDrawerSwitch"
-                                      Classes="Flat TransparentBack"
+                                      IsChecked="False"
+                                      Theme="{StaticResource MaterialFlatButton}"
                                       Width="32" Height="32" Padding="4">
                             <avalonia:MaterialIcon Kind="Menu" Width="24" Height="24" />
                         </ToggleButton>
                         <TextBlock Grid.Column="2" Classes="Headline6" Text="EAP Recull"
                                    VerticalAlignment="Center" />
                         <Menu Grid.Column="4" Height="32" Padding="0" Margin="0">
-                            <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
+                            <MenuItem Height="32" Width="32" Padding="4">
+                                <MenuItem.Header>
+                                    <avalonia:MaterialIcon Kind="DotsVertical" Width="24" Height="24" />
+                                </MenuItem.Header>
 
                                 <MenuItem Header="Centres" Click="Centre_OnClick">
                                     <MenuItem.Icon>
@@ -133,7 +137,7 @@
                             </MenuItem>
                         </Menu>
                     </Grid>
-                </styles:ColorZone>
+                </controls:ColorZone>
                 <Grid Name="mainScroller"
                             DockPanel.Dock="Top">
                     <Border HorizontalAlignment="Stretch"
@@ -153,7 +157,7 @@
 
                             <WrapPanel Margin="10,40,10,10" HorizontalAlignment="Center">
 
-                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
+                                <controls:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
                                     <StackPanel>
                                         <StackPanel Margin="8">
                                             <avalonia:MaterialIcon HorizontalAlignment="Center"
@@ -165,9 +169,9 @@
                                             <Button    Margin="0,12,0,0" Content="Gestiona alumnes" Command="{Binding AlumneSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
-                                </styles:Card>
+                                </controls:Card>
 
-                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
+                                <controls:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
                                     <StackPanel>
                                         <StackPanel Margin="8">
                                             <avalonia:MaterialIcon HorizontalAlignment="Center"
@@ -179,9 +183,9 @@
                                             <Button    Margin="0,12,0,0" Content="Gestiona actuacions" Command="{Binding ActuacioSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
-                                </styles:Card>
+                                </controls:Card>
 
-                                <styles:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
+                                <controls:Card Width="240" Padding="4" VerticalAlignment="Top" Margin="10,10,10,10"  HorizontalAlignment="Center">
                                     <StackPanel>
                                         <StackPanel Margin="8">
                                             <avalonia:MaterialIcon HorizontalAlignment="Center"
@@ -193,7 +197,7 @@
                                             <Button    Margin="0,12,0,0" Content="Gestiona cursos acadèmics" Command="{Binding CursAcademicSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
-                                </styles:Card>
+                                </controls:Card>
 
                             </WrapPanel>
 
@@ -206,8 +210,7 @@
                                         Classes="Apareix"
                                         BoxShadow="5 5 10 2 Gray">
 
-                                    <TextBlock>
-Llicència EAPRecull: MIT (Respectant la llicència dels paquets que inclou)
+                                    <TextBlock xml:space="preserve" TextWrapping="Wrap">Llicència EAPRecull: MIT (Respectant la llicència dels paquets que inclou)
 
 Codi font: https://github.com/ctrl-alt-d/eaprecull
 
@@ -217,18 +220,16 @@ Feu servir aquest program sota la vostra responsabilitat.
 
 Programari lliure inclòs a EAPRecull:
 
-    * https://github.com/egonl/SharpDocx
-    * https://github.com/AvaloniaUI/Avalonia
-    * https://github.com/AvaloniaCommunity/material.avalonia
-    * https://github.com/ClosedXML/ClosedXML
-    * https://github.com/EPPlusSoftware/EPPlus  (LicenseContext.NonCommercial x education)
-    * DotNet
+    • https://github.com/egonl/SharpDocx
+    • https://github.com/AvaloniaUI/Avalonia
+    • https://github.com/AvaloniaCommunity/material.avalonia
+    • https://github.com/ClosedXML/ClosedXML
+    • https://github.com/EPPlusSoftware/EPPlus  (LicenseContext.NonCommercial x education)
+    • DotNet
 
 Incidències, propostes de millora, etc són benvingudes: https://github.com/ctrl-alt-d/eaprecull/issues/new
 
-Versió 0.7
-
-                                    </TextBlock>
+Versió 1.0</TextBlock>
                                 </Border>
                             </ScrollViewer>
 
@@ -237,6 +238,6 @@ Versió 0.7
                     </Border>
                 </Grid>
             </DockPanel>
-        </styles:NavigationDrawer>
-    </styles:SnackbarHost>
+        </controls:NavigationDrawer>
+    </controls:SnackbarHost>
 </Window>

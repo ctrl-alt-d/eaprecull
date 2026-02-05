@@ -1,9 +1,9 @@
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -16,24 +16,24 @@ using System.Linq.Expressions;
 namespace BusinessLayer.Services
 {
     public class CursAcademicActivaDesactiva :
-        BLActivaDesactiva<models.CursAcademic, dtoo.CursAcademic>,
+        BLActivaDesactiva<Models.CursAcademic, Dtoo.CursAcademic>,
         ICursAcademicActivaDesactiva
     {
         public CursAcademicActivaDesactiva(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
+        protected override Expression<Func<Models.CursAcademic, Dtoo.CursAcademic>> ToDto
             =>
-            project
+            Project
             .CursAcademic
             .ToDto;
 
-        protected override Task Post(models.CursAcademic model)
+        protected override Task Post(Models.CursAcademic model)
             =>
             DeixaNomesUnActiu(model);
 
-        protected virtual async Task DeixaNomesUnActiu(models.CursAcademic model)
+        protected virtual async Task DeixaNomesUnActiu(Models.CursAcademic model)
         {
             if (!model.EsActiu)
                 return;
@@ -51,7 +51,7 @@ namespace BusinessLayer.Services
 
         }
 
-        protected override Task Pre(models.CursAcademic model)
+        protected override Task Pre(Models.CursAcademic model)
             =>
             Task.CompletedTask;
 

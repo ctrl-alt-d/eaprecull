@@ -1,15 +1,13 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              x:Class="UI.ER.AvaloniaUI.App">
-    <Application.Resources>
-        <themes:BundledTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="Amber"/>
-    </Application.Resources>
     <Application.Styles>
-      <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
-      <StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
+      <!-- Modern color scheme: Indigo primary with Pink accent -->
+      <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Pink" />
+      <avalonia:MaterialIconStyles />
           <Style Selector="TextBlock.Error">
                 <Setter Property="Foreground" Value="Red"/>
                 <Style.Animations>                    

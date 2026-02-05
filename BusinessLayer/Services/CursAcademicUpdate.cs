@@ -1,9 +1,9 @@
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -17,12 +17,12 @@ using DataModels.Models;
 namespace BusinessLayer.Services
 {
     public class CursAcademicUpdate :
-        BLUpdate<models.CursAcademic, parms.CursAcademicUpdateParms, dtoo.CursAcademic>,
+        BLUpdate<Models.CursAcademic, Parms.CursAcademicUpdateParms, Dtoo.CursAcademic>,
         ICursAcademicUpdate
     {
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
+        protected override Expression<Func<Models.CursAcademic, Dtoo.CursAcademic>> ToDto
             =>
-            project
+            Project
             .CursAcademic
             .ToDto;
 
@@ -30,23 +30,23 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Task PostUpdate(models.CursAcademic model, CursAcademicUpdateParms parm)
+        protected override Task PostUpdate(Models.CursAcademic model, CursAcademicUpdateParms parm)
             =>
             Task.CompletedTask;
 
-        protected override Task PreUpdate(models.CursAcademic model, CursAcademicUpdateParms parm)
+        protected override Task PreUpdate(Models.CursAcademic model, CursAcademicUpdateParms parm)
             =>
-            new RuleChecker<models.CursAcademic, CursAcademicUpdateParms>(model, parm)
+            new RuleChecker<Models.CursAcademic, CursAcademicUpdateParms>(model, parm)
             .AddCheck(RuleHiHaValorsNoInformats, "Comprova que tots els valors estiguin ben informats")
             .AddCheck(RuleEstaRepetit, "Ja existeix un altre Curs Academic amb aquest mateix any inici")
             .Check();
 
-        protected virtual bool RuleHiHaValorsNoInformats(models.CursAcademic model, CursAcademicUpdateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(Models.CursAcademic model, CursAcademicUpdateParms parm)
             =>
             parm.AnyInici < 1980
             ;
 
-        protected virtual Task<bool> RuleEstaRepetit(models.CursAcademic model, CursAcademicUpdateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(Models.CursAcademic model, CursAcademicUpdateParms parm)
             =>
             GetCollection()
             .Where(x => x.Id != model.Id)
@@ -54,7 +54,7 @@ namespace BusinessLayer.Services
 
 
 
-        protected override Task UpdateModel(models.CursAcademic model, CursAcademicUpdateParms parm)
+        protected override Task UpdateModel(Models.CursAcademic model, CursAcademicUpdateParms parm)
         {
             model.AnyInici = parm.AnyInici;
             model.EsActiu = parm.EsActiu;

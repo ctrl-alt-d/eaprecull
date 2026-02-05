@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DataLayer
 {
@@ -36,13 +37,15 @@ namespace DataLayer
         {
             return
                 optionsBuilder
-                .UseSqlite(ConnectionString);
+                .UseSqlite(ConnectionString)
+                .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
         public static DbContextOptionsBuilder ConfigureAppDbContext(this DbContextOptionsBuilder optionsBuilder)
         {
             return
                 optionsBuilder
-                .UseSqlite(ConnectionString);
+                .UseSqlite(ConnectionString)
+                .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
     }
 }

@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -59,7 +59,7 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual async void LoadDadesInicials(int? alumneId)
         {
             using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
-            var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
+            var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursActuacioId = cursActual?.Id;
             CursActuacioTxt = cursActual?.Etiqueta ?? string.Empty;
@@ -168,7 +168,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? AlumneId { get; set; }
-        public string _AlumneTxt = string.Empty;
+        private string _AlumneTxt = string.Empty;
         public string AlumneTxt
         {
             get => _AlumneTxt;
@@ -177,7 +177,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? TipusActuacioId { get; set; }
-        public string _TipusActuacioTxt = string.Empty;
+        private string _TipusActuacioTxt = string.Empty;
         public string TipusActuacioTxt
         {
             get => _TipusActuacioTxt;
@@ -185,7 +185,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _ObservacionsTipusActuacio = string.Empty;
+        private string _ObservacionsTipusActuacio = string.Empty;
         public string ObservacionsTipusActuacio
         {
             get => _ObservacionsTipusActuacio;
@@ -193,14 +193,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _MomentDeLactuacio;
+        private DateTime? _MomentDeLactuacio;
         public DateTime? MomentDeLactuacio
         {
             get => _MomentDeLactuacio;
             set => this.RaiseAndSetIfChanged(ref _MomentDeLactuacio, value);
         }
 
-        public string _MomentDeLactuacioTxt = string.Empty;
+        private string _MomentDeLactuacioTxt = string.Empty;
         public string MomentDeLactuacioTxt
         {
             get => _MomentDeLactuacioTxt;
@@ -209,7 +209,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CursActuacioId { get; set; }
-        public string _CursActuacioTxt = string.Empty;
+        private string _CursActuacioTxt = string.Empty;
         public string CursActuacioTxt
         {
             get => _CursActuacioTxt;
@@ -218,7 +218,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CentreId { get; set; }
-        public string _CentreTxt = string.Empty;
+        private string _CentreTxt = string.Empty;
         public string CentreTxt
         {
             get => _CentreTxt;
@@ -227,7 +227,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? EtapaAlMomentDeLactuacioId { get; set; }
-        public string _EtapaAlMomentDeLactuacioTxt = string.Empty;
+        private string _EtapaAlMomentDeLactuacioTxt = string.Empty;
         public string EtapaAlMomentDeLactuacioTxt
         {
             get => _EtapaAlMomentDeLactuacioTxt;
@@ -236,7 +236,7 @@ namespace UI.ER.ViewModels.ViewModels
 
 
         //
-        public string _NivellAlMomentDeLactuacio = string.Empty;
+        private string _NivellAlMomentDeLactuacio = string.Empty;
         public string NivellAlMomentDeLactuacio
         {
             get => _NivellAlMomentDeLactuacio;
@@ -244,7 +244,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _MinutsDuradaActuacioTxt = StringIntConverter.Convert(default);
+        private string _MinutsDuradaActuacioTxt = StringIntConverter.Convert(default);
         public string MinutsDuradaActuacioTxt
         {
             get => _MinutsDuradaActuacioTxt;
@@ -259,14 +259,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _DescripcioActuacio = string.Empty;
+        private string _DescripcioActuacio = string.Empty;
         public string DescripcioActuacio
         {
             get => _DescripcioActuacio;
             set => this.RaiseAndSetIfChanged(ref _DescripcioActuacio, value);
         }
         //
-        private void DTO2ModelView(dtoo.Actuacio? data)
+        private void DTO2ModelView(Dtoo.Actuacio? data)
         {
             if (data == null) return;
 
@@ -301,12 +301,12 @@ namespace UI.ER.ViewModels.ViewModels
         //
 
 
-        public virtual async Task<dtoo.Actuacio?> CreateData()
+        public virtual async Task<Dtoo.Actuacio?> CreateData()
         {
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.ActuacioCreateParms(
+            var Parms = new Dtoi.ActuacioCreateParms(
                 AlumneId!.Value,
                 TipusActuacioId!.Value,
                 ObservacionsTipusActuacio,
@@ -321,7 +321,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // cridar backend
             using var bl = BLCreate();
-            var dto = await bl.Create(parms);
+            var dto = await bl.Create(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -333,7 +333,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Actuacio?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.Actuacio?> SubmitCommand { get; }
 
 
         // --- Alumne ---

@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
@@ -18,8 +18,8 @@ namespace UI.ER.ViewModels.ViewModels
     public class TipusActuacioRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.TipusActuacio Model { get; }
-        public TipusActuacioRowViewModel(dtoo.TipusActuacio TipusActuacioDto, bool modeLookup = false)
+        protected Dtoo.TipusActuacio Model { get; }
+        public TipusActuacioRowViewModel(Dtoo.TipusActuacio TipusActuacioDto, bool modeLookup = false)
         {
 
             // Behavior Parm
@@ -72,7 +72,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.TipusActuacio? data)
+        private void DTO2ModelView(Dtoo.TipusActuacio? data)
         {
             if (data == null)
                 return;
@@ -101,7 +101,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<TipusActuacioUpdateViewModel, dtoo.TipusActuacio?> ShowUpdateDialog { get; } = new();
+        public Interaction<TipusActuacioUpdateViewModel, Dtoo.TipusActuacio?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new TipusActuacioUpdateViewModel(Id);
@@ -110,8 +110,8 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Seleccionar si estem en mode lookup ---
-        public ReactiveCommand<Unit, dtoo.TipusActuacio> SeleccionarCommand { get; }
-        private dtoo.TipusActuacio SelectRow() => Model;
+        public ReactiveCommand<Unit, Dtoo.TipusActuacio> SeleccionarCommand { get; }
+        private Dtoo.TipusActuacio SelectRow() => Model;
 
     }
 }

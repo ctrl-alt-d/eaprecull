@@ -1,9 +1,9 @@
 ﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -16,7 +16,7 @@ using System;
 namespace BusinessLayer.Services
 {
     public class EtapaCreate :
-        BLCreate<models.Etapa, parms.EtapaCreateParms, dtoo.Etapa>,
+        BLCreate<Models.Etapa, Parms.EtapaCreateParms, Dtoo.Etapa>,
         IEtapaCreate
     {
         public EtapaCreate(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
@@ -41,11 +41,11 @@ namespace BusinessLayer.Services
             GetCollection()
             .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
 
-        protected override Task<models.Etapa> InitializeModel(EtapaCreateParms parm)
+        protected override Task<Models.Etapa> InitializeModel(EtapaCreateParms parm)
             =>
             Task
             .FromResult(
-                new models.Etapa()
+                new Models.Etapa()
                 {
                     Codi = parm.Codi,
                     Nom = parm.Nom,
@@ -59,9 +59,9 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override Expression<Func<models.Etapa, dtoo.Etapa>> ToDto
+        protected override Expression<Func<Models.Etapa, Dtoo.Etapa>> ToDto
             =>
-            project
+            Project
             .Etapa
             .ToDto;
 

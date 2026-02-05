@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
@@ -18,12 +18,39 @@ namespace UI.ER.ViewModels.ViewModels
     public class CursAcademicRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.CursAcademic Model { get; }
+        protected Dtoo.CursAcademic Model { get; }
         protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos { get; }
         public CursAcademicRowViewModel(
-            dtoo.CursAcademic CursAcademicDto,
+            Dtoo.CursAcademic CursAcademicDto,
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
             bool modeLookup = false)
+            : this(CursAcademicDto, totsElsCursos, modeLookup, 0)
+        {
+        }
+
+        public CursAcademicRowViewModel(
+            Dtoo.CursAcademicAmbActuacions CursAcademicDto,
+            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
+            bool modeLookup = false)
+            : this(
+                new Dtoo.CursAcademic(
+                    CursAcademicDto.Id,
+                    CursAcademicDto.AnyInici,
+                    CursAcademicDto.Nom,
+                    CursAcademicDto.EsActiu,
+                    CursAcademicDto.Etiqueta,
+                    CursAcademicDto.Descripcio),
+                totsElsCursos,
+                modeLookup,
+                CursAcademicDto.NombreActuacions)
+        {
+        }
+
+        private CursAcademicRowViewModel(
+            Dtoo.CursAcademic CursAcademicDto,
+            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
+            bool modeLookup,
+            int nombreActuacions)
         {
 
             // Behavior Parm
@@ -36,6 +63,7 @@ namespace UI.ER.ViewModels.ViewModels
             _Descripcio = CursAcademicDto.Descripcio;
             _Estat = CursAcademicDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = CursAcademicDto.EsActiu;
+            _NombreActuacions = nombreActuacions;
             Id = CursAcademicDto.Id;
 
             // Behavior
@@ -58,7 +86,7 @@ namespace UI.ER.ViewModels.ViewModels
         public string Estat
         {
             get { return _Estat; }
-            protected set { this.RaiseAndSetIfChanged(ref _Estat, value); }
+            internal set { this.RaiseAndSetIfChanged(ref _Estat, value); }
         }
 
         private string _Descripcio = string.Empty;
@@ -72,12 +100,21 @@ namespace UI.ER.ViewModels.ViewModels
         public bool EsActiu
         {
             get { return _EsActiu; }
-            protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
+            internal set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
+
+        private int _NombreActuacions;
+        public int NombreActuacions
+        {
+            get { return _NombreActuacions; }
+            protected set { this.RaiseAndSetIfChanged(ref _NombreActuacions, value); }
+        }
+
+        public string NumActuacionsTxt => $"{NombreActuacions} actuacions";
 
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.CursAcademic? data)
+        private void DTO2ModelView(Dtoo.CursAcademic? data)
         {
             if (data == null)
                 return;
@@ -114,7 +151,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<CursAcademicUpdateViewModel, dtoo.CursAcademic?> ShowUpdateDialog { get; } = new();
+        public Interaction<CursAcademicUpdateViewModel, Dtoo.CursAcademic?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new CursAcademicUpdateViewModel(Id);
@@ -123,8 +160,8 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Seleccionar si estem en mode lookup ---
-        public ReactiveCommand<Unit, dtoo.CursAcademic> SeleccionarCommand { get; }
-        private dtoo.CursAcademic SelectRow() => Model;
+        public ReactiveCommand<Unit, Dtoo.CursAcademic> SeleccionarCommand { get; }
+        private Dtoo.CursAcademic SelectRow() => Model;
 
     }
 }

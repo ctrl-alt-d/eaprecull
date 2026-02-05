@@ -8,7 +8,7 @@ using BusinessLayer.Abstract.Exceptions;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using DataLayer;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using OfficeOpenXml.Table.PivotTable;
@@ -22,10 +22,11 @@ namespace BusinessLayer.Services
 
         public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            // EPPlus 8+ requires using the static License property
+            ExcelPackage.License.SetNonCommercialOrganization("EAPRecull - Educational Use");
         }
 
-        public async Task<OperationResult<dtoo.SaveResult>> Run()
+        public async Task<OperationResult<Dtoo.SaveResult>> Run()
         {
             try
             {
@@ -36,7 +37,7 @@ namespace BusinessLayer.Services
                 ExportaExcel(path, dades);
 
                 return new(
-                    new dtoo.SaveResult(
+                    new Dtoo.SaveResult(
                         path,
                         filename,
                         folder

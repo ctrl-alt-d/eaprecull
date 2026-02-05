@@ -9,7 +9,7 @@ using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using DataLayer;
 using DataModels.Models;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using Microsoft.EntityFrameworkCore;
 using SharpDocx;
 using DTO.o.DTOs;

@@ -1,5 +1,6 @@
 using DataLayer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using BusinessLayer.DI;
@@ -7,20 +8,23 @@ using BusinessLayer.Abstract.Services;
 using System.IO;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Integration.Test
 {
     public class ReadWriteTest
     {
         [Fact]
-        public async void WriteTest()
+        public async Task WriteTest()
         {
             // arrange
             var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt => opt.UseSqlite(ConnectionString));
+            services.AddDbContextFactory<AppDbContext>(opt => 
+                opt.UseSqlite(ConnectionString)
+                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
             services.BusinessLayerConfigureServices();
 
             var serviceProvider = services.BuildServiceProvider();
@@ -35,29 +39,31 @@ namespace BusinessLayer.Integration.Test
 
 
             // act
-            var parms = new DTO.i.DTOs.CentreCreateParms(
+            var Parms = new DTO.i.DTOs.CentreCreateParms(
                 codi: "123",
                 nom: "Pepe",
                 esActiu: true
             );
-            var result = await centreCreate.Create(parms);
+            var result = await centreCreate.Create(Parms);
 
             // assert
-            var expected = parms.Nom;
+            var expected = Parms.Nom;
             Assert.Equal(expected, result.Data.Nom);
 
         }
 
 
         [Fact]
-        public async void ReadTest()
+        public async Task ReadTest()
         {
             // arrange
             var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt => opt.UseSqlite(ConnectionString));
+            services.AddDbContextFactory<AppDbContext>(opt => 
+                opt.UseSqlite(ConnectionString)
+                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
             services.BusinessLayerConfigureServices();
 
             var serviceProvider = services.BuildServiceProvider();
@@ -80,8 +86,8 @@ namespace BusinessLayer.Integration.Test
             );
             var createresult = await centreCreate.Create(createparms);
 
-            var parms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
-            var results = await centres.FromPredicate(parms);
+            var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: true);
+            var results = await centres.FromPredicate(Parms);
             var result = results.Data.First();
 
 

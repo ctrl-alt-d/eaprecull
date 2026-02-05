@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -91,10 +91,10 @@ namespace BusinessLayer.Services
             System.Console.WriteLine("Fi Set darrera modificacio alumnes");
         }
 
-        private async Task<Dictionary<string, dtoo.Centre>> ExtreureCentres(ImportAllResult result, List<ActuacioDataRow> data)
+        private async Task<Dictionary<string, Dtoo.Centre>> ExtreureCentres(ImportAllResult result, List<ActuacioDataRow> data)
         {
             System.Console.WriteLine("Inici Centres");
-            Dictionary<string, dtoo.Centre> d = new();
+            Dictionary<string, Dtoo.Centre> d = new();
 
             var itemsActius =
                 data
@@ -105,12 +105,12 @@ namespace BusinessLayer.Services
 
             foreach (var item in itemsActius)
             {
-                var parms = new CentreCreateParms(
+                var Parms = new CentreCreateParms(
                     codi: item,
                     nom: item,
                     esActiu: true
                 );
-                var dto = await blCentre.Create(parms);
+                var dto = await blCentre.Create(Parms);
                 d.Add(item, dto.Data!);
                 result.NumCentres++;
             }
@@ -125,12 +125,12 @@ namespace BusinessLayer.Services
 
             foreach (var item in itemsNoActius)
             {
-                var parms = new CentreCreateParms(
+                var Parms = new CentreCreateParms(
                     codi: item,
                     nom: item,
                     esActiu: false
                 );
-                var dto = await blCentre.Create(parms);
+                var dto = await blCentre.Create(Parms);
                 d.Add(item, dto.Data!);
                 result.NumCentres++;
                 if (result.NumCentres % 10 == 0) System.Console.Write(".");
@@ -140,10 +140,10 @@ namespace BusinessLayer.Services
             return d;
         }
 
-        private async Task<Dictionary<string, dtoo.CursAcademic>> ExtreureCursos(ImportAllResult result, List<ActuacioDataRow> data)
+        private async Task<Dictionary<string, Dtoo.CursAcademic>> ExtreureCursos(ImportAllResult result, List<ActuacioDataRow> data)
         {
             System.Console.WriteLine("Inici Cursos");
-            Dictionary<string, dtoo.CursAcademic> d = new();
+            Dictionary<string, Dtoo.CursAcademic> d = new();
 
             var items =
                 data
@@ -161,11 +161,11 @@ namespace BusinessLayer.Services
 
             foreach (var item in items)
             {
-                var parms = new CursAcademicCreateParms(
+                var Parms = new CursAcademicCreateParms(
                     anyInici: item.anyInici,
                     esActiu: item.anyInici == darrer.anyInici
                 );
-                var dto = await blCursAcademic.Create(parms);
+                var dto = await blCursAcademic.Create(Parms);
                 d.Add(item.curs, dto.Data!);
                 result.NumCursosAcademics++;
                 if (result.NumCursosAcademics % 10 == 0) System.Console.Write(".");
@@ -175,10 +175,10 @@ namespace BusinessLayer.Services
             return d;
         }
 
-        private async Task<Dictionary<string, dtoo.Etapa>> ExtreureEtapes(ImportAllResult result, List<ActuacioDataRow> data)
+        private async Task<Dictionary<string, Dtoo.Etapa>> ExtreureEtapes(ImportAllResult result, List<ActuacioDataRow> data)
         {
             System.Console.WriteLine("Inici Etapes");
-            Dictionary<string, dtoo.Etapa> d = new();
+            Dictionary<string, Dtoo.Etapa> d = new();
 
             var etapesActuacio =
                 data
@@ -198,13 +198,13 @@ namespace BusinessLayer.Services
             foreach (var item in items)
             {
                 var codi = string.IsNullOrEmpty(item) ? this.ETAPAPERDEFECTE : item;
-                var parms = new EtapaCreateParms(
+                var Parms = new EtapaCreateParms(
                     codi: codi,
                     nom: codi,
                     sonEstudisObligatoris: false,
                     esActiu: item != this.ETAPAPERDEFECTE
                 );
-                var dto = await blEtapa.Create(parms);
+                var dto = await blEtapa.Create(Parms);
                 d.Add(codi, dto.Data!);
                 result.NumEtapes++;
                 if (result.NumEtapes % 10 == 0) System.Console.Write(".");
@@ -214,10 +214,10 @@ namespace BusinessLayer.Services
             return d;
         }
 
-        private async Task<Dictionary<string, dtoo.TipusActuacio>> ExtreureTipusActuacio(ImportAllResult result, List<ActuacioDataRow> data)
+        private async Task<Dictionary<string, Dtoo.TipusActuacio>> ExtreureTipusActuacio(ImportAllResult result, List<ActuacioDataRow> data)
         {
             System.Console.WriteLine("Inici Tipus Actuacio");
-            Dictionary<string, dtoo.TipusActuacio> d = new();
+            Dictionary<string, Dtoo.TipusActuacio> d = new();
 
             var items =
                 data
@@ -230,12 +230,12 @@ namespace BusinessLayer.Services
             foreach (var item in items)
             {
                 var codi = string.IsNullOrEmpty(item) ? TIPUSACTUACIOPERDEFECTE : item;
-                var parms = new TipusActuacioCreateParms(
+                var Parms = new TipusActuacioCreateParms(
                     codi: codi,
                     nom: codi,
                     esActiu: true
                 );
-                var dto = await blTipusActuacio.Create(parms);
+                var dto = await blTipusActuacio.Create(Parms);
                 d.Add(item, dto.Data!);
                 result.NumTipusActuacio++;
                 if (result.NumTipusActuacio % 10 == 0) System.Console.Write(".");
@@ -246,14 +246,14 @@ namespace BusinessLayer.Services
             return d;
         }
 
-        private async Task<Dictionary<string, dtoo.Alumne>> ExtreureAlumne(
+        private async Task<Dictionary<string, Dtoo.Alumne>> ExtreureAlumne(
             ImportAllResult result, List<ActuacioDataRow> data,
-            Dictionary<string, dtoo.Centre> dictCentre, Dictionary<string, dtoo.CursAcademic> dictCursos, Dictionary<string, dtoo.Etapa> dictEtapes, Dictionary<string, dtoo.TipusActuacio> dictTipusActuacio
+            Dictionary<string, Dtoo.Centre> dictCentre, Dictionary<string, Dtoo.CursAcademic> dictCursos, Dictionary<string, Dtoo.Etapa> dictEtapes, Dictionary<string, Dtoo.TipusActuacio> dictTipusActuacio
         )
         {
             System.Console.WriteLine("Inici Alumne");
 
-            Dictionary<string, dtoo.Alumne> d = new();
+            Dictionary<string, Dtoo.Alumne> d = new();
 
             if (!dictCursos.Any()) return d;
 
@@ -285,7 +285,7 @@ namespace BusinessLayer.Services
                 var nivellActual = !string.IsNullOrWhiteSpace(v.NivellActual) ? v.NivellActual : v.NivellActuacio;
 
 
-                var parms = new AlumneCreateParms(
+                var Parms = new AlumneCreateParms(
                     nom: v.Nom,
                     cognoms: v.Cognoms,
                     dataNaixement: v.DataNaixement,
@@ -299,7 +299,7 @@ namespace BusinessLayer.Services
                     observacionsNESENoNEE: v.ObservacionsNESENoNEE,
                     tags: $"#importateapactua{DateTime.Now.Year}"
                 );
-                var dto = await blAlumne.Create(parms);
+                var dto = await blAlumne.Create(Parms);
                 d.Add(item.codi, dto.Data!);
                 result.NumAlumnes++;
                 if (result.NumAlumnes % 10 == 0) System.Console.Write(".");
@@ -310,11 +310,11 @@ namespace BusinessLayer.Services
             return d;
         }
 
-        private async Task<Dictionary<string, dtoo.Actuacio>> ExtreuActuacions(
+        private async Task<Dictionary<string, Dtoo.Actuacio>> ExtreuActuacions(
             ImportAllResult result, List<ActuacioDataRow> data,
-            Dictionary<string, dtoo.Centre> dictCentre, Dictionary<string, dtoo.CursAcademic> dictCursos, Dictionary<string, dtoo.Etapa> dictEtapes, Dictionary<string, dtoo.TipusActuacio> dictTipusActuacio, Dictionary<string, dtoo.Alumne> dictAlumne)
+            Dictionary<string, Dtoo.Centre> dictCentre, Dictionary<string, Dtoo.CursAcademic> dictCursos, Dictionary<string, Dtoo.Etapa> dictEtapes, Dictionary<string, Dtoo.TipusActuacio> dictTipusActuacio, Dictionary<string, Dtoo.Alumne> dictAlumne)
         {
-            Dictionary<string, dtoo.Actuacio> d = new();
+            Dictionary<string, Dtoo.Actuacio> d = new();
 
             System.Console.WriteLine("Inici actuacions");
 
@@ -364,7 +364,7 @@ namespace BusinessLayer.Services
                      $"\n\nACORDS: {v.Acords}" : "");
 
                 //
-                var parms = new ActuacioCreateParms(
+                var Parms = new ActuacioCreateParms(
                     alumneId: alumneId,
                     tipusActuacioId: tipusActuacioId,
                     observacionsTipusActuacio: v.ObservacionsTipusActuacio,
@@ -376,7 +376,7 @@ namespace BusinessLayer.Services
                     minutsDuradaActuacio: v.DuradaActuacio,
                     descripcioActuacio: descripcioActuacio
                 );
-                var dto = await blActuacio.Create(parms);
+                var dto = await blActuacio.Create(Parms);
                 d.Add(item.codi, dto.Data!);
 
                 //

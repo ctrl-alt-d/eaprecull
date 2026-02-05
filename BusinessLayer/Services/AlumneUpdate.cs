@@ -1,9 +1,9 @@
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -17,12 +17,12 @@ using DataModels.Models;
 namespace BusinessLayer.Services
 {
     public class AlumneUpdate :
-        BLUpdate<models.Alumne, parms.AlumneUpdateParms, dtoo.Alumne>,
+        BLUpdate<Models.Alumne, Parms.AlumneUpdateParms, Dtoo.Alumne>,
         IAlumneUpdate
     {
-        protected override Expression<Func<models.Alumne, dtoo.Alumne>> ToDto
+        protected override Expression<Func<Models.Alumne, Dtoo.Alumne>> ToDto
             =>
-            project
+            Project
             .Alumne
             .ToDto;
 
@@ -30,29 +30,29 @@ namespace BusinessLayer.Services
         {
         }
 
-        protected override Task PostUpdate(models.Alumne model, AlumneUpdateParms parm)
+        protected override Task PostUpdate(Models.Alumne model, AlumneUpdateParms parm)
             =>
             Task.CompletedTask;
 
-        protected override Task PreUpdate(models.Alumne model, AlumneUpdateParms parm)
+        protected override Task PreUpdate(Models.Alumne model, AlumneUpdateParms parm)
             =>
-            new RuleChecker<models.Alumne, AlumneUpdateParms>(model, parm)
+            new RuleChecker<Models.Alumne, AlumneUpdateParms>(model, parm)
             .AddCheck(RuleHiHaValorsNoInformats, "No es pot deixar el Nom en blanc")
             .AddCheck(RuleEstaRepetit, "Ja existeix un altre Alumne amb aquest mateix nom, cognoms i data de naixement")
             .AddCheck(RuleNoHiHaCapCursActiu, "Abans de crear cap alumne cal que hi hagi un curs marcat com actiu.")
             .Check();
 
-        protected virtual bool RuleHiHaValorsNoInformats(models.Alumne model, AlumneUpdateParms parm)
+        protected virtual bool RuleHiHaValorsNoInformats(Models.Alumne model, AlumneUpdateParms parm)
             =>
             string.IsNullOrEmpty(parm.Nom);
 
-        protected virtual Task<bool> RuleEstaRepetit(models.Alumne model, AlumneUpdateParms parm)
+        protected virtual Task<bool> RuleEstaRepetit(Models.Alumne model, AlumneUpdateParms parm)
             =>
             GetCollection()
             .Where(x => x.Id != model.Id)
             .AnyAsync(x => x.Cognoms == parm.Cognoms && x.Nom == parm.Nom && x.DataNaixement == parm.DataNaixement);
 
-        protected virtual async Task<bool> RuleNoHiHaCapCursActiu(models.Alumne m, AlumneUpdateParms p)
+        protected virtual async Task<bool> RuleNoHiHaCapCursActiu(Models.Alumne m, AlumneUpdateParms p)
             =>
             !
             await (
@@ -62,7 +62,7 @@ namespace BusinessLayer.Services
                 .AnyAsync()
             );
 
-        protected override async Task UpdateModel(models.Alumne model, AlumneUpdateParms parm)
+        protected override async Task UpdateModel(Models.Alumne model, AlumneUpdateParms parm)
         {
             model.Nom = parm.Nom;
             model.Cognoms = parm.Cognoms;
@@ -80,7 +80,7 @@ namespace BusinessLayer.Services
             model.DataDarreraModificacio = DateTime.Now;
         }
 
-        protected override void ResetReferences(models.Alumne model)
+        protected override void ResetReferences(Models.Alumne model)
             =>
             ReferencesAreModify(
                 model,

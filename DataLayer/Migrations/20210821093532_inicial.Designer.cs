@@ -10,7 +10,7 @@ namespace DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20210821093532_inicial")]
-    partial class inicial
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -79,28 +79,28 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<BrokenRule> BrokenRules = new();
 
-        public string _CursActual = string.Empty;
+        private string _CursActual = string.Empty;
         public string CursActual
         {
             get => _CursActual;
             set => this.RaiseAndSetIfChanged(ref _CursActual, value);
         }
 
-        public string _CursActualWarning = string.Empty;
+        private string _CursActualWarning = string.Empty;
         public string CursActualWarning
         {
             get => _CursActualWarning;
             set => this.RaiseAndSetIfChanged(ref _CursActualWarning, value);
         }
 
-        public string _TotalActuacions = string.Empty;
+        private string _TotalActuacions = string.Empty;
         public string TotalActuacions
         {
             get => _TotalActuacions;
             set => this.RaiseAndSetIfChanged(ref _TotalActuacions, value);
         }
 
-        public string _TotalActuacionsCursActual = string.Empty;
+        private string _TotalActuacionsCursActual = string.Empty;
         public string TotalActuacionsCursActual
         {
             get => _TotalActuacionsCursActual;
@@ -108,14 +108,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
 
-        public string _TotalALumnes = string.Empty;
+        private string _TotalALumnes = string.Empty;
         public string TotalALumnes
         {
             get => _TotalALumnes;
             set => this.RaiseAndSetIfChanged(ref _TotalALumnes, value);
         }
 
-        public string _TotalALumnesActualitzats = string.Empty;
+        private string _TotalALumnesActualitzats = string.Empty;
         public string TotalALumnesActualitzats
         {
             get => _TotalALumnesActualitzats;

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
@@ -13,7 +13,7 @@
         WindowStartupLocation="CenterOwner"
         >
     <Design.DataContext>
-        <viewModels:TipusActuaciosViewModel />
+        <viewModels:TipusActuacioSetViewModel />
     </Design.DataContext>
 
     <DockPanel>
@@ -64,7 +64,7 @@
 
         </DockPanel>
 
-        <ItemsControl Items="{Binding BrokenRules}"
+        <ItemsControl ItemsSource="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"
                       Margin="10" >            
             <ItemsControl.ItemTemplate>
@@ -75,7 +75,7 @@
         </ItemsControl>        
 
         <ScrollViewer DockPanel.Dock="Bottom">
-            <ItemsControl Margin="10" Items="{Binding MyItems, Mode=OneWay}">            
+            <ItemsControl Margin="10" ItemsSource="{Binding MyItems, Mode=OneWay}">            
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <pages:TipusActuacioRowUserCtrl/>

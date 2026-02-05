@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="18.2.5" />
+    <PackageReference Include="ReactiveUI.Validation" Version="6.0.18" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
     <ProjectReference Include="..\BusinessLayer.Abstract\BusinessLayer.Abstract.csproj" />
-    <PackageReference Include="ReactiveUI.Validation" Version="3.0.1" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using System.Linq;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -49,7 +49,7 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual async void LoadDadesInicials()
         {
             using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
-            var dto = await bl.FromPredicate(new dtoi.EsActiuParms(true));
+            var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
             CursDarreraActualitacioDadesTxt = cursActual?.Etiqueta ?? string.Empty;
@@ -105,7 +105,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _Nom = string.Empty;
+        private string _Nom = string.Empty;
         public string Nom
         {
             get => _Nom;
@@ -113,7 +113,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _Cognoms = string.Empty;
+        private string _Cognoms = string.Empty;
         public string Cognoms
         {
             get => _Cognoms;
@@ -121,14 +121,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _DataNaixement;
+        private DateTime? _DataNaixement;
         public DateTime? DataNaixement
         {
             get => _DataNaixement;
             set => this.RaiseAndSetIfChanged(ref _DataNaixement, value);
         }
 
-        public string _DataNaixementTxt = string.Empty;
+        private string _DataNaixementTxt = string.Empty;
         public string DataNaixementTxt
         {
             get => _DataNaixementTxt;
@@ -137,7 +137,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CentreId { get; set; }
-        public string _CentreTxt = string.Empty;
+        private string _CentreTxt = string.Empty;
         public string CentreTxt
         {
             get => _CentreTxt;
@@ -146,7 +146,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? CursDarreraActualitacioDadesId { get; set; }
-        public string _CursDarreraActualitacioDadesTxt = string.Empty;
+        private string _CursDarreraActualitacioDadesTxt = string.Empty;
         public string CursDarreraActualitacioDadesTxt
         {
             get => _CursDarreraActualitacioDadesTxt;
@@ -155,7 +155,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         //
         protected virtual int? EtapaActualId { get; set; }
-        public string _EtapaActualTxt = string.Empty;
+        private string _EtapaActualTxt = string.Empty;
         public string EtapaActualTxt
         {
             get => _EtapaActualTxt;
@@ -164,7 +164,7 @@ namespace UI.ER.ViewModels.ViewModels
 
 
         //
-        public string _NivellActual = string.Empty;
+        private string _NivellActual = string.Empty;
         public string NivellActual
         {
             get => _NivellActual;
@@ -172,14 +172,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _DataInformeNESENEE;
+        private DateTime? _DataInformeNESENEE;
         public DateTime? DataInformeNESENEE
         {
             get => _DataInformeNESENEE;
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENEE, value);
         }
 
-        public string _DataInformeNESENEETxt = string.Empty;
+        private string _DataInformeNESENEETxt = string.Empty;
         public string DataInformeNESENEETxt
         {
             get => _DataInformeNESENEETxt;
@@ -187,7 +187,7 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _ObservacionsNESENEE = string.Empty;
+        private string _ObservacionsNESENEE = string.Empty;
         public string ObservacionsNESENEE
         {
             get => _ObservacionsNESENEE;
@@ -195,21 +195,21 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public DateTime? _DataInformeNESENoNEE;
+        private DateTime? _DataInformeNESENoNEE;
         public DateTime? DataInformeNESENoNEE
         {
             get => _DataInformeNESENoNEE;
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEE, value);
         }
 
-        public string _DataInformeNESENoNEETxt = string.Empty;
+        private string _DataInformeNESENoNEETxt = string.Empty;
         public string DataInformeNESENoNEETxt
         {
             get => _DataInformeNESENoNEETxt;
             set => this.RaiseAndSetIfChanged(ref _DataInformeNESENoNEETxt, value);
         }
         //
-        public string _ObservacionsNESENoNEE = string.Empty;
+        private string _ObservacionsNESENoNEE = string.Empty;
         public string ObservacionsNESENoNEE
         {
             get => _ObservacionsNESENoNEE;
@@ -217,14 +217,14 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         //
-        public string _Tags = string.Empty;
+        private string _Tags = string.Empty;
         public string Tags
         {
             get => _Tags;
             set => this.RaiseAndSetIfChanged(ref _Tags, value);
         }
         //
-        private void DTO2ModelView(dtoo.Alumne? data)
+        private void DTO2ModelView(Dtoo.Alumne? data)
         {
             if (data == null) return;
 
@@ -259,12 +259,12 @@ namespace UI.ER.ViewModels.ViewModels
         //
 
 
-        public virtual async Task<dtoo.Alumne?> CreateData()
+        public virtual async Task<Dtoo.Alumne?> CreateData()
         {
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.AlumneCreateParms(
+            var Parms = new Dtoi.AlumneCreateParms(
                 Nom,
                 Cognoms,
                 DataNaixement,
@@ -281,7 +281,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             // cridar backend
             using var bl = BLCreate();
-            var dto = await bl.Create(parms);
+            var dto = await bl.Create(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -293,7 +293,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Alumne?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.Alumne?> SubmitCommand { get; }
 
         // --- Centre ---
         public ICommand CentreLookupCommand { get; }

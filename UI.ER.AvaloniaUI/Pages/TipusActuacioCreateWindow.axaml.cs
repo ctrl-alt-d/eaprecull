@@ -1,8 +1,8 @@
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using ReactiveUI;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using UI.ER.ViewModels.ViewModels;
 using System;
 using System.Reactive.Linq;
@@ -10,9 +10,9 @@ using DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class TipusActuacioCreateWindow : ReactiveWindow<TipusActuacioCreateViewModel>
+    public partial class TipusActuacioCreateWindow : ReactiveWindow<TipusActuacioCreateViewModel>
     {
-        public OperationResult<dtoo.TipusActuacio> Result { get; set; } = default!;
+        public OperationResult<Dtoo.TipusActuacio> Result { get; set; } = default!;
         public TipusActuacioCreateWindow()
         {
             this.InitializeComponent();

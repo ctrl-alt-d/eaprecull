@@ -1,9 +1,9 @@
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -15,23 +15,23 @@ using System.Linq.Expressions;
 namespace BusinessLayer.Services
 {
     public class CentreActivaDesactiva :
-        BLActivaDesactiva<models.Centre, dtoo.Centre>,
+        BLActivaDesactiva<Models.Centre, Dtoo.Centre>,
         ICentreActivaDesactiva
     {
         public CentreActivaDesactiva(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto
+        protected override Expression<Func<Models.Centre, Dtoo.Centre>> ToDto
             =>
-            project
+            Project
             .Centre
             .ToDto;
-        protected override Task Post(models.Centre model)
+        protected override Task Post(Models.Centre model)
             =>
             Task.CompletedTask;
 
-        protected override Task Pre(models.Centre model)
+        protected override Task Pre(Models.Centre model)
             =>
             Task.CompletedTask;
 

@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -17,8 +17,8 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Actuacio Model { get; set; }
-        public ActuacioRowViewModel(dtoo.Actuacio data, bool modeLookup = false)
+        protected Dtoo.Actuacio Model { get; set; }
+        public ActuacioRowViewModel(Dtoo.Actuacio data, bool modeLookup = false)
         {
 
             // Behavior Parm
@@ -67,7 +67,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.Actuacio? ActuacioDto)
+        private void DTO2ModelView(Dtoo.Actuacio? ActuacioDto)
         {
             if (ActuacioDto == null)
                 return;
@@ -88,7 +88,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<ActuacioUpdateViewModel, dtoo.Actuacio?> ShowUpdateDialog { get; } = new();
+        public Interaction<ActuacioUpdateViewModel, Dtoo.Actuacio?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new ActuacioUpdateViewModel(Id);
@@ -97,8 +97,8 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Seleccionar si estem en mode lookup ---
-        public ReactiveCommand<Unit, dtoo.Actuacio> SeleccionarCommand { get; }
-        private dtoo.Actuacio SelectRow() => Model;
+        public ReactiveCommand<Unit, Dtoo.Actuacio> SeleccionarCommand { get; }
+        private Dtoo.Actuacio SelectRow() => Model;
 
 
     }

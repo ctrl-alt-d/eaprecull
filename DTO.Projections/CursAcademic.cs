@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
-using dtoo = DTO.o.DTOs;
-using models = DataModels.Models;
+using Dtoo = DTO.o.DTOs;
+using Models = DataModels.Models;
 
 namespace DTO.Projections
 {
     public static class CursAcademic
     {
-        public static Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
+        public static Expression<Func<Models.CursAcademic, Dtoo.CursAcademic>> ToDto
             =>
             model
             =>

@@ -7,7 +7,7 @@ using BusinessLayer.DI;
 using BusinessLayer.Abstract.Generic;
 using DataLayer.DI;
 using System.Threading.Tasks;
-using parms = DTO.i.DTOs;
+using Parms = DTO.i.DTOs;
 
 namespace CreateDemoData
 {
@@ -44,16 +44,16 @@ namespace CreateDemoData
             Console.WriteLine("Creant Centres!");
 
             using var blset = GetBLOperation<ICentreSet>();
-            var nhiha = (await blset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
+            var nhiha = (await blset.FromPredicate(new Parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {
                 using var crea = GetBLOperation<ICentreCreate>();
-                await crea.Create(new parms.CentreCreateParms("M1", "Les Melies", true));
-                await crea.Create(new parms.CentreCreateParms("M2", "Cendrassos", true));
+                await crea.Create(new Parms.CentreCreateParms("M1", "Les Melies", true));
+                await crea.Create(new Parms.CentreCreateParms("M2", "Cendrassos", true));
                 for (var i = 0; i < 20; i++)
                 {
-                    await crea.Create(new parms.CentreCreateParms("Centre: " + Guid.NewGuid().ToString().Substring(2, 3), Guid.NewGuid().ToString().Substring(2, 8), true));
+                    await crea.Create(new Parms.CentreCreateParms("Centre: " + Guid.NewGuid().ToString().Substring(2, 3), Guid.NewGuid().ToString().Substring(2, 8), true));
                 }
             }
         }
@@ -63,14 +63,14 @@ namespace CreateDemoData
             Console.WriteLine("Creant Cursos Acadèmics!");
 
             using var blset = GetBLOperation<ICursAcademicSet>();
-            var nhiha = (await blset.FromPredicate(new parms.EsActiuParms(null))).Data!.Any();
+            var nhiha = (await blset.FromPredicate(new Parms.EsActiuParms(null))).Data!.Any();
 
             if (!nhiha)
             {
                 using var crea = GetBLOperation<ICursAcademicCreate>();
-                await crea.Create(new parms.CursAcademicCreateParms(2020, false));
-                await crea.Create(new parms.CursAcademicCreateParms(2021, true));
-                await crea.Create(new parms.CursAcademicCreateParms(2022, false));
+                await crea.Create(new Parms.CursAcademicCreateParms(2020, false));
+                await crea.Create(new Parms.CursAcademicCreateParms(2021, true));
+                await crea.Create(new Parms.CursAcademicCreateParms(2022, false));
             }
         }
 
@@ -80,13 +80,13 @@ namespace CreateDemoData
             Console.WriteLine("Creant Alumnes!");
 
             using var blset = GetBLOperation<IAlumneSet>();
-            var nhiha = (await blset.FromPredicate(new parms.AlumneSearchParms())).Data!.Any();
+            var nhiha = (await blset.FromPredicate(new Parms.AlumneSearchParms())).Data!.Any();
 
             using var blcentresset = GetBLOperation<ICentreSet>();
-            var centres = await blcentresset.FromPredicate(new parms.EsActiuParms(null));
+            var centres = await blcentresset.FromPredicate(new Parms.EsActiuParms(null));
 
             using var blcursos = GetBLOperation<ICursAcademicSet>();
-            var cursos = await blcursos.FromPredicate(new parms.EsActiuParms(null));
+            var cursos = await blcursos.FromPredicate(new Parms.EsActiuParms(null));
 
             using var crea = GetBLOperation<IAlumneCreate>();
 
@@ -94,7 +94,7 @@ namespace CreateDemoData
                 for (int i = 0; i < 2500; i++)
                 {
                     var createParm =
-                        new parms.AlumneCreateParms(
+                        new Parms.AlumneCreateParms(
                             $"Pepe {i}",
                             $"Escobar {i}",
                             DateTime.Now.AddYears(-10),

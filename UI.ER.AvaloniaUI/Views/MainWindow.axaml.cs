@@ -1,13 +1,15 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Material.Styles;
+using Avalonia.Threading;
+using Material.Styles.Controls;
 using UI.ER.AvaloniaUI.Pages;
 using UI.ER.ViewModels.ViewModels;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
 using ReactiveUI;
 using System.Threading.Tasks;
@@ -16,14 +18,10 @@ using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Views
 {
-    public class MainWindow : ReactiveWindow<AppStatusViewModel>
+    public partial class MainWindow : ReactiveWindow<AppStatusViewModel>
     {
-        #region Control fields
-        private ToggleButton NavDrawerSwitch = default!;
-        private ListBox DrawerList = default!;
-        private Carousel PageCarousel = default!;
-        private Grid mainScroller = default!;
-        #endregion
+        private NavigationDrawer? _leftDrawer;
+        private ToggleButton? _navSwitch;
 
         public MainWindow()
         {
@@ -40,6 +38,31 @@ namespace UI.ER.AvaloniaUI.Views
             InitializeComponent();
             this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
 
+            // Get controls and set up two-way sync
+            _leftDrawer = this.FindControl<NavigationDrawer>("LeftDrawer");
+            _navSwitch = this.FindControl<ToggleButton>("NavDrawerSwitch");
+            
+            if (_navSwitch != null && _leftDrawer != null)
+            {
+                // Force closed state on startup
+                _leftDrawer.LeftDrawerOpened = false;
+                _navSwitch.IsChecked = false;
+                
+                // Sync toggle button changes to drawer
+                _navSwitch.IsCheckedChanged += (s, e) =>
+                {
+                    _leftDrawer.LeftDrawerOpened = _navSwitch.IsChecked ?? false;
+                };
+                
+                // Sync drawer changes back to toggle button
+                _leftDrawer.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == NavigationDrawer.LeftDrawerOpenedProperty)
+                    {
+                        _navSwitch.IsChecked = _leftDrawer.LeftDrawerOpened;
+                    }
+                };
+            }
         }
 
         //
@@ -48,17 +71,16 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(DoShowAlumneLookup))
+                .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneSetWindow()
+                    {
+                        DataContext = new AlumneSetViewModel(modeLookup: false)
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowAlumneLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new AlumneSetWindow()
-            {
-                DataContext = new AlumneSetViewModel(modeLookup: false)
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         //
         protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
@@ -66,17 +88,16 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new ActuacioSetWindow()
+                    {
+                        DataContext = new ActuacioSetViewModel(modeLookup: false)
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowActuacioLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new ActuacioSetWindow()
-            {
-                DataContext = new ActuacioSetViewModel(modeLookup: false)
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         //
         protected virtual void RegisterShowCursAcademicDialog(Action<IDisposable> disposables)
@@ -84,17 +105,16 @@ namespace UI.ER.AvaloniaUI.Views
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(DoShowCursAcademicLookup))
+                .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new CursAcademicSetWindow()
+                    {
+                        DataContext = new CursAcademicSetViewModel(modeLookup: false)
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowCursAcademicLookup(InteractionContext<Unit, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new CursAcademicSetWindow()
-            {
-                DataContext = new CursAcademicSetViewModel(modeLookup: false)
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         private Window GetWindow()
             =>
@@ -144,7 +164,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void TemplatedControl_OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)");
+            SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)", "Root", DispatcherPriority.Normal);
         }
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)
@@ -220,7 +240,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            SnackbarHost.Post("See ya next time, user!");
+            SnackbarHost.Post("See ya next time, user!", "Root", DispatcherPriority.Normal);
         }
     }
 }

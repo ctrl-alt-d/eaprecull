@@ -1,11 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Linq;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using System;
@@ -17,14 +17,14 @@ using BusinessLayer.Abstract.Exceptions;
 namespace BusinessLayer.Services
 {
     public class CursAcademicSet :
-        BLSet<models.CursAcademic, parms.EsActiuParms, dtoo.CursAcademic>,
+        BLSet<Models.CursAcademic, Parms.EsActiuParms, Dtoo.CursAcademic>,
         ICursAcademicSet
     {
         public CursAcademicSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        protected override IQueryable<models.CursAcademic> GetModels(parms.EsActiuParms request)
+        protected override IQueryable<Models.CursAcademic> GetModels(Parms.EsActiuParms request)
             =>
             GetAllModels()
             .Where(i => !request.EsActiu.HasValue || i.EsActiu == request.EsActiu)
@@ -34,7 +34,7 @@ namespace BusinessLayer.Services
         {
             var cursActiu =
                 await
-                GetModels(new parms.EsActiuParms(true))
+                GetModels(new Parms.EsActiuParms(true))
                 .FirstOrDefaultAsync();
 
             if (cursActiu == null) return null;
@@ -42,11 +42,11 @@ namespace BusinessLayer.Services
             return cursActiu.AnyInici == DateTime.Now.AddMonths(-8).Year;
         }
 
-        public async Task<OperationResult<dtoo.CursAcademic>> GetCursActiu()
+        public async Task<OperationResult<Dtoo.CursAcademic>> GetCursActiu()
         {
             var cursActiu =
                 await
-                GetModels(new parms.EsActiuParms(true))
+                GetModels(new Parms.EsActiuParms(true))
                 .Select(ToDto)
                 .FirstOrDefaultAsync();
 
@@ -54,15 +54,15 @@ namespace BusinessLayer.Services
             if (cursActiu == null)
             {
                 var excepti = new List<BrokenRule>() { new BrokenRule("Cel definir el curs actiu") };
-                return new OperationResult<dtoo.CursAcademic>(excepti);
+                return new OperationResult<Dtoo.CursAcademic>(excepti);
             }
 
-            return new OperationResult<dtoo.CursAcademic>(cursActiu);
+            return new OperationResult<Dtoo.CursAcademic>(cursActiu);
         }
 
-        protected override Expression<Func<models.CursAcademic, dtoo.CursAcademic>> ToDto
+        protected override Expression<Func<Models.CursAcademic, Dtoo.CursAcademic>> ToDto
             =>
-            project
+            Project
             .CursAcademic
             .ToDto;
     }

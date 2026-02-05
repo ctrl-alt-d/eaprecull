@@ -1,5 +1,6 @@
 using DataLayer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using BusinessLayer.DI;
@@ -7,6 +8,7 @@ using BusinessLayer.Abstract.Services;
 using System.IO;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Integration.Test
 {
@@ -15,14 +17,16 @@ namespace BusinessLayer.Integration.Test
 
 
         [Fact]
-        public async void Test()
+        public async Task Test()
         {
             // arrange
             var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt => opt.UseSqlite(ConnectionString));
+            services.AddDbContextFactory<AppDbContext>(opt => 
+                opt.UseSqlite(ConnectionString)
+                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
             services.BusinessLayerConfigureServices();
 
             var serviceProvider = services.BuildServiceProvider();

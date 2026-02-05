@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
@@ -18,9 +18,9 @@ namespace UI.ER.ViewModels.ViewModels
     public class AlumneRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Alumne Model { get; set; }
-        protected readonly dtoo.CursAcademic? CursActual;
-        public AlumneRowViewModel(dtoo.Alumne data, dtoo.CursAcademic? cursActual, bool modeLookup = false)
+        protected Dtoo.Alumne Model { get; set; }
+        protected readonly Dtoo.CursAcademic? CursActual;
+        public AlumneRowViewModel(Dtoo.Alumne data, Dtoo.CursAcademic? cursActual, bool modeLookup = false)
         {
 
             // Behavior Parm
@@ -102,7 +102,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.Alumne? AlumneDto)
+        private void DTO2ModelView(Dtoo.Alumne? AlumneDto)
         {
             if (AlumneDto == null)
                 return;
@@ -136,7 +136,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<AlumneUpdateViewModel, dtoo.Alumne?> ShowUpdateDialog { get; } = new();
+        public Interaction<AlumneUpdateViewModel, Dtoo.Alumne?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new AlumneUpdateViewModel(Id);
@@ -166,12 +166,12 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Seleccionar si estem en mode lookup ---
-        public ReactiveCommand<Unit, dtoo.Alumne> SeleccionarCommand { get; }
-        private dtoo.Alumne SelectRow() => Model;
+        public ReactiveCommand<Unit, Dtoo.Alumne> SeleccionarCommand { get; }
+        private Dtoo.Alumne SelectRow() => Model;
 
         // --- Generar informe ---
-        public ReactiveCommand<Unit, dtoo.SaveResult?> GeneraInformeCommand { get; }
-        private async Task<dtoo.SaveResult?> DoGeneraInforme()
+        public ReactiveCommand<Unit, Dtoo.SaveResult?> GeneraInformeCommand { get; }
+        private async Task<Dtoo.SaveResult?> DoGeneraInforme()
         {
             ResultatInformeAlumne = "";
             using var bl = SuperContext.GetBLOperation<IAlumneInforme>();

@@ -1,9 +1,9 @@
 ﻿using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using DTO.i.DTOs;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
@@ -16,7 +16,7 @@ using System;
 namespace BusinessLayer.Services
 {
     public class CentreCreate :
-        BLCreate<models.Centre, parms.CentreCreateParms, dtoo.Centre>,
+        BLCreate<Models.Centre, Parms.CentreCreateParms, Dtoo.Centre>,
         ICentreCreate
     {
         public CentreCreate(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
@@ -39,11 +39,11 @@ namespace BusinessLayer.Services
             GetCollection()
             .AnyAsync(x => x.Codi == parm.Codi || x.Nom == parm.Nom);
 
-        protected override Task<models.Centre> InitializeModel(CentreCreateParms parm)
+        protected override Task<Models.Centre> InitializeModel(CentreCreateParms parm)
             =>
             Task
             .FromResult(
-                new models.Centre()
+                new Models.Centre()
                 {
                     Codi = parm.Codi,
                     Nom = parm.Nom,
@@ -56,9 +56,9 @@ namespace BusinessLayer.Services
             Task
             .CompletedTask;
 
-        protected override Expression<Func<models.Centre, dtoo.Centre>> ToDto
+        protected override Expression<Func<Models.Centre, Dtoo.Centre>> ToDto
             =>
-            project
+            Project
             .Centre
             .ToDto;
 

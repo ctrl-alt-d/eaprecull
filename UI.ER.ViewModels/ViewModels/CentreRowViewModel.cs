@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
@@ -18,8 +18,18 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
     {
 
-        protected dtoo.Centre Model { get; }
-        public CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup = false)
+        protected Dtoo.Centre Model { get; }
+        public CentreRowViewModel(Dtoo.Centre centreDto, bool modeLookup = false)
+            : this(centreDto, modeLookup, 0, 0)
+        {
+        }
+
+        public CentreRowViewModel(Dtoo.CentreAmbActuacions centreDto, bool modeLookup = false)
+            : this(centreDto, modeLookup, centreDto.TotalActuacions, centreDto.ActuacionsCursActiu)
+        {
+        }
+
+        private CentreRowViewModel(Dtoo.Centre centreDto, bool modeLookup, int totalActuacions, int actuacionsCursActiu)
         {
 
             // Behavior Parm
@@ -31,6 +41,8 @@ namespace UI.ER.ViewModels.ViewModels
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = centreDto.EsActiu;
+            _TotalActuacions = totalActuacions;
+            _ActuacionsCursActiu = actuacionsCursActiu;
             Id = centreDto.Id;
 
             // Behavior
@@ -70,9 +82,25 @@ namespace UI.ER.ViewModels.ViewModels
             protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
 
+        private int _TotalActuacions;
+        public int TotalActuacions
+        {
+            get { return _TotalActuacions; }
+            protected set { this.RaiseAndSetIfChanged(ref _TotalActuacions, value); }
+        }
+
+        private int _ActuacionsCursActiu;
+        public int ActuacionsCursActiu
+        {
+            get { return _ActuacionsCursActiu; }
+            protected set { this.RaiseAndSetIfChanged(ref _ActuacionsCursActiu, value); }
+        }
+
+        public string ActuacionsTxt => $"{ActuacionsCursActiu} actuacions (curs actiu) / {TotalActuacions} total";
+
         public int Id { get; }
 
-        private void DTO2ModelView(dtoo.Centre? data)
+        private void DTO2ModelView(Dtoo.Centre? data)
         {
             if (data == null)
                 return;
@@ -101,7 +129,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<CentreUpdateViewModel, dtoo.Centre?> ShowUpdateDialog { get; } = new();
+        public Interaction<CentreUpdateViewModel, Dtoo.Centre?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new CentreUpdateViewModel(Id);
@@ -110,8 +138,8 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Seleccionar si estem en mode lookup ---
-        public ReactiveCommand<Unit, dtoo.Centre> SeleccionarCommand { get; }
-        private dtoo.Centre SelectRow() => Model;
+        public ReactiveCommand<Unit, Dtoo.Centre> SeleccionarCommand { get; }
+        private Dtoo.Centre SelectRow() => Model;
 
     }
 }

@@ -1,11 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
-using parms = DTO.i.DTOs;
-using dtoo = DTO.o.DTOs;
+using Parms = DTO.i.DTOs;
+using Dtoo = DTO.o.DTOs;
 using System.Linq;
-using project = DTO.Projections;
-using models = DataModels.Models;
+using Project = DTO.Projections;
+using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using System;
@@ -16,14 +16,14 @@ using System.Linq.Expressions;
 namespace BusinessLayer.Services
 {
     public class ActuacioSet :
-        BLSet<models.Actuacio, parms.ActuacioSearchParms, dtoo.Actuacio>,
+        BLSet<Models.Actuacio, Parms.ActuacioSearchParms, Dtoo.Actuacio>,
         IActuacioSet
     {
         public ActuacioSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
         }
 
-        protected override IQueryable<models.Actuacio> GetModels(parms.ActuacioSearchParms request)
+        protected override IQueryable<Models.Actuacio> GetModels(Parms.ActuacioSearchParms request)
         {
             var query = GetAllModels();
 
@@ -140,9 +140,9 @@ namespace BusinessLayer.Services
         }
 
         //
-        protected override Expression<Func<models.Actuacio, dtoo.Actuacio>> ToDto
+        protected override Expression<Func<Models.Actuacio, Dtoo.Actuacio>> ToDto
             =>
-            project
+            Project
             .Actuacio
             .ToDto;
 

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:material="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
@@ -13,7 +13,7 @@
         WindowStartupLocation="CenterOwner"
         >
     <Design.DataContext>
-        <viewModels:ActuaciosViewModel />
+        <viewModels:ActuacioSetViewModel />
     </Design.DataContext>
 
     <DockPanel>
@@ -75,7 +75,7 @@
                      BorderBrush="{DynamicResource PrimaryHueMidBrush}"
                      BorderThickness="1" Classes="Solo"
                      Watermark="Cercar per nom, cognoms, tag i centre de l'alumne i descripcio, tipus i curs de l'actuació."
-                     wpf:TextFieldAssist.CornerRadius="32" Margin="8">
+                      Margin="8">
                 <TextBox.InnerLeftContent>
                     <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
                         <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -91,7 +91,7 @@
                    IsVisible="{Binding Loading}" Classes="Subtitle2"
                     />
 
-        <ListBox Items="{Binding BrokenRules}"
+        <ListBox ItemsSource="{Binding BrokenRules}"
                       DockPanel.Dock="Bottom"
                       Margin="10"
                        >            
@@ -104,8 +104,8 @@
 
         <ListBox DockPanel.Dock="Bottom"
                  Margin="0"
-                 Items="{Binding MyItems, Mode=OneWay}"
-                 VirtualizationMode="Simple">
+                 ItemsSource="{Binding MyItems, Mode=OneWay}"
+                 >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <pages:ActuacioRowUserCtrl/>

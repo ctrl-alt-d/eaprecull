@@ -3,13 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
-using Avalonia.ReactiveUI;
+using Dtoo = DTO.o.DTOs;
+using ReactiveUI.Avalonia;
 using System;
+using System.Reactive.Linq;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class ActuacioRowUserCtrl : ReactiveUserControl<ActuacioRowViewModel>
+    public partial class ActuacioRowUserCtrl : ReactiveUserControl<ActuacioRowViewModel>
     {
         public ActuacioRowUserCtrl()
         {
@@ -37,19 +38,19 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Where(vm => vm != null)
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new ActuacioUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<Dtoo.Actuacio?>(GetWindow());
+
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<ActuacioUpdateViewModel, dtoo.Actuacio?> interaction)
-        {
-            var dialog = new ActuacioUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.Actuacio?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)
@@ -57,6 +58,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
             );
 

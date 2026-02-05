@@ -3,15 +3,16 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
-using Avalonia.ReactiveUI;
+using Dtoo = DTO.o.DTOs;
+using ReactiveUI.Avalonia;
 using System;
 using System.Reactive;
+using System.Reactive.Linq;
 using CommonInterfaces;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public class AlumneRowUserCtrl : ReactiveUserControl<AlumneRowViewModel>
+    public partial class AlumneRowUserCtrl : ReactiveUserControl<AlumneRowViewModel>
     {
         public AlumneRowUserCtrl()
         {
@@ -41,19 +42,18 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(DoShowUpdateDialog))
+                .Where(vm => vm != null)
+                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+
+                    var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowUpdateDialog(InteractionContext<AlumneUpdateViewModel, dtoo.Alumne?> interaction)
-        {
-            var dialog = new AlumneUpdateWindow()
-            {
-                DataContext = interaction.Input
-            };
-
-            var result = await dialog.ShowDialog<dtoo.Alumne?>(GetWindow());
-
-            interaction.SetOutput(result);
-        }
 
         // -- Show actuacions
         protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
@@ -61,17 +61,17 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(DoShowActuacioLookup))
+                .Where(vm => vm != null)
+                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new ActuacioSetWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    interaction.SetOutput(result);
+                }))
             );
-        protected virtual async Task DoShowActuacioLookup(InteractionContext<ActuacioSetViewModel, IIdEtiquetaDescripcio?> interaction)
-        {
-            var dialog = new ActuacioSetWindow()
-            {
-                DataContext = interaction.Input
-            };
-            var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-            interaction.SetOutput(result);
-        }
 
         // -- Select Row
         private void RegisterCloseOnSelect(Action<IDisposable> disposables)
@@ -79,6 +79,7 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
             );
 
@@ -89,10 +90,11 @@ namespace UI.ER.AvaloniaUI.Pages
             disposables(
                 this
                 .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
                 .Subscribe(vm => vm!.GeneraInformeCommand.Subscribe(ObraFileExplorer))
             );
 
-        private void ObraFileExplorer(dtoo.SaveResult? saveResult)
+        private void ObraFileExplorer(Dtoo.SaveResult? saveResult)
         {
             if (saveResult == null) return;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()

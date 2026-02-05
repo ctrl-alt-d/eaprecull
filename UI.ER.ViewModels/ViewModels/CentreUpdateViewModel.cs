@@ -1,12 +1,12 @@
 using System.Reactive;
 using ReactiveUI;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.AvaloniaUI.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
-using dtoi = DTO.i.DTOs;
+using Dtoi = DTO.i.DTOs;
 using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
@@ -27,7 +27,7 @@ namespace UI.ER.ViewModels.ViewModels
         public int Id { get; }
         public string IdTxt => $"Centre #{Id}";
 
-        public string _Codi = string.Empty;
+        private string _Codi = string.Empty;
         public string Codi
         {
             get => _Codi;
@@ -41,7 +41,7 @@ namespace UI.ER.ViewModels.ViewModels
                 this.RaiseAndSetIfChanged(ref _Codi, value);
             }
         }
-        public string _Nom = string.Empty;
+        private string _Nom = string.Empty;
         public string Nom
         {
             get => _Nom;
@@ -69,7 +69,7 @@ namespace UI.ER.ViewModels.ViewModels
             DTO2ModelView(dto.Data);
         }
 
-        private void DTO2ModelView(dtoo.Centre? data)
+        private void DTO2ModelView(Dtoo.Centre? data)
         {
             if (data == null) return;
 
@@ -78,17 +78,17 @@ namespace UI.ER.ViewModels.ViewModels
             EsActiu = data.EsActiu;
         }
 
-        public virtual async Task<dtoo.Centre?> UpdateData()
+        public virtual async Task<Dtoo.Centre?> UpdateData()
         {
             // Clear brokenRules
             BrokenRules.Clear();
 
             // preparar paràmetres
-            var parms = new dtoi.CentreUpdateParms(Id, Codi, Nom, EsActiu);
+            var Parms = new Dtoi.CentreUpdateParms(Id, Codi, Nom, EsActiu);
 
             // cridar backend
             using var bl = SuperContext.GetBLOperation<ICentreUpdate>();
-            var dto = await bl.Update(parms);
+            var dto = await bl.Update(Parms);
             var data = dto.Data;
 
             // actualitzar dades amb el resultat
@@ -101,7 +101,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
 
-        public ReactiveCommand<Unit, dtoo.Centre?> SubmitCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.Centre?> SubmitCommand { get; }
 
 
     }

@@ -9,7 +9,7 @@ using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using DataLayer;
 using DataModels.Models;
-using dtoo = DTO.o.DTOs;
+using Dtoo = DTO.o.DTOs;
 using Microsoft.EntityFrameworkCore;
 using SharpDocx;
 
@@ -23,7 +23,7 @@ namespace BusinessLayer.Services
         {
         }
 
-        public async Task<OperationResult<dtoo.SaveResult>> Run(int alumneId)
+        public async Task<OperationResult<Dtoo.SaveResult>> Run(int alumneId)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace BusinessLayer.Services
                 document.Generate(path);
 
                 return new(
-                    new dtoo.SaveResult(
+                    new Dtoo.SaveResult(
                         path,
                         filename,
                         folder
