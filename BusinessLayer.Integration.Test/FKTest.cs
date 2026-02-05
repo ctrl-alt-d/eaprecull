@@ -8,6 +8,7 @@ using BusinessLayer.Abstract.Services;
 using System.IO;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Integration.Test
 {
@@ -16,7 +17,7 @@ namespace BusinessLayer.Integration.Test
 
 
         [Fact]
-        public async void Test()
+        public async Task Test()
         {
             // arrange
             var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
