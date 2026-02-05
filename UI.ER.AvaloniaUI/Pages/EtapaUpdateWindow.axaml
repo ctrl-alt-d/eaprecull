@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.EtapaUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Edició dades Etapa"        
+        Title="Etapa Educativa, detall i modificació de dades"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >

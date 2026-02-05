@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.CursAcademicUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Edició dades CursAcademic"        
+        Title="Curs Acadèmic, detall i modificació de dades"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >

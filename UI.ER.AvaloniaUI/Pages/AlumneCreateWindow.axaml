@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneCreateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Alta nou Alumne"        
+        Title="Alumne, alta"        
         Width="1100" Height="600" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >

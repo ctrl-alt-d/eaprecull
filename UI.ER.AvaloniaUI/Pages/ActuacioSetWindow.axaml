@@ -8,7 +8,7 @@
         xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
         x:Class="UI.ER.AvaloniaUI.Pages.ActuacioSetWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Actuacions"        
+        Title="Actuació, llistat"        
         Width="1000" Height="700" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
