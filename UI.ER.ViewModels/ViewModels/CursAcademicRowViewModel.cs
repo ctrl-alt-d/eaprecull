@@ -24,6 +24,33 @@ namespace UI.ER.ViewModels.ViewModels
             dtoo.CursAcademic CursAcademicDto,
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
             bool modeLookup = false)
+            : this(CursAcademicDto, totsElsCursos, modeLookup, 0)
+        {
+        }
+
+        public CursAcademicRowViewModel(
+            dtoo.CursAcademicAmbActuacions CursAcademicDto,
+            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
+            bool modeLookup = false)
+            : this(
+                new dtoo.CursAcademic(
+                    CursAcademicDto.Id,
+                    CursAcademicDto.AnyInici,
+                    CursAcademicDto.Nom,
+                    CursAcademicDto.EsActiu,
+                    CursAcademicDto.Etiqueta,
+                    CursAcademicDto.Descripcio),
+                totsElsCursos,
+                modeLookup,
+                CursAcademicDto.NombreActuacions)
+        {
+        }
+
+        private CursAcademicRowViewModel(
+            dtoo.CursAcademic CursAcademicDto,
+            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
+            bool modeLookup,
+            int nombreActuacions)
         {
 
             // Behavior Parm
@@ -36,6 +63,7 @@ namespace UI.ER.ViewModels.ViewModels
             _Descripcio = CursAcademicDto.Descripcio;
             _Estat = CursAcademicDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = CursAcademicDto.EsActiu;
+            _NombreActuacions = nombreActuacions;
             Id = CursAcademicDto.Id;
 
             // Behavior
@@ -74,6 +102,15 @@ namespace UI.ER.ViewModels.ViewModels
             get { return _EsActiu; }
             internal set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
+
+        private int _NombreActuacions;
+        public int NombreActuacions
+        {
+            get { return _NombreActuacions; }
+            protected set { this.RaiseAndSetIfChanged(ref _NombreActuacions, value); }
+        }
+
+        public string NumActuacionsTxt => $"{NombreActuacions} actuacions";
 
         public int Id { get; }
 
