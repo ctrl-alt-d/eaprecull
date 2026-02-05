@@ -59,8 +59,8 @@
                         DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
                 
-
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+                <TextBlock Classes="Body2" Text="{Binding ActuacionsTxt}" />
 
                 <ItemsControl Margin="10"
                               IsVisible="{Binding BrokenRules.Count}"

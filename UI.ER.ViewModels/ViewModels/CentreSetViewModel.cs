@@ -65,7 +65,7 @@ namespace UI.ER.ViewModels.ViewModels
             var parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = SuperContext.GetBLOperation<ICentreSet>();
+            using var bl = SuperContext.GetBLOperation<ICentreSetAmbActuacions>();
             var dto = await bl.FromPredicate(parms);
 
             // 
@@ -81,6 +81,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
+                .Cast<dtoo.CentreAmbActuacions>()
                 .Select(x => new CentreRowViewModel(x, ModeLookup));
 
             MyItems.AddRange(newItems);

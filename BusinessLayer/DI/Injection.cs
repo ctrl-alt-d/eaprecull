@@ -13,6 +13,7 @@ namespace BusinessLayer.DI
 
             // centre
             services.AddTransient<ICentreSet, CentreSet>();
+            services.AddTransient<ICentreSetAmbActuacions, CentreSetAmbActuacions>();
             services.AddTransient<ICentreCreate, CentreCreate>();
             services.AddTransient<ICentreUpdate, CentreUpdate>();
             services.AddTransient<ICentreActivaDesactiva, CentreActivaDesactiva>();

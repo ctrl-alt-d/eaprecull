@@ -20,6 +20,16 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected dtoo.Centre Model { get; }
         public CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup = false)
+            : this(centreDto, modeLookup, 0, 0)
+        {
+        }
+
+        public CentreRowViewModel(dtoo.CentreAmbActuacions centreDto, bool modeLookup = false)
+            : this(centreDto, modeLookup, centreDto.TotalActuacions, centreDto.ActuacionsCursActiu)
+        {
+        }
+
+        private CentreRowViewModel(dtoo.Centre centreDto, bool modeLookup, int totalActuacions, int actuacionsCursActiu)
         {
 
             // Behavior Parm
@@ -31,6 +41,8 @@ namespace UI.ER.ViewModels.ViewModels
             _Descripcio = centreDto.Descripcio;
             _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
             _EsActiu = centreDto.EsActiu;
+            _TotalActuacions = totalActuacions;
+            _ActuacionsCursActiu = actuacionsCursActiu;
             Id = centreDto.Id;
 
             // Behavior
@@ -69,6 +81,22 @@ namespace UI.ER.ViewModels.ViewModels
             get { return _EsActiu; }
             protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
+
+        private int _TotalActuacions;
+        public int TotalActuacions
+        {
+            get { return _TotalActuacions; }
+            protected set { this.RaiseAndSetIfChanged(ref _TotalActuacions, value); }
+        }
+
+        private int _ActuacionsCursActiu;
+        public int ActuacionsCursActiu
+        {
+            get { return _ActuacionsCursActiu; }
+            protected set { this.RaiseAndSetIfChanged(ref _ActuacionsCursActiu, value); }
+        }
+
+        public string ActuacionsTxt => $"{ActuacionsCursActiu} actuacions (curs actiu) / {TotalActuacions} total";
 
         public int Id { get; }
 
