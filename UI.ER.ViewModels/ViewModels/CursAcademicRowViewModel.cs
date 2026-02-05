@@ -58,7 +58,7 @@ namespace UI.ER.ViewModels.ViewModels
         public string Estat
         {
             get { return _Estat; }
-            protected set { this.RaiseAndSetIfChanged(ref _Estat, value); }
+            internal set { this.RaiseAndSetIfChanged(ref _Estat, value); }
         }
 
         private string _Descripcio = string.Empty;
@@ -72,7 +72,7 @@ namespace UI.ER.ViewModels.ViewModels
         public bool EsActiu
         {
             get { return _EsActiu; }
-            protected set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
+            internal set { this.RaiseAndSetIfChanged(ref _EsActiu, value); }
         }
 
         public int Id { get; }

@@ -41,6 +41,16 @@ namespace UI.ER.ViewModels.ViewModels
                 {
                     var item = new CursAcademicRowViewModel(data, MyItems, ModeLookup);
                     MyItems.Insert(0, item);
+
+                    // Si el nou curs és actiu, desactivar tots els altres a la UI
+                    if (data.EsActiu)
+                    {
+                        foreach (var curs in MyItems.Where(x => x.Id != data.Id))
+                        {
+                            curs.EsActiu = false;
+                            curs.Estat = "Desactivat";
+                        }
+                    }
                 }
             });
 
