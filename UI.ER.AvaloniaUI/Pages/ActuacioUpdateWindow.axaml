@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.ActuacioUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Modificar dades Actuacio"        
+        Title="Actuació, detall i modificació de dades"        
         Width="1100" Height="700" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >

@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.TipusActuacioUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Edició de Tipus d'Actuació"        
+        Title="Tipus d'Actuació, detall i modificació de dades"        
         Width="800" Height="500" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >

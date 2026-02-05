@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneUpdateWindow"
         HorizontalContentAlignment="Stretch"
-        Title="Edició dades Alumne"        
+        Title="Alumne, detall i modificació de dades"        
         Width="1100" Height="600" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
