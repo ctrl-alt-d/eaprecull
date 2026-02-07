@@ -122,6 +122,13 @@ namespace UI.ER.ViewModels.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _totalActuacions, value);
         }
 
+        private string _tempsTotalTxt = string.Empty;
+        public string TempsTotalTxt
+        {
+            get => _tempsTotalTxt;
+            private set => this.RaiseAndSetIfChanged(ref _tempsTotalTxt, value);
+        }
+
         public ObservableCollectionExtended<Dtoo.ActuacioInformeItem> Actuacions { get; } = new();
 
         // --- Estat ---
@@ -199,6 +206,7 @@ namespace UI.ER.ViewModels.ViewModels
             ObservacionsNESENoNEE = data.ObservacionsNESENoNEE;
 
             TotalActuacions = data.TotalActuacions;
+            TempsTotalTxt = data.TempsTotalTxt;
             Actuacions.Clear();
             Actuacions.AddRange(data.Actuacions);
         }

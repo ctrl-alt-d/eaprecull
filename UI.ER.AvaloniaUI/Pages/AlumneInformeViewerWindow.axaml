@@ -229,6 +229,20 @@
                                            Foreground="Gray"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Center"/>
+                                <TextBlock Text="·" 
+                                           Classes="Subtitle1"
+                                           Foreground="Gray"
+                                           Margin="10,0,10,0"
+                                           VerticalAlignment="Center"/>
+                                <avalonia:MaterialIcon Kind="ClockOutline" 
+                                                       Width="18" Height="18"
+                                                       Foreground="Gray"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding TempsTotalTxt}" 
+                                           Classes="Subtitle1"
+                                           Foreground="Gray"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <!-- Llista d'actuacions -->
