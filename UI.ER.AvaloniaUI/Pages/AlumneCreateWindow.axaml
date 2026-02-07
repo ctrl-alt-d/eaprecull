@@ -14,93 +14,112 @@
 
     <ScrollViewer>
         <StackPanel Orientation="Vertical"
-                    Margin="16, 16">
-            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,*"
-                  ColumnDefinitions="1*,1*">
+                    Margin="24, 20">
 
-                <!-- 0 -->
+            <!-- ==================== DADES PERSONALS ==================== -->
+            <Border Background="#F5F7FA" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                    BorderBrush="#E0E0E0" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <avalonia:MaterialIcon Kind="AccountOutline" Width="22" Height="22" 
+                                               Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,10,0"/>
+                        <TextBlock Text="Dades personals" Classes="Subtitle1" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    </StackPanel>
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="1*,1*">
+                        <TextBox Grid.Row="0" Grid.Column="0" Margin="6,4"
+                                    Text="{Binding Nom}"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Nom" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding Cognoms}"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Cognoms" />
+                        <controls:DateInput Grid.Row="1" Grid.Column="0" Margin="6,4"
+                                    DateText="{Binding DataNaixementTxt}"
+                                    Label="Data naixement (dd.mm.aaaa)" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding Tags}"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Tags (paraules clau per cercar)" />
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-                <TextBox Grid.Row="0" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding Nom}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Nom" />
+            <!-- ==================== DADES ACADÈMIQUES ==================== -->
+            <Border Background="#F5F7FA" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                    BorderBrush="#E0E0E0" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <avalonia:MaterialIcon Kind="SchoolOutline" Width="22" Height="22" 
+                                               Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,10,0"/>
+                        <TextBlock Text="Dades acadèmiques" Classes="Subtitle1" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    </StackPanel>
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="1*,1*">
+                        <controls:LookupInput Grid.Row="0" Grid.Column="0" Margin="6,4"
+                                    Text="{Binding CursDarreraActualitacioDadesTxt}"
+                                    Label="Curs Darrera Actualització Dades"
+                                    LookupCommand="{Binding CursDarreraActualitacioDadesLookupCommand}"
+                                    ClearCommand="{Binding CursDarreraActualitacioDadesClearCommand}" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding NivellActual}"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Nivell actual (exs: 1, 1r, AO, ...)" />
+                        <controls:LookupInput Grid.Row="1" Grid.Column="0" Margin="6,4"
+                                    Text="{Binding EtapaActualTxt}"
+                                    Label="Etapa que cursa l'alumne"
+                                    LookupCommand="{Binding EtapaActualLookupCommand}"
+                                    ClearCommand="{Binding EtapaActualClearCommand}" />
+                        <controls:LookupInput Grid.Row="1" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding CentreTxt}"
+                                    Label="Centre on estudia l'alumne"
+                                    LookupCommand="{Binding CentreLookupCommand}"
+                                    ClearCommand="{Binding CentreClearCommand}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding Cognoms}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Cognoms" />
-
-                <!-- 1 -->
-
-                <controls:DateInput Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
-                            DateText="{Binding DataNaixementTxt}"
-                            Label="Data naixement (dd.mm.aaaa)" />
-
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding Tags}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Tags (paraules clau per cercar)" />
-
-                <!-- 2 -->
-
-                <controls:LookupInput Grid.Row="2" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding CursDarreraActualitacioDadesTxt}"
-                            Label="Curs Darrera Actualització Dades"
-                            LookupCommand="{Binding CursDarreraActualitacioDadesLookupCommand}"
-                            ClearCommand="{Binding CursDarreraActualitacioDadesClearCommand}" />
-
-                <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding NivellActual}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Nivell actual (exs: 1, 1r, AO, ...)" />
-
-                <!-- 3 -->
-
-                <controls:LookupInput Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding EtapaActualTxt}"
-                            Label="Etapa que cursa l'alumne"
-                            LookupCommand="{Binding EtapaActualLookupCommand}"
-                            ClearCommand="{Binding EtapaActualClearCommand}" />
-
-                <controls:LookupInput Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding CentreTxt}"
-                            Label="Centre on estudia l'alumne"
-                            LookupCommand="{Binding CentreLookupCommand}"
-                            ClearCommand="{Binding CentreClearCommand}" />
-
-                <!-- 4 -->
-
-                <controls:DateInput Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
-                            DateText="{Binding DataInformeNESENEETxt}"
-                            Label="Data informe NESE NEE (dd.mm.aaaa)" />
-
-                <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding ObservacionsNESENEE}"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Observacions NESE NEE" />
-
-                <!-- 5 -->
-
-                <controls:DateInput Grid.Row="5" Grid.Column="0" Margin="10,5,10,5"
-                            DateText="{Binding DataInformeNESENoNEETxt}"
-                            Label="Data informe NESE NO NEE (dd.mm.aaaa)" />
-
-                <TextBox Grid.Row="5" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding ObservacionsNESENoNEE}"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Observacions NESE NO NEE" />
-
-            </Grid>
+            <!-- ==================== NESE ==================== -->
+            <Border Background="#FFF8E1" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                    BorderBrush="#FFE0B2" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <avalonia:MaterialIcon Kind="AlertCircleOutline" Width="22" Height="22" 
+                                               Foreground="#E65100" Margin="0,0,10,0"/>
+                        <TextBlock Text="NESE (Necessitats Específiques)" Classes="Subtitle1" FontWeight="SemiBold"
+                                   Foreground="#E65100"/>
+                    </StackPanel>
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="1*,1*">
+                        <controls:DateInput Grid.Row="0" Grid.Column="0" Margin="6,4"
+                                    DateText="{Binding DataInformeNESENEETxt}"
+                                    Label="Data informe NESE NEE (dd.mm.aaaa)" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding ObservacionsNESENEE}"
+                                    AcceptsReturn="True"
+                                    TextWrapping="Wrap"
+                                    MinHeight="60"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Observacions NESE NEE" />
+                        <controls:DateInput Grid.Row="1" Grid.Column="0" Margin="6,4"
+                                    DateText="{Binding DataInformeNESENoNEETxt}"
+                                    Label="Data informe NESE NO NEE (dd.mm.aaaa)" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding ObservacionsNESENoNEE}"
+                                    AcceptsReturn="True"
+                                    TextWrapping="Wrap"
+                                    MinHeight="60"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Observacions NESE NO NEE" />
+                    </Grid>
+                </StackPanel>
+            </Border>
 
             <ItemsControl Margin="10,5,10,5" ItemsSource="{Binding BrokenRules}">            
                 <ItemsControl.ItemTemplate>
@@ -110,7 +129,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,5,10,5"/>
+            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,10,10,5"/>
 
         </StackPanel>
 

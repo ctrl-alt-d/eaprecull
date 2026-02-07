@@ -14,88 +14,103 @@
 
     <ScrollViewer>
         <StackPanel Orientation="Vertical"
-                    Margin="16, 16">
-            <Grid ColumnDefinitions="1*,1*"
-                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" >
+                    Margin="24, 20">
 
-                <!-- 0 -->
+            <!-- ==================== DADES DE L'ACTUACIÓ ==================== -->
+            <Border Background="#F5F7FA" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                    BorderBrush="#E0E0E0" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <avalonia:MaterialIcon Kind="CalendarClock" Width="22" Height="22" 
+                                               Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,10,0"/>
+                        <TextBlock Text="Dades de l'actuació" Classes="Subtitle1" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    </StackPanel>
+                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="1*,1*">
+                        <controls:DateInput Grid.Row="0" Grid.Column="0" Margin="6,4"
+                                    DateText="{Binding MomentDeLactuacioTxt}"
+                                    Label="Data de l'actuació (dd.mm.aaaa)" />
+                        <controls:LookupInput Grid.Row="0" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding CursActuacioTxt}"
+                                    Label="Curs de l'actuació"
+                                    LookupCommand="{Binding CursActuacioLookupCommand}"
+                                    ClearCommand="{Binding CursActuacioClearCommand}" />
+                        <controls:LookupInput Grid.Row="1" Grid.Column="0" Margin="6,4"
+                                    Text="{Binding TipusActuacioTxt}"
+                                    Label="Tipus d'actuació"
+                                    LookupCommand="{Binding TipusActuacioLookupCommand}"
+                                    ClearCommand="{Binding TipusActuacioClearCommand}" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="6,4"
+                                       UseFloatingWatermark="True"
+                                       Classes="Filled"
+                                       wpf:TextFieldAssist.Label="Minuts emprats"
+                                       Text="{Binding MinutsDuradaActuacioTxt}"/>
+                        <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="6,4"
+                                    Text="{Binding ObservacionsTipusActuacio}"
+                                    AcceptsReturn="True"
+                                    TextWrapping="Wrap"
+                                    MinHeight="50"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Observacions sobre el tipus d'actuació" />
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-                <controls:DateInput Grid.Row="0" Grid.Column="0" Margin="10,5,10,5"
-                            DateText="{Binding MomentDeLactuacioTxt}"
-                            Label="Data de l'actuació (dd.mm.aaaa)" />
-
-                <controls:LookupInput Grid.Row="0" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding CursActuacioTxt}"
-                            Label="Curs de l'actuació"
-                            LookupCommand="{Binding CursActuacioLookupCommand}"
-                            ClearCommand="{Binding CursActuacioClearCommand}" />
-
-                <!-- 1 -->
-
-                <controls:LookupInput Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding TipusActuacioTxt}"
-                            Label="Tipus d'actuació"
-                            LookupCommand="{Binding TipusActuacioLookupCommand}"
-                            ClearCommand="{Binding TipusActuacioClearCommand}" />
-
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,10,5"
-                               UseFloatingWatermark="True"
-                               Classes="Filled"
-                               wpf:TextFieldAssist.Label="Minuts emprats"
-                               Text="{Binding MinutsDuradaActuacioTxt}"/>
-
-
-                <!-- 2 -->
-
-                <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,5,10,5"
-                            Text="{Binding ObservacionsTipusActuacio}"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
+            <!-- ==================== ALUMNE I CONTEXT ==================== -->
+            <Border Background="#E8F5E9" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                    BorderBrush="#C8E6C9" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <avalonia:MaterialIcon Kind="AccountSchoolOutline" Width="22" Height="22" 
+                                               Foreground="#2E7D32" Margin="0,0,10,0"/>
+                        <TextBlock Text="Alumne i context" Classes="Subtitle1" FontWeight="SemiBold"
+                                   Foreground="#2E7D32"/>
+                    </StackPanel>
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="1*,1*">
+                        <controls:LookupInput Grid.Row="0" Grid.Column="0" Margin="6,4"
+                                    Text="{Binding AlumneTxt}"
+                                    Label="Alumne"
+                                    LookupCommand="{Binding AlumneLookupCommand}"
+                                    ClearCommand="{Binding AlumneClearCommand}" />
+                        <controls:LookupInput Grid.Row="0" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding CentreTxt}"
+                                    Label="Centre de l'alumne al moment de l'actuació"
+                                    LookupCommand="{Binding CentreLookupCommand}"
+                                    ClearCommand="{Binding CentreClearCommand}" />
+                        <controls:LookupInput Grid.Row="1" Grid.Column="0" Margin="6,4"
+                                    Text="{Binding EtapaAlMomentDeLactuacioTxt}"
+                                    Label="Etapa al moment de l'actuació"
+                                    LookupCommand="{Binding EtapaAlMomentDeLactuacioLookupCommand}"
+                                    ClearCommand="{Binding EtapaAlMomentDeLactuacioClearCommand}" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="6,4"
+                            Text="{Binding NivellAlMomentDeLactuacio}"
                             UseFloatingWatermark="True"
                             Classes="Filled"
-                            wpf:TextFieldAssist.Label="Observacions sobre el tipus d'actuació" />
+                            wpf:TextFieldAssist.Label="Nivell al moment de l'actuació (ex: 1r)" />
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-
-                <!-- 3 -->
-
-                <controls:LookupInput Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding AlumneTxt}"
-                            Label="Alumne"
-                            LookupCommand="{Binding AlumneLookupCommand}"
-                            ClearCommand="{Binding AlumneClearCommand}" />
-
-                <controls:LookupInput Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
-                            Text="{Binding CentreTxt}"
-                            Label="Centre de l'alumne al moment de l'actuació"
-                            LookupCommand="{Binding CentreLookupCommand}"
-                            ClearCommand="{Binding CentreClearCommand}" />
-
-                <!-- 4 -->
-
-                <controls:LookupInput Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding EtapaAlMomentDeLactuacioTxt}"
-                            Label="Etapa al moment de l'actuació"
-                            LookupCommand="{Binding EtapaAlMomentDeLactuacioLookupCommand}"
-                            ClearCommand="{Binding EtapaAlMomentDeLactuacioClearCommand}" />
-                
-                <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
-                    Text="{Binding NivellAlMomentDeLactuacio}"
-                    UseFloatingWatermark="True"
-                    Classes="Filled"
-                    wpf:TextFieldAssist.Label="Nivell al moment de l'actuació (ex: 1r)" />
-
-                <!-- 5 -->
-
-                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,5,10,5"
-                            Text="{Binding DescripcioActuacio}"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Descripció de l'actuació" />
-
-
-            </Grid>
+            <!-- ==================== DESCRIPCIÓ ==================== -->
+            <Border Background="#F5F7FA" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                    BorderBrush="#E0E0E0" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <avalonia:MaterialIcon Kind="TextBoxOutline" Width="22" Height="22" 
+                                               Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0,0,10,0"/>
+                        <TextBlock Text="Descripció" Classes="Subtitle1" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding DescripcioActuacio}"
+                                AcceptsReturn="True"
+                                TextWrapping="Wrap"
+                                MinHeight="80"
+                                UseFloatingWatermark="True"
+                                Classes="Filled"
+                                wpf:TextFieldAssist.Label="Descripció de l'actuació" />
+                </StackPanel>
+            </Border>
 
             <ItemsControl Margin="10,5,10,5" ItemsSource="{Binding BrokenRules}">            
                 <ItemsControl.ItemTemplate>
@@ -105,7 +120,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,5,10,5"/>
+            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,10,10,5"/>
 
         </StackPanel>
 
