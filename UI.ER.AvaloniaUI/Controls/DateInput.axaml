@@ -7,7 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="50"
              x:Class="UI.ER.AvaloniaUI.Controls.DateInput">
     
-    <Grid ColumnDefinitions="*,Auto">
+    <Grid ColumnDefinitions="*,Auto,Auto">
         <TextBox x:Name="DateTextBox"
                  Grid.Column="0"
                  Text="{Binding DateText, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -31,6 +31,16 @@
                               SelectionMode="SingleDate"/>
                 </Flyout>
             </Button.Flyout>
+        </Button>
+        
+        <Button x:Name="ClearButton"
+                Grid.Column="2"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,8"
+                Classes="Flat"
+                Padding="8"
+                ToolTip.Tip="Esborrar data">
+            <avalonia:MaterialIcon Kind="Close" Width="20" Height="20"/>
         </Button>
     </Grid>
 </UserControl>
