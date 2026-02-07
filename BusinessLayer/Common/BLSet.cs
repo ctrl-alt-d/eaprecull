@@ -2,7 +2,6 @@ using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
-using DataModels.Models.Interfaces;
 using DTO.i;
 using DTO.i.Interfaces;
 using DTO.o.Interfaces;
@@ -16,7 +15,7 @@ namespace BusinessLayer.Common
 {
     public abstract class BLSet<TModel, TParm, TDTOo>
         : BLOperation,
-         ISet<TParm, TDTOo>
+         ISetProjectable<TParm, TModel, TDTOo>
             where TDTOo : IDTOo, IEtiquetaDescripcio
             where TParm : IDtoi
             where TModel : class, IModel, IId
@@ -66,6 +65,38 @@ namespace BusinessLayer.Common
             return new OperationResults<TDTOo>(data, total, take);
         }
 
+        public virtual async Task<OperationResults<TDTOoProjected>> FromPredicateProjected<TDTOoProjected>(
+            TParm request,
+            Expression<Func<TModel, TDTOoProjected>> projection
+            )
+            where TDTOoProjected : IDTOo, IEtiquetaDescripcio
+        {
+
+            var take = 2000;
+            var skip = 0;
+
+            if (request is IPaginated paginatedrequest)
+            {
+                take = paginatedrequest.Take;
+                skip = paginatedrequest.Skip;
+            }
+
+            var total =
+                await
+                GetModels(request)
+                .CountAsync();
+
+            var data =
+                await
+                GetModels(request)
+                .Skip(skip)
+                .Take(take)
+                .Select(projection)
+                .ToListAsync();
+
+            return new OperationResults<TDTOoProjected>(data, total, take);
+        }
+
         public virtual async Task<IntOperationResult> CountFromPredicate(
             TParm request
             )
@@ -88,6 +119,22 @@ namespace BusinessLayer.Common
                 .FirstOrDefaultAsync();
 
             return new OperationResult<TDTOo>(data);
+        }
+
+        public virtual async Task<OperationResult<TDTOoProjected>> FromIdProjected<TDTOoProjected>(
+            int id,
+            Expression<Func<TModel, TDTOoProjected>> projection
+            )
+            where TDTOoProjected : IDTOo, IEtiquetaDescripcio
+        {
+            var data =
+                await
+                GetAllModels()
+                .Where(x => x.Id == id)
+                .Select(projection)
+                .FirstOrDefaultAsync();
+
+            return new OperationResult<TDTOoProjected>(data);
         }
 
     }

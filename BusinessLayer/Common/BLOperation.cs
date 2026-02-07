@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataLayer;
-using DataModels.Models.Interfaces;
+using CommonInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Common

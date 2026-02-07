@@ -45,7 +45,7 @@ namespace BusinessLayer.DI
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
             services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
             services.AddTransient<ICursAcademicSet, CursAcademicSet>();
-            services.AddTransient<ICursAcademicSetAmbActuacions, CursAcademicSetAmbActuacions>();
+            services.AddTransient<ICursAcademicSetProjectable, CursAcademicSet>();
             services.AddTransient<ICursAcademicActivaDesactiva, CursAcademicActivaDesactiva>();
 
             // actuacio
