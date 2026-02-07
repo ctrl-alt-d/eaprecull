@@ -33,6 +33,7 @@ namespace UI.ER.ViewModels.ViewModels
             SeleccionarCommand = ReactiveCommand.Create(SelectRow);
             UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
             VeureExpedientAlumneCommand = ReactiveCommand.CreateFromTask(ShowExpedientAlumneDialogHandle);
+            EditarAlumneCommand = ReactiveCommand.CreateFromTask(ShowEditarAlumneDialogHandle);
         }
 
 
@@ -109,6 +110,16 @@ namespace UI.ER.ViewModels.ViewModels
             var alumneId = Model.Alumne.Id;
             var vm = new AlumneInformeViewerViewModel(alumneId);
             await ShowExpedientAlumneDialog.Handle(vm);
+        }
+
+        // --- Editar dades de l'alumne ---
+        public ICommand EditarAlumneCommand { get; }
+        public Interaction<AlumneUpdateViewModel, Dtoo.Alumne?> ShowEditarAlumneDialog { get; } = new();
+        private async Task ShowEditarAlumneDialogHandle()
+        {
+            var alumneId = Model.Alumne.Id;
+            var vm = new AlumneUpdateViewModel(alumneId);
+            await ShowEditarAlumneDialog.Handle(vm);
         }
 
     }
