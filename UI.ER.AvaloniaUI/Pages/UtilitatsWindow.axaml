@@ -7,45 +7,141 @@
         x:Class="UI.ER.AvaloniaUI.Pages.UtilitatsWindow"
         HorizontalContentAlignment="Stretch"
         Title="Utilitats addicionals"        
-        Width="800" Height="500" MinWidth="720"
+        Width="820" Height="620" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
 
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" Margin="24">
 
-    <StackPanel Orientation="Vertical"
-                Margin="16, 16"
-                >
+            <!-- ════════════════════════════════════════════ -->
+            <!-- HEADER -->
+            <!-- ════════════════════════════════════════════ -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20" VerticalAlignment="Center">
+                <avalonia:MaterialIcon Kind="ChartDonutVariant" Width="28" Height="28"
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Classes="Headline5" Text="Utilitats addicionals"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+            </StackPanel>
 
-        <StackPanel.Styles> 
-        </StackPanel.Styles>                
+            <!-- ════════════════════════════════════════════ -->
+            <!-- EXPORTACIÓ PIVOT -->
+            <!-- ════════════════════════════════════════════ -->
+            <material:Card Padding="0" Margin="0,0,0,16">
+                <StackPanel>
+                    <!-- Capçalera -->
+                    <Border Background="#E8EAF6" Padding="16,12">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="MicrosoftExcel" Width="22" Height="22"
+                                                   Foreground="#1A237E"
+                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Classes="Subtitle1" Text="Exportar taula de pivotació"
+                                       VerticalAlignment="Center"
+                                       Foreground="#1A237E"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Contingut -->
+                    <StackPanel Margin="16,12,16,16">
+                        <TextBlock Classes="Body2" TextWrapping="Wrap" Margin="0,0,0,8"
+                                   Text="Genera un fitxer Excel amb totes les dades d'actuacions preparades per a taules dinàmiques. Permet obtenir estadístiques sobre alumnes atesos, nombre d'actuacions i minuts dedicats, filtrant per centre, curs, tipus d'actuació i estudis obligatoris."/>
+                        <TextBlock Classes="Overline" Text="{Binding TotalActuacions}" Margin="0,0,0,12"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
 
-        <ToggleSwitch ToolTip.Tip="Activar les operacions delicades (les que la pots liar)"
-                VerticalAlignment="Center" 
-                IsChecked="{Binding OperacionsDelicadesActivat}"
-        />
+                        <Button Command="{Binding GeneraPivotCommand}" Classes="PivotCss Flat"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <avalonia:MaterialIcon Kind="FileExcelBox" Width="20" Height="20"
+                                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Exportar a Excel" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
 
-        <TextBlock 
-                Margin="10,10,10,10"
-                Classes="Subtitle1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Utilitats"
-                Foreground="Blue"  />
+                        <!-- Resultat -->
+                        <Border IsVisible="{Binding ResultatPivotAlumne, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Background="#E8F5E9" CornerRadius="4" Padding="10,8" Margin="0,12,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <avalonia:MaterialIcon Kind="CheckCircleOutline" Width="18" Height="18"
+                                                       Foreground="#2E7D32" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Classes="Body2" Foreground="#2E7D32"
+                                           Text="{Binding ResultatPivotAlumne}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </material:Card>
 
-        <Button Margin="10,10,10,0"
-                Command="{Binding GeneraPivotCommand}"
-                Content="Exportar taula de pivotació resum actuacions"
-                Classes="PivotCss Flat" />
-        <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatPivotAlumne}" Margin="0,5,0,0"/>
+            <!-- ════════════════════════════════════════════ -->
+            <!-- ZONA DELICADA (DANGER ZONE) -->
+            <!-- ════════════════════════════════════════════ -->
+            <Border BorderBrush="#E53935" BorderThickness="1" CornerRadius="6" Margin="0,8,0,0"
+                    Padding="0">
+                <StackPanel>
+                    <!-- Capçalera Danger Zone -->
+                    <Border Background="#FFEBEE" Padding="16,12" CornerRadius="6,6,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="AlertOutline" Width="22" Height="22"
+                                                   Foreground="#C62828"
+                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Classes="Subtitle1" Text="Zona d'operacions delicades"
+                                       VerticalAlignment="Center" Foreground="#C62828"/>
+                        </StackPanel>
+                    </Border>
 
-        <Button Margin="10,10,10,0"
-                Command="{Binding GeneraSyncCommand}"
-                Content="Sincronitzar 'Actiu' alumne amb 'Actiu' centre"
-                ToolTip.Tip="Cal activar les operacions delicades perquè la pots liar. Passarà tots els alumnes de centres actius a actiu i tots els alumnes de centres inactius a inactius."
-                Classes="PivotCss Flat" />
-        <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatSyncAlumne}" Margin="0,5,0,0"/>
+                    <StackPanel Margin="16,12,16,4">
+                        <TextBlock Classes="Body2" TextWrapping="Wrap" Foreground="#616161"
+                                   Text="Aquestes operacions modifiquen dades de forma massiva. Activa l'interruptor per desbloquejar-les."/>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,6">
+                            <ToggleSwitch IsChecked="{Binding OperacionsDelicadesActivat}"
+                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Classes="Body1" Text="Habilitar operacions delicades"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
 
+                    <Separator Margin="16,0" Background="#FFCDD2"/>
 
-    </StackPanel>
+                    <!-- Targeta: Sincronitzar Actiu -->
+                    <StackPanel Margin="16,12,16,16"
+                                IsEnabled="{Binding OperacionsDelicadesActivat}">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <avalonia:MaterialIcon Kind="Sync" Width="20" Height="20"
+                                                   Foreground="#E53935"
+                                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Classes="Subtitle2" Text="Sincronitzar estat dels alumnes amb els centres"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Classes="Body2" TextWrapping="Wrap" Foreground="#616161" Margin="0,0,0,4"
+                                   Text="Marca com a actius tots els alumnes de centres actius, i com a no actius tots els alumnes de centres inactius."/>
+                        <TextBlock Classes="Caption" TextWrapping="Wrap" Foreground="#9E9E9E" Margin="0,0,0,12"
+                                   Text="Atenció: pot fer que deixis de veure alumnes si estan associats a centres marcats com a no actius. Igualment, podries començar a veure alumnes inactius si el seu centre està actiu. No s'esborra cap alumne."/>
+
+                        <Button Command="{Binding GeneraSyncCommand}"
+                                Classes="Flat" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <avalonia:MaterialIcon Kind="SyncAlert" Width="20" Height="20"
+                                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Sincronitzar" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Resultat -->
+                        <Border IsVisible="{Binding ResultatSyncAlumne, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Background="#FFF3E0" CornerRadius="4" Padding="10,8" Margin="0,12,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <avalonia:MaterialIcon Kind="InformationOutline" Width="18" Height="18"
+                                                       Foreground="#E65100" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Classes="Body2" Foreground="#E65100"
+                                           Text="{Binding ResultatSyncAlumne}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
 
 </Window>

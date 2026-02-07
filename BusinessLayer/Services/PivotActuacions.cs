@@ -16,7 +16,9 @@ namespace BusinessLayer.Services
 {
     public class PivotActuacions : BLReport<Dtoo.SaveResult>, IPivotActuacions
     {
-        internal record DataRecord(string Curs, string Alumne, string Data, string Centre, string Tipus, int Minuts, string Etapa, string EstudisObligatoris);
+        internal record DataRecord(
+            string Curs, string Alumne, string Data, string Centre, string Tipus, int Minuts, string Etapa, string EstudisObligatoris,
+            string Nivell, string TeInformeNESENEE, string DataInformeNESENEE, string TeInformeNESENoNEE, string DataInformeNESENoNEE, string Tags, string Descripcio);
 
         public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory) 
             : base(appDbContextFactory)
@@ -82,32 +84,52 @@ namespace BusinessLayer.Services
             pck.SaveAs(new FileInfo(path));
         }
 
-        private Task<List<DataRecord>> GetInformes()
-            =>
-            GetContext()
-            .Actuacions
-            .Include(a => a.Alumne)
-            .Include(a => a.CursActuacio)
-            .Include(a => a.CentreAlMomentDeLactuacio)
-            .Include(a => a.EtapaAlMomentDeLactuacio)
-            .Include(a => a.TipusActuacio)
-            .OrderByDescending(a => a.CursActuacio.AnyInici)
-            .ThenBy(a => a.CentreAlMomentDeLactuacio.Nom)
-            .ThenBy(a => a.Alumne.Cognoms)
-            .ThenBy(a => a.Alumne.Nom)
-            .ThenBy(a => a.MomentDeLactuacio)
-            .AsNoTracking()
-            .Select( d => new DataRecord(
-                                d.CursActuacio.Nom,
-                                $"{d.Alumne.Cognoms}, {d.Alumne.Nom} (#{d.Alumne.Id})",
-                                d.MomentDeLactuacio.ToString("yyyy-MM-dd"),
-                                d.CentreAlMomentDeLactuacio.Nom,
-                                d.TipusActuacio.Nom,
-                                d.MinutsDuradaActuacio,
-                                d.EtapaAlMomentDeLactuacio.Nom,
-                                d.EtapaAlMomentDeLactuacio.SonEstudisObligatoris ? "Sí" : "No"
-                )
-            )            
-            .ToListAsync();
+        private async Task<List<DataRecord>> GetInformes()
+        {
+            var rawData = await GetContext()
+                .Actuacions
+                .Include(a => a.Alumne)
+                .Include(a => a.CursActuacio)
+                .Include(a => a.CentreAlMomentDeLactuacio)
+                .Include(a => a.EtapaAlMomentDeLactuacio)
+                .Include(a => a.TipusActuacio)
+                .OrderByDescending(a => a.CursActuacio.AnyInici)
+                .ThenBy(a => a.CentreAlMomentDeLactuacio.Nom)
+                .ThenBy(a => a.Alumne.Cognoms)
+                .ThenBy(a => a.Alumne.Nom)
+                .ThenBy(a => a.MomentDeLactuacio)
+                .AsNoTracking()
+                .Select(d => new DataRecord(
+                    d.CursActuacio.Nom,
+                    $"{d.Alumne.Cognoms}, {d.Alumne.Nom} (#{d.Alumne.Id})",
+                    d.MomentDeLactuacio.ToString("yyyy-MM-dd"),
+                    d.CentreAlMomentDeLactuacio.Nom,
+                    d.TipusActuacio.Nom,
+                    d.MinutsDuradaActuacio,
+                    d.EtapaAlMomentDeLactuacio.Nom,
+                    d.EtapaAlMomentDeLactuacio.SonEstudisObligatoris ? "Sí" : "No",
+                    d.NivellAlMomentDeLactuacio,
+                    d.Alumne.DataInformeNESENEE != null ? "Sí" : "No",
+                    d.Alumne.DataInformeNESENEE != null ? d.Alumne.DataInformeNESENEE.Value.ToString("yyyy-MM-dd") : "",
+                    d.Alumne.DataInformeNESENoNEE != null ? "Sí" : "No",
+                    d.Alumne.DataInformeNESENoNEE != null ? d.Alumne.DataInformeNESENoNEE.Value.ToString("yyyy-MM-dd") : "",
+                    d.Alumne.Tags,
+                    d.DescripcioActuacio
+                ))
+                .ToListAsync();
+
+            return rawData
+                .Select(d => d with { Descripcio = TruncaAPrimeres20Paraules(d.Descripcio) })
+                .ToList();
+        }
+
+        private static string TruncaAPrimeres20Paraules(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return "";
+            var paraules = text.Replace("\n", " ").Replace("\r", " ")
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (paraules.Length <= 20) return string.Join(" ", paraules);
+            return string.Join(" ", paraules.Take(20)) + "...";
+        }
     }
 }

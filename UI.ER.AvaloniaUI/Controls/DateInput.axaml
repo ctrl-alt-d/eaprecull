@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="50"
+             x:Class="UI.ER.AvaloniaUI.Controls.DateInput">
+    
+    <Grid ColumnDefinitions="*,Auto,Auto">
+        <TextBox x:Name="DateTextBox"
+                 Grid.Column="0"
+                 Text="{Binding DateText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 UseFloatingWatermark="True"
+                 Classes="Filled"
+                 wpf:TextFieldAssist.Label="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 Watermark="dd.mm.aaaa"
+                 Margin="0"/>
+        
+        <Button x:Name="CalendarButton"
+                Grid.Column="1"
+                VerticalAlignment="Bottom"
+                Margin="4,0,0,8"
+                Classes="Flat"
+                Padding="8"
+                ToolTip.Tip="Obrir calendari">
+            <avalonia:MaterialIcon Kind="Calendar" Width="20" Height="20"/>
+            <Button.Flyout>
+                <Flyout Placement="BottomEdgeAlignedLeft">
+                    <Calendar x:Name="DateCalendar"
+                              SelectionMode="SingleDate"/>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        
+        <Button x:Name="ClearButton"
+                Grid.Column="2"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,8"
+                Classes="Flat"
+                Padding="8"
+                ToolTip.Tip="Esborrar data">
+            <avalonia:MaterialIcon Kind="Close" Width="20" Height="20"/>
+        </Button>
+    </Grid>
+</UserControl>

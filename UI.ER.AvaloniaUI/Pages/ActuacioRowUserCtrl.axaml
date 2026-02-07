@@ -33,7 +33,7 @@
     <Border BorderBrush="White"
             BorderThickness="1"
             CornerRadius="4"
-            Padding="6"
+            Padding="10"
             Margin="5,0,20,10"
             Classes="Apareix"
             BoxShadow="5 5 10 2 Gray">
@@ -64,13 +64,44 @@
             </Button>
 
             <StackPanel Orientation="Vertical"
-                        DockPanel.Dock="Left">                            
-                <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>
-                
+                        DockPanel.Dock="Left">
 
-                <TextBlock Classes="Overline" Text="{Binding Descripcio}"/>
+                <!-- Línia 1: Data + Curs + Durada -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <Border Background="#E3F2FD" CornerRadius="4" Padding="8,3" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="CalendarOutline" Width="14" Height="14" 
+                                                   Foreground="#1565C0" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding DataTxt}" Classes="Body2" FontWeight="SemiBold" 
+                                       Foreground="#1565C0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Text="{Binding CursActuacio}" Classes="Caption" Foreground="Gray" 
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding DuradaTxt}" Classes="Caption" Foreground="Gray" 
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding DuradaTxt, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                </StackPanel>
 
-                <ItemsControl Margin="10"
+                <!-- Línia 2: Alumne + Tipus (badge) -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                    <TextBlock Classes="Body1" Text="{Binding AlumneNom}" FontWeight="SemiBold" 
+                               MinWidth="250" Margin="0,0,10,0"/>
+                    <Border Background="#F3E5F5" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
+                        <TextBlock Text="{Binding TipusActuacio}" Classes="Caption" FontWeight="SemiBold"
+                                   Foreground="#7B1FA2"/>
+                    </Border>
+                    <TextBlock Text="{Binding CentreActuacio}" Classes="Caption" Foreground="Gray" 
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Línia 3: Descripció (resum) -->
+                <TextBlock Classes="Body2" Text="{Binding DescripcioActuacio}" 
+                           TextTrimming="CharacterEllipsis" MaxLines="1"
+                           Foreground="Gray" Margin="0,2,0,0"
+                           IsVisible="{Binding DescripcioActuacio, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                <ItemsControl Margin="10,4,10,0"
                               IsVisible="{Binding BrokenRules.Count}"
                               ItemsSource="{Binding BrokenRules}">            
                     <ItemsControl.ItemTemplate>

@@ -67,6 +67,41 @@ namespace UI.ER.ViewModels.ViewModels
             protected set { this.RaiseAndSetIfChanged(ref _CursActuacio, value); }
         }
 
+        private string _DataTxt = string.Empty;
+        public string DataTxt
+        {
+            get { return _DataTxt; }
+            protected set { this.RaiseAndSetIfChanged(ref _DataTxt, value); }
+        }
+
+        private string _TipusActuacio = string.Empty;
+        public string TipusActuacio
+        {
+            get { return _TipusActuacio; }
+            protected set { this.RaiseAndSetIfChanged(ref _TipusActuacio, value); }
+        }
+
+        private string _DuradaTxt = string.Empty;
+        public string DuradaTxt
+        {
+            get { return _DuradaTxt; }
+            protected set { this.RaiseAndSetIfChanged(ref _DuradaTxt, value); }
+        }
+
+        private string _DescripcioActuacio = string.Empty;
+        public string DescripcioActuacio
+        {
+            get { return _DescripcioActuacio; }
+            protected set { this.RaiseAndSetIfChanged(ref _DescripcioActuacio, value); }
+        }
+
+        private string _AlumneNom = string.Empty;
+        public string AlumneNom
+        {
+            get { return _AlumneNom; }
+            protected set { this.RaiseAndSetIfChanged(ref _AlumneNom, value); }
+        }
+
         public int Id { get; }
 
         private void DTO2ModelView(Dtoo.Actuacio? ActuacioDto)
@@ -79,6 +114,11 @@ namespace UI.ER.ViewModels.ViewModels
             Descripcio = ActuacioDto.Descripcio;
             CentreActuacio = ActuacioDto.CentreAlMomentDeLactuacio.Etiqueta;
             CursActuacio = ActuacioDto.CursActuacio.Etiqueta;
+            DataTxt = ActuacioDto.MomentDeLactuacio.ToString("dd/MM/yyyy");
+            TipusActuacio = ActuacioDto.TipusActuacio.Etiqueta;
+            DuradaTxt = ActuacioDto.MinutsDuradaActuacio > 0 ? $"{ActuacioDto.MinutsDuradaActuacio} min" : string.Empty;
+            DescripcioActuacio = ActuacioDto.DescripcioActuacio ?? string.Empty;
+            AlumneNom = ActuacioDto.Alumne.Etiqueta;
         }
 
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();

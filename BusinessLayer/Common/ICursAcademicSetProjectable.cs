@@ -1,10 +1,9 @@
 using BusinessLayer.Abstract.Services;
-using BusinessLayer.Common;
 using Parms = DTO.i.DTOs;
 using Dtoo = DTO.o.DTOs;
 using Models = DataModels.Models;
 
-namespace BusinessLayer.Services
+namespace BusinessLayer.Common
 {
     /// <summary>
     /// Interfície que estén ICursAcademicSet amb capacitat de projecció personalitzada.

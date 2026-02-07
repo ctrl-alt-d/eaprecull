@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="50"
+             x:Class="UI.ER.AvaloniaUI.Controls.LookupInput">
+    
+    <Grid ColumnDefinitions="*,Auto,Auto">
+        <TextBox Grid.Column="0"
+                 Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 UseFloatingWatermark="True"
+                 Classes="Filled"
+                 IsReadOnly="True"
+                 Focusable="False"
+                 wpf:TextFieldAssist.Label="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 Margin="0"/>
+        
+        <Button Grid.Column="1"
+                VerticalAlignment="Bottom"
+                Margin="4,0,0,8"
+                Classes="Flat"
+                Padding="8"
+                ToolTip.Tip="Obrir pantalla de selecció"
+                Command="{Binding LookupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <avalonia:MaterialIcon Kind="CardSearchOutline" Width="20" Height="20"/>
+        </Button>
+        
+        <Button Grid.Column="2"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,8"
+                Classes="Flat"
+                Padding="8"
+                ToolTip.Tip="Esborrar selecció"
+                Command="{Binding ClearCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <avalonia:MaterialIcon Kind="Close" Width="20" Height="20"/>
+        </Button>
+    </Grid>
+</UserControl>
