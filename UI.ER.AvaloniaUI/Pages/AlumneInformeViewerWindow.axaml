@@ -20,8 +20,8 @@
         
         <!-- Contingut principal amb scroll -->
         <ScrollViewer Grid.Row="0" 
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Visible">
             
             <StackPanel Orientation="Vertical" Margin="24">
                 
