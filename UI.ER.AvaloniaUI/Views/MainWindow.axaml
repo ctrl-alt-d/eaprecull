@@ -161,8 +161,7 @@
                                     <StackPanel>
                                         <StackPanel Margin="8">
                                             <avalonia:MaterialIcon HorizontalAlignment="Center"
-                                                                    Classes="Headline6"
-                                                                    Kind="School" Width="24" Height="24" 
+                                                                    Kind="School" Width="48" Height="48" 
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding TotalALumnes}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding TotalALumnesActualitzats}" HorizontalAlignment="Center"/>
@@ -175,8 +174,7 @@
                                     <StackPanel>
                                         <StackPanel Margin="8">
                                             <avalonia:MaterialIcon HorizontalAlignment="Center"
-                                                                    Classes="Headline6"
-                                                                    Kind="BookOpenVariant" Width="24" Height="24" 
+                                                                    Kind="BookOpenVariant" Width="48" Height="48" 
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding TotalActuacions}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding TotalActuacionsCursActual}" HorizontalAlignment="Center"/>
@@ -189,8 +187,7 @@
                                     <StackPanel>
                                         <StackPanel Margin="8">
                                             <avalonia:MaterialIcon HorizontalAlignment="Center"
-                                                                    Classes="Headline6"
-                                                                    Kind="CalendarCheck" Width="24" Height="24" 
+                                                                    Kind="CalendarCheck" Width="48" Height="48" 
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding CursActual}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                                             <TextBlock Classes="Body2" Foreground="Red" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>

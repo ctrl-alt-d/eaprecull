@@ -27,6 +27,10 @@
                     Padding="16,14">
                 <StackPanel Spacing="10">
                     <!-- Input de cerca -->
+                    <DockPanel>
+                        <avalonia:MaterialIcon DockPanel.Dock="Left"
+                                               Kind="BookOpenVariant" Width="28" Height="28"
+                                               VerticalAlignment="Center" Margin="0,0,10,0" />
                     <TextBox Text="{Binding SearchString}"
                              BorderBrush="{Binding $self.Foreground}" BorderThickness="1"
                              Classes="solo" Theme="{StaticResource SoloTextBox}"
@@ -39,6 +43,7 @@
                             </Border>
                         </TextBox.InnerLeftContent>
                     </TextBox>
+                    </DockPanel>
                     <!-- Filtres i info -->
                     <DockPanel>
                         <Border DockPanel.Dock="Right" 
