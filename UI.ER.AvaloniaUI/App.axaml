@@ -3,11 +3,16 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+             xmlns:helpers="clr-namespace:UI.ER.AvaloniaUI.Helpers;assembly=UI.ER.AvaloniaUI"
              x:Class="UI.ER.AvaloniaUI.App">
     <Application.Styles>
       <!-- Modern color scheme: Indigo primary with Pink accent -->
-      <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Pink" />
+            <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Pink" />
       <avalonia:MaterialIconStyles />
+
+            <Style Selector="Window">
+                <Setter Property="helpers:WindowHelper.ClampToWorkingArea" Value="True" />
+            </Style>
           <Style Selector="TextBlock.Error">
                 <Setter Property="Foreground" Value="Red"/>
                 <Style.Animations>                    

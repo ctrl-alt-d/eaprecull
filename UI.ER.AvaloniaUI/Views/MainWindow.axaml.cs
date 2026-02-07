@@ -242,5 +242,7 @@ namespace UI.ER.AvaloniaUI.Views
         {
             SnackbarHost.Post("See ya next time, user!", "Root", DispatcherPriority.Normal);
         }
+
+        
     }
 }
