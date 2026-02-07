@@ -4,6 +4,7 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:controls="clr-namespace:UI.ER.AvaloniaUI.Controls"
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneCreateWindow"
         HorizontalContentAlignment="Stretch"
         Title="Alumne, alta"        
@@ -33,11 +34,9 @@
 
                 <!-- 1 -->
 
-                <TextBox Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding DataNaixementTxt}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Data naixement. (dd.mm.aaaa)" />
+                <controls:DateInput Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
+                            DateText="{Binding DataNaixementTxt}"
+                            Label="Data naixement (dd.mm.aaaa)" />
 
                 <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,10,5"
                             Text="{Binding Tags}"
@@ -114,11 +113,9 @@
 
                 <!-- 4 -->
 
-                <TextBox Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding DataInformeNESENEETxt}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Data informe NESE NEE (dd.mm.aaaa)" />
+                <controls:DateInput Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
+                            DateText="{Binding DataInformeNESENEETxt}"
+                            Label="Data informe NESE NEE (dd.mm.aaaa)" />
 
                 <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
                             Text="{Binding ObservacionsNESENEE}"
@@ -130,11 +127,9 @@
 
                 <!-- 5 -->
 
-                <TextBox Grid.Row="5" Grid.Column="0" Margin="10,5,10,5"
-                            Text="{Binding DataInformeNESENoNEETxt}"
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            wpf:TextFieldAssist.Label="Data informe NESE NO NEE (dd.mm.aaaa)" />
+                <controls:DateInput Grid.Row="5" Grid.Column="0" Margin="10,5,10,5"
+                            DateText="{Binding DataInformeNESENoNEETxt}"
+                            Label="Data informe NESE NO NEE (dd.mm.aaaa)" />
 
                 <TextBox Grid.Row="5" Grid.Column="1" Margin="10,5,10,5"
                             Text="{Binding ObservacionsNESENoNEE}"
