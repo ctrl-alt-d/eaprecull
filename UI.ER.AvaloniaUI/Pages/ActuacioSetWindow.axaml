@@ -16,102 +16,104 @@
         <viewModels:ActuacioSetViewModel />
     </Design.DataContext>
 
-    <DockPanel>
+    <Grid>
 
-        <DockPanel.Styles>
-            <Style Selector="Button.DesarCss">
-                <Setter Property="HotKey" Value="Ctrl++" />
-                <Setter Property="ToolTip.Tip" Value="Utilitza ^+ com a drecera de teclat" />
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Template>
-                            <StackPanel Orientation="Horizontal" Height="24">
-                                <Viewbox Stretch="Fill"                                            
-                                         VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
-                                </Viewbox>
-                                <TextBlock Margin="8,0" Text="Afegir una nova Actuació" Classes="Subtitle2"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Template>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </DockPanel.Styles>   
+        <DockPanel>
 
-        <DockPanel Margin="10"
-                   DockPanel.Dock="Top">
+            <!-- ==================== CERCA ==================== -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#F5F7FA" 
+                    BorderBrush="#E0E0E0" BorderThickness="0,0,0,1"
+                    Padding="16,14">
+                <StackPanel Spacing="10">
+                    <!-- Input de cerca -->
+                    <TextBox Text="{Binding SearchString}"
+                             BorderBrush="{Binding $self.Foreground}" BorderThickness="1"
+                             Classes="solo" Theme="{StaticResource SoloTextBox}"
+                             Watermark="Cercar per nom, cognoms, tag i centre de l'alumne i descripció, tipus i curs de l'actuació."
+                             CornerRadius="32">
+                        <TextBox.InnerLeftContent>
+                            <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
+                                <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       Kind="Magnify" Width="20" Height="20" />
+                            </Border>
+                        </TextBox.InnerLeftContent>
+                    </TextBox>
+                    <!-- Filtres i info -->
+                    <DockPanel>
+                        <Border DockPanel.Dock="Right" 
+                                Background="#E3F2FD" CornerRadius="12" 
+                                Padding="12,4" Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                IsVisible="{Binding PaginatedMsg, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <TextBlock Text="{Binding PaginatedMsg}"
+                                       Classes="Caption" Foreground="#1565C0"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <ToggleSwitch VerticalAlignment="Center"
+                                        IsChecked="{Binding NomesAlumnesActius}"
+                                        Content="Només alumnes actius "
+                                        Margin="0"
+                                        Classes="LeftHeader" />
+                        </StackPanel>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
 
-            <ToggleSwitch DockPanel.Dock="Right"
-                        VerticalAlignment="Center"
-                        IsChecked="{Binding NomesAlumnesActius}"
-                        Content="Filtrar només alumnes actius"
-                        Margin="0 5 0 5"
-                        Classes="LeftHeader"
-                        />
+            <!-- ==================== LOADING ==================== -->
+            <StackPanel DockPanel.Dock="Top" 
+                        Orientation="Horizontal" 
+                        Margin="16,12" Spacing="8"
+                        IsVisible="{Binding Loading}">
+                <avalonia:MaterialIcon Kind="Loading" Width="18" Height="18" 
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                       Classes="Rotating" />
+                <TextBlock Text="Carregant dades ..." Classes="Subtitle2"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}" />
+            </StackPanel>
 
-            <Button DockPanel.Dock="Left"
-                    HorizontalAlignment="Left"
-                    Margin="10,0,0,0"
-                    Width="350"
-                    Command="{Binding Create}"
-                    Classes="Outline DesarCss"  />
+            <!-- ==================== ERRORS ==================== -->
+            <ItemsControl DockPanel.Dock="Top"
+                          Margin="16,4" 
+                          ItemsSource="{Binding BrokenRules}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}" Margin="0,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-            <TextBlock DockPanel.Dock="Left"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Margin="10, 3, 0, 0"
-                    Width="350"
-                    Text="{Binding PaginatedMsg}"
-                    Foreground="Blue"  />
+            <!-- ==================== RESULTATS ==================== -->
+            <ListBox Margin="8,4,8,8"
+                     ItemsSource="{Binding MyItems, Mode=OneWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <pages:ActuacioRowUserCtrl/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
         </DockPanel>
 
-        <DockPanel Margin="10"
-            DockPanel.Dock="Top">
+        <!-- ==================== FAB AFEGIR ==================== -->
+        <material:FloatingButton
+            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            Margin="0,0,24,24"
+            IsExtended="True"
+            Command="{Binding Create}"
+            HotKey="Ctrl++"
+            ToolTip.Tip="Afegir una nova actuació (Ctrl++)">
+            <material:FloatingButton.Content>
+                <StackPanel Orientation="Horizontal" Height="24">
+                    <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
+                        <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
+                    </Viewbox>
+                    <TextBlock Margin="8,0" Text="Nova actuació" Classes="Subtitle2"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </material:FloatingButton.Content>
+        </material:FloatingButton>
 
-            <TextBox Text="{Binding SearchString}"
-                     DockPanel.Dock="Left"
-                     BorderBrush="{Binding $self.Foreground}" BorderThickness="1" 
-                     Classes="solo" Theme="{StaticResource SoloTextBox}"
-                     Watermark="Cercar per nom, cognoms, tag i centre de l'alumne i descripcio, tipus i curs de l'actuació."
-                     CornerRadius="32" Margin="8">
-                <TextBox.InnerLeftContent>
-                    <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
-                        <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
-                                               Kind="Magnify" Width="20" Height="20" />
-                    </Border>
-                </TextBox.InnerLeftContent>
-            </TextBox>
-
-        </DockPanel>
-
-        <TextBlock Text="Carregant dades ..." 
-                   Margin="10"
-                   IsVisible="{Binding Loading}" Classes="Subtitle2"
-                    />
-
-        <ListBox ItemsSource="{Binding BrokenRules}"
-                      DockPanel.Dock="Bottom"
-                      Margin="10"
-                       >            
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>        
-
-        <ListBox DockPanel.Dock="Bottom"
-                 Margin="0"
-                 ItemsSource="{Binding MyItems, Mode=OneWay}"
-                 >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <pages:ActuacioRowUserCtrl/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-    </DockPanel>
+    </Grid>
 </Window>    
