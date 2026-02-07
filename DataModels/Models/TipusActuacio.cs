@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommonInterfaces;
-using DataModels.Models.Interfaces;
 
 
 namespace DataModels.Models

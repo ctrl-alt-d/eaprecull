@@ -3,7 +3,6 @@ using BusinessLayer.Abstract.Exceptions;
 using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
-using DataModels.Models.Interfaces;
 using DTO.o.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;

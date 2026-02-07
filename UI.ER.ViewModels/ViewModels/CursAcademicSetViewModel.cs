@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using BusinessLayer.Abstract.Services;
+using BusinessLayer.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
+using Project = DTO.Projections;
 using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
@@ -75,8 +77,8 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = SuperContext.GetBLOperation<ICursAcademicSetAmbActuacions>();
-            var dto = await bl.FromPredicate(Parms);
+            using var bl = SuperContext.GetBLOperation<ICursAcademicSetProjectable>();
+            var dto = await bl.FromPredicateProjected(Parms, Project.CursAcademicAmbActuacions.ToDto);
 
             // 
             BrokenRules.Clear();

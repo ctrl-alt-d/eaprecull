@@ -58,12 +58,18 @@ Aquesta solució utilitza una **arquitectura per capes (Layered Architecture)** 
 | Classe Base | Propòsit | Mètodes Principals |
 |-------------|----------|-------------------|
 | `BLOperation` | Base per a tots els serveis | `GetContext()`, `Perfection<T>()`, `LoadReference()` |
-| `BLSet<TModel, TParm, TDTOo>` | Consultes/llistats | `FromPredicate()`, `FromId()`, `CountFromPredicate()` |
+| `BLSet<TModel, TParm, TDTOo>` | Consultes/llistats | `FromPredicate()`, `FromId()`, `CountFromPredicate()`, `FromPredicateProjected()`, `FromIdProjected()` |
 | `BLCreate<TModel, TParm, TDTOo>` | Creació d'entitats | `Create()`, `PreInitialize()`, `InitializeModel()`, `PostAdd()` |
 | `BLUpdate<TModel, TParm, TDTOo>` | Actualització d'entitats | `Update()`, `PreUpdate()`, `UpdateModel()`, `PostUpdate()` |
 | `BLActivaDesactiva<TModel, TDTOo>` | Soft-delete toggle | `Activa()`, `Desactiva()`, `Toggle()` |
 | `BLReport<TResult>` | Generació d'informes/fitxers | `ExecuteReport()`, `CalculatePath()`, `GetTemplatesPath()` |
 | `BLBatchOperation<TResult>` | Operacions massives | `ExecuteBatch()` |
+
+### Interfícies de Projecció Personalitzada
+
+| Interfície | Ubicació | Propòsit |
+|------------|----------|----------|
+| `ISetProjectable<TParm, TModel, TDefaultDTOo>` | `BusinessLayer/Common/` | Permet passar projeccions personalitzades als mètodes de consulta |
 
 ### Flux de Dependències
 
@@ -126,7 +132,7 @@ public class Centre : IIdEtiquetaDescripcio, IActivable, IModel
 | `IActiu` | Proporciona `bool EsActiu { get; }` |
 | `IActivable` | Estén `IActiu` amb `SetActiu()` i `SetInactiu()` |
 | `IIdEtiquetaDescripcio` | Combina `IId` + `IEtiquetaDescripcio` |
-| `IModel` | Marcador per a entitats persistides |
+| `IModel` | Marcador per a entitats persistides (a `CommonInterfaces`) |
 | `IDtoi` | Marcador per a DTOs d'entrada |
 | `IDTOo` | Marcador per a DTOs de sortida |
 
@@ -219,7 +225,6 @@ public class Alumne : IEntityTypeConfiguration<DM.Alumne>
 
 ```csharp
 using CommonInterfaces;
-using DataModels.Models.Interfaces;
 
 namespace DataModels.Models
 {
@@ -751,6 +756,46 @@ else
     var items = dto.Data.Select(d => new AlumneRowViewModel(d));
 }
 ```
+
+### Exemple d'Ús amb Projecció Personalitzada (ISetProjectable)
+
+Quan necessites obtenir dades amb una projecció diferent de la per defecte (per exemple, incloent comptatges o dades agregades), utilitza `ISetProjectable`:
+
+```csharp
+// 1. Crear la interfície específica a BusinessLayer/Services/
+public interface ICursAcademicSetProjectable 
+    : ICursAcademicSet, 
+      ISetProjectable<Parms.EsActiuParms, Models.CursAcademic, Dtoo.CursAcademic>
+{
+}
+
+// 2. Fer que el servei implementi la nova interfície
+public class CursAcademicSet :
+    BLSet<Models.CursAcademic, Parms.EsActiuParms, Dtoo.CursAcademic>,
+    ICursAcademicSetProjectable  // <- implementa ISetProjectable automàticament via BLSet
+{
+    // ... implementació normal ...
+}
+
+// 3. Registrar al DI (ambdues interfícies apunten a la mateixa implementació)
+services.AddTransient<ICursAcademicSet, CursAcademicSet>();
+services.AddTransient<ICursAcademicSetProjectable, CursAcademicSet>();
+
+// 4. Usar al ViewModel amb projecció personalitzada
+using var bl = SuperContext.GetBLOperation<ICursAcademicSetProjectable>();
+var dto = await bl.FromPredicateProjected(
+    new EsActiuParms(esActiu: true), 
+    Project.CursAcademicAmbActuacions.ToDto  // <- projecció alternativa
+);
+
+// El resultat conté el DTO amb les dades agregades
+var items = dto.Data.Cast<Dtoo.CursAcademicAmbActuacions>();
+```
+
+**Avantatges d'aquest patró:**
+- Una sola classe de servei per múltiples projeccions
+- El consumidor tria la projecció en temps d'execució
+- `BusinessLayer.Abstract` no depèn de `DataModels` (les interfícies `ISetProjectable` estan a `BusinessLayer`)
 
 ### Exemple d'Ús de BLReport
 
