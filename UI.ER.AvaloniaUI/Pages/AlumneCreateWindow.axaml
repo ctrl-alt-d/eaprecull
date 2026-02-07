@@ -12,6 +12,7 @@
         WindowStartupLocation="CenterOwner"
         >
 
+    <Grid>
     <ScrollViewer>
         <StackPanel Orientation="Vertical"
                     Margin="24, 20">
@@ -129,9 +130,31 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <material:FloatingButton Classes="Desar" IsExtended="True" Command="{Binding SubmitCommand}" Margin="10,10,10,5"/>
+            <!-- Espai perquè el FAB no tapi contingut -->
+            <Border Height="80" />
 
         </StackPanel>
 
     </ScrollViewer>
+
+        <!-- ==================== FAB DESAR ==================== -->
+        <material:FloatingButton
+            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            Margin="0,0,24,24"
+            IsExtended="True"
+            Command="{Binding SubmitCommand}"
+            HotKey="Ctrl+S"
+            ToolTip.Tip="Desar els canvis (Ctrl+S)">
+            <material:FloatingButton.Content>
+                <StackPanel Orientation="Horizontal" Height="24">
+                    <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
+                        <avalonia:MaterialIcon Kind="ContentSave" Width="24" Height="24" />
+                    </Viewbox>
+                    <TextBlock Margin="8,0" Text="Desar" Classes="Subtitle2"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </material:FloatingButton.Content>
+        </material:FloatingButton>
+
+    </Grid>
 </Window>
