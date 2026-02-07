@@ -79,14 +79,14 @@
 
             <TextBox Text="{Binding NomCognomsTagCentre}"
                      DockPanel.Dock="Left"
-                     BorderBrush="{DynamicResource PrimaryHueMidBrush}"
-                     BorderThickness="1" Classes="Solo"
+                     BorderBrush="{Binding $self.Foreground}" BorderThickness="1"
+                     Classes="solo" Theme="{StaticResource SoloTextBox}"
                      Watermark="Cerca alumnes per nom, cognoms, centre i tags"
-                      Margin="8">
+                     CornerRadius="32" Margin="8">
                 <TextBox.InnerLeftContent>
                     <Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
                         <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
-                                               Kind="Magnify" Width="20" Height="20" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                                               Kind="Magnify" Width="20" Height="20" />
                     </Border>
                 </TextBox.InnerLeftContent>
             </TextBox>
