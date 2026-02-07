@@ -792,6 +792,14 @@ public class AlumneSyncActiuByCentre : BLBatchOperation<EtiquetaDescripcio>, IAl
 
 ---
 
+8 Llibreries més importants
+
+* Avalonia Material UI: https://github.com/AvaloniaCommunity/Material.Avalonia
+
+
+---
+
+
 ## Resum
 
 Aquesta aplicació és un sistema de gestió educativa que segueix una arquitectura neta per capes amb:

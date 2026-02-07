@@ -1,0 +1,331 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:styles="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+        x:Class="UI.ER.AvaloniaUI.Pages.AlumneInformeViewerWindow"
+        Title="Informe de l'Alumne"
+        Width="950" Height="750" MinWidth="700" MinHeight="500"
+        WindowStartupLocation="CenterOwner">
+
+    <Design.DataContext>
+        <viewModels:AlumneInformeViewerViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*, Auto">
+        
+        <!-- Contingut principal amb scroll -->
+        <ScrollViewer Grid.Row="0" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            
+            <StackPanel Orientation="Vertical" Margin="24">
+                
+                <!-- Loading indicator -->
+                <StackPanel IsVisible="{Binding IsLoading}" 
+                            HorizontalAlignment="Center" 
+                            Margin="0,50">
+                    <avalonia:MaterialIcon Kind="Loading" 
+                                           Width="50" Height="50"
+                                           Classes="Rotating"/>
+                    <TextBlock Text="Carregant dades..." 
+                               Classes="Subtitle1" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,10"/>
+                </StackPanel>
+
+                <!-- Errors -->
+                <ItemsControl IsVisible="{Binding HasError}"
+                              ItemsSource="{Binding BrokenRules}"
+                              Margin="0,20">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Classes="Body1" 
+                                       Foreground="Red" 
+                                       Text="{Binding}" 
+                                       Margin="0,5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Contingut quan no està carregant -->
+                <StackPanel IsVisible="{Binding !IsLoading}">
+
+                    <!-- ==================== CAPÇALERA ALUMNE ==================== -->
+                    <Border Background="#E3F2FD" 
+                            CornerRadius="8" 
+                            Padding="20" 
+                            Margin="0,0,0,20">
+                        
+                        <StackPanel>
+                            <!-- Nom complet (títol principal) -->
+                            <TextBlock Text="{Binding NomComplet}" 
+                                       Classes="Headline5" 
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,15"/>
+
+                            <!-- Info bàsica en grid -->
+                            <Grid ColumnDefinitions="Auto, *, Auto, *" 
+                                  RowDefinitions="Auto, Auto, Auto">
+                                
+                                <!-- Fila 1 -->
+                                <TextBlock Grid.Row="0" Grid.Column="0" 
+                                           Text="Data naixement:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,8"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" 
+                                           Text="{Binding DataNaixement}" 
+                                           Classes="Body1"
+                                           Margin="0,0,30,8"/>
+
+                                <TextBlock Grid.Row="0" Grid.Column="2" 
+                                           Text="Centre actual:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,8"/>
+                                <TextBlock Grid.Row="0" Grid.Column="3" 
+                                           Text="{Binding CentreActual}" 
+                                           Classes="Body1"
+                                           Margin="0,0,0,8"/>
+
+                                <!-- Fila 2 -->
+                                <TextBlock Grid.Row="1" Grid.Column="0" 
+                                           Text="Etapa:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,8"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" 
+                                           Text="{Binding EtapaActual}" 
+                                           Classes="Body1"
+                                           Margin="0,0,30,8"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="2" 
+                                           Text="Nivell:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,8"/>
+                                <TextBlock Grid.Row="1" Grid.Column="3" 
+                                           Text="{Binding NivellActual}" 
+                                           Classes="Body1"
+                                           Margin="0,0,0,8"/>
+
+                                <!-- Fila 3 - Tags -->
+                                <TextBlock Grid.Row="2" Grid.Column="0" 
+                                           Text="Tags:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,0"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
+                                           Text="{Binding Tags}" 
+                                           Classes="Body1"
+                                           TextWrapping="Wrap"
+                                           Foreground="Gray"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ==================== NESE NEE ==================== -->
+                    <Border IsVisible="{Binding TeNESENEE}"
+                            Background="#FFF3E0" 
+                            CornerRadius="8" 
+                            Padding="20" 
+                            Margin="0,0,0,15">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <avalonia:MaterialIcon Kind="AlertCircle" 
+                                                       Foreground="#E65100" 
+                                                       Width="24" Height="24"
+                                                       Margin="0,0,10,0"/>
+                                <TextBlock Text="NESE NEE" 
+                                           Classes="Subtitle1" 
+                                           FontWeight="Bold"
+                                           Foreground="#E65100"/>
+                            </StackPanel>
+                            
+                            <Grid ColumnDefinitions="Auto, *">
+                                <TextBlock Grid.Column="0" 
+                                           Text="Data informe:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,5"/>
+                                <TextBlock Grid.Column="1" 
+                                           Text="{Binding DataNESENEE}" 
+                                           Classes="Body1"/>
+                            </Grid>
+                            
+                            <TextBlock Text="Observacions:" 
+                                       Classes="Body2" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,10,0,5"
+                                       IsVisible="{Binding ObservacionsNESENEE, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            <TextBlock Text="{Binding ObservacionsNESENEE}" 
+                                       Classes="Body1"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{Binding ObservacionsNESENEE, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ==================== NESE No NEE ==================== -->
+                    <Border IsVisible="{Binding TeNESENoNEE}"
+                            Background="#E8F5E9" 
+                            CornerRadius="8" 
+                            Padding="20" 
+                            Margin="0,0,0,15">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <avalonia:MaterialIcon Kind="InformationOutline" 
+                                                       Foreground="#2E7D32" 
+                                                       Width="24" Height="24"
+                                                       Margin="0,0,10,0"/>
+                                <TextBlock Text="NESE No NEE" 
+                                           Classes="Subtitle1" 
+                                           FontWeight="Bold"
+                                           Foreground="#2E7D32"/>
+                            </StackPanel>
+                            
+                            <Grid ColumnDefinitions="Auto, *">
+                                <TextBlock Grid.Column="0" 
+                                           Text="Data informe:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,5"/>
+                                <TextBlock Grid.Column="1" 
+                                           Text="{Binding DataNESENoNEE}" 
+                                           Classes="Body1"/>
+                            </Grid>
+                            
+                            <TextBlock Text="Observacions:" 
+                                       Classes="Body2" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,10,0,5"
+                                       IsVisible="{Binding ObservacionsNESENoNEE, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            <TextBlock Text="{Binding ObservacionsNESENoNEE}" 
+                                       Classes="Body1"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{Binding ObservacionsNESENoNEE, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ==================== ACTUACIONS ==================== -->
+                    <Border Background="#FAFAFA" 
+                            CornerRadius="8" 
+                            Padding="20">
+                        <StackPanel>
+                            <!-- Títol secció actuacions -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <avalonia:MaterialIcon Kind="BookOpenVariant" 
+                                                       Width="24" Height="24"
+                                                       Margin="0,0,10,0"/>
+                                <TextBlock Text="Actuacions" 
+                                           Classes="Headline6" 
+                                           FontWeight="Bold"/>
+                                <TextBlock Text="{Binding TotalActuacions, StringFormat='({0})'}" 
+                                           Classes="Subtitle1"
+                                           Foreground="Gray"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- Llista d'actuacions -->
+                            <ItemsControl ItemsSource="{Binding Actuacions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="White" 
+                                                CornerRadius="6" 
+                                                Padding="15" 
+                                                Margin="0,0,0,12"
+                                                BorderBrush="#E0E0E0"
+                                                BorderThickness="1">
+                                            <StackPanel>
+                                                <!-- Capçalera de l'actuació -->
+                                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding DataTxt}" 
+                                                                   Classes="Subtitle1" 
+                                                                   FontWeight="Bold"
+                                                                   Foreground="#1976D2"/>
+                                                        <TextBlock Text=" · " 
+                                                                   Classes="Subtitle1" 
+                                                                   Foreground="Gray"/>
+                                                        <TextBlock Text="{Binding CursActuacio}" 
+                                                                   Classes="Subtitle1"
+                                                                   Foreground="Gray"/>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2" 
+                                                               Text="{Binding DuradaTxt}" 
+                                                               Classes="Caption"
+                                                               Foreground="Gray"
+                                                               VerticalAlignment="Center"/>
+                                                </Grid>
+
+                                                <!-- Tipus d'actuació -->
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <Border Background="#E3F2FD" 
+                                                            CornerRadius="4" 
+                                                            Padding="8,4">
+                                                        <TextBlock Text="{Binding TipusActuacio}" 
+                                                                   Classes="Caption" 
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="#1565C0"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding ObservacionsTipusActuacio}" 
+                                                               Classes="Body2"
+                                                               Foreground="Gray"
+                                                               Margin="10,0,0,0"
+                                                               VerticalAlignment="Center"
+                                                               IsVisible="{Binding ObservacionsTipusActuacio, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                                </StackPanel>
+
+                                                <!-- Context (Centre, Etapa, Nivell) -->
+                                                <TextBlock Text="{Binding ContextTxt}" 
+                                                           Classes="Caption"
+                                                           Foreground="Gray"
+                                                           Margin="0,6,0,0"/>
+
+                                                <!-- Descripció -->
+                                                <TextBlock Text="{Binding DescripcioActuacio}" 
+                                                           Classes="Body2"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,10,0,0"
+                                                           IsVisible="{Binding DescripcioActuacio, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Missatge si no hi ha actuacions -->
+                            <TextBlock Text="No hi ha actuacions registrades per aquest alumne."
+                                       Classes="Body1"
+                                       Foreground="Gray"
+                                       FontStyle="Italic"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,20"
+                                       IsVisible="{Binding !TotalActuacions}"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Barra inferior amb botó tancar -->
+        <Border Grid.Row="1" 
+                Background="#F5F5F5" 
+                Padding="16"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,1,0,0">
+            <Button Content="Tancar" 
+                    Command="{Binding CloseCommand}"
+                    Classes="Flat"
+                    HorizontalAlignment="Right"/>
+        </Border>
+
+    </Grid>
+
+</Window>

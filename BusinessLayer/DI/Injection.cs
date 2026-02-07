@@ -39,6 +39,7 @@ namespace BusinessLayer.DI
 
             // alumnes - reports
             services.AddTransient<IAlumneInforme, AlumneInforme>();
+            services.AddTransient<IAlumneInformeViewer, AlumneInformeViewer>();
 
             // curs acadèmic
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();

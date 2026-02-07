@@ -38,6 +38,7 @@ namespace UI.ER.ViewModels.ViewModels
             UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
             ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
             GeneraInformeCommand = ReactiveCommand.CreateFromTask(DoGeneraInforme);
+            VeureInformeCommand = ReactiveCommand.CreateFromTask(ShowInformeViewerDialogHandle);
 
         }
 
@@ -182,6 +183,15 @@ namespace UI.ER.ViewModels.ViewModels
                 "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
 
             return resultat.Data;
+        }
+
+        // --- Veure informe per pantalla ---
+        public ICommand VeureInformeCommand { get; }
+        public Interaction<AlumneInformeViewerViewModel, Unit> ShowInformeViewerDialog { get; } = new();
+        private async Task ShowInformeViewerDialogHandle()
+        {
+            var vm = new AlumneInformeViewerViewModel(Id);
+            await ShowInformeViewerDialog.Handle(vm);
         }
 
     }
