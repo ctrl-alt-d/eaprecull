@@ -16,75 +16,88 @@
         <viewModels:CursAcademicSetViewModel />
     </Design.DataContext>
 
-    <DockPanel>
+    <Grid>
 
-        <DockPanel.Styles>
-            <Style Selector="Button.DesarCss">
-                <Setter Property="HotKey" Value="Ctrl++" />
-                <Setter Property="ToolTip.Tip" Value="Utilitza ^+ com a drecera de teclat" />
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Template>
-                            <StackPanel Orientation="Horizontal" Height="24">
-                                <Viewbox Stretch="Fill"                                            
-                                         VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
-                                </Viewbox>
-                                <TextBlock Margin="8,0" Text="Afegir un nou Curs Acadèmic" Classes="Subtitle2"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-                        </Template>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </DockPanel.Styles>   
+        <DockPanel>
 
-        <DockPanel Margin="10"
-                   DockPanel.Dock="Top">
+            <!-- ==================== FILTRES ==================== -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#F5F7FA" 
+                    BorderBrush="#E0E0E0" BorderThickness="0,0,0,1"
+                    Padding="16,14">
+                <DockPanel>
+                    <Border DockPanel.Dock="Right" 
+                            Background="#E3F2FD" CornerRadius="12" 
+                            Padding="12,4" Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            IsVisible="{Binding PaginatedMsg, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <TextBlock Text="{Binding PaginatedMsg}"
+                                   Classes="Caption" Foreground="#1565C0"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <ToggleSwitch VerticalAlignment="Center"
+                                    IsChecked="{Binding NomesActius}"
+                                    Content="Filtrar només actius"
+                                    Margin="0"
+                                    Classes="LeftHeader" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
 
-            <ToggleSwitch DockPanel.Dock="Right"
-                        VerticalAlignment="Center"
-                        IsChecked="{Binding NomesActius}"
-                        Content="Filtrar només actius"
-                        Margin="0 5 0 5"
-                        />
-            <Button DockPanel.Dock="Left"
-                    HorizontalAlignment="Left"
-                    Width="350"
-                    Command="{Binding Create}"
-                    Classes="Outline DesarCss"  />
+            <!-- ==================== LOADING ==================== -->
+            <StackPanel DockPanel.Dock="Top" 
+                        Orientation="Horizontal" 
+                        Margin="16,12" Spacing="8"
+                        IsVisible="{Binding Loading}">
+                <avalonia:MaterialIcon Kind="Loading" Width="18" Height="18" 
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                       Classes="Rotating" />
+                <TextBlock Text="Carregant dades ..." Classes="Subtitle2"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}" />
+            </StackPanel>
 
-            <TextBlock DockPanel.Dock="Left"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Margin="10, 3, 0, 0"
-                    Width="350"
-                    Text="{Binding PaginatedMsg}"
-                    Foreground="Blue"  />
+            <!-- ==================== ERRORS ==================== -->
+            <ItemsControl DockPanel.Dock="Top"
+                          Margin="16,4" 
+                          ItemsSource="{Binding BrokenRules}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}" Margin="0,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- ==================== RESULTATS ==================== -->
+            <ListBox Margin="8,4,8,8"
+                     ItemsSource="{Binding MyItems, Mode=OneWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <pages:CursAcademicRowUserCtrl/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
         </DockPanel>
 
-        <ListBox ItemsSource="{Binding BrokenRules}"
-                      DockPanel.Dock="Bottom"
-                      Margin="10"
-                       >            
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>        
+        <!-- ==================== FAB AFEGIR ==================== -->
+        <material:FloatingButton
+            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            Margin="0,0,24,24"
+            IsExtended="True"
+            Command="{Binding Create}"
+            HotKey="Ctrl++"
+            ToolTip.Tip="Afegir un nou Curs Acadèmic (Ctrl++)">
+            <material:FloatingButton.Content>
+                <StackPanel Orientation="Horizontal" Height="24">
+                    <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
+                        <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
+                    </Viewbox>
+                    <TextBlock Margin="8,0" Text="Nou curs acadèmic" Classes="Subtitle2"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </material:FloatingButton.Content>
+        </material:FloatingButton>
 
-        <ListBox DockPanel.Dock="Bottom"
-                 Margin="0"
-                 ItemsSource="{Binding MyItems, Mode=OneWay}"
-                 >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <pages:CursAcademicRowUserCtrl/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-    </DockPanel>
+    </Grid>
 </Window>    
