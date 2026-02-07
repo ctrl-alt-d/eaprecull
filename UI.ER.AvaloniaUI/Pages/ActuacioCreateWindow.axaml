@@ -24,41 +24,19 @@
                             DateText="{Binding MomentDeLactuacioTxt}"
                             Label="Data de l'actuació (dd.mm.aaaa)" />
 
-                <Grid Grid.Row="0" Grid.Column="1"  Margin="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding CursActuacioTxt}" Margin="10,5,10,5"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Curs de l'actuació" />
-                    <Button Grid.Column="1" Command="{Binding CursActuacioLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding CursActuacioClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="0" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding CursActuacioTxt}"
+                            Label="Curs de l'actuació"
+                            LookupCommand="{Binding CursActuacioLookupCommand}"
+                            ClearCommand="{Binding CursActuacioClearCommand}" />
 
                 <!-- 1 -->
 
-                <Grid Grid.Row="1" Grid.Column="0" 
-                      ColumnDefinitions="*,auto,auto" Margin="0">
-                    <TextBox Text="{Binding TipusActuacioTxt}" Margin="10,5,10,5"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Tipus d'actuació" />
-                    <Button Grid.Column="1" Command="{Binding TipusActuacioLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding TipusActuacioClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="1" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding TipusActuacioTxt}"
+                            Label="Tipus d'actuació"
+                            LookupCommand="{Binding TipusActuacioLookupCommand}"
+                            ClearCommand="{Binding TipusActuacioClearCommand}" />
 
                 <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5,10,5"
                                UseFloatingWatermark="True"
@@ -80,52 +58,25 @@
 
                 <!-- 3 -->
 
-                <Grid Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
-                      ColumnDefinitions="*,auto,auto">
-                    <TextBox Text="{Binding AlumneTxt}"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Alumne" />
-                    <Button Grid.Column="1" Command="{Binding AlumneLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding AlumneClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding AlumneTxt}"
+                            Label="Alumne"
+                            LookupCommand="{Binding AlumneLookupCommand}"
+                            ClearCommand="{Binding AlumneClearCommand}" />
 
-                <Grid Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
-                      ColumnDefinitions="*,auto,auto">
-                    <TextBox Text="{Binding CentreTxt}"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Centre de l'alumne al moment de l'actuació" />
-                    <Button Grid.Column="1" Command="{Binding CentreLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding CentreClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding CentreTxt}"
+                            Label="Centre de l'alumne al moment de l'actuació"
+                            LookupCommand="{Binding CentreLookupCommand}"
+                            ClearCommand="{Binding CentreClearCommand}" />
 
                 <!-- 4 -->
 
-                <Grid Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
-                      ColumnDefinitions="*,auto,auto">
-                    <TextBox Text="{Binding EtapaAlMomentDeLactuacioTxt}"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Etapa al moment de l'actuació" />
-                    <Button Grid.Column="1" Command="{Binding EtapaAlMomentDeLactuacioLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding EtapaAlMomentDeLactuacioClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="4" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding EtapaAlMomentDeLactuacioTxt}"
+                            Label="Etapa al moment de l'actuació"
+                            LookupCommand="{Binding EtapaAlMomentDeLactuacioLookupCommand}"
+                            ClearCommand="{Binding EtapaAlMomentDeLactuacioClearCommand}" />
                 
                 <TextBox Grid.Row="4" Grid.Column="1" Margin="10,5,10,5"
                     Text="{Binding NivellAlMomentDeLactuacio}"

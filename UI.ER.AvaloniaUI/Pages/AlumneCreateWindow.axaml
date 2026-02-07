@@ -46,24 +46,11 @@
 
                 <!-- 2 -->
 
-                <Grid Grid.Row="2" Grid.Column="0" Margin="10,5,10,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding CursDarreraActualitacioDadesTxt}"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Curs Darrera Actualitació Dades" />
-                    <Button Grid.Column="1" Command="{Binding CursDarreraActualitacioDadesLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding CursDarreraActualitacioDadesClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="2" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding CursDarreraActualitacioDadesTxt}"
+                            Label="Curs Darrera Actualització Dades"
+                            LookupCommand="{Binding CursDarreraActualitacioDadesLookupCommand}"
+                            ClearCommand="{Binding CursDarreraActualitacioDadesClearCommand}" />
 
                 <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5,10,5"
                             Text="{Binding NivellActual}"
@@ -73,43 +60,17 @@
 
                 <!-- 3 -->
 
-                <Grid Grid.Row="3" Grid.Column="0" Margin="10,5,10,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding EtapaActualTxt}"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Etapa que cursa l'alumne" />
-                    <Button Grid.Column="1" Command="{Binding EtapaActualLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding EtapaActualClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="3" Grid.Column="0" Margin="10,5,10,5"
+                            Text="{Binding EtapaActualTxt}"
+                            Label="Etapa que cursa l'alumne"
+                            LookupCommand="{Binding EtapaActualLookupCommand}"
+                            ClearCommand="{Binding EtapaActualClearCommand}" />
 
-                <Grid Grid.Row="3" Grid.Column="1" Margin="10,5,10,5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding CentreTxt}"
-                            Grid.Column="0" 
-                            UseFloatingWatermark="True"
-                            Classes="Filled"
-                            IsReadOnly="true"
-                            Focusable="false"
-                            wpf:TextFieldAssist.Label="Centre on estudia l'alumne" />
-                    <Button Grid.Column="1" Command="{Binding CentreLookupCommand}"
-                            Classes="LookupCss Flat"  />
-                    <Button Grid.Column="2" Command="{Binding CentreClearCommand}"
-                            Classes="ClearCss Flat"  />
-                </Grid>
+                <controls:LookupInput Grid.Row="3" Grid.Column="1" Margin="10,5,10,5"
+                            Text="{Binding CentreTxt}"
+                            Label="Centre on estudia l'alumne"
+                            LookupCommand="{Binding CentreLookupCommand}"
+                            ClearCommand="{Binding CentreClearCommand}" />
 
                 <!-- 4 -->
 
