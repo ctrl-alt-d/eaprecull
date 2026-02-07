@@ -50,7 +50,7 @@ namespace UI.ER.ViewModels.ViewModels
             var dtoCursCorrecte = await blCursAcademicSet.ElCursPerDefecteEsCorresponAmbLaDataActual();
             if (!(dtoCursCorrecte ?? false))
             {
-                CursActualWarning = "Revisa el curs activat!";
+                CursActualWarning = "Revisa el curs Actiu!";
             }
 
             var cursActual = dtoCursActual.Data;
@@ -66,14 +66,14 @@ namespace UI.ER.ViewModels.ViewModels
             var nTotalActuacionsCursActualTxt = nTotalActuacionsCursActual.Data?.ToString("N0");
             TotalActuacionsCursActual =
                 nTotalActuacionsCursActual != null && cursActual != null ?
-                $"({nTotalActuacionsCursActualTxt} durant el curs {cursActual?.Nom})" :
+                $"Del curs actiu: {nTotalActuacionsCursActualTxt}" :
                 SPACE;
 
             var nAlumnesTxt = nAlumnes.Data?.ToString("N0");
             TotalALumnes = nAlumnesTxt != null ? $"{nAlumnesTxt} Alumnes" : NA;
 
             var nAlumnesActualitzatsTxt = nAlumnesActualitzats.Data?.ToString("N0");
-            TotalALumnesActualitzats = nAlumnesActualitzatsTxt != null ? $"({nAlumnesActualitzatsTxt} actualitzats)" : NA;
+            TotalALumnesActualitzats = nAlumnesActualitzatsTxt != null ? $"Amb dades actualitzades: {nAlumnesActualitzatsTxt}" : NA;
 
         }
 
