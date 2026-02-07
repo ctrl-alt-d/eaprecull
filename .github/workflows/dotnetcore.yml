@@ -22,6 +22,12 @@ jobs:
     - name: Build for Windows
       run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r win-x64 --configuration ReleaseComplete /p:PublishSingleFile=true --self-contained true
     
+    - name: Build for macOS (Apple Silicon)
+      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r osx-arm64 --configuration ReleaseComplete /p:PublishSingleFile=true --self-contained true
+    
+    - name: Build for macOS (Intel)
+      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r osx-x64 --configuration ReleaseComplete /p:PublishSingleFile=true --self-contained true
+    
     - name: Create ZIP for Linux
       run: |
         cd UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/linux-x64/publish
@@ -31,6 +37,16 @@ jobs:
       run: |
         cd UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/win-x64/publish
         zip -r ../../../../../../EAPRecull-Windows-x64.zip .
+    
+    - name: Create ZIP for macOS (Apple Silicon)
+      run: |
+        cd UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/osx-arm64/publish
+        zip -r ../../../../../../EAPRecull-macOS-arm64.zip .
+    
+    - name: Create ZIP for macOS (Intel)
+      run: |
+        cd UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/osx-x64/publish
+        zip -r ../../../../../../EAPRecull-macOS-x64.zip .
     
     - name: Upload artifact - Linux
       uses: actions/upload-artifact@v4
@@ -44,6 +60,18 @@ jobs:
         name: EAPRecull-Windows-x64
         path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/win-x64/publish
     
+    - name: Upload artifact - macOS (Apple Silicon)
+      uses: actions/upload-artifact@v4
+      with:
+        name: EAPRecull-macOS-arm64
+        path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/osx-arm64/publish
+    
+    - name: Upload artifact - macOS (Intel)
+      uses: actions/upload-artifact@v4
+      with:
+        name: EAPRecull-macOS-x64
+        path: UI.ER.AvaloniaUI/bin/ReleaseComplete/net10.0/osx-x64/publish
+    
     - name: Create GitHub Release with Assets
       uses: softprops/action-gh-release@v2
       with:
@@ -51,6 +79,8 @@ jobs:
         files: |
           EAPRecull-Windows-x64.zip
           EAPRecull-Linux-x64.zip
+          EAPRecull-macOS-arm64.zip
+          EAPRecull-macOS-x64.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
