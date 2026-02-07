@@ -22,6 +22,7 @@ namespace UI.ER.ViewModels.ViewModels
             _alumneId = alumneId;
             CloseCommand = ReactiveCommand.Create(() => { });
             LoadDataCommand = ReactiveCommand.CreateFromTask(LoadData);
+            ExportarWordCommand = ReactiveCommand.CreateFromTask(DoExportarWord);
         }
 
         // --- Propietats de l'Alumne ---
@@ -145,6 +146,16 @@ namespace UI.ER.ViewModels.ViewModels
 
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadDataCommand { get; }
+        public ReactiveCommand<Unit, Dtoo.SaveResult?> ExportarWordCommand { get; }
+
+        // --- Resultat exportació ---
+
+        private string _resultatExportacio = string.Empty;
+        public string ResultatExportacio
+        {
+            get => _resultatExportacio;
+            private set => this.RaiseAndSetIfChanged(ref _resultatExportacio, value);
+        }
 
         // --- Càrrega de dades ---
 
@@ -190,6 +201,21 @@ namespace UI.ER.ViewModels.ViewModels
             TotalActuacions = data.TotalActuacions;
             Actuacions.Clear();
             Actuacions.AddRange(data.Actuacions);
+        }
+
+        // --- Exportar a Word ---
+
+        private async Task<Dtoo.SaveResult?> DoExportarWord()
+        {
+            ResultatExportacio = "";
+            using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
+            var resultat = await bl.Run(_alumneId);
+            ResultatExportacio =
+                resultat.Data != null ?
+                $"Fitxer desat a: {resultat.Data.FullPath}" :
+                "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
+
+            return resultat.Data;
         }
     }
 }

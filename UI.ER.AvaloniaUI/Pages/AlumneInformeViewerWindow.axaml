@@ -314,16 +314,39 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Barra inferior amb botó tancar -->
+        <!-- Barra inferior amb botons -->
         <Border Grid.Row="1" 
                 Background="#F5F5F5" 
                 Padding="16"
                 BorderBrush="#E0E0E0"
                 BorderThickness="0,1,0,0">
-            <Button Content="Tancar" 
-                    Command="{Binding CloseCommand}"
-                    Classes="Flat"
-                    HorizontalAlignment="Right"/>
+            <Grid ColumnDefinitions="*, Auto, Auto">
+                <!-- Resultat exportació -->
+                <TextBlock Grid.Column="0"
+                           Text="{Binding ResultatExportacio}"
+                           Classes="Caption"
+                           Foreground="#1976D2"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"/>
+                
+                <!-- Botó exportar Word -->
+                <Button Grid.Column="1"
+                        Command="{Binding ExportarWordCommand}"
+                        ToolTip.Tip="Exportar a Word"
+                        Classes="Flat"
+                        Margin="0,0,10,0">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="FileWordOutline" Margin="0,0,5,0"/>
+                        <TextBlock Text="Exportar a Word" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                
+                <!-- Botó tancar -->
+                <Button Grid.Column="2"
+                        Content="Tancar" 
+                        Command="{Binding CloseCommand}"
+                        Classes="Flat"/>
+            </Grid>
         </Border>
 
     </Grid>
