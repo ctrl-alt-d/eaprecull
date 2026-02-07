@@ -19,6 +19,8 @@ namespace UI.ER.AvaloniaUI.Pages
             this.WhenActivated(disposables =>
             {
                 RegisterShowUpdateDialog(disposables);
+                RegisterShowExpedientAlumneDialog(disposables);
+                RegisterShowEditarAlumneDialog(disposables);
                 RegisterCloseOnSelect(disposables);
             });
 
@@ -48,6 +50,42 @@ namespace UI.ER.AvaloniaUI.Pages
 
                     var result = await dialog.ShowDialog<Dtoo.Actuacio?>(GetWindow());
 
+                    interaction.SetOutput(result);
+                }))
+            );
+
+        // -- Show expedient alumne
+        protected virtual void RegisterShowExpedientAlumneDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
+                .Subscribe(vm => vm!.ShowExpedientAlumneDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneInformeViewerWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+                    await dialog.ShowDialog(GetWindow());
+                    interaction.SetOutput(System.Reactive.Unit.Default);
+                }))
+            );
+
+        // -- Show editar alumne
+        protected virtual void RegisterShowEditarAlumneDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
+                .Subscribe(vm => vm!.ShowEditarAlumneDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneUpdateWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+                    var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
             );

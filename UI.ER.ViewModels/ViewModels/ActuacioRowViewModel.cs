@@ -32,6 +32,8 @@ namespace UI.ER.ViewModels.ViewModels
             // Behavior
             SeleccionarCommand = ReactiveCommand.Create(SelectRow);
             UpdateCommand = ReactiveCommand.CreateFromTask(ShowUpdateDialogHandle);
+            VeureExpedientAlumneCommand = ReactiveCommand.CreateFromTask(ShowExpedientAlumneDialogHandle);
+            EditarAlumneCommand = ReactiveCommand.CreateFromTask(ShowEditarAlumneDialogHandle);
         }
 
 
@@ -100,6 +102,25 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Dtoo.Actuacio> SeleccionarCommand { get; }
         private Dtoo.Actuacio SelectRow() => Model;
 
+        // --- Veure expedient de l'alumne ---
+        public ICommand VeureExpedientAlumneCommand { get; }
+        public Interaction<AlumneInformeViewerViewModel, Unit> ShowExpedientAlumneDialog { get; } = new();
+        private async Task ShowExpedientAlumneDialogHandle()
+        {
+            var alumneId = Model.Alumne.Id;
+            var vm = new AlumneInformeViewerViewModel(alumneId);
+            await ShowExpedientAlumneDialog.Handle(vm);
+        }
+
+        // --- Editar dades de l'alumne ---
+        public ICommand EditarAlumneCommand { get; }
+        public Interaction<AlumneUpdateViewModel, Dtoo.Alumne?> ShowEditarAlumneDialog { get; } = new();
+        private async Task ShowEditarAlumneDialogHandle()
+        {
+            var alumneId = Model.Alumne.Id;
+            var vm = new AlumneUpdateViewModel(alumneId);
+            await ShowEditarAlumneDialog.Handle(vm);
+        }
 
     }
 }

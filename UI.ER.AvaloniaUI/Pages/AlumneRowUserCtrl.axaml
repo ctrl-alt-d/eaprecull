@@ -67,7 +67,15 @@
  
             <Button DockPanel.Dock="Right"
                     Command="{Binding GeneraInformeCommand}"
+                    ToolTip.Tip="Exportar a Word"
                     Classes="InformeCss Flat" />
+
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding VeureInformeCommand}"
+                    ToolTip.Tip="Veure informe per pantalla"
+                    Classes="Flat" >
+                <avalonia:MaterialIcon Kind="FolderAccount" />
+            </Button>
 
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">     

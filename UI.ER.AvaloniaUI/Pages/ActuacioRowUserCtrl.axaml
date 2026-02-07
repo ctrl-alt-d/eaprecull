@@ -49,6 +49,20 @@
                     Command="{Binding UpdateCommand}"
                     Classes="EditarCss Flat" />
 
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding VeureExpedientAlumneCommand}"
+                    ToolTip.Tip="Veure expedient de l'alumne"
+                    Classes="Flat" >
+                <avalonia:MaterialIcon Kind="FolderAccount" />
+            </Button>
+
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding EditarAlumneCommand}"
+                    ToolTip.Tip="Editar dades de l'alumne"
+                    Classes="Flat" >
+                <avalonia:MaterialIcon Kind="AccountEdit" />
+            </Button>
+
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Left">                            
                 <TextBlock Classes="Body1"  Text="{Binding Etiqueta}"/>

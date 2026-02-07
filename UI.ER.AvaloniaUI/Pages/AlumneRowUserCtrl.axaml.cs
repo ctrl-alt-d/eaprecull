@@ -22,6 +22,7 @@ namespace UI.ER.AvaloniaUI.Pages
             {
                 RegisterShowUpdateDialog(disposables);
                 RegisterShowActuacioDialog(disposables);
+                RegisterShowInformeViewerDialog(disposables);
                 RegisterCloseOnSelect(disposables);
                 RegisterInformeActuacions(disposables);
             });
@@ -70,6 +71,24 @@ namespace UI.ER.AvaloniaUI.Pages
                     };
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
                     interaction.SetOutput(result);
+                }))
+            );
+
+        // -- Show informe viewer
+        protected virtual void RegisterShowInformeViewerDialog(Action<IDisposable> disposables)
+            =>
+            disposables(
+                this
+                .WhenAnyValue(x => x.ViewModel)
+                .Where(vm => vm != null)
+                .Subscribe(vm => vm!.ShowInformeViewerDialog.RegisterHandler(async interaction =>
+                {
+                    var dialog = new AlumneInformeViewerWindow()
+                    {
+                        DataContext = interaction.Input
+                    };
+                    await dialog.ShowDialog(GetWindow());
+                    interaction.SetOutput(System.Reactive.Unit.Default);
                 }))
             );
 
