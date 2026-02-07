@@ -1,30 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract;
-using BusinessLayer.Abstract.Exceptions;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using DataLayer;
-using DataModels.Models;
-using Dtoo = DTO.o.DTOs;
-using Microsoft.EntityFrameworkCore;
-using SharpDocx;
 using DTO.o.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Services
 {
-
-    public class AlumneSyncActiuByCentre : BLOperation, IAlumneSyncActiuByCentre
+    public class AlumneSyncActiuByCentre : BLBatchOperation<EtiquetaDescripcio>, IAlumneSyncActiuByCentre
     {
-
-        public AlumneSyncActiuByCentre(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public AlumneSyncActiuByCentre(IDbContextFactory<AppDbContext> appDbContextFactory) 
+            : base(appDbContextFactory)
         {
         }
 
-        public async Task<OperationResult<EtiquetaDescripcio>> Run()
+        public Task<OperationResult<EtiquetaDescripcio>> Run()
+            => ExecuteBatch(SyncAlumnes);
+
+        private async Task<EtiquetaDescripcio> SyncAlumnes()
         {
             var ctx = GetContext();
 
@@ -34,7 +29,7 @@ namespace BusinessLayer.Services
                 .Alumnes
                 .Include(a => a.CentreActual)
                 .Where(a => 
-                    a.CentreActual == null || 
+                    a.CentreActual == null || 
                     a.EsActiu != a.CentreActual!.EsActiu
                 )
                 .ToListAsync();
@@ -44,13 +39,10 @@ namespace BusinessLayer.Services
 
             var n = await ctx.SaveChangesAsync();
 
-            var data = new EtiquetaDescripcio(
+            return new EtiquetaDescripcio(
                 etiqueta: $"{n} alumnes canviats d'estat 'Actiu'",
                 descripcio: "S'ha sincronitzat l'estat 'Actiu' de centre amb l'estat 'Actiu' d'alumne"
             );
-
-            return new(data);
-
         }
     }
 }

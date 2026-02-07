@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract;
-using BusinessLayer.Abstract.Exceptions;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Common;
 using DataLayer;
@@ -15,48 +14,27 @@ using OfficeOpenXml.Table.PivotTable;
 
 namespace BusinessLayer.Services
 {
-
-    public class PivotActuacions : BLOperation, IPivotActuacions
+    public class PivotActuacions : BLReport<Dtoo.SaveResult>, IPivotActuacions
     {
         internal record DataRecord(string Curs, string Alumne, string Data, string Centre, string Tipus, int Minuts, string Etapa, string EstudisObligatoris);
 
-        public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory) 
+            : base(appDbContextFactory)
         {
-            // EPPlus 8+ requires using the static License property
             ExcelPackage.License.SetNonCommercialOrganization("EAPRecull - Educational Use");
         }
 
-        public async Task<OperationResult<Dtoo.SaveResult>> Run()
+        public Task<OperationResult<Dtoo.SaveResult>> Run()
+            => ExecuteReport(GenerateReport);
+
+        private async Task<Dtoo.SaveResult> GenerateReport()
         {
-            try
-            {
-                var dades = await GetInformes();
+            var dades = await GetInformes();
+            var (path, filename, folder) = CalculatePath("pivot_actuacions", "xlsx");
+            
+            ExportaExcel(path, dades);
 
-                var (path, filename, folder) = CalculaPath("pivot_actuacions");
-
-                ExportaExcel(path, dades);
-
-                return new(
-                    new Dtoo.SaveResult(
-                        path,
-                        filename,
-                        folder
-                    )
-                );
-
-            }
-            catch (BrokenRuleException e)
-            {
-
-                return new(e.BrokenRules);
-            }
-            catch (Exception e)
-            {
-                var msg = e.Message;
-                System.Console.WriteLine(e.StackTrace);
-                return new(new List<BrokenRule>() { new BrokenRule(msg) });
-            }
-
+            return new Dtoo.SaveResult(path, filename, folder);
         }
 
         private void ExportaExcel(string path, List<DataRecord> dades)
@@ -131,58 +109,5 @@ namespace BusinessLayer.Services
                 )
             )            
             .ToListAsync();
-
-        private static (string path, string filename, string folder) CalculaPath(string prefixfilename)
-        {
-
-            var filename = $"{prefixfilename}_{DateTime.Now.ToString("yyyyMMdd-HHmm")}.xlsx";
-
-            var binPath = AppDomain.CurrentDomain.BaseDirectory;
-
-            var folder = Path.Combine(binPath, "Reports");
-
-#if (DEBUG)
-            // En mode debug a la carpeta de documents.
-            folder = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EapRecullReports");
-#endif
-
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            var path = string.Empty;
-            while (true)
-            {
-                path = Path.Combine(folder, filename);
-                if (!File.Exists(path)) break;
-                filename = filename.Replace(".xlsx", "_nou.xlsx");
-            }
-
-            return (path, filename, folder);
-        }
-
-        private static string GetTemplatesPath(string template)
-        {
-
-            var directori = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
-
-
-            if (!Directory.Exists(directori))
-            {
-                throw new Exception($"No trobo la carpeta: {directori}");
-            }
-            var path = Path.Combine(directori, template);
-
-            if (!File.Exists(path))
-            {
-                throw new Exception($"No trobat el template {path}");
-            }
-
-            return path;
-        }
-
-
     }
-
 }

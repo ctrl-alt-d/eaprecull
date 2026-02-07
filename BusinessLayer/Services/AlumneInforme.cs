@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract;
@@ -15,52 +12,32 @@ using SharpDocx;
 
 namespace BusinessLayer.Services
 {
-
-    public class AlumneInforme : BLOperation, IAlumneInforme
+    public class AlumneInforme : BLReport<Dtoo.SaveResult>, IAlumneInforme
     {
-
-        public AlumneInforme(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
+        public AlumneInforme(IDbContextFactory<AppDbContext> appDbContextFactory) 
+            : base(appDbContextFactory)
         {
         }
 
-        public async Task<OperationResult<Dtoo.SaveResult>> Run(int alumneId)
+        public Task<OperationResult<Dtoo.SaveResult>> Run(int alumneId)
+            => ExecuteReport(() => GenerateReport(alumneId));
+
+        private async Task<Dtoo.SaveResult> GenerateReport(int alumneId)
         {
-            try
-            {
-                var dades = await GetDadesAlumne(alumneId);
+            var dades = await GetDadesAlumne(alumneId);
 
-                if (dades == null) throw new BrokenRuleException("Alumne no trobat");
+            if (dades == null) 
+                throw new BrokenRuleException("Alumne no trobat");
 
-                var cognomsnom = $"{dades.Cognoms}_{dades.Nom}".Replace(" ", "_");
+            var cognomsnom = $"{dades.Cognoms}_{dades.Nom}".Replace(" ", "_");
 
-                var (path, filename, folder) = CalculaPath(cognomsnom);
-                var templatepath = GetTemplatesPath("AlumneInforme.cs.docx");
-                var document = DocumentFactory.Create(templatepath, dades);
+            var (path, filename, folder) = CalculatePath(cognomsnom, "docx");
+            var templatePath = GetTemplatesPath("AlumneInforme.cs.docx");
+            var document = DocumentFactory.Create(templatePath, dades);
 
+            document.Generate(path);
 
-                document.Generate(path);
-
-                return new(
-                    new Dtoo.SaveResult(
-                        path,
-                        filename,
-                        folder
-                    )
-                );
-
-            }
-            catch (BrokenRuleException e)
-            {
-
-                return new(e.BrokenRules);
-            }
-            catch (Exception e)
-            {
-                var msg = e.Message;
-                System.Console.WriteLine(e.StackTrace);
-                return new(new List<BrokenRule>() { new BrokenRule(msg) });
-            }
-
+            return new Dtoo.SaveResult(path, filename, folder);
         }
 
         private Task<Alumne?> GetDadesAlumne(int alumneId)
@@ -76,57 +53,5 @@ namespace BusinessLayer.Services
             .Include(a => a.EtapaActual)
             .Where(a => a.Id == alumneId)
             .FirstOrDefaultAsync();
-
-        private static (string path, string filename, string folder) CalculaPath(string prefixfilename)
-        {
-
-            var filename = $"{prefixfilename}-{DateTime.Now.ToString("yyyyMMdd")}.docx";
-
-            var binPath = AppDomain.CurrentDomain.BaseDirectory;
-
-            var folder = Path.Combine(binPath, "Reports");
-
-#if (DEBUG)
-            // En mode debug a la carpeta de documents.
-            folder = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EapRecullReports");
-#endif
-
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            var path = string.Empty;
-            while (true)
-            {
-                path = Path.Combine(folder, filename);
-                if (!File.Exists(path)) break;
-                filename = filename.Replace(".docx", "_nou.docx");
-            }
-
-            return (path, filename, folder);
-        }
-
-        private static string GetTemplatesPath(string template)
-        {
-
-            var directori = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
-
-
-            if (!Directory.Exists(directori))
-            {
-                throw new Exception($"No trobo la carpeta: {directori}");
-            }
-            var path = Path.Combine(directori, template);
-
-            if (!File.Exists(path))
-            {
-                throw new Exception($"No trobat el template {path}");
-            }
-
-            return path;
-        }
-
-
     }
 }

@@ -1,8 +1,9 @@
 using CommonInterfaces;
+using DTO.o.Interfaces;
 
 namespace DTO.o.DTOs;
 
-public class EtiquetaDescripcio : IEtiquetaDescripcio
+public class EtiquetaDescripcio : IEtiquetaDescripcio, IDTOo
 {
     public EtiquetaDescripcio(string etiqueta, string descripcio)
     {

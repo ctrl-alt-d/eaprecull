@@ -21,4 +21,10 @@
     <PackageReference Include="SharpDocx" Version="2.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Assets\Templates\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
