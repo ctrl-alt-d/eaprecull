@@ -14,7 +14,7 @@
                  UseFloatingWatermark="True"
                  Classes="Filled"
                  wpf:TextFieldAssist.Label="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 Watermark="dd.mm.aaaa"
+                 Watermark="d.m.aaaa"
                  Margin="0"/>
         
         <Button x:Name="CalendarButton"

@@ -28,7 +28,7 @@ namespace DataModels.Models
         // IEtiquetaDescripcio
         public string Etiqueta => $"{Cognoms}, {Nom}";
         public string Descripcio =>
-            $"{DataNaixement} {CentreActual?.Etiqueta ?? ""} " +
+            $"{DataNaixement?.ToString("d.M.yyyy")} {CentreActual?.Etiqueta ?? ""} " +
             $"{EtapaActual?.Etiqueta ?? ""} {_NESEEE_txt}{_NESENoEE_txt}";
         public string _NESEEE_txt => DataInformeNESENEE != null ? " [NESE NEE]" : "";
         public string _NESENoEE_txt => DataInformeNESENoNEE != null ? " [NESE No NEE]" : "";
