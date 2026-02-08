@@ -31,7 +31,8 @@ namespace BusinessLayer.Services
                 if (alumne == null)
                     throw new BrokenRuleException("Alumne no trobat");
 
-                var data = MapToDto(alumne);
+                var cursActiu = await GetCursActiu();
+                var data = MapToDto(alumne, cursActiu);
                 return new OperationResult<Dtoo.AlumneInformeViewerData>(data);
             }
             catch (BrokenRuleException br)
@@ -49,12 +50,20 @@ namespace BusinessLayer.Services
             .Include(a => a.Actuacions).ThenInclude(a => a.CentreAlMomentDeLactuacio)
             .Include(a => a.Actuacions).ThenInclude(a => a.EtapaAlMomentDeLactuacio)
             .Include(a => a.Actuacions).ThenInclude(a => a.TipusActuacio)
+            .Include(a => a.CursDarreraActualitacioDades)
             .Include(a => a.CentreActual)
             .Include(a => a.EtapaActual)
             .Where(a => a.Id == alumneId)
             .FirstOrDefaultAsync();
 
-        private Dtoo.AlumneInformeViewerData MapToDto(Alumne alumne)
+        private Task<CursAcademic?> GetCursActiu()
+            =>
+            GetContext()
+            .CursosAcademics
+            .Where(c => c.EsActiu)
+            .FirstOrDefaultAsync();
+
+        private Dtoo.AlumneInformeViewerData MapToDto(Alumne alumne, CursAcademic? cursActiu)
         {
             var actuacions = alumne.Actuacions
                 .OrderByDescending(a => a.MomentDeLactuacio)
@@ -77,6 +86,7 @@ namespace BusinessLayer.Services
                 alumne.Nom,
                 alumne.Cognoms,
                 alumne.DataNaixement,
+                alumne.CursDarreraActualitacioDades?.Etiqueta ?? "-",
                 alumne.CentreActual?.Etiqueta ?? "-",
                 alumne.EtapaActual?.Etiqueta ?? "-",
                 alumne.NivellActual,
@@ -85,6 +95,7 @@ namespace BusinessLayer.Services
                 alumne.DataInformeNESENoNEE,
                 alumne.ObservacionsNESENoNEE,
                 alumne.Tags,
+                cursActiu != null && alumne.CursDarreraActualitacioDades?.Id != cursActiu.Id,
                 actuacions
             );
         }

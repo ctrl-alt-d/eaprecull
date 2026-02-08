@@ -41,6 +41,20 @@ namespace UI.ER.ViewModels.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _dataNaixement, value);
         }
 
+        private string _cursDarreraActualitzacio = string.Empty;
+        public string CursDarreraActualitzacio
+        {
+            get => _cursDarreraActualitzacio;
+            private set => this.RaiseAndSetIfChanged(ref _cursDarreraActualitzacio, value);
+        }
+
+        private bool _desactualitzat;
+        public bool Desactualitzat
+        {
+            get => _desactualitzat;
+            private set => this.RaiseAndSetIfChanged(ref _desactualitzat, value);
+        }
+
         private string _centreActual = string.Empty;
         public string CentreActual
         {
@@ -192,6 +206,8 @@ namespace UI.ER.ViewModels.ViewModels
         {
             NomComplet = data.NomComplet;
             DataNaixement = data.DataNaixementTxt;
+            CursDarreraActualitzacio = data.CursDarreraActualitzacio;
+            Desactualitzat = data.Desactualitzat;
             CentreActual = data.CentreActual;
             EtapaActual = data.EtapaActual;
             NivellActual = data.NivellActual;

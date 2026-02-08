@@ -68,11 +68,23 @@
                                        FontWeight="Bold"
                                        Margin="0,0,0,15"/>
 
+                            <!-- Alerta desactualitzat -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12"
+                                        IsVisible="{Binding Desactualitzat}">
+                                <avalonia:MaterialIcon Kind="AlertOutline" Width="18" Height="18" 
+                                                       Foreground="Red" Margin="0,0,8,0"
+                                                       VerticalAlignment="Center"/>
+                                <TextBlock Text="Les dades relatives a centre i etapa poden estar desactualitzades."
+                                           Classes="Body2" 
+                                           Foreground="Red"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
                             <!-- Info bàsica en grid -->
                             <Grid ColumnDefinitions="Auto, *, Auto, *" 
-                                  RowDefinitions="Auto, Auto, Auto">
+                                  RowDefinitions="Auto, Auto, Auto, Auto">
                                 
-                                <!-- Fila 1 -->
+                                <!-- Fila 1 - Dades personals -->
                                 <TextBlock Grid.Row="0" Grid.Column="0" 
                                            Text="Data naixement:" 
                                            Classes="Body2" 
@@ -83,44 +95,55 @@
                                            Classes="Body1"
                                            Margin="0,0,30,8"/>
 
-                                <TextBlock Grid.Row="0" Grid.Column="2" 
-                                           Text="Centre actual:" 
-                                           Classes="Body2" 
-                                           FontWeight="SemiBold"
-                                           Margin="0,0,10,8"/>
-                                <TextBlock Grid.Row="0" Grid.Column="3" 
-                                           Text="{Binding CentreActual}" 
-                                           Classes="Body1"
-                                           Margin="0,0,0,8"/>
-
-                                <!-- Fila 2 -->
+                                <!-- Fila 2 - Curs | Centre -->
                                 <TextBlock Grid.Row="1" Grid.Column="0" 
-                                           Text="Etapa:" 
+                                           Text="Curs darrera actualització:" 
                                            Classes="Body2" 
                                            FontWeight="SemiBold"
                                            Margin="0,0,10,8"/>
                                 <TextBlock Grid.Row="1" Grid.Column="1" 
-                                           Text="{Binding EtapaActual}" 
+                                           Text="{Binding CursDarreraActualitzacio}" 
                                            Classes="Body1"
                                            Margin="0,0,30,8"/>
 
                                 <TextBlock Grid.Row="1" Grid.Column="2" 
-                                           Text="Nivell:" 
+                                           Text="Centre actual:" 
                                            Classes="Body2" 
                                            FontWeight="SemiBold"
                                            Margin="0,0,10,8"/>
                                 <TextBlock Grid.Row="1" Grid.Column="3" 
+                                           Text="{Binding CentreActual}" 
+                                           Classes="Body1"
+                                           Margin="0,0,0,8"/>
+
+                                <!-- Fila 3 - Etapa | Nivell -->
+                                <TextBlock Grid.Row="2" Grid.Column="0" 
+                                           Text="Etapa:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,8"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" 
+                                           Text="{Binding EtapaActual}" 
+                                           Classes="Body1"
+                                           Margin="0,0,30,8"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="2" 
+                                           Text="Nivell:" 
+                                           Classes="Body2" 
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,10,8"/>
+                                <TextBlock Grid.Row="2" Grid.Column="3" 
                                            Text="{Binding NivellActual}" 
                                            Classes="Body1"
                                            Margin="0,0,0,8"/>
 
-                                <!-- Fila 3 - Tags -->
-                                <TextBlock Grid.Row="2" Grid.Column="0" 
+                                <!-- Fila 4 - Tags -->
+                                <TextBlock Grid.Row="3" Grid.Column="0" 
                                            Text="Tags:" 
                                            Classes="Body2" 
                                            FontWeight="SemiBold"
                                            Margin="0,0,10,0"/>
-                                <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
+                                <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
                                            Text="{Binding Tags}" 
                                            Classes="Body1"
                                            TextWrapping="Wrap"
