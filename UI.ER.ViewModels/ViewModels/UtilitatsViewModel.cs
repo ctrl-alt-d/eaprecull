@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
@@ -47,8 +47,8 @@ namespace UI.ER.ViewModels.ViewModels
         {
             BrokenRules.Clear();
 
-            using var blActuacioSet = SuperContext.GetBLOperation<IActuacioSet>();
-            using var blCursAcademicSet = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var blActuacioSet = SuperContext.Resolve<IActuacioSet>();
+            using var blCursAcademicSet = SuperContext.Resolve<ICursAcademicSet>();
             var dtoCursActual = await blCursAcademicSet.GetCursActiu();
 
             var nTotalActuacions = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms());
@@ -105,7 +105,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoGeneraPivot()
         {
             ResultatPivotAlumne = "";
-            using var bl = SuperContext.GetBLOperation<IPivotActuacions>();
+            using var bl = SuperContext.Resolve<IPivotActuacions>();
             var resultat = await bl.Run();
             ResultatPivotAlumne =
                 resultat.Data != null ?
@@ -143,7 +143,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.EtiquetaDescripcio?> DoGeneraSync()
         {
             ResultatSyncAlumne = "";
-            using var bl = SuperContext.GetBLOperation<IAlumneSyncActiuByCentre>();
+            using var bl = SuperContext.Resolve<IAlumneSyncActiuByCentre>();
             var resultat = await bl.Run();
             ResultatSyncAlumne =
                 resultat.Data != null ?

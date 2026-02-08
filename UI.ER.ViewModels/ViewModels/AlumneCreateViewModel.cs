@@ -3,7 +3,7 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class AlumneCreateViewModel : ViewModelBase
     {
 
-        protected virtual IAlumneCreate BLCreate() => SuperContext.GetBLOperation<IAlumneCreate>();
+        protected virtual IAlumneCreate BLCreate() => SuperContext.Resolve<IAlumneCreate>();
         public AlumneCreateViewModel()
         {
 
@@ -48,7 +48,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadDadesInicials()
         {
-            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var bl = SuperContext.Resolve<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;

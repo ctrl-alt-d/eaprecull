@@ -1,30 +1,32 @@
-using Microsoft.Extensions.DependencyInjection;
-using BusinessLayer.DI;
 using BusinessLayer.Abstract.Generic;
-using DataLayer.DI;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace UI.ER.AvaloniaUI.Services
+namespace UI.ER.ViewModels.Services
 {
-    public static class SuperContext
+    public class SuperContext : IServiceFactory
     {
-        private static ServiceProvider? _ServiceProvider;
-        private static ServiceProvider GetServiceProvider()
+        private static IServiceProvider? _serviceProvider;
+
+        public static void Initialize(IServiceProvider serviceProvider)
         {
-            _ServiceProvider = _ServiceProvider ??
-                new ServiceCollection()
-                .DataLayerConfigureServices()
-                .BusinessLayerConfigureServices()
-                .BuildServiceProvider()
-                ;
-            return _ServiceProvider;
+            _serviceProvider = serviceProvider;
         }
 
-        public static T GetBLOperation<T>()
-            where T : IBLOperation
+        public T GetBLOperation<T>() where T : IBLOperation
         {
-            return
-                GetServiceProvider()
-                .GetRequiredService<T>();
+            return GetProvider().GetRequiredService<T>();
+        }
+
+        public static T Resolve<T>() where T : IBLOperation
+        {
+            return GetProvider().GetRequiredService<T>();
+        }
+
+        private static IServiceProvider GetProvider()
+        {
+            return _serviceProvider
+                ?? throw new InvalidOperationException("SuperContext no ha estat inicialitzat. Crida SuperContext.Initialize() al Composition Root.");
         }
     }
 }

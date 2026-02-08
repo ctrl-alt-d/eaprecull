@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Abstract.Services;
 using DynamicData.Binding;
 using ReactiveUI;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using Dtoo = DTO.o.DTOs;
 
 namespace UI.ER.ViewModels.ViewModels
@@ -172,7 +172,7 @@ namespace UI.ER.ViewModels.ViewModels
             HasError = false;
             BrokenRules.Clear();
 
-            using var bl = SuperContext.GetBLOperation<IAlumneInformeViewer>();
+            using var bl = SuperContext.Resolve<IAlumneInformeViewer>();
             var result = await bl.Run(_alumneId);
 
             if (result.BrokenRules.Any())
@@ -216,7 +216,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoExportarWord()
         {
             ResultatExportacio = "";
-            using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
+            using var bl = SuperContext.Resolve<IAlumneInforme>();
             var resultat = await bl.Run(_alumneId);
             ResultatExportacio =
                 resultat.Data != null ?

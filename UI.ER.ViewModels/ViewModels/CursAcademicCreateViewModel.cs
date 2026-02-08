@@ -2,7 +2,7 @@ using System.Reactive;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using Dtoi = DTO.i.DTOs;
 using UI.ER.ViewModels.Common;
@@ -48,7 +48,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.CursAcademicCreateParms(Convert.ToInt32(AnyInici), true);
 
             // cridar backend
-            using var bl = SuperContext.GetBLOperation<ICursAcademicCreate>();
+            using var bl = SuperContext.Resolve<ICursAcademicCreate>();
             var dto = await bl.Create(Parms);
             var data = dto.Data;
 

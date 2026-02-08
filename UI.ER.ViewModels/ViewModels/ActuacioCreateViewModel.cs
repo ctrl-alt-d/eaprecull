@@ -3,7 +3,7 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioCreateViewModel : ViewModelBase
     {
 
-        protected virtual IActuacioCreate BLCreate() => SuperContext.GetBLOperation<IActuacioCreate>();
+        protected virtual IActuacioCreate BLCreate() => SuperContext.Resolve<IActuacioCreate>();
         public ActuacioCreateViewModel(int? alumneId = null)
         {
 
@@ -58,7 +58,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadDadesInicials(int? alumneId)
         {
-            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var bl = SuperContext.Resolve<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursActuacioId = cursActual?.Id;
@@ -89,7 +89,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (alumneId == null) return;
 
             // Amb alumne? Portem les dades de l'alumne cap aquí
-            using (var bl = SuperContext.GetBLOperation<IAlumneSet>())
+            using (var bl = SuperContext.Resolve<IAlumneSet>())
             {
                 var dto = await bl.FromId(alumneId!.Value);
                 var data = dto.Data;

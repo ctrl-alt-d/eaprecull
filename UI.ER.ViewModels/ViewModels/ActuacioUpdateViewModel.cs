@@ -3,7 +3,7 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
@@ -19,7 +19,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class ActuacioUpdateViewModel : ViewModelBase
     {
 
-        protected virtual IActuacioUpdate BLUpdate() => SuperContext.GetBLOperation<IActuacioUpdate>();
+        protected virtual IActuacioUpdate BLUpdate() => SuperContext.Resolve<IActuacioUpdate>();
         public ActuacioUpdateViewModel(int id)
         {
             Id = id;
@@ -62,7 +62,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.GetBLOperation<IActuacioSet>();
+            using var bl = SuperContext.Resolve<IActuacioSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -90,7 +90,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (alumneId == null) return;
 
             // Amb alumne? Portem les dades de l'alumne cap aquí
-            using (var bl = SuperContext.GetBLOperation<IAlumneSet>())
+            using (var bl = SuperContext.Resolve<IAlumneSet>())
             {
                 var dto = await bl.FromId(alumneId!.Value);
                 var data = dto.Data;

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 
 namespace UI.ER.ViewModels.ViewModels

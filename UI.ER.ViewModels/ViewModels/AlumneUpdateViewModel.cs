@@ -3,7 +3,7 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
@@ -73,7 +73,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadDadesInicials()
         {
-            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var bl = SuperContext.Resolve<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
@@ -265,7 +265,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.GetBLOperation<IAlumneSet>();
+            using var bl = SuperContext.Resolve<IAlumneSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -276,7 +276,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async Task LoadDadesCursActual()
         {
-            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var bl = SuperContext.Resolve<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursActualId = cursActual?.Id;
@@ -345,7 +345,7 @@ namespace UI.ER.ViewModels.ViewModels
                 EsActiu);
 
             // cridar backend
-            using var bl = SuperContext.GetBLOperation<IAlumneUpdate>();
+            using var bl = SuperContext.Resolve<IAlumneUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 

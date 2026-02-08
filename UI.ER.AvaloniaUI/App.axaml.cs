@@ -1,7 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using UI.ER.AvaloniaUI.Services;
+using Microsoft.Extensions.DependencyInjection;
+using BusinessLayer.DI;
+using DataLayer.DI;
+using UI.ER.ViewModels.Services;
+using BusinessLayer.Abstract.Generic;
 using UI.ER.ViewModels.ViewModels;
 using UI.ER.AvaloniaUI.Views;
 
@@ -16,6 +20,15 @@ namespace UI.ER.AvaloniaUI
 
         public override void OnFrameworkInitializationCompleted()
         {
+            var services = new ServiceCollection()
+                .DataLayerConfigureServices()
+                .BusinessLayerConfigureServices();
+
+            services.AddSingleton<IServiceFactory, SuperContext>();
+
+            var provider = services.BuildServiceProvider();
+            SuperContext.Initialize(provider);
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow();

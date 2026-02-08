@@ -3,7 +3,7 @@ using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
@@ -51,7 +51,7 @@ namespace UI.ER.ViewModels.ViewModels
             {
                 var update = new ActuacioCreateViewModel(alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
-                using var blCurs = SuperContext.GetBLOperation<ICursAcademicSet>();
+                using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
                 var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
@@ -86,7 +86,7 @@ namespace UI.ER.ViewModels.ViewModels
             );
 
             // Petició al backend            
-            using var bl = SuperContext.GetBLOperation<IActuacioSet>();
+            using var bl = SuperContext.Resolve<IActuacioSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 
@@ -99,7 +99,7 @@ namespace UI.ER.ViewModels.ViewModels
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             //
-            using var blCurs = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
             var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = cursActual_dto.Data?.FirstOrDefault();
 

@@ -2,7 +2,7 @@
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
@@ -65,7 +65,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = SuperContext.GetBLOperation<IEtapaSet>();
+            using var bl = SuperContext.Resolve<IEtapaSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 

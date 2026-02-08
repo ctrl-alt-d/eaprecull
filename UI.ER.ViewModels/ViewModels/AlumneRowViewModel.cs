@@ -3,7 +3,7 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -129,7 +129,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.GetBLOperation<IAlumneActivaDesactiva>();
+            using var bl = SuperContext.Resolve<IAlumneActivaDesactiva>();
             var dto = await bl.Toggle(Id);
             DTO2ModelView(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
@@ -157,7 +157,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async void ReLoadData()
         {
             BrokenRules.Clear();
-            using var blAlumneSet = SuperContext.GetBLOperation<IAlumneSet>();
+            using var blAlumneSet = SuperContext.Resolve<IAlumneSet>();
             var dto = await blAlumneSet.FromId(Model.Id);
             BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
             if (dto.Data == null) return;
@@ -175,7 +175,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoGeneraInforme()
         {
             ResultatInformeAlumne = "";
-            using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
+            using var bl = SuperContext.Resolve<IAlumneInforme>();
             var resultat = await bl.Run(Id);
             ResultatInformeAlumne =
                 resultat.Data != null ?
