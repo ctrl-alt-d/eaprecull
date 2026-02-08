@@ -7,6 +7,7 @@ namespace UI.ER.AvaloniaUI;
 
 class Program
 {
+    [STAThread]
     public static void Main(string[] args)
     {
         LogHelpers.ConfigureLogging();
