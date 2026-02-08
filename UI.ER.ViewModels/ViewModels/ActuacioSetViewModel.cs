@@ -51,7 +51,8 @@ namespace UI.ER.ViewModels.ViewModels
             {
                 var update = new ActuacioCreateViewModel(alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
-                var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new Dtoi.EsActiuParms(true));
+                using var blCurs = SuperContext.GetBLOperation<ICursAcademicSet>();
+                var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
                 if (data != null)
@@ -98,7 +99,8 @@ namespace UI.ER.ViewModels.ViewModels
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             //
-            var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new Dtoi.EsActiuParms(true));
+            using var blCurs = SuperContext.GetBLOperation<ICursAcademicSet>();
+            var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
             // Tenim els resultats

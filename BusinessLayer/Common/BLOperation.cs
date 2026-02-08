@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using DataLayer;
 using CommonInterfaces;
 using Microsoft.EntityFrameworkCore;
+using BusinessLayer.Abstract.Generic;
 
 namespace BusinessLayer.Common
 {
-    public abstract class BLOperation : IDisposable
+    public abstract class BLOperation : IBLOperation
     {
-        public readonly IDbContextFactory<AppDbContext> AppDbContextFactory;
+        protected readonly IDbContextFactory<AppDbContext> AppDbContextFactory;
 
         public BLOperation(IDbContextFactory<AppDbContext> appDbContextFactory)
         {
