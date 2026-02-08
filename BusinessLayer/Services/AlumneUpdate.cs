@@ -84,8 +84,8 @@ namespace BusinessLayer.Services
             =>
             ReferencesAreModify(
                 model,
-                x=>x.CentreActual,
-                x=>x.CursDarreraActualitacioDades,
-                x=>x.EtapaActual);
+                x => x.CentreActual,
+                x => x.CursDarreraActualitacioDades,
+                x => x.EtapaActual);
     }
 }

@@ -62,7 +62,7 @@ namespace BusinessLayer.Services
         }
 
         protected override void ResetReferences(TipusActuacio model)
-        {}
+        { }
 
     }
 }

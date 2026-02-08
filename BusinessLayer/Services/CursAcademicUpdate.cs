@@ -63,6 +63,6 @@ namespace BusinessLayer.Services
         }
 
         protected override void ResetReferences(CursAcademic model)
-        {}
+        { }
     }
 }

@@ -11,7 +11,7 @@ namespace BusinessLayer.Services
 {
     public class AlumneSyncActiuByCentre : BLBatchOperation<EtiquetaDescripcio>, IAlumneSyncActiuByCentre
     {
-        public AlumneSyncActiuByCentre(IDbContextFactory<AppDbContext> appDbContextFactory) 
+        public AlumneSyncActiuByCentre(IDbContextFactory<AppDbContext> appDbContextFactory)
             : base(appDbContextFactory)
         {
         }
@@ -23,13 +23,13 @@ namespace BusinessLayer.Services
         {
             var ctx = GetContext();
 
-            var alumnes = 
-                await 
+            var alumnes =
+                await
                 ctx
                 .Alumnes
                 .Include(a => a.CentreActual)
-                .Where(a => 
-                    a.CentreActual == null || 
+                .Where(a =>
+                    a.CentreActual == null ||
                     a.EsActiu != a.CentreActual!.EsActiu
                 )
                 .ToListAsync();

@@ -33,13 +33,13 @@ namespace BusinessLayer.Common
             where TTarget : class, IModel
         {
             var model =
-                await 
+                await
                 GetContext()
                 .Set<TTarget>()
                 .FindAsync(id);
 
             var result =
-                model ?? 
+                model ??
                 throw new Exception($"{typeof(TTarget).FullName} no trobat per id {id}");
 
             return result;
@@ -72,10 +72,10 @@ namespace BusinessLayer.Common
             =>
             Task.WhenAll(
                 propertyExpressions
-                .Select(p => LoadReference(model, p))                
+                .Select(p => LoadReference(model, p))
                 .ToArray()
             );
-        
+
         protected virtual void PropertyIsModify<TTarget>(TTarget model, Expression<Func<TTarget, IModel?>> propertyExpression)
             where TTarget : class, IModel
             =>

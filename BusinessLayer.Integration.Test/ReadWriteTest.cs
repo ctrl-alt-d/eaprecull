@@ -22,7 +22,7 @@ namespace BusinessLayer.Integration.Test
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt => 
+            services.AddDbContextFactory<AppDbContext>(opt =>
                 opt.UseSqlite(ConnectionString)
                    .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
             services.BusinessLayerConfigureServices();
@@ -61,7 +61,7 @@ namespace BusinessLayer.Integration.Test
             var ConnectionString = $"Data Source={dataSource}";
 
             var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt => 
+            services.AddDbContextFactory<AppDbContext>(opt =>
                 opt.UseSqlite(ConnectionString)
                    .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
             services.BusinessLayerConfigureServices();

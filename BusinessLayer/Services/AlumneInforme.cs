@@ -14,7 +14,7 @@ namespace BusinessLayer.Services
 {
     public class AlumneInforme : BLReport<Dtoo.SaveResult>, IAlumneInforme
     {
-        public AlumneInforme(IDbContextFactory<AppDbContext> appDbContextFactory) 
+        public AlumneInforme(IDbContextFactory<AppDbContext> appDbContextFactory)
             : base(appDbContextFactory)
         {
         }
@@ -26,7 +26,7 @@ namespace BusinessLayer.Services
         {
             var dades = await GetDadesAlumne(alumneId);
 
-            if (dades == null) 
+            if (dades == null)
                 throw new BrokenRuleException("Alumne no trobat");
 
             var cognomsnom = $"{dades.Cognoms}_{dades.Nom}".Replace(" ", "_");

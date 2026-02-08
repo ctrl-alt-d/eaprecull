@@ -61,6 +61,6 @@ namespace BusinessLayer.Services
         }
 
         protected override void ResetReferences(Etapa model)
-        {}
+        { }
     }
 }

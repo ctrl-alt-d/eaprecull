@@ -62,6 +62,6 @@ namespace BusinessLayer.Services
         }
 
         protected override void ResetReferences(Centre model)
-        {}
+        { }
     }
 }

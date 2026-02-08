@@ -50,21 +50,21 @@ namespace UI.ER.AvaloniaUI.Controls
         protected override void OnLoaded(RoutedEventArgs e)
         {
             base.OnLoaded(e);
-            
+
             _calendar = this.FindControl<Avalonia.Controls.Calendar>("DateCalendar");
             _calendarButton = this.FindControl<Button>("CalendarButton");
             _clearButton = this.FindControl<Button>("ClearButton");
-            
+
             if (_calendar != null)
             {
                 _calendar.AddHandler(PointerReleasedEvent, Calendar_PointerReleased, RoutingStrategies.Tunnel);
             }
-            
+
             if (_calendarButton?.Flyout is Flyout flyout)
             {
                 flyout.Opening += Flyout_Opening;
             }
-            
+
             if (_clearButton != null)
             {
                 _clearButton.Click += ClearButton_Click;
@@ -77,17 +77,17 @@ namespace UI.ER.AvaloniaUI.Controls
             {
                 _calendar.RemoveHandler(PointerReleasedEvent, Calendar_PointerReleased);
             }
-            
+
             if (_calendarButton?.Flyout is Flyout flyout)
             {
                 flyout.Opening -= Flyout_Opening;
             }
-            
+
             if (_clearButton != null)
             {
                 _clearButton.Click -= ClearButton_Click;
             }
-            
+
             base.OnUnloaded(e);
         }
 
@@ -152,18 +152,18 @@ namespace UI.ER.AvaloniaUI.Controls
         private DateTime? ParseDateFromText()
         {
             var text = DateText?.Trim() ?? string.Empty;
-            
+
             if (string.IsNullOrWhiteSpace(text))
             {
                 return null;
             }
-            
-            if (DateTime.TryParseExact(text, DateFormat, CultureInfo.InvariantCulture, 
+
+            if (DateTime.TryParseExact(text, DateFormat, CultureInfo.InvariantCulture,
                 DateTimeStyles.None, out var result))
             {
                 return result;
             }
-            
+
             return null;
         }
     }

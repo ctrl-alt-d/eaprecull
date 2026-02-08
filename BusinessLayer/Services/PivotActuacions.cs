@@ -20,7 +20,7 @@ namespace BusinessLayer.Services
             string Curs, string Alumne, string Data, string Centre, string Tipus, int Minuts, string Etapa, string EstudisObligatoris,
             string Nivell, string TeInformeNESENEE, string DataInformeNESENEE, string TeInformeNESENoNEE, string DataInformeNESENoNEE, string Tags, string Descripcio);
 
-        public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory) 
+        public PivotActuacions(IDbContextFactory<AppDbContext> appDbContextFactory)
             : base(appDbContextFactory)
         {
             ExcelPackage.License.SetNonCommercialOrganization("EAPRecull - Educational Use");
@@ -33,7 +33,7 @@ namespace BusinessLayer.Services
         {
             var dades = await GetInformes();
             var (path, filename, folder) = CalculatePath("pivot_actuacions", "xlsx");
-            
+
             ExportaExcel(path, dades);
 
             return new Dtoo.SaveResult(path, filename, folder);
@@ -44,7 +44,7 @@ namespace BusinessLayer.Services
             // https://github.com/EPPlusSoftware/EPPlus/wiki/Pivot-Tables
             // https://github.com/EPPlusSoftware/EPPlus.Sample.NetCore/blob/master/18-PivotTables/PivotTablesSample.cs
             using var pck = new ExcelPackage();
-            var wsData=pck.Workbook.Worksheets.Add("Dades");
+            var wsData = pck.Workbook.Worksheets.Add("Dades");
             //
             var dataRange = wsData.Cells["A1"].LoadFromCollection(
                     dades,
@@ -62,7 +62,7 @@ namespace BusinessLayer.Services
 
             // - page
             var pageField = pivotTable1.PageFields.Add(pivotTable1.Fields["Curs"]);
-            pageField.Items.Refresh();  
+            pageField.Items.Refresh();
             pageField.Items.SelectSingleItem(0);
 
             // - rows
@@ -73,11 +73,11 @@ namespace BusinessLayer.Services
             pivotTable1.DataOnRows = false;
 
             var dataFieldMinuts = pivotTable1.DataFields.Add(pivotTable1.Fields["Minuts"]);
-            dataFieldMinuts.Format="#,##0";
+            dataFieldMinuts.Format = "#,##0";
             dataFieldMinuts.Function = DataFieldFunctions.Sum;
 
             var dataFieldNombre = pivotTable1.DataFields.Add(pivotTable1.Fields["Minuts"]);
-            dataFieldNombre.Format="#,##0";
+            dataFieldNombre.Format = "#,##0";
             dataFieldNombre.Function = DataFieldFunctions.Count;
 
             //

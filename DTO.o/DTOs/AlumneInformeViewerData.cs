@@ -63,14 +63,14 @@ namespace DTO.o.DTOs
         public bool TeNESENoNEE => DataInformeNESENoNEE.HasValue;
         public string DataNESENoNEETxt => DataInformeNESENoNEE?.ToString("dd/MM/yyyy") ?? "-";
         public int TotalActuacions => Actuacions.Count;
-        
+
         // Temps total d'actuacions
         public int TotalMinuts => Actuacions.Sum(a => a.MinutsDuradaActuacio);
         public int TotalHores => TotalMinuts / 60;
         public int MinutsRestants => TotalMinuts % 60;
-        public string TempsTotalTxt => TotalMinuts > 0 
-            ? (TotalHores > 0 
-                ? $"{TotalHores}h {MinutsRestants}min" 
+        public string TempsTotalTxt => TotalMinuts > 0
+            ? (TotalHores > 0
+                ? $"{TotalHores}h {MinutsRestants}min"
                 : $"{MinutsRestants}min")
             : "-";
 

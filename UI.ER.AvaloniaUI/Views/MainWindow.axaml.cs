@@ -41,19 +41,19 @@ namespace UI.ER.AvaloniaUI.Views
             // Get controls and set up two-way sync
             _leftDrawer = this.FindControl<NavigationDrawer>("LeftDrawer");
             _navSwitch = this.FindControl<ToggleButton>("NavDrawerSwitch");
-            
+
             if (_navSwitch != null && _leftDrawer != null)
             {
                 // Force closed state on startup
                 _leftDrawer.LeftDrawerOpened = false;
                 _navSwitch.IsChecked = false;
-                
+
                 // Sync toggle button changes to drawer
                 _navSwitch.IsCheckedChanged += (s, e) =>
                 {
                     _leftDrawer.LeftDrawerOpened = _navSwitch.IsChecked ?? false;
                 };
-                
+
                 // Sync drawer changes back to toggle button
                 _leftDrawer.PropertyChanged += (s, e) =>
                 {
@@ -235,7 +235,7 @@ namespace UI.ER.AvaloniaUI.Views
                 DataContext = new UtilitatsViewModel()
             };
 
-            w.ShowDialog(this);            
+            w.ShowDialog(this);
         }
 
         private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -243,6 +243,6 @@ namespace UI.ER.AvaloniaUI.Views
             SnackbarHost.Post("See ya next time, user!", "Root", DispatcherPriority.Normal);
         }
 
-        
+
     }
 }

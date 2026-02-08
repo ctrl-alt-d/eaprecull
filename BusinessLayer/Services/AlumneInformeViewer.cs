@@ -17,7 +17,7 @@ namespace BusinessLayer.Services
     /// </summary>
     public class AlumneInformeViewer : BLOperation, IAlumneInformeViewer
     {
-        public AlumneInformeViewer(IDbContextFactory<AppDbContext> appDbContextFactory) 
+        public AlumneInformeViewer(IDbContextFactory<AppDbContext> appDbContextFactory)
             : base(appDbContextFactory)
         {
         }

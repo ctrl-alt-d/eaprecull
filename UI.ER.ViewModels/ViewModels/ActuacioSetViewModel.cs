@@ -74,14 +74,14 @@ namespace UI.ER.ViewModels.ViewModels
             var esActiu =
                 nomesAlumnesActius && !alumneId.HasValue ?  // si tenim id alumne el mostrem sempre
                 true :
-                (bool?)null;            
+                (bool?)null;
 
             // Preparar paràmetres al backend
             var Parms = new DTO.i.DTOs.ActuacioSearchParms(
                 take: 200,
                 searchString: searchString,
                 alumneId: alumneId,
-                alumneEsActiu: esActiu 
+                alumneEsActiu: esActiu
             );
 
             // Petició al backend            

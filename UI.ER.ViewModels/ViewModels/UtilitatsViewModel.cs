@@ -29,11 +29,11 @@ namespace UI.ER.ViewModels.ViewModels
 
             var ObservaBotoPivotActivat =
                 this
-                .WhenAnyValue(x => x.BotoPivotActivat );
+                .WhenAnyValue(x => x.BotoPivotActivat);
 
             var ObservaBotoSyncActivat =
                 this
-                .WhenAnyValue(x => x.BotoSyncActivat );
+                .WhenAnyValue(x => x.BotoSyncActivat);
 
             RxApp
                 .MainThreadScheduler
@@ -64,7 +64,7 @@ namespace UI.ER.ViewModels.ViewModels
         public bool OperacionsDelicadesActivat
         {
             get => _OperacionsDelicadesActivat;
-            set => this.RaiseAndSetIfChanged(ref _OperacionsDelicadesActivat, value);                
+            set => this.RaiseAndSetIfChanged(ref _OperacionsDelicadesActivat, value);
         }
 
         #region Pivot
@@ -82,7 +82,7 @@ namespace UI.ER.ViewModels.ViewModels
         public int? NumTotalActuacions
         {
             get => _NumTotalActuacions;
-            set => this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);                
+            set => this.RaiseAndSetIfChanged(ref _NumTotalActuacions, value);
         }
 
         private string _TotalActuacions = string.Empty;
@@ -113,7 +113,7 @@ namespace UI.ER.ViewModels.ViewModels
                 "Error generant fitxer: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
 
             return resultat.Data;
-            
+
         }
 
         #endregion
@@ -150,7 +150,7 @@ namespace UI.ER.ViewModels.ViewModels
                 resultat.Data.Etiqueta :
                 "Error sincronitzant: " + string.Join(" * ", resultat.BrokenRules.Select(x => x.Message));
 
-            return resultat.Data;            
+            return resultat.Data;
         }
 
         #endregion
