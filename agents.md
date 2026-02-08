@@ -41,7 +41,7 @@ Aquesta solució utilitza una **arquitectura per capes (Layered Architecture)** 
 | **BusinessLayer.Abstract** | Interfícies dels serveis i tipus de resultat (`OperationResult`, `BrokenRule`) |
 | **BusinessLayer** | Implementació de la lògica de negoci |
 | **UI.ER.ViewModels** | ViewModels per MVVM amb ReactiveUI |
-| **UI.ER.AvaloniaUI** | Vistes AXAML i code-behind |
+| **UI.ER.AvaloniaUI** | Vistes AXAML, code-behind, helpers i controls personalitzats |
 
 ### Patrons Arquitectònics Principals
 
@@ -58,18 +58,12 @@ Aquesta solució utilitza una **arquitectura per capes (Layered Architecture)** 
 | Classe Base | Propòsit | Mètodes Principals |
 |-------------|----------|-------------------|
 | `BLOperation` | Base per a tots els serveis | `GetContext()`, `Perfection<T>()`, `LoadReference()` |
-| `BLSet<TModel, TParm, TDTOo>` | Consultes/llistats | `FromPredicate()`, `FromId()`, `CountFromPredicate()`, `FromPredicateProjected()`, `FromIdProjected()` |
+| `BLSet<TModel, TParm, TDTOo>` | Consultes/llistats | `FromPredicate()`, `FromId()`, `CountFromPredicate()` |
 | `BLCreate<TModel, TParm, TDTOo>` | Creació d'entitats | `Create()`, `PreInitialize()`, `InitializeModel()`, `PostAdd()` |
 | `BLUpdate<TModel, TParm, TDTOo>` | Actualització d'entitats | `Update()`, `PreUpdate()`, `UpdateModel()`, `PostUpdate()` |
 | `BLActivaDesactiva<TModel, TDTOo>` | Soft-delete toggle | `Activa()`, `Desactiva()`, `Toggle()` |
 | `BLReport<TResult>` | Generació d'informes/fitxers | `ExecuteReport()`, `CalculatePath()`, `GetTemplatesPath()` |
 | `BLBatchOperation<TResult>` | Operacions massives | `ExecuteBatch()` |
-
-### Interfícies de Projecció Personalitzada
-
-| Interfície | Ubicació | Propòsit |
-|------------|----------|----------|
-| `ISetProjectable<TParm, TModel, TDefaultDTOo>` | `BusinessLayer/Common/` | Permet passar projeccions personalitzades als mètodes de consulta |
 
 ### Flux de Dependències
 
@@ -142,11 +136,14 @@ public class Centre : IIdEtiquetaDescripcio, IActivable, IModel
 - `{Entitat}CreateParms` - Per crear noves entitats
 - `{Entitat}UpdateParms` - Per actualitzar entitats (inclou `IId`)
 - `{Entitat}SearchParms` - Per cercar/filtrar entitats
+- `ActivaDesactivaParms` - Paràmetre per operacions d'activació/desactivació
 - `EsActiuParms` - Paràmetre genèric per filtrar per `EsActiu`
 - `EmptyParms` - Quan no cal cap paràmetre
+- `EmptyPaginatedParms` - Quan no cal cap paràmetre però es vol paginació
 
 **DTOs de sortida (`DTO.o`):**
-- Mateix nom que l'entitat: `Alumne`, `Centre`, `Actuacio`, etc.
+- Mateix nom que l'entitat: `Alumne`, `Centre`, `Actuacio`, `CursAcademic`, `Etapa`, `TipusActuacio`
+- DTOs addicionals: `CentreAmbActuacions`, `EtiquetaDescripcio`, `SaveResult`, `ImportAllResult`, `AlumneInformeViewerData`
 
 **ViewModels:**
 - `{Entitat}SetViewModel` - Llista/cerca d'entitats
@@ -688,7 +685,10 @@ ReferencesAreModify(model, x => x.Relacio1, x => x.Relacio2);
 ├── Models/                    # Entitats (DataModels)
 ├── Configurations/            # Configuracions EF (DataModels.Configuration)
 ├── ViewModels/                # ViewModels (UI.ER.ViewModels)
-└── Pages/                     # Vistes AXAML (UI.ER.AvaloniaUI)
+├── Pages/                     # Vistes AXAML (UI.ER.AvaloniaUI)
+├── Controls/                  # Controls personalitzats (DateInput, LookupInput)
+├── Converters/                # Conversors de valors per a bindings
+└── Helpers/                   # Utilitats (LogHelpers, WindowHelper)
 ```
 
 ### Convencions d'Alias Imports
@@ -757,46 +757,6 @@ else
 }
 ```
 
-### Exemple d'Ús amb Projecció Personalitzada (ISetProjectable)
-
-Quan necessites obtenir dades amb una projecció diferent de la per defecte (per exemple, incloent comptatges o dades agregades), utilitza `ISetProjectable`:
-
-```csharp
-// 1. Crear la interfície específica a BusinessLayer/Services/
-public interface ICursAcademicSetProjectable 
-    : ICursAcademicSet, 
-      ISetProjectable<Parms.EsActiuParms, Models.CursAcademic, Dtoo.CursAcademic>
-{
-}
-
-// 2. Fer que el servei implementi la nova interfície
-public class CursAcademicSet :
-    BLSet<Models.CursAcademic, Parms.EsActiuParms, Dtoo.CursAcademic>,
-    ICursAcademicSetProjectable  // <- implementa ISetProjectable automàticament via BLSet
-{
-    // ... implementació normal ...
-}
-
-// 3. Registrar al DI (ambdues interfícies apunten a la mateixa implementació)
-services.AddTransient<ICursAcademicSet, CursAcademicSet>();
-services.AddTransient<ICursAcademicSetProjectable, CursAcademicSet>();
-
-// 4. Usar al ViewModel amb projecció personalitzada
-using var bl = SuperContext.GetBLOperation<ICursAcademicSetProjectable>();
-var dto = await bl.FromPredicateProjected(
-    new EsActiuParms(esActiu: true), 
-    Project.CursAcademicAmbActuacions.ToDto  // <- projecció alternativa
-);
-
-// El resultat conté el DTO amb les dades agregades
-var items = dto.Data.Cast<Dtoo.CursAcademicAmbActuacions>();
-```
-
-**Avantatges d'aquest patró:**
-- Una sola classe de servei per múltiples projeccions
-- El consumidor tria la projecció en temps d'execució
-- `BusinessLayer.Abstract` no depèn de `DataModels` (les interfícies `ISetProjectable` estan a `BusinessLayer`)
-
 ### Exemple d'Ús de BLReport
 
 ```csharp
@@ -837,10 +797,46 @@ public class AlumneSyncActiuByCentre : BLBatchOperation<EtiquetaDescripcio>, IAl
 
 ---
 
-8 Llibreries més importants
+## 8. Llibreries i Dependències
 
-* Avalonia Material UI: https://github.com/AvaloniaCommunity/Material.Avalonia
+### UI
+| Paquet | Versió |
+|--------|--------|
+| Avalonia | 11.3.11 |
+| Avalonia.Desktop | 11.3.11 |
+| Avalonia.Diagnostics | 11.3.11 |
+| Material.Avalonia | 3.13.4 |
+| Material.Icons.Avalonia | 2.4.1 |
+| ReactiveUI.Avalonia | 11.3.8 |
+| Serilog.Sinks.File | 7.0.0 |
 
+* Material Avalonia: https://github.com/AvaloniaCommunity/Material.Avalonia
+
+### Dades
+| Paquet | Versió |
+|--------|--------|
+| Microsoft.EntityFrameworkCore | 10.0.2 |
+| Microsoft.EntityFrameworkCore.Sqlite | 10.0.2 |
+| Microsoft.EntityFrameworkCore.Design | 10.0.2 |
+| SQLitePCLRaw.bundle_e_sqlite3 | 3.0.2 |
+
+### Negoci / Informes
+| Paquet | Versió |
+|--------|--------|
+| ClosedXML | 0.105.0 |
+| EPPlus | 8.4.2 |
+| SharpDocx | 2.6.0 |
+
+### Logging
+| Paquet | Versió |
+|--------|--------|
+| Serilog.Sinks.File | 7.0.0 |
+
+El logging d'errors està configurat a `UI.ER.AvaloniaUI/Helpers/LogHelpers.cs`. Escriu a `error.log` al directori de l'executable. Captura:
+- Excepcions no gestionades de `AppDomain`
+- Excepcions de tasques no observades (`TaskScheduler`)
+- Excepcions de pipelines ReactiveUI (`RxApp`)
+- Excepcions fatals a l'arrencada/aturada de l'aplicació
 
 ---
 

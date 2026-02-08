@@ -24,34 +24,8 @@ namespace UI.ER.ViewModels.ViewModels
             Dtoo.CursAcademic CursAcademicDto,
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
             bool modeLookup = false)
-            : this(CursAcademicDto, totsElsCursos, modeLookup, 0)
         {
-        }
-
-        public CursAcademicRowViewModel(
-            Dtoo.CursAcademicAmbActuacions CursAcademicDto,
-            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
-            bool modeLookup = false)
-            : this(
-                new Dtoo.CursAcademic(
-                    CursAcademicDto.Id,
-                    CursAcademicDto.AnyInici,
-                    CursAcademicDto.Nom,
-                    CursAcademicDto.EsActiu,
-                    CursAcademicDto.Etiqueta,
-                    CursAcademicDto.Descripcio),
-                totsElsCursos,
-                modeLookup,
-                CursAcademicDto.NombreActuacions)
-        {
-        }
-
-        private CursAcademicRowViewModel(
-            Dtoo.CursAcademic CursAcademicDto,
-            ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
-            bool modeLookup,
-            int nombreActuacions)
-        {
+            var nombreActuacions = CursAcademicDto.NombreActuacions;
 
             // Behavior Parm
             ModeLookup = modeLookup;

@@ -1,5 +1,4 @@
 using BusinessLayer.Abstract.Services;
-using BusinessLayer.Common;
 using BusinessLayer.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -45,7 +44,6 @@ namespace BusinessLayer.DI
             services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
             services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
             services.AddTransient<ICursAcademicSet, CursAcademicSet>();
-            services.AddTransient<ICursAcademicSetProjectable, CursAcademicSet>();
             services.AddTransient<ICursAcademicActivaDesactiva, CursAcademicActivaDesactiva>();
 
             // actuacio
