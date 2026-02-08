@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using BusinessLayer.Abstract.Services;
-using BusinessLayer.Common;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
-using Project = DTO.Projections;
 using UI.ER.AvaloniaUI.Services;
 using System.Reactive.Linq;
 using System;
@@ -77,8 +75,8 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = SuperContext.GetBLOperation<ICursAcademicSetProjectable>();
-            var dto = await bl.FromPredicateProjected(Parms, Project.CursAcademicAmbActuacions.ToDto);
+            using var bl = SuperContext.GetBLOperation<ICursAcademicSet>();
+            var dto = await bl.FromPredicate(Parms);
 
             // 
             BrokenRules.Clear();
@@ -93,7 +91,6 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Cast<Dtoo.CursAcademicAmbActuacions>()
                 .Select(x => new CursAcademicRowViewModel(x, MyItems, ModeLookup));
 
             MyItems.AddRange(newItems);

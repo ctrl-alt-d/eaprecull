@@ -1,43 +1,35 @@
 ﻿using System;
-using System.Reactive;
 using Avalonia;
-using ReactiveUI;
 using ReactiveUI.Avalonia;
+using UI.ER.AvaloniaUI.Helpers;
 
-namespace UI.ER.AvaloniaUI
+namespace UI.ER.AvaloniaUI;
+
+class Program
 {
-    class Program
+    public static void Main(string[] args)
     {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        public static void Main(string[] args)
+        LogHelpers.ConfigureLogging();
+
+        try
         {
-            // Prevent ReactiveUI from crashing the app on unhandled exceptions
-            // (e.g., when pasting XML/HTML-like text triggers clipboard parsing errors on Windows)
-            RxApp.DefaultExceptionHandler = Observer.Create<Exception>(ex =>
-            {
-                System.Diagnostics.Debug.WriteLine($"[RxApp Unhandled Exception] {ex}");
-                // Log but don't crash
-            });
-
-            BuildAvaloniaApp()
-                // .With(new X11PlatformOptions { UseGpu = false })
-                .StartWithClassicDesktopLifetime(args);
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
+        catch (Exception ex)
+        {
+            LogHelpers.LogFatalAndRethrow(ex);
+        }
+        finally
+        {
+            LogHelpers.CloseAndFlush();
+        }
+    }
 
-
-
-
-        // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
-            =>
-            AppBuilder
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder
             .Configure<App>()
             .UsePlatformDetect()
             .LogToTrace()
-            .UseReactiveUI()
-            ;
-
-    }
+            .UseReactiveUI();
 }

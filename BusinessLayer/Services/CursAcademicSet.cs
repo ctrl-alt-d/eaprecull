@@ -18,7 +18,7 @@ namespace BusinessLayer.Services
 {
     public class CursAcademicSet :
         BLSet<Models.CursAcademic, Parms.EsActiuParms, Dtoo.CursAcademic>,
-        ICursAcademicSetProjectable
+        ICursAcademicSet
     {
         public CursAcademicSet(IDbContextFactory<AppDbContext> appDbContextFactory) : base(appDbContextFactory)
         {
