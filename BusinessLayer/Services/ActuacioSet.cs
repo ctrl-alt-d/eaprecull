@@ -98,12 +98,12 @@ namespace BusinessLayer.Services
 
         private IQueryable<Actuacio> MatchAlumneEsActiu(IQueryable<Actuacio> query, ActuacioSearchParms request)
         {
-            if (!request.AlumneEsActiu.HasValue ) 
+            if (!request.AlumneEsActiu.HasValue)
                 return query;
 
             return query.Where(model => model.Alumne.EsActiu);
         }
-       
+
 
         private IQueryable<Actuacio> MatchSearchString(IQueryable<Actuacio> query, ActuacioSearchParms request)
         {
@@ -122,8 +122,8 @@ namespace BusinessLayer.Services
                     EF.Functions.Like(model.Alumne.Tags, $"%{token}%") ||
 
                     // centre
-                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Nom, $"%{token}%"))||
-                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Codi, $"%{token}%"))||
+                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Nom, $"%{token}%")) ||
+                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Codi, $"%{token}%")) ||
 
                     // descripcions
                     EF.Functions.Like(model.ObservacionsTipusActuacio, $"%{token}%") ||

@@ -28,7 +28,7 @@ namespace UI.ER.AvaloniaUI.Converters
                 return result;
 
             return (DateTime?)null;
-        }        
+        }
     }
 
 

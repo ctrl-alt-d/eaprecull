@@ -3,7 +3,7 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
@@ -61,7 +61,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.GetBLOperation<ITipusActuacioSet>();
+            using var bl = SuperContext.Resolve<ITipusActuacioSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -87,7 +87,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.TipusActuacioUpdateParms(Id, Codi, Nom, EsActiu);
 
             // cridar backend
-            using var bl = SuperContext.GetBLOperation<ITipusActuacioUpdate>();
+            using var bl = SuperContext.Resolve<ITipusActuacioUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 

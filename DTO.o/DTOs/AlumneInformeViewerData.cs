@@ -16,6 +16,7 @@ namespace DTO.o.DTOs
             string nom,
             string cognoms,
             DateTime? dataNaixement,
+            string cursDarreraActualitzacio,
             string centreActual,
             string etapaActual,
             string nivellActual,
@@ -24,12 +25,14 @@ namespace DTO.o.DTOs
             DateTime? dataInformeNESENoNEE,
             string observacionsNESENoNEE,
             string tags,
+            bool desactualitzat,
             List<ActuacioInformeItem> actuacions)
         {
             Id = id;
             Nom = nom;
             Cognoms = cognoms;
             DataNaixement = dataNaixement;
+            CursDarreraActualitzacio = cursDarreraActualitzacio;
             CentreActual = centreActual;
             EtapaActual = etapaActual;
             NivellActual = nivellActual;
@@ -38,6 +41,7 @@ namespace DTO.o.DTOs
             DataInformeNESENoNEE = dataInformeNESENoNEE;
             ObservacionsNESENoNEE = observacionsNESENoNEE;
             Tags = tags;
+            Desactualitzat = desactualitzat;
             Actuacions = actuacions;
         }
 
@@ -45,6 +49,7 @@ namespace DTO.o.DTOs
         public string Nom { get; }
         public string Cognoms { get; }
         public DateTime? DataNaixement { get; }
+        public string CursDarreraActualitzacio { get; }
         public string CentreActual { get; }
         public string EtapaActual { get; }
         public string NivellActual { get; }
@@ -53,6 +58,7 @@ namespace DTO.o.DTOs
         public DateTime? DataInformeNESENoNEE { get; }
         public string ObservacionsNESENoNEE { get; }
         public string Tags { get; }
+        public bool Desactualitzat { get; }
         public List<ActuacioInformeItem> Actuacions { get; }
 
         // Propietats calculades per la UI
@@ -63,14 +69,14 @@ namespace DTO.o.DTOs
         public bool TeNESENoNEE => DataInformeNESENoNEE.HasValue;
         public string DataNESENoNEETxt => DataInformeNESENoNEE?.ToString("dd/MM/yyyy") ?? "-";
         public int TotalActuacions => Actuacions.Count;
-        
+
         // Temps total d'actuacions
         public int TotalMinuts => Actuacions.Sum(a => a.MinutsDuradaActuacio);
         public int TotalHores => TotalMinuts / 60;
         public int MinutsRestants => TotalMinuts % 60;
-        public string TempsTotalTxt => TotalMinuts > 0 
-            ? (TotalHores > 0 
-                ? $"{TotalHores}h {MinutsRestants}min" 
+        public string TempsTotalTxt => TotalMinuts > 0
+            ? (TotalHores > 0
+                ? $"{TotalHores}h {MinutsRestants}min"
                 : $"{MinutsRestants}min")
             : "-";
 

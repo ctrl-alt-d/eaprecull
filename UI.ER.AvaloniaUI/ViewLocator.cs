@@ -11,7 +11,7 @@ namespace UI.ER.AvaloniaUI
         {
             if (data is null)
                 return null;
-                
+
             var name = data.GetType().FullName!.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 

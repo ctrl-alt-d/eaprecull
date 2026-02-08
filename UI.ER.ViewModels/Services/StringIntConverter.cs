@@ -1,11 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
-using BusinessLayer.DI;
-using BusinessLayer.Abstract.Generic;
-using DataLayer.DI;
 using System;
 using System.Globalization;
 
-namespace UI.ER.AvaloniaUI.Services
+namespace UI.ER.ViewModels.Services
 {
     public static class StringIntConverter
     {

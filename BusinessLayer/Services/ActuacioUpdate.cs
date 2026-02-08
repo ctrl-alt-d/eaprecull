@@ -41,11 +41,11 @@ namespace BusinessLayer.Services
             =>
             ReferencesAreModify(
                 model,
-                x=>x.Alumne,
-                x=>x.TipusActuacio,
-                x=>x.CursActuacio,
-                x=>x.CentreAlMomentDeLactuacio,
-                x=>x.EtapaAlMomentDeLactuacio
+                x => x.Alumne,
+                x => x.TipusActuacio,
+                x => x.CursActuacio,
+                x => x.CentreAlMomentDeLactuacio,
+                x => x.EtapaAlMomentDeLactuacio
             );
 
         protected override async Task UpdateModel(Models.Actuacio model, ActuacioUpdateParms parm)

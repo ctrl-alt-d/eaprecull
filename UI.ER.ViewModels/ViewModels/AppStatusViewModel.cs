@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
@@ -41,9 +41,9 @@ namespace UI.ER.ViewModels.ViewModels
 
 
 
-            using var blActuacioSet = SuperContext.GetBLOperation<IActuacioSet>();
-            using var blAlumneSet = SuperContext.GetBLOperation<IAlumneSet>();
-            using var blCursAcademicSet = SuperContext.GetBLOperation<ICursAcademicSet>();
+            using var blActuacioSet = SuperContext.Resolve<IActuacioSet>();
+            using var blAlumneSet = SuperContext.Resolve<IAlumneSet>();
+            using var blCursAcademicSet = SuperContext.Resolve<ICursAcademicSet>();
 
             var dtoCursActual = await blCursAcademicSet.GetCursActiu();
 

@@ -3,7 +3,7 @@ using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
@@ -51,7 +51,8 @@ namespace UI.ER.ViewModels.ViewModels
             {
                 var update = new ActuacioCreateViewModel(alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
-                var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new Dtoi.EsActiuParms(true));
+                using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
+                var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
                 if (data != null)
@@ -74,18 +75,18 @@ namespace UI.ER.ViewModels.ViewModels
             var esActiu =
                 nomesAlumnesActius && !alumneId.HasValue ?  // si tenim id alumne el mostrem sempre
                 true :
-                (bool?)null;            
+                (bool?)null;
 
             // Preparar paràmetres al backend
             var Parms = new DTO.i.DTOs.ActuacioSearchParms(
                 take: 200,
                 searchString: searchString,
                 alumneId: alumneId,
-                alumneEsActiu: esActiu 
+                alumneEsActiu: esActiu
             );
 
             // Petició al backend            
-            using var bl = SuperContext.GetBLOperation<IActuacioSet>();
+            using var bl = SuperContext.Resolve<IActuacioSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 
@@ -98,7 +99,8 @@ namespace UI.ER.ViewModels.ViewModels
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             //
-            var cursActual_dto = await SuperContext.GetBLOperation<ICursAcademicSet>().FromPredicate(new Dtoi.EsActiuParms(true));
+            using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
+            var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
             // Tenim els resultats

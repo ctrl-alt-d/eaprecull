@@ -11,7 +11,7 @@ public class EtiquetaDescripcio : IEtiquetaDescripcio, IDTOo
         Descripcio = descripcio;
     }
 
-    public string Etiqueta {get; }
+    public string Etiqueta { get; }
 
-    public string Descripcio {get; }
+    public string Descripcio { get; }
 }

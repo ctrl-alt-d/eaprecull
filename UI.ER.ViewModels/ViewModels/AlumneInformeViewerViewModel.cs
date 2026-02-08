@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Abstract.Services;
 using DynamicData.Binding;
 using ReactiveUI;
-using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.Services;
 using Dtoo = DTO.o.DTOs;
 
 namespace UI.ER.ViewModels.ViewModels
@@ -39,6 +39,20 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _dataNaixement;
             private set => this.RaiseAndSetIfChanged(ref _dataNaixement, value);
+        }
+
+        private string _cursDarreraActualitzacio = string.Empty;
+        public string CursDarreraActualitzacio
+        {
+            get => _cursDarreraActualitzacio;
+            private set => this.RaiseAndSetIfChanged(ref _cursDarreraActualitzacio, value);
+        }
+
+        private bool _desactualitzat;
+        public bool Desactualitzat
+        {
+            get => _desactualitzat;
+            private set => this.RaiseAndSetIfChanged(ref _desactualitzat, value);
         }
 
         private string _centreActual = string.Empty;
@@ -172,7 +186,7 @@ namespace UI.ER.ViewModels.ViewModels
             HasError = false;
             BrokenRules.Clear();
 
-            using var bl = SuperContext.GetBLOperation<IAlumneInformeViewer>();
+            using var bl = SuperContext.Resolve<IAlumneInformeViewer>();
             var result = await bl.Run(_alumneId);
 
             if (result.BrokenRules.Any())
@@ -192,6 +206,8 @@ namespace UI.ER.ViewModels.ViewModels
         {
             NomComplet = data.NomComplet;
             DataNaixement = data.DataNaixementTxt;
+            CursDarreraActualitzacio = data.CursDarreraActualitzacio;
+            Desactualitzat = data.Desactualitzat;
             CentreActual = data.CentreActual;
             EtapaActual = data.EtapaActual;
             NivellActual = data.NivellActual;
@@ -216,7 +232,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoExportarWord()
         {
             ResultatExportacio = "";
-            using var bl = SuperContext.GetBLOperation<IAlumneInforme>();
+            using var bl = SuperContext.Resolve<IAlumneInforme>();
             var resultat = await bl.Run(_alumneId);
             ResultatExportacio =
                 resultat.Data != null ?

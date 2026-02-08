@@ -66,21 +66,21 @@
                                     Label="Curs Darrera Actualització Dades"
                                     LookupCommand="{Binding CursDarreraActualitacioDadesLookupCommand}"
                                     ClearCommand="{Binding CursDarreraActualitacioDadesClearCommand}" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Margin="6,4"
-                                    Text="{Binding NivellActual}"
-                                    UseFloatingWatermark="True"
-                                    Classes="Filled"
-                                    wpf:TextFieldAssist.Label="Nivell actual (exs: 1, 1r, AO, ...)" />
+                        <controls:LookupInput Grid.Row="0" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding CentreTxt}"
+                                    Label="Centre on estudia l'alumne"
+                                    LookupCommand="{Binding CentreLookupCommand}"
+                                    ClearCommand="{Binding CentreClearCommand}" />
                         <controls:LookupInput Grid.Row="1" Grid.Column="0" Margin="6,4"
                                     Text="{Binding EtapaActualTxt}"
                                     Label="Etapa que cursa l'alumne"
                                     LookupCommand="{Binding EtapaActualLookupCommand}"
                                     ClearCommand="{Binding EtapaActualClearCommand}" />
-                        <controls:LookupInput Grid.Row="1" Grid.Column="1" Margin="6,4"
-                                    Text="{Binding CentreTxt}"
-                                    Label="Centre on estudia l'alumne"
-                                    LookupCommand="{Binding CentreLookupCommand}"
-                                    ClearCommand="{Binding CentreClearCommand}" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="6,4"
+                                    Text="{Binding NivellActual}"
+                                    UseFloatingWatermark="True"
+                                    Classes="Filled"
+                                    wpf:TextFieldAssist.Label="Nivell actual (exs: 1, 1r, AO, ...)" />
                     </Grid>
                 </StackPanel>
             </Border>
