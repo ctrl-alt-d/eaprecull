@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CommonInterfaces;
 using DTO.o.Interfaces;
 
@@ -7,6 +8,6 @@ namespace BusinessLayer.Abstract.Generic
         : IBLOperation
             where TDTOo : IDTOo, IEtiquetaDescripcio
     {
-        OperationResult<TDTOo> Delete(int id);
+        Task<OperationResult<TDTOo>> Delete(IId id);
     }
 }
