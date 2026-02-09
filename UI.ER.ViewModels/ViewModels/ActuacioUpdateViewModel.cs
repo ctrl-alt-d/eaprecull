@@ -31,7 +31,8 @@ namespace UI.ER.ViewModels.ViewModels
 
             // --- Delete ---
             ShowDeleteConfirmation = new Interaction<string, bool>();
-            DeleteCommand = ReactiveCommand.CreateFromTask(DoDelete);
+            var canDelete = this.WhenAnyValue(x => x.DangerModeEnabled);
+            DeleteCommand = ReactiveCommand.CreateFromTask(DoDelete, canDelete);
 
             // --- configura lookup Alumne ---
             ShowAlumneLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -275,6 +276,14 @@ namespace UI.ER.ViewModels.ViewModels
         {
             get => _DescripcioActuacio;
             set => this.RaiseAndSetIfChanged(ref _DescripcioActuacio, value);
+        }
+
+        //
+        private bool _DangerModeEnabled = false;
+        public bool DangerModeEnabled
+        {
+            get => _DangerModeEnabled;
+            set => this.RaiseAndSetIfChanged(ref _DangerModeEnabled, value);
         }
         //
         private void DTO2ModelView(Dtoo.Actuacio? data)
