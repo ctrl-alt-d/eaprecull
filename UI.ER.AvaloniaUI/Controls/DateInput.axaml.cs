@@ -13,7 +13,7 @@ namespace UI.ER.AvaloniaUI.Controls
     public partial class DateInput : UserControl
     {
         private bool _isUpdating = false;
-        private const string DateFormat = "d.M.yyyy";
+        private const string DateFormat = "dd.MM.yyyy";
         private Avalonia.Controls.Calendar? _calendar;
         private Button? _calendarButton;
         private Button? _clearButton;

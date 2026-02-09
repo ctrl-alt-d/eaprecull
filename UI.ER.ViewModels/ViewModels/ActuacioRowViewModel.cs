@@ -116,7 +116,7 @@ namespace UI.ER.ViewModels.ViewModels
             Descripcio = ActuacioDto.Descripcio;
             CentreActuacio = ActuacioDto.CentreAlMomentDeLactuacio.Etiqueta;
             CursActuacio = ActuacioDto.CursActuacio.Etiqueta;
-            DataTxt = ActuacioDto.MomentDeLactuacio.ToString("d.M.yyyy");
+            DataTxt = ActuacioDto.MomentDeLactuacio.ToString("dd.MM.yyyy");
             TipusActuacio = ActuacioDto.TipusActuacio.Etiqueta;
             DuradaTxt = ActuacioDto.MinutsDuradaActuacio > 0 ? $"{ActuacioDto.MinutsDuradaActuacio} min" : string.Empty;
             DescripcioActuacio = ActuacioDto.DescripcioActuacio ?? string.Empty;

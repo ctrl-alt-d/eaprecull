@@ -12,7 +12,7 @@ namespace UI.ER.AvaloniaUI.Converters
         {
             var date = (DateTime?)value;
 
-            return date?.ToString("d.M.yyyy") ?? "";
+            return date?.ToString("dd.MM.yyyy") ?? "";
 
         }
 
@@ -22,7 +22,7 @@ namespace UI.ER.AvaloniaUI.Converters
 
             var valueTxt = value?.ToString()?.Trim() ?? "";
 
-            bool success = DateTime.TryParseExact(valueTxt, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out result);
+            bool success = DateTime.TryParseExact(valueTxt, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out result);
 
             if (success)
                 return result;

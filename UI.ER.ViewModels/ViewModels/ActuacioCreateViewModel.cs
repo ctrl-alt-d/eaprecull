@@ -64,7 +64,7 @@ namespace UI.ER.ViewModels.ViewModels
             CursActuacioId = cursActual?.Id;
             CursActuacioTxt = cursActual?.Etiqueta ?? string.Empty;
 
-            MomentDeLactuacioTxt = DateTime.Now.ToString("d.M.yyyy");
+            MomentDeLactuacioTxt = DateTime.Now.ToString("dd.MM.yyyy");
 
             await OnChangeAlumne(alumneId);
         }
@@ -279,7 +279,7 @@ namespace UI.ER.ViewModels.ViewModels
             ObservacionsTipusActuacio = data.ObservacionsTipusActuacio;
 
             MomentDeLactuacio = data.MomentDeLactuacio;
-            MomentDeLactuacioTxt = data.MomentDeLactuacio.ToString("d.M.yyyy"); // Limitacions avalonia
+            MomentDeLactuacioTxt = data.MomentDeLactuacio.ToString("dd.MM.yyyy"); // Limitacions avalonia
 
             CursActuacioId = data.CursActuacio.Id;
             CursActuacioTxt = data.CursActuacio.Etiqueta;

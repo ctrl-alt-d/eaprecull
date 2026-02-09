@@ -9,7 +9,7 @@ namespace UI.ER.ViewModels.Services
         {
             var date = (DateTime?)value;
 
-            return date?.ToString("d.M.yyyy") ?? "";
+            return date?.ToString("dd.MM.yyyy") ?? "";
 
         }
 
@@ -17,7 +17,7 @@ namespace UI.ER.ViewModels.Services
         {
             var valueTxt = value?.ToString()?.Trim() ?? "";
 
-            bool success = DateTime.TryParseExact(valueTxt, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime result);
+            bool success = DateTime.TryParseExact(valueTxt, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime result);
 
             if (success)
                 return result;
@@ -33,7 +33,7 @@ namespace UI.ER.ViewModels.Services
             }
 
             var valueTxt = value?.ToString()?.Trim() ?? "";
-            bool success = DateTime.TryParseExact(valueTxt, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _);
+            bool success = DateTime.TryParseExact(valueTxt, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out _);
             return success;
         }
     }

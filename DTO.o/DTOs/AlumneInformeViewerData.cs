@@ -63,11 +63,11 @@ namespace DTO.o.DTOs
 
         // Propietats calculades per la UI
         public string NomComplet => $"{Cognoms}, {Nom}";
-        public string DataNaixementTxt => DataNaixement?.ToString("d.M.yyyy") ?? "-";
+        public string DataNaixementTxt => DataNaixement?.ToString("dd.MM.yyyy") ?? "-";
         public bool TeNESENEE => DataInformeNESENEE.HasValue;
-        public string DataNESENEETxt => DataInformeNESENEE?.ToString("d.M.yyyy") ?? "-";
+        public string DataNESENEETxt => DataInformeNESENEE?.ToString("dd.MM.yyyy") ?? "-";
         public bool TeNESENoNEE => DataInformeNESENoNEE.HasValue;
-        public string DataNESENoNEETxt => DataInformeNESENoNEE?.ToString("d.M.yyyy") ?? "-";
+        public string DataNESENoNEETxt => DataInformeNESENoNEE?.ToString("dd.MM.yyyy") ?? "-";
         public int TotalActuacions => Actuacions.Count;
 
         // Temps total d'actuacions
@@ -126,7 +126,7 @@ namespace DTO.o.DTOs
         public string DescripcioActuacio { get; }
 
         // Propietats calculades per la UI
-        public string DataTxt => MomentDeLactuacio.ToString("d.M.yyyy");
+        public string DataTxt => MomentDeLactuacio.ToString("dd.MM.yyyy");
         public string DuradaTxt => MinutsDuradaActuacio > 0 ? $"{MinutsDuradaActuacio} min" : "-";
         public string ContextTxt => $"{CentreAlMomentDeLactuacio} · {EtapaAlMomentDeLactuacio} · {NivellAlMomentDeLactuacio}";
     }
