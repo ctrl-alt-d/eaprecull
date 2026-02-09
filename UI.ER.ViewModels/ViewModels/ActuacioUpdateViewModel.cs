@@ -5,6 +5,7 @@ using CommonInterfaces;
 using System.Threading.Tasks;
 using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
+using BusinessLayer.Abstract;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
 using System.Linq;
@@ -20,12 +21,17 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected virtual IActuacioUpdate BLUpdate() => SuperContext.Resolve<IActuacioUpdate>();
+        protected virtual IActuacioDelete BLDelete() => SuperContext.Resolve<IActuacioDelete>();
         public ActuacioUpdateViewModel(int id)
         {
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);
 
             SubmitCommand = ReactiveCommand.CreateFromTask(UpdateData, this.IsValid());
+
+            // --- Delete ---
+            ShowDeleteConfirmation = new Interaction<string, bool>();
+            DeleteCommand = ReactiveCommand.CreateFromTask(DoDelete);
 
             // --- configura lookup Alumne ---
             ShowAlumneLookup = new Interaction<Unit, IIdEtiquetaDescripcio?>();
@@ -440,8 +446,26 @@ namespace UI.ER.ViewModels.ViewModels
             await Task.CompletedTask;
         }
 
-        // ----
+        // --- Delete ---
+        public ReactiveCommand<Unit, OperationResult<Dtoo.Actuacio>?> DeleteCommand { get; }
+        public Interaction<string, bool> ShowDeleteConfirmation { get; }
+        private async Task<OperationResult<Dtoo.Actuacio>?> DoDelete()
+        {
+            var confirmat = await ShowDeleteConfirmation.Handle(
+                $"Segur que vols esborrar aquesta actuació de {AlumneTxt}?");
 
+            if (!confirmat)
+                return null;
+
+            BrokenRules.Clear();
+
+            using var bl = BLDelete();
+            var result = await bl.Delete(new Dtoi.IdParms(Id));
+
+            BrokenRules.AddRange(result.BrokenRules.Select(x => x.Message));
+
+            return result;
+        }
 
     }
 }

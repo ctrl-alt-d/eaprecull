@@ -121,6 +121,19 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
+            <!-- ==================== BOTÓ ESBORRAR ==================== -->
+            <Button
+                Margin="6,20,6,10"
+                Classes="Flat"
+                Foreground="#D32F2F"
+                Command="{Binding DeleteCommand}"
+                ToolTip.Tip="Esborrar aquesta actuació">
+                <StackPanel Orientation="Horizontal">
+                    <avalonia:MaterialIcon Kind="DeleteOutline" Width="20" Height="20" />
+                    <TextBlock Margin="8,0,0,0" Text="Esborrar" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
             <!-- Espai perquè el FAB no tapi contingut -->
             <Border Height="80" />
 

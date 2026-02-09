@@ -9,12 +9,15 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData.Binding;
+using System.Reactive.Disposables;
 
 namespace UI.ER.ViewModels.ViewModels
 {
 
     public class ActuacioSetViewModel : ViewModelBase
     {
+        private readonly CompositeDisposable _itemSubscriptions = new();
+
         public bool ModeLookup { get; }
         public ActuacioSetViewModel(bool modeLookup = false, int? alumneId = null)
         {
@@ -57,7 +60,7 @@ namespace UI.ER.ViewModels.ViewModels
 
                 if (data != null)
                 {
-                    var item = new ActuacioRowViewModel(data, ModeLookup);
+                    var item = CreateRowViewModel(data);
                     MyItems.Insert(0, item);
                 }
             });
@@ -70,6 +73,7 @@ namespace UI.ER.ViewModels.ViewModels
         protected virtual async void LoadActuacioSet(bool nomesAlumnesActius, int? alumneId, string searchString)
         {
             Loading = true;
+            _itemSubscriptions.Clear();
             MyItems.Clear();
 
             var esActiu =
@@ -107,7 +111,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new ActuacioRowViewModel(x, ModeLookup));
+                .Select(x => CreateRowViewModel(x));
 
             MyItems.AddRange(newItems);
 
@@ -161,6 +165,34 @@ namespace UI.ER.ViewModels.ViewModels
         public ICommand Create { get; }
         public Interaction<ActuacioCreateViewModel, Dtoo.Actuacio?> ShowDialog { get; }
 
+        /// <summary>
+        /// Crea un RowViewModel i es subscriu al seu event WasDeleted per eliminar-lo de la llista
+        /// </summary>
+        private ActuacioRowViewModel CreateRowViewModel(Dtoo.Actuacio data)
+        {
+            var item = new ActuacioRowViewModel(data, ModeLookup);
+
+            // Subscriure's a l'event d'esborrat
+            var subscription = item.WasDeleted
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(deletedId => RemoveItemById(deletedId));
+
+            _itemSubscriptions.Add(subscription);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Elimina un item de la llista pel seu Id
+        /// </summary>
+        private void RemoveItemById(int id)
+        {
+            var itemToRemove = MyItems.FirstOrDefault(x => x.Id == id);
+            if (itemToRemove != null)
+            {
+                MyItems.Remove(itemToRemove);
+            }
+        }
 
     }
 }

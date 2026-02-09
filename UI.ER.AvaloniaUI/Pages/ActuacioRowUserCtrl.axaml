@@ -28,6 +28,21 @@
             </Style.Animations>
         </Style>
 
+        <Style Selector="Border.Desapareix">
+            <Style.Animations>
+                <Animation Duration="0:0:0.4" FillMode="Forward"> 
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="1.0"/>
+                        <Setter Property="TranslateTransform.X" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0.0"/>
+                        <Setter Property="TranslateTransform.X" Value="-50"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
     </UserControl.Styles>
 
     <Border BorderBrush="White"
@@ -36,7 +51,9 @@
             Padding="10"
             Margin="5,0,20,10"
             Classes="Apareix"
-            BoxShadow="5 5 10 2 Gray">
+            Classes.Desapareix="{Binding IsDeleting}"
+            BoxShadow="5 5 10 2 Gray"
+            RenderTransform="translate(0,0)">
 
         <DockPanel>
 
