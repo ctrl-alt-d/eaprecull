@@ -48,7 +48,7 @@ namespace UI.ER.AvaloniaUI.Pages
                         DataContext = interaction.Input
                     };
 
-                    var result = await dialog.ShowDialog<Dtoo.Actuacio?>(GetWindow());
+                    var result = await dialog.ShowDialog<Dtoo.EditDialogResult<Dtoo.Actuacio>?>(GetWindow());
 
                     interaction.SetOutput(result);
                 }))

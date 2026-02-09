@@ -11,12 +11,12 @@ using CommonInterfaces;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using System.Reactive;
+using UI.ER.AvaloniaUI.Helpers;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class ActuacioUpdateWindow : ReactiveWindow<ActuacioUpdateViewModel>
     {
-        public OperationResult<Dtoo.Actuacio> Result { get; set; } = default!;
         public ActuacioUpdateWindow()
         {
             this.InitializeComponent();
@@ -30,6 +30,21 @@ namespace UI.ER.AvaloniaUI.Pages
                     .SubmitCommand
                     .Subscribe(CloseIfSaved)
                 );
+
+                // Tancar si s'ha esborrat
+                d(
+                    ViewModel!
+                    .DeleteCommand
+                    .Subscribe(CloseIfDeleted)
+                );
+
+                // Diàleg de confirmació per esborrar
+                d(ViewModel!.ShowDeleteConfirmation.RegisterHandler(async interaction =>
+                {
+                    var window = (Window)this.VisualRoot!;
+                    var result = await ConfirmationDialog.Show(window, interaction.Input, "Esborrar actuació");
+                    interaction.SetOutput(result);
+                }));
 
                 // Lookups
                 d(ViewModel!.ShowAlumneLookup.RegisterHandler(async interaction =>
@@ -93,7 +108,16 @@ namespace UI.ER.AvaloniaUI.Pages
         private void CloseIfSaved(Actuacio? obj)
         {
             if (obj != null)
-                Close(obj);
+                Close(EditDialogResult<Actuacio>.Updated(obj));
+        }
+
+        private void CloseIfDeleted(OperationResult<Actuacio>? result)
+        {
+            // Si result és null, l'usuari ha cancel·lat
+            // Si té BrokenRules, hi ha hagut un error (mostrat al ViewModel)
+            // Si Data no és null, s'ha esborrat correctament
+            if (result?.Data != null)
+                Close(EditDialogResult<Actuacio>.Deleted(result.Data.Id));
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

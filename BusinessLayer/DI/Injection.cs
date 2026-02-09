@@ -50,6 +50,7 @@ namespace BusinessLayer.DI
             services.AddTransient<IActuacioSet, ActuacioSet>();
             services.AddTransient<IActuacioCreate, ActuacioCreate>();
             services.AddTransient<IActuacioUpdate, ActuacioUpdate>();
+            services.AddTransient<IActuacioDelete, ActuacioDelete>();
 
             // altres
             services.AddTransient<IImportAll, ImportAll>();

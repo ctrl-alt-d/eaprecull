@@ -121,6 +121,37 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
+            <!-- ==================== DANGER ZONE ==================== -->
+            <Border Background="#FFEBEE" CornerRadius="8" Padding="16" Margin="0,16,0,0"
+                    BorderBrush="#FFCDD2" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <avalonia:MaterialIcon Kind="AlertOutline" Width="18" Height="18" 
+                                               Foreground="#C62828" Margin="0,0,8,0"/>
+                        <TextBlock Text="Zona de perill" Classes="Body2" FontWeight="SemiBold"
+                                   Foreground="#C62828"/>
+                    </StackPanel>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ToggleSwitch IsChecked="{Binding DangerModeEnabled}" 
+                                          OffContent="Desactivat" OnContent="Activat"
+                                          Margin="0,0,12,0"/>
+                            <Button
+                                Padding="8,4"
+                                Background="#D32F2F"
+                                Foreground="White"
+                                Command="{Binding DeleteCommand}"
+                                ToolTip.Tip="Esborrar aquesta actuació">
+                                <StackPanel Orientation="Horizontal">
+                                    <avalonia:MaterialIcon Kind="DeleteOutline" Width="16" Height="16" />
+                                    <TextBlock Margin="6,0,0,0" Text="Esborrar" VerticalAlignment="Center" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <!-- Espai perquè el FAB no tapi contingut -->
             <Border Height="80" />
 

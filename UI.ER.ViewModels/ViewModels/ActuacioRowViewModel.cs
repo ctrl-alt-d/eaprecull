@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using System.Reactive.Subjects;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
@@ -11,6 +12,7 @@ using System.Linq;
 using DynamicData.Binding;
 using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
+using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -128,14 +130,40 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.AddRange(brokenRules.Select(x => x.Message));
         }
 
+        // --- Esborrat ---
+        private readonly Subject<int> _wasDeleted = new();
+        public IObservable<int> WasDeleted => _wasDeleted.AsObservable();
+
+        private bool _IsDeleting;
+        public bool IsDeleting
+        {
+            get => _IsDeleting;
+            private set => this.RaiseAndSetIfChanged(ref _IsDeleting, value);
+        }
+
         // --- Obrir Finestra Edició ---
         public ICommand UpdateCommand { get; }
-        public Interaction<ActuacioUpdateViewModel, Dtoo.Actuacio?> ShowUpdateDialog { get; } = new();
+        public Interaction<ActuacioUpdateViewModel, Dtoo.EditDialogResult<Dtoo.Actuacio>?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
             var update = new ActuacioUpdateViewModel(Id);
-            var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            var result = await ShowUpdateDialog.Handle(update);
+
+            if (result == null) return;
+
+            if (result.WasUpdated && result.Data != null)
+            {
+                DTO2ModelView(result.Data);
+            }
+            else if (result.WasDeleted && result.DeletedId.HasValue)
+            {
+                // Activar animació de fade out
+                IsDeleting = true;
+                // Esperar que acabi l'animació (400ms)
+                await Task.Delay(400);
+                // Notificar per eliminar de la llista
+                _wasDeleted.OnNext(result.DeletedId.Value);
+            }
         }
 
         // --- Seleccionar si estem en mode lookup ---
