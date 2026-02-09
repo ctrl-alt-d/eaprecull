@@ -95,7 +95,7 @@
             </ItemsControl>
 
             <!-- ==================== RESULTATS ==================== -->
-            <ListBox Margin="8,4,8,8"
+            <ListBox Margin="8,4,8,80"
                      ItemsSource="{Binding MyItems, Mode=OneWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
