@@ -17,16 +17,16 @@ jobs:
         dotnet-version: '10.0.x'
     
     - name: Build for Linux
-      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r linux-x64 --configuration ReleaseComplete
+      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r linux-x64 --configuration ReleaseComplete --self-contained true
     
     - name: Build for Windows
-      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r win-x64 --configuration ReleaseComplete
+      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r win-x64 --configuration ReleaseComplete --self-contained true
     
     - name: Build for macOS (Apple Silicon)
-      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r osx-arm64 --configuration ReleaseComplete
+      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r osx-arm64 --configuration ReleaseComplete --self-contained true
     
     - name: Build for macOS (Intel)
-      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r osx-x64 --configuration ReleaseComplete
+      run: dotnet publish UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj -r osx-x64 --configuration ReleaseComplete --self-contained true
     
     - name: Create ZIP for Linux
       run: |
