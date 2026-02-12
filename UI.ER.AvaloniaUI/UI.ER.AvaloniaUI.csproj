@@ -3,6 +3,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <!-- SharpDocx usa Roslyn per compilar plantilles dinàmicament i necessita
+         que els assemblies del runtime siguin a disc (Assembly.Location vàlid).
+         Sense això, PublishSingleFile fa que Location retorni "" i falla. -->
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />
