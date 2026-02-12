@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace BusinessLayer.Common
 {
@@ -68,6 +69,7 @@ namespace BusinessLayer.Common
             }
             catch (Exception e)
             {
+                Log.Error(e, "Error intern no esperat (Update)");
                 throw new BrokenRuleException($"Error intern no esperat.", e);
             }
         }

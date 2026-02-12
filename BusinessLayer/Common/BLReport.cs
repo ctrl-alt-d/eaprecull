@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace BusinessLayer.Common
 {
@@ -39,6 +40,7 @@ namespace BusinessLayer.Common
             }
             catch (Exception e)
             {
+                Log.Error(e, "Error generant l'informe");
                 var brokenRules = new List<BrokenRule> { new BrokenRule($"Error generant l'informe: {e.Message}") };
                 return new OperationResult<TResult>(brokenRules);
             }
