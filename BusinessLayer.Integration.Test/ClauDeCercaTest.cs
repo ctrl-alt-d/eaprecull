@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("martí")]
         public async Task TrobaLAlumneAmbAccentSiguiComSigui(string cercat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: "Martí", cognoms: "Peñíscola Çabater");
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -45,7 +45,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("Peñíscola")]
         public async Task TreuTambeLaEnyaILaCedella(string cercat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: "Martí", cognoms: "Peñíscola Çabater");
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -62,7 +62,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("lAnna", "l'Anna")]       // sense apòstrof
         public async Task LApostrofSEscriuDeMoltesManeresIVolDirElMateix(string cercat, string desat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: desat, cognoms: "Puig");
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -81,7 +81,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("Marti", "Mart\u200Bi")]         // amplada zero, igual d'invisible
         public async Task ElsSeparadorsInvisiblesIElsQueSEscriuenDeDuesManeres(string cercat, string desat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: "Nom", cognoms: desat);
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -98,7 +98,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("Encyclopaedia", "Encyclop\u00E6dia")]
         public async Task LesLletresAmbTracILesLigaturesTambe(string cercat, string desat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: "Nom", cognoms: desat);
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -113,7 +113,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("Mart%")]
         public async Task ElsComodinsEscritsAlCercadorSonTextILlest(string cercat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: "Martí", cognoms: "Peñíscola Çabater");
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -125,7 +125,7 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public async Task NoAfluixaLaCercaFinsAFerQueTotHiLligui()
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnAlumne(provider, nom: "Martí", cognoms: "Peñíscola Çabater");
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
@@ -139,7 +139,7 @@ namespace BusinessLayer.Integration.Test
         [InlineData("DESCRIPCIÓ")]
         public async Task LaCercaDActuacionsTambeIgnoraElsAccents(string cercat)
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             await UnaActuacio(provider);
 
             var trobats = await provider.GetRequiredService<IActuacioSet>()
@@ -189,24 +189,5 @@ namespace BusinessLayer.Integration.Test
             return (centre.Id, curs.Id, etapa.Id, tipus.Id);
         }
 
-        private static ServiceProvider Provider()
-        {
-            var fitxer = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString("N")[..8] + ".db");
-
-            var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt =>
-                opt.UseSqlite($"Data Source={fitxer}")
-                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
-            services.BusinessLayerConfigureServices();
-
-            var provider = services.BuildServiceProvider();
-
-            provider.GetRequiredService<IDbContextFactory<AppDbContext>>()
-                .CreateDbContext()
-                .Database
-                .Migrate();
-
-            return provider;
-        }
     }
 }

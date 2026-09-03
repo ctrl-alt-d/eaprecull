@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,7 +75,7 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public async Task UnaAltaEmetLesReferenciesDelDtoCreat()
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             var canvis = Escolta(provider);
 
             var centre = await provider.GetRequiredService<ICentreCreate>()
@@ -89,7 +89,7 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public async Task UnaModificacioEmetLesReferenciesDAbansIDeDespres()
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
 
             var centre = await provider.GetRequiredService<ICentreCreate>()
                 .Create(new DTO.i.DTOs.CentreCreateParms(codi: "123", nom: "Pepe", esActiu: true));
@@ -108,7 +108,7 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public async Task ActivarIDesactivarTambeEmet()
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
 
             var centre = await provider.GetRequiredService<ICentreCreate>()
                 .Create(new DTO.i.DTOs.CentreCreateParms(codi: "123", nom: "Pepe", esActiu: true));
@@ -127,7 +127,7 @@ namespace BusinessLayer.Integration.Test
         {
             // El motiu pel qual BLUpdate calcula el DTO previ: amb les referències del DTO
             // nou només, el comptador de l'alumne d'origen es quedaria alt.
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             var (actuacioId, origen, desti, parms) = await UnaActuacioIDosAlumnes(provider);
 
             var canvis = Escolta(provider);
@@ -143,7 +143,7 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public async Task UnaBaixaEmetLesReferenciesDeLActuacioEsborrada()
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             var (actuacioId, origen, _, _) = await UnaActuacioIDosAlumnes(provider);
 
             var canvis = Escolta(provider);
@@ -160,7 +160,7 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public async Task UnaOperacioMassivaDemanaQueEsRefresquiTot()
         {
-            using var provider = Provider();
+            using var provider = EntornDeTest.Nou();
             var canvis = Escolta(provider);
 
             await provider.GetRequiredService<IAlumneSyncActiuByCentre>().Run();
@@ -215,25 +215,6 @@ namespace BusinessLayer.Integration.Test
             return canvis;
         }
 
-        private static ServiceProvider Provider()
-        {
-            var fitxer = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString("N")[..8] + ".db");
-
-            var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt =>
-                opt.UseSqlite($"Data Source={fitxer}")
-                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
-            services.BusinessLayerConfigureServices();
-
-            var provider = services.BuildServiceProvider();
-
-            provider.GetRequiredService<IDbContextFactory<AppDbContext>>()
-                .CreateDbContext()
-                .Database
-                .Migrate();
-
-            return provider;
-        }
 
         /// <summary>Les operacions concretes del BusinessLayer.</summary>
         private static IEnumerable<Type> Operacions()
