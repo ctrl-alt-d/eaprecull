@@ -9,13 +9,23 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using CommonInterfaces;
+using Microsoft.Extensions.DependencyInjection;
+using UI.ER.AvaloniaUI.Services;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class AlumneRowUserCtrl : ReactiveUserControl<AlumneRowViewModel>
     {
-        public AlumneRowUserCtrl()
+        private readonly IWindowFactory _windows;
+
+        // El ListBox.ItemTemplate instancia aquest control des de l'AXAML, no pas
+        // el contenidor: cal un constructor sense paràmetres que resolgui la factory.
+        public AlumneRowUserCtrl() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public AlumneRowUserCtrl(IWindowFactory windows)
         {
+            _windows = windows;
+
             InitializeComponent();
 
             this.WhenActivated(disposables =>
@@ -46,10 +56,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new AlumneUpdateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
+                    var dialog = _windows.GetWith<AlumneUpdateWindow>(interaction.Input);
 
                     var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
                     interaction.SetOutput(result);
@@ -65,10 +72,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new ActuacioSetWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
+                    var dialog = _windows.GetWith<ActuacioSetWindow>(interaction.Input);
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
@@ -83,10 +87,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowInformeViewerDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new AlumneInformeViewerWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
+                    var dialog = _windows.GetWith<AlumneInformeViewerWindow>(interaction.Input);
                     await dialog.ShowDialog(GetWindow());
                     interaction.SetOutput(System.Reactive.Unit.Default);
                 }))

@@ -7,13 +7,23 @@ using Dtoo = DTO.o.DTOs;
 using ReactiveUI.Avalonia;
 using System;
 using System.Reactive.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using UI.ER.AvaloniaUI.Services;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class CursAcademicRowUserCtrl : ReactiveUserControl<CursAcademicRowViewModel>
     {
-        public CursAcademicRowUserCtrl()
+        private readonly IWindowFactory _windows;
+
+        // El ListBox.ItemTemplate instancia aquest control des de l'AXAML, no pas
+        // el contenidor: cal un constructor sense paràmetres que resolgui la factory.
+        public CursAcademicRowUserCtrl() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public CursAcademicRowUserCtrl(IWindowFactory windows)
         {
+            _windows = windows;
+
             InitializeComponent();
 
             this.WhenActivated(disposables =>
@@ -41,10 +51,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .Where(vm => vm != null)
                 .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new CursAcademicUpdateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
+                    var dialog = _windows.GetWith<CursAcademicUpdateWindow>(interaction.Input);
 
                     var result = await dialog.ShowDialog<Dtoo.CursAcademic?>(GetWindow());
                     interaction.SetOutput(result);

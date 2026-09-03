@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportData", "ImportData\Im
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.ER.ViewModels", "UI.ER.ViewModels\UI.ER.ViewModels.csproj", "{7A1A5FE1-DD8E-4BFA-9A09-3546D3FB1C3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.ER.AvaloniaUI.Test", "UI.ER.AvaloniaUI.Test\UI.ER.AvaloniaUI.Test.csproj", "{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,18 @@ Global
 		{7A1A5FE1-DD8E-4BFA-9A09-3546D3FB1C3E}.Release|x64.Build.0 = Release|Any CPU
 		{7A1A5FE1-DD8E-4BFA-9A09-3546D3FB1C3E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7A1A5FE1-DD8E-4BFA-9A09-3546D3FB1C3E}.Release|x86.Build.0 = Release|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Debug|x64.Build.0 = Debug|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Debug|x86.Build.0 = Debug|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Release|x64.ActiveCfg = Release|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Release|x64.Build.0 = Release|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{F59D1CE3-C47C-4491-897D-6B7D19A7A5E0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

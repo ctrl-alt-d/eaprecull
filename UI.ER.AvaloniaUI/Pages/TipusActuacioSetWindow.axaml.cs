@@ -8,13 +8,24 @@ using UI.ER.ViewModels.ViewModels;
 using Dtoo = DTO.o.DTOs;
 using System.Reactive.Linq;
 using System.Linq;
+using UI.ER.AvaloniaUI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class TipusActuacioSetWindow : ReactiveWindow<TipusActuacioSetViewModel>
     {
-        public TipusActuacioSetWindow()
+        private readonly IWindowFactory _windows;
+
+        // Constructor pont: el manté el carregador XAML en temps d'execució i el
+        // previsualitzador d'Avalonia, que instancien la vista sense passar pel
+        // contenidor. Encadena amb el de DI, així les dues vies deixen _windows a punt.
+        public TipusActuacioSetWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public TipusActuacioSetWindow(IWindowFactory windows)
         {
+            _windows = windows;
+
             InitializeComponent();
 
             this.WhenActivated(disposables =>
@@ -30,10 +41,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 .WhenAnyValue(x => x.ViewModel)
                 .Subscribe(vm => vm!.ShowDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new TipusActuacioCreateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
+                    var dialog = _windows.GetWith<TipusActuacioCreateWindow>(interaction.Input);
 
                     var result = await dialog.ShowDialog<Dtoo.TipusActuacio?>(GetWindow());
                     interaction.SetOutput(result);

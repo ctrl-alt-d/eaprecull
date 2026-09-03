@@ -12,13 +12,24 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using System.Reactive;
 using UI.ER.AvaloniaUI.Helpers;
+using UI.ER.AvaloniaUI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class ActuacioUpdateWindow : ReactiveWindow<ActuacioUpdateViewModel>
     {
-        public ActuacioUpdateWindow()
+        private readonly IWindowFactory _windows;
+
+        // Constructor pont: el manté el carregador XAML en temps d'execució i el
+        // previsualitzador d'Avalonia, que instancien la vista sense passar pel
+        // contenidor. Encadena amb el de DI, així les dues vies deixen _windows a punt.
+        public ActuacioUpdateWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public ActuacioUpdateWindow(IWindowFactory windows)
         {
+            _windows = windows;
+
             this.InitializeComponent();
 
             this.WhenActivated(d =>
@@ -49,10 +60,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 // Lookups
                 d(ViewModel!.ShowAlumneLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new AlumneSetWindow()
-                    {
-                        DataContext = new AlumneSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<AlumneSetWindow>(new AlumneSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
@@ -60,10 +68,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 }));
                 d(ViewModel!.ShowTipusActuacioLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new TipusActuacioSetWindow()
-                    {
-                        DataContext = new TipusActuacioSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<TipusActuacioSetWindow>(new TipusActuacioSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
@@ -71,10 +76,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 }));
                 d(ViewModel!.ShowCentreLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new CentreSetWindow()
-                    {
-                        DataContext = new CentreSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<CentreSetWindow>(new CentreSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
@@ -82,10 +84,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 }));
                 d(ViewModel!.ShowEtapaAlMomentDeLactuacioLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new EtapaSetWindow()
-                    {
-                        DataContext = new EtapaSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<EtapaSetWindow>(new EtapaSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
@@ -93,10 +92,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 }));
                 d(ViewModel!.ShowCursActuacioLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new CursAcademicSetWindow()
-                    {
-                        DataContext = new CursAcademicSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<CursAcademicSetWindow>(new CursAcademicSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);

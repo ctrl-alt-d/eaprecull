@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Material.Styles.Controls;
 using UI.ER.AvaloniaUI.Pages;
+using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI.Avalonia;
 using System;
@@ -15,18 +16,28 @@ using ReactiveUI;
 using System.Threading.Tasks;
 using System.Reactive;
 using CommonInterfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UI.ER.AvaloniaUI.Views
 {
+    // MainWindow és l'única vista fora de convenció: el seu ViewModel no es diu
+    // MainViewModel. Es declara aquí en comptes de tractar-la com a cas especial
+    // dins de la factory.
+    [ViewModel(typeof(AppStatusViewModel))]
     public partial class MainWindow : ReactiveWindow<AppStatusViewModel>
     {
+        private readonly IWindowFactory _windows;
         private NavigationDrawer? _leftDrawer;
         private ToggleButton? _navSwitch;
 
-        public MainWindow()
-        {
+        // Constructor pont: el manté el carregador XAML en temps d'execució i el
+        // previsualitzador d'Avalonia, que instancien la vista sense passar pel
+        // contenidor. Encadena amb el de DI, així les dues vies deixen _windows a punt.
+        public MainWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
 
-            DataContext = new AppStatusViewModel();
+        public MainWindow(IWindowFactory windows)
+        {
+            _windows = windows;
 
             this.WhenActivated(disposables =>
             {
@@ -73,10 +84,7 @@ namespace UI.ER.AvaloniaUI.Views
                 .WhenAnyValue(x => x.ViewModel)
                 .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new AlumneSetWindow()
-                    {
-                        DataContext = new AlumneSetViewModel(modeLookup: false)
-                    };
+                    var dialog = _windows.Get<AlumneSetWindow>();
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
@@ -90,10 +98,7 @@ namespace UI.ER.AvaloniaUI.Views
                 .WhenAnyValue(x => x.ViewModel)
                 .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new ActuacioSetWindow()
-                    {
-                        DataContext = new ActuacioSetViewModel(modeLookup: false)
-                    };
+                    var dialog = _windows.Get<ActuacioSetWindow>();
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
@@ -107,10 +112,7 @@ namespace UI.ER.AvaloniaUI.Views
                 .WhenAnyValue(x => x.ViewModel)
                 .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(async interaction =>
                 {
-                    var dialog = new CursAcademicSetWindow()
-                    {
-                        DataContext = new CursAcademicSetViewModel(modeLookup: false)
-                    };
+                    var dialog = _windows.Get<CursAcademicSetWindow>();
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
                     interaction.SetOutput(result);
                 }))
@@ -169,60 +171,42 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void Centre_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new CentreSetWindow()
-            {
-                DataContext = new CentreSetViewModel()
-            };
+            var w = _windows.Get<CentreSetWindow>();
 
             w.ShowDialog(this);
         }
 
         private void Etapa_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new EtapaSetWindow()
-            {
-                DataContext = new EtapaSetViewModel()
-            };
+            var w = _windows.Get<EtapaSetWindow>();
 
             w.ShowDialog(this);
         }
 
         private void CursAcademic_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new CursAcademicSetWindow()
-            {
-                DataContext = new CursAcademicSetViewModel()
-            };
+            var w = _windows.Get<CursAcademicSetWindow>();
 
             w.ShowDialog(this);
         }
 
         private void TipusActuacio_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new TipusActuacioSetWindow()
-            {
-                DataContext = new TipusActuacioSetViewModel()
-            };
+            var w = _windows.Get<TipusActuacioSetWindow>();
 
             w.ShowDialog(this);
         }
 
         private void Alumne_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new AlumneSetWindow()
-            {
-                DataContext = new AlumneSetViewModel()
-            };
+            var w = _windows.Get<AlumneSetWindow>();
 
             w.ShowDialog(this);
         }
 
         private void Actuacio_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new ActuacioSetWindow()
-            {
-                DataContext = new ActuacioSetViewModel()
-            };
+            var w = _windows.Get<ActuacioSetWindow>();
 
             w.ShowDialog(this);
         }
@@ -230,10 +214,7 @@ namespace UI.ER.AvaloniaUI.Views
 
         private void Utilitats_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new UtilitatsWindow()
-            {
-                DataContext = new UtilitatsViewModel()
-            };
+            var w = _windows.Get<UtilitatsWindow>();
 
             w.ShowDialog(this);
         }

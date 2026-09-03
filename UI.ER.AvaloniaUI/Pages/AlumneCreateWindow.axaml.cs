@@ -13,15 +13,24 @@ using Avalonia.Controls;
 using System.Reactive;
 using Avalonia;
 using Avalonia.Input;
+using UI.ER.AvaloniaUI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class AlumneCreateWindow : ReactiveWindow<AlumneCreateViewModel>
     {
         public OperationResult<Dtoo.Alumne> Result { get; set; } = default!;
-        public AlumneCreateWindow()
+        private readonly IWindowFactory _windows;
+
+        // Constructor pont: el manté el carregador XAML en temps d'execució i el
+        // previsualitzador d'Avalonia, que instancien la vista sense passar pel
+        // contenidor. Encadena amb el de DI, així les dues vies deixen _windows a punt.
+        public AlumneCreateWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public AlumneCreateWindow(IWindowFactory windows)
         {
-            this.DataContext = new AlumneCreateViewModel();
+            _windows = windows;
 
             this.InitializeComponent();
             this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
@@ -39,10 +48,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 // Lookups
                 d(ViewModel!.ShowCentreLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new CentreSetWindow()
-                    {
-                        DataContext = new CentreSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<CentreSetWindow>(new CentreSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
@@ -50,10 +56,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 }));
                 d(ViewModel!.ShowEtapaActualLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new EtapaSetWindow()
-                    {
-                        DataContext = new EtapaSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<EtapaSetWindow>(new EtapaSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
@@ -61,10 +64,7 @@ namespace UI.ER.AvaloniaUI.Pages
                 }));
                 d(ViewModel!.ShowCursDarreraActualitacioDadesLookup.RegisterHandler(async interaction =>
                 {
-                    var dialog = new CursAcademicSetWindow()
-                    {
-                        DataContext = new CursAcademicSetViewModel(modeLookup: true)
-                    };
+                    var dialog = _windows.GetWith<CursAcademicSetWindow>(new CursAcademicSetViewModel(modeLookup: true));
 
                     var window = (Window)this.VisualRoot!;
                     var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);

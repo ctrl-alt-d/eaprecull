@@ -1,18 +1,33 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using BusinessLayer.DI;
 using DataLayer.DI;
+using UI.ER.AvaloniaUI.DI;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.AvaloniaUI.Views;
 using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Generic;
-using UI.ER.ViewModels.ViewModels;
-using UI.ER.AvaloniaUI.Views;
 
 namespace UI.ER.AvaloniaUI
 {
     public class App : Application
     {
+        private static IServiceProvider? _services;
+
+        /// <summary>
+        /// Provider arrel. Només l'han de fer servir els constructors pont sense
+        /// paràmetres de les vistes, que Avalonia instancia des de l'AXAML
+        /// (<c>ItemTemplate</c>, previsualitzador) i per tant no passen pel contenidor.
+        /// </summary>
+        public static IServiceProvider Services
+            => _services
+               ?? throw new InvalidOperationException(
+                   "El contenidor no s'ha construït encara. "
+                   + "S'inicialitza a App.OnFrameworkInitializationCompleted().");
+
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -22,16 +37,19 @@ namespace UI.ER.AvaloniaUI
         {
             var services = new ServiceCollection()
                 .DataLayerConfigureServices()
-                .BusinessLayerConfigureServices();
+                .BusinessLayerConfigureServices()
+                .UIConfigureServices();
 
             services.AddSingleton<IServiceFactory, SuperContext>();
 
-            var provider = services.BuildServiceProvider();
-            SuperContext.Initialize(provider);
+            _services = services.BuildServiceProvider();
+            SuperContext.Initialize(_services);
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow = _services
+                    .GetRequiredService<IWindowFactory>()
+                    .Get<MainWindow>();
             }
 
             base.OnFrameworkInitializationCompleted();
