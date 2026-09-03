@@ -3,22 +3,24 @@ using System.Reactive.Linq;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
-using System.Windows.Input;
 using System.Threading.Tasks;
-using CommonInterfaces;
 using Dtoo = DTO.o.DTOs;
 using System;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class UtilitatsViewModel : ViewModelBase
     {
-        public UtilitatsViewModel()
+        private readonly IServiceFactory _serveis;
+
+        public UtilitatsViewModel(IServiceFactory serveis)
         {
+            _serveis = serveis;
+
             this
                 .WhenAnyValue(x => x.NumTotalActuacions)
                 .Subscribe(x => this.BotoPivotActivat = (x ?? 0) > 0);
@@ -47,8 +49,8 @@ namespace UI.ER.ViewModels.ViewModels
         {
             BrokenRules.Clear();
 
-            using var blActuacioSet = SuperContext.Resolve<IActuacioSet>();
-            using var blCursAcademicSet = SuperContext.Resolve<ICursAcademicSet>();
+            using var blActuacioSet = _serveis.GetBLOperation<IActuacioSet>();
+            using var blCursAcademicSet = _serveis.GetBLOperation<ICursAcademicSet>();
             var dtoCursActual = await blCursAcademicSet.GetCursActiu();
 
             var nTotalActuacions = await blActuacioSet.CountFromPredicate(new DTO.i.DTOs.ActuacioSearchParms());
@@ -105,7 +107,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoGeneraPivot()
         {
             ResultatPivotAlumne = "";
-            using var bl = SuperContext.Resolve<IPivotActuacions>();
+            using var bl = _serveis.GetBLOperation<IPivotActuacions>();
             var resultat = await bl.Run();
             ResultatPivotAlumne =
                 resultat.Data != null ?
@@ -143,7 +145,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.EtiquetaDescripcio?> DoGeneraSync()
         {
             ResultatSyncAlumne = "";
-            using var bl = SuperContext.Resolve<IAlumneSyncActiuByCentre>();
+            using var bl = _serveis.GetBLOperation<IAlumneSyncActiuByCentre>();
             var resultat = await bl.Run();
             ResultatSyncAlumne =
                 resultat.Data != null ?

@@ -1,28 +1,25 @@
-﻿using System.Linq;
+﻿using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using DynamicData.Binding;
-using System.Reactive.Disposables;
+using BusinessLayer.Abstract.Generic;
+using UI.ER.ViewModels.ViewModels.Base;
 
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class ActuacioSetViewModel : ViewModelBase
+    public class ActuacioSetViewModel
+        : SetViewModelBase<ActuacioRowViewModel, Dtoo.Actuacio>,
+          ISetViewModel<ActuacioCreateViewModel, Dtoo.Actuacio>
     {
-        private readonly CompositeDisposable _itemSubscriptions = new();
-
-        public bool ModeLookup { get; }
-        public ActuacioSetViewModel(bool modeLookup = false, int? alumneId = null)
+        public ActuacioSetViewModel(IServiceFactory serveis, bool modeLookup = false, int? alumneId = null)
+            : base(serveis, modeLookup)
         {
-
-            ModeLookup = modeLookup;
             AlumneId = alumneId;
 
             // Filtre
@@ -44,7 +41,7 @@ namespace UI.ER.ViewModels.ViewModels
                         (alumneId, nomesAlumnesActius, searchString)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(t => LoadActuacioSet(t.nomesAlumnesActius, t.alumneId, t.searchString))
+                .Subscribe(_ => CarregaAra())
                 ;
 
             // Create
@@ -52,94 +49,41 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new ActuacioCreateViewModel(alumneId: AlumneId);
+                var update = new ActuacioCreateViewModel(Serveis, alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
-                using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
-                var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
-                var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
-                if (data != null)
-                {
-                    var item = CreateRowViewModel(data);
-                    MyItems.Insert(0, item);
-                }
+                if (data == null)
+                    return;
+
+                MyItems.Insert(0, CreaFila(data));
             });
 
         }
-        public ObservableCollectionExtended<ActuacioRowViewModel> MyItems { get; } = new();
 
-        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
-
-        protected virtual async void LoadActuacioSet(bool nomesAlumnesActius, int? alumneId, string searchString)
+        protected override async Task<OperationResults<Dtoo.Actuacio>> Consulta()
         {
-            Loading = true;
-            _itemSubscriptions.Clear();
-            MyItems.Clear();
-
             var esActiu =
-                nomesAlumnesActius && !alumneId.HasValue ?  // si tenim id alumne el mostrem sempre
+                NomesAlumnesActius && !AlumneId.HasValue ?  // si tenim id alumne el mostrem sempre
                 true :
                 (bool?)null;
 
             // Preparar paràmetres al backend
-            var Parms = new DTO.i.DTOs.ActuacioSearchParms(
+            var Parms = new Dtoi.ActuacioSearchParms(
                 take: 200,
-                searchString: searchString,
-                alumneId: alumneId,
+                searchString: SearchString,
+                alumneId: AlumneId,
                 alumneEsActiu: esActiu
             );
 
-            // Petició al backend            
-            using var bl = SuperContext.Resolve<IActuacioSet>();
-            var dto = await bl.FromPredicate(Parms);
-
-            // 
-            BrokenRules.Clear();
-            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
-
-
-            // Ha fallat la petició
-            if (dto.Data == null)
-                throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
-
-            //
-            using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
-            var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
-            var cursActual = cursActual_dto.Data?.FirstOrDefault();
-
-            // Tenim els resultats
-            var newItems =
-                dto
-                .Data
-                .Select(x => CreateRowViewModel(x));
-
-            MyItems.AddRange(newItems);
-
-            //
-            PaginatedMsg =
-                (dto.Total > dto.TakeRequested) ?
-                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats" :
-                $"Seleccionats {newItems.Count()} items";
-
-            Loading = false;
+            // Petició al backend
+            using var bl = Serveis.GetBLOperation<IActuacioSet>();
+            return await bl.FromPredicate(Parms);
         }
 
-        // Warning
-        private string _PaginatedMsg = string.Empty;
-        public string PaginatedMsg
-        {
-            get => _PaginatedMsg;
-            set => this.RaiseAndSetIfChanged(ref _PaginatedMsg, value);
-        }
+        protected override ActuacioRowViewModel CreaFila(Dtoo.Actuacio dto)
+            => new(Serveis, dto, ModeLookup);
 
         // Filtre
-        private bool _Loading = true;
-        public bool Loading
-        {
-            get => _Loading;
-            set => this.RaiseAndSetIfChanged(ref _Loading, value);
-        }
-
         private int? _AlumneId;
         public int? AlumneId
         {
@@ -164,35 +108,6 @@ namespace UI.ER.ViewModels.ViewModels
         // Crear item
         public ICommand Create { get; }
         public Interaction<ActuacioCreateViewModel, Dtoo.Actuacio?> ShowDialog { get; }
-
-        /// <summary>
-        /// Crea un RowViewModel i es subscriu al seu event WasDeleted per eliminar-lo de la llista
-        /// </summary>
-        private ActuacioRowViewModel CreateRowViewModel(Dtoo.Actuacio data)
-        {
-            var item = new ActuacioRowViewModel(data, ModeLookup);
-
-            // Subscriure's a l'event d'esborrat
-            var subscription = item.WasDeleted
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(deletedId => RemoveItemById(deletedId));
-
-            _itemSubscriptions.Add(subscription);
-
-            return item;
-        }
-
-        /// <summary>
-        /// Elimina un item de la llista pel seu Id
-        /// </summary>
-        private void RemoveItemById(int id)
-        {
-            var itemToRemove = MyItems.FirstOrDefault(x => x.Id == id);
-            if (itemToRemove != null)
-            {
-                MyItems.Remove(itemToRemove);
-            }
-        }
 
     }
 }

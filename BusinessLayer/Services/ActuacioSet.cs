@@ -8,6 +8,7 @@ using Project = DTO.Projections;
 using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
+using DataLayer.Sql;
 using System;
 using DataModels.Models;
 using DTO.i.DTOs;
@@ -117,24 +118,24 @@ namespace BusinessLayer.Services
                 query = query.Where(model => (
 
                     // alumne nom, cognoms i tags
-                    EF.Functions.Like(model.Alumne.Nom, $"%{token}%") ||
-                    EF.Functions.Like(model.Alumne.Cognoms, $"%{token}%") ||
-                    EF.Functions.Like(model.Alumne.Tags, $"%{token}%") ||
+                    FuncionsSql.Conte(model.Alumne.Nom, token) ||
+                    FuncionsSql.Conte(model.Alumne.Cognoms, token) ||
+                    FuncionsSql.Conte(model.Alumne.Tags, token) ||
 
                     // centre
-                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Nom, $"%{token}%")) ||
-                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Codi, $"%{token}%")) ||
+                    (model.Alumne.CentreActual != null && FuncionsSql.Conte(model.Alumne.CentreActual.Nom, token)) ||
+                    (model.Alumne.CentreActual != null && FuncionsSql.Conte(model.Alumne.CentreActual.Codi, token)) ||
 
                     // descripcions
-                    EF.Functions.Like(model.ObservacionsTipusActuacio, $"%{token}%") ||
-                    EF.Functions.Like(model.DescripcioActuacio, $"%{token}%") ||
+                    FuncionsSql.Conte(model.ObservacionsTipusActuacio, token) ||
+                    FuncionsSql.Conte(model.DescripcioActuacio, token) ||
 
                     // tipus actuacio
-                    EF.Functions.Like(model.TipusActuacio.Nom, $"%{token}%") ||
-                    EF.Functions.Like(model.TipusActuacio.Codi, $"%{token}%") ||
+                    FuncionsSql.Conte(model.TipusActuacio.Nom, token) ||
+                    FuncionsSql.Conte(model.TipusActuacio.Codi, token) ||
 
                     // curs actuacio
-                    EF.Functions.Like(model.CursActuacio.Nom, $"%{token}%")
+                    FuncionsSql.Conte(model.CursActuacio.Nom, token)
             )));
             return query;
         }

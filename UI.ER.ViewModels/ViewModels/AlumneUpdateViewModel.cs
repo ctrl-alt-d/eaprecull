@@ -7,21 +7,24 @@ using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
 using System;
 using ReactiveUI.Validation.Extensions;
 using System.Windows.Input;
 using System.Reactive.Linq;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class AlumneUpdateViewModel : ViewModelBase, IId
+    public class AlumneUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Alumne>, IId
     {
 
-        public AlumneUpdateViewModel(int id)
+        private readonly IServiceFactory _serveis;
+
+        public AlumneUpdateViewModel(IServiceFactory serveis, int id)
         {
+            _serveis = serveis;
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadData);
 
@@ -73,7 +76,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadDadesInicials()
         {
-            using var bl = SuperContext.Resolve<ICursAcademicSet>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
@@ -265,7 +268,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.Resolve<IAlumneSet>();
+            using var bl = _serveis.GetBLOperation<IAlumneSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -276,7 +279,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async Task LoadDadesCursActual()
         {
-            using var bl = SuperContext.Resolve<ICursAcademicSet>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursActualId = cursActual?.Id;
@@ -345,7 +348,7 @@ namespace UI.ER.ViewModels.ViewModels
                 EsActiu);
 
             // cridar backend
-            using var bl = SuperContext.Resolve<IAlumneUpdate>();
+            using var bl = _serveis.GetBLOperation<IAlumneUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 

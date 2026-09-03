@@ -4,17 +4,38 @@
              xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:helpers="clr-namespace:UI.ER.AvaloniaUI.Helpers;assembly=UI.ER.AvaloniaUI"
-             x:Class="UI.ER.AvaloniaUI.App">
+             x:Class="UI.ER.AvaloniaUI.App"
+             x:CompileBindings="True"
+             RequestedThemeVariant="Light">
+
+    <!--
+      RequestedThemeVariant és l'únic lloc on es tria el tema: decideix quina taula de
+      Themes/Paleta.axaml s'aplica, i el MaterialTheme de sota el segueix perquè està
+      declarat amb BaseTheme="Inherit". Aquest valor aquí és només el tema d'arrencada;
+      Helpers/Tema.cs el commuta en calent des del menú.
+
+      No es deixa sense fixar a posta: així l'aplicació no canvia de cara segons el tema
+      del sistema operatiu sense que ningú ho hagi demanat.
+    -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://UI.ER.AvaloniaUI/Themes/Paleta.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.Styles>
       <!-- Modern color scheme: Indigo primary with Pink accent -->
-            <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Pink" />
+            <themes:MaterialTheme BaseTheme="Inherit" PrimaryColor="Indigo" SecondaryColor="Pink" />
       <avalonia:MaterialIconStyles />
 
             <Style Selector="Window">
                 <Setter Property="helpers:WindowHelper.ClampToWorkingArea" Value="True" />
             </Style>
           <Style Selector="TextBlock.Error">
-                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="Foreground" Value="{DynamicResource DangerStrongBrush}"/>
                 <Style.Animations>                    
                     <Animation Duration="0:0:1"> 
                         <KeyFrame Cue="0%">
@@ -26,6 +47,8 @@
                     </Animation>
                 </Style.Animations>
             </Style>      
+
+            <!-- ==================== BOTONS D'ICONA ==================== -->
 
             <Style Selector="Button.LookupCss">
                 <Setter Property="ToolTip.Tip" Value="Obrir pantalla de selecció"/>
@@ -95,15 +118,23 @@
                 </Setter>
             </Style>
 
+            <!-- ==================== BOTONS FLOTANTS ==================== -->
+
+            <!--
+              Els dos FAB de l'aplicació. El text va per `Tag` perquè el contingut és
+              idèntic a totes les finestres tret d'una paraula: així no cal repetir el
+              StackPanel + Viewbox + MaterialIcon a cada AXAML.
+            -->
+
             <Style Selector="material|FloatingButton.Desar[IsExtended=true]">
-                <Setter Property="ToolTip.Tip" Value="Desar els canvis."/>
+                <Setter Property="HotKey" Value="Ctrl+S"/>
+                <Setter Property="ToolTip.Tip" Value="Desar els canvis (Ctrl+S)"/>
                 <Setter Property="Content">
                     <Setter.Value>
                         <Template>
                             <StackPanel Orientation="Horizontal" Height="24">
-                                <Viewbox Stretch="Fill"                                            
-                                         VerticalAlignment="Stretch">
-                                    <avalonia:MaterialIcon Kind="FolderDownload" Width="24" Height="24" />
+                                <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
+                                    <avalonia:MaterialIcon Kind="ContentSave" Width="24" Height="24" />
                                 </Viewbox>
                                 <TextBlock Margin="8,0" Text="Desar els canvis" Classes="Subtitle2"
                                            VerticalAlignment="Center" />
@@ -111,6 +142,117 @@
                         </Template>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style Selector="material|FloatingButton.Afegir[IsExtended=true]">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="Margin" Value="0,0,24,24"/>
+                <Setter Property="HotKey" Value="Ctrl++"/>
+                <!-- El Content de cada finestra és l'etiqueta: «Nova etapa», «Nou centre»… -->
+                <Setter Property="ContentTemplate">
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Height="24">
+                            <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
+                                <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
+                            </Viewbox>
+                            <TextBlock Margin="8,0" Classes="Subtitle2" VerticalAlignment="Center"
+                                       Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Setter>
+            </Style>
+
+            <!-- FAB de desar ancorat a baix a la dreta, damunt del contingut. -->
+            <Style Selector="material|FloatingButton.Desar.Ancorat">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="Margin" Value="0,0,24,24"/>
+            </Style>
+
+            <!-- ==================== BLOCS DE DISSENY ==================== -->
+
+            <!-- Targeta d'una fila de llistat. -->
+            <Style Selector="Border.Fitxa">
+                <Setter Property="BorderBrush" Value="{DynamicResource SurfaceCardBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="Padding" Value="6"/>
+                <Setter Property="Margin" Value="5,0,20,10"/>
+                <Setter Property="BoxShadow" Value="5 5 10 2 #40000000"/>
+            </Style>
+
+            <!-- Barra superior de filtres d'un llistat. -->
+            <Style Selector="Border.BarraFiltres">
+                <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                <Setter Property="Padding" Value="16,14"/>
+            </Style>
+
+            <!-- Xip informatiu (el missatge de paginació). -->
+            <Style Selector="Border.Xip">
+                <Setter Property="Background" Value="{DynamicResource InfoContainerBrush}"/>
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="Padding" Value="12,4"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <!-- Secció d'un formulari. Les variants només canvien de família de color. -->
+            <Style Selector="Border.Seccio">
+                <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="20"/>
+                <Setter Property="Margin" Value="0,0,0,16"/>
+            </Style>
+
+            <Style Selector="Border.Seccio.Ok">
+                <Setter Property="Background" Value="{DynamicResource SuccessContainerBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource SuccessBorderBrush}"/>
+            </Style>
+
+            <Style Selector="Border.Seccio.Avis">
+                <Setter Property="Background" Value="{DynamicResource WarningContainerBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource WarningBorderBrush}"/>
+            </Style>
+
+            <Style Selector="Border.Seccio.Perill">
+                <Setter Property="Background" Value="{DynamicResource DangerContainerBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource DangerBorderBrush}"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Margin" Value="0,16,0,0"/>
+            </Style>
+
+            <!-- ==================== ANIMACIONS DE LLISTA ==================== -->
+
+            <Style Selector="Border.Apareix">
+                <Style.Animations>
+                    <Animation Duration="0:0:1">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="0.0"/>
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="1.0"/>
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+
+            <Style Selector="Border.Desapareix">
+                <Style.Animations>
+                    <Animation Duration="0:0:0.4" FillMode="Forward">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="1.0"/>
+                            <Setter Property="TranslateTransform.X" Value="0"/>
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="0.0"/>
+                            <Setter Property="TranslateTransform.X" Value="-50"/>
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
             </Style>
 
     </Application.Styles>

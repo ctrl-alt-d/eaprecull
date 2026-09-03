@@ -29,3 +29,13 @@ Fer load de references abans de l'update (issue #70)
 22.07.10
 En comptes de fer load de references abans de l'update (issue #70)
 el que es fa és marcar les referències com a modificades (IsModified)
+
+# 0.8
+
+2026.02.08
+Migració a net 10
+
+# 0.9
+2026.09.04
+Refactor Avalonia.UI.
+Bus de notificacions.

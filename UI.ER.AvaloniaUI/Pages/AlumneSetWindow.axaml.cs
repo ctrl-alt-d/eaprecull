@@ -1,50 +1,22 @@
-using System;
-using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ReactiveUI.Avalonia;
-using ReactiveUI;
-using UI.ER.ViewModels.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Dtoo = DTO.o.DTOs;
-using System.Reactive.Linq;
-using System.Linq;
+using UI.ER.AvaloniaUI.Pages.Base;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public partial class AlumneSetWindow : ReactiveWindow<AlumneSetViewModel>
+    public partial class AlumneSetWindow
+        : EntitySetWindow<AlumneSetViewModel, AlumneCreateViewModel, AlumneCreateWindow, Dtoo.Alumne>
     {
-        public AlumneSetWindow()
-        {
-            InitializeComponent();
-            this.WhenActivated(disposables =>
-            {
-                RegisterShowCreateDialog(disposables);
-            });
-        }
+        // Constructor pont: el manté el carregador XAML en temps d'execució i el
+        // previsualitzador d'Avalonia, que instancien la vista sense passar pel
+        // contenidor. Encadena amb el de DI, així les dues vies deixen Windows a punt.
+        public AlumneSetWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
 
-        private void RegisterShowCreateDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new AlumneCreateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
+        public AlumneSetWindow(IWindowFactory windows) : base(windows) => InitializeComponent();
 
-                    var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        private void InitializeComponent()
-            =>
-            AvaloniaXamlLoader.Load(this);
-
-        private Window GetWindow()
-            =>
-            (Window)this.VisualRoot!;
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

@@ -1,15 +1,17 @@
 ﻿using ReactiveUI;
 using System.Reactive.Linq;
 using BusinessLayer.Abstract.Exceptions;
-using System.Linq;
 using DynamicData.Binding;
-using UI.ER.ViewModels.Services;
+using BusinessLayer.Abstract.Generic;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Windows.Input;
-using System.Threading.Tasks;
 using CommonInterfaces;
+using System;
+using UI.ER.ViewModels.Services;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -17,13 +19,34 @@ namespace UI.ER.ViewModels.ViewModels
     {
         private readonly string SPACE = " ";
         private readonly string NA = "N/A";
-        public AppStatusViewModel()
-        {
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-            ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
-            AlumneSetCommand = ReactiveCommand.CreateFromTask(ShowAlumneSetDialogHandle);
-            CursAcademicSetCommand = ReactiveCommand.CreateFromTask(ShowCursAcademicSetDialogHandle);
+        private readonly IServiceFactory _serveis;
 
+        public AppStatusViewModel(IServiceFactory serveis)
+        {
+            _serveis = serveis;
+
+            RxApp.MainThreadScheduler.Schedule(LoadData);
+
+            // Les xifres del taulell les fa obsoletes qualsevol escriptura, vingui de la
+            // finestra que vingui. En comptes de rellegir-les en tancar cada diàleg,
+            // s'escolta el bus de canvis: aquí sí que interessa tot el que passi.
+            this.WhenActivated(d =>
+                _serveis.Canvis.ComObservable()
+                    .Throttle(TimeSpan.FromMilliseconds(300))
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(_ => LoadData())
+                    .DisposeWith(d));
+
+            // Una comanda per cada entrada de navegació de la finestra principal: les tres
+            // targetes del taulell i les set entrades del menú. La vista només hi enganxa
+            // quina finestra atén cada Interaction; el que s'obre es decideix aquí.
+            ActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowActuacioSetDialog.Handle(Unit.Default));
+            AlumneSetCommand = ReactiveCommand.CreateFromObservable(() => ShowAlumneSetDialog.Handle(Unit.Default));
+            CentreSetCommand = ReactiveCommand.CreateFromObservable(() => ShowCentreSetDialog.Handle(Unit.Default));
+            CursAcademicSetCommand = ReactiveCommand.CreateFromObservable(() => ShowCursAcademicSetDialog.Handle(Unit.Default));
+            EtapaSetCommand = ReactiveCommand.CreateFromObservable(() => ShowEtapaSetDialog.Handle(Unit.Default));
+            TipusActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowTipusActuacioSetDialog.Handle(Unit.Default));
+            UtilitatsCommand = ReactiveCommand.CreateFromObservable(() => ShowUtilitatsDialog.Handle(Unit.Default));
         }
 
         private async void LoadData()
@@ -41,9 +64,9 @@ namespace UI.ER.ViewModels.ViewModels
 
 
 
-            using var blActuacioSet = SuperContext.Resolve<IActuacioSet>();
-            using var blAlumneSet = SuperContext.Resolve<IAlumneSet>();
-            using var blCursAcademicSet = SuperContext.Resolve<ICursAcademicSet>();
+            using var blActuacioSet = _serveis.GetBLOperation<IActuacioSet>();
+            using var blAlumneSet = _serveis.GetBLOperation<IAlumneSet>();
+            using var blCursAcademicSet = _serveis.GetBLOperation<ICursAcademicSet>();
 
             var dtoCursActual = await blCursAcademicSet.GetCursActiu();
 
@@ -122,34 +145,33 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _TotalALumnesActualitzats, value);
         }
 
-        // ---
+        // --- Navegació -------------------------------------------------------------
+        //
+        // Cada parella {Entitat}SetCommand / Show{Entitat}SetDialog és un punt d'entrada
+        // de la finestra principal. Les llistes retornen IIdEtiquetaDescripcio? perquè les
+        // mateixes finestres fan de lookup; obertes des del menú el resultat és null i
+        // s'ignora.
+
         public ICommand ActuacioSetCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowActuacioSetDialog { get; } = new();
-        private async Task ShowActuacioSetDialogHandle()
-        {
-            var data = await ShowActuacioSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-        }
 
-        // ---
         public ICommand AlumneSetCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowAlumneSetDialog { get; } = new();
-        private async Task ShowAlumneSetDialogHandle()
-        {
-            var data = await ShowAlumneSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-        }
 
+        public ICommand CentreSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCentreSetDialog { get; } = new();
 
-        // ---
         public ICommand CursAcademicSetCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCursAcademicSetDialog { get; } = new();
-        private async Task ShowCursAcademicSetDialogHandle()
-        {
-            var data = await ShowCursAcademicSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-        }
 
+        public ICommand EtapaSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowEtapaSetDialog { get; } = new();
 
+        public ICommand TipusActuacioSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowTipusActuacioSetDialog { get; } = new();
+
+        /// <summary>Utilitats no és una llista d'entitats: només s'obre i es tanca.</summary>
+        public ICommand UtilitatsCommand { get; }
+        public Interaction<Unit, Unit> ShowUtilitatsDialog { get; } = new();
     }
 }

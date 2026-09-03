@@ -1,38 +1,29 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        xmlns:controls="clr-namespace:UI.ER.AvaloniaUI.Controls"
         xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
         x:Class="UI.ER.AvaloniaUI.Pages.EtapaSetWindow"
+        x:DataType="viewModels:EtapaSetViewModel"
+        x:CompileBindings="True"
         HorizontalContentAlignment="Stretch"
-        Title="Etapa Educativa, llistat"        
+        Title="Etapa Educativa, llistat"
         Width="1000" Height="700" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
-    <Design.DataContext>
-        <viewModels:EtapaSetViewModel />
-    </Design.DataContext>
 
     <Grid>
 
         <DockPanel>
 
             <!-- ==================== FILTRES ==================== -->
-            <Border DockPanel.Dock="Top" 
-                    Background="#F5F7FA" 
-                    BorderBrush="#E0E0E0" BorderThickness="0,0,0,1"
-                    Padding="16,14">
+            <Border DockPanel.Dock="Top" Classes="BarraFiltres">
                 <DockPanel>
-                    <Border DockPanel.Dock="Right" 
-                            Background="#E3F2FD" CornerRadius="12" 
-                            Padding="12,4" Margin="8,0,0,0"
-                            VerticalAlignment="Center"
+                    <Border DockPanel.Dock="Right" Classes="Xip" Margin="8,0,0,0"
                             IsVisible="{Binding PaginatedMsg, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                        <TextBlock Text="{Binding PaginatedMsg}"
-                                   Classes="Caption" Foreground="#1565C0"
+                        <TextBlock Text="{Binding PaginatedMsg}" Classes="Caption"
+                                   Foreground="{DynamicResource InfoBrush}"
                                    VerticalAlignment="Center" />
                     </Border>
                     <StackPanel Orientation="Horizontal" Spacing="16">
@@ -45,21 +36,12 @@
                 </DockPanel>
             </Border>
 
-            <!-- ==================== LOADING ==================== -->
-            <StackPanel DockPanel.Dock="Top" 
-                        Orientation="Horizontal" 
-                        Margin="16,12" Spacing="8"
-                        IsVisible="{Binding Loading}">
-                <avalonia:MaterialIcon Kind="Loading" Width="18" Height="18" 
-                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                       Classes="Rotating" />
-                <TextBlock Text="Carregant dades ..." Classes="Subtitle2"
-                           Foreground="{DynamicResource PrimaryHueMidBrush}" />
-            </StackPanel>
+            <!-- ==================== CARREGANT ==================== -->
+            <controls:IndicadorCarrega DockPanel.Dock="Top" IsVisible="{Binding Loading}" />
 
             <!-- ==================== ERRORS ==================== -->
             <ItemsControl DockPanel.Dock="Top"
-                          Margin="16,4" 
+                          Margin="16,4"
                           ItemsSource="{Binding BrokenRules}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -81,23 +63,10 @@
         </DockPanel>
 
         <!-- ==================== FAB AFEGIR ==================== -->
-        <material:FloatingButton
-            HorizontalAlignment="Right" VerticalAlignment="Bottom"
-            Margin="0,0,24,24"
-            IsExtended="True"
-            Command="{Binding Create}"
-            HotKey="Ctrl++"
-            ToolTip.Tip="Afegir una nova etapa (Ctrl++)">
-            <material:FloatingButton.Content>
-                <StackPanel Orientation="Horizontal" Height="24">
-                    <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
-                        <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
-                    </Viewbox>
-                    <TextBlock Margin="8,0" Text="Nova etapa" Classes="Subtitle2"
-                               VerticalAlignment="Center" />
-                </StackPanel>
-            </material:FloatingButton.Content>
-        </material:FloatingButton>
+        <material:FloatingButton Classes="Afegir" IsExtended="True"
+                                 Command="{Binding Create}"
+                                 Content="Nova etapa"
+                                 ToolTip.Tip="Afegir una nova etapa (Ctrl++)" />
 
     </Grid>
-</Window>    
+</Window>

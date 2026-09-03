@@ -1,10 +1,10 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
         x:Class="UI.ER.AvaloniaUI.Pages.CursAcademicCreateWindow"
+        x:DataType="viewModels:CursAcademicCreateViewModel"
+        x:CompileBindings="True"
         HorizontalContentAlignment="Stretch"
         Title="Curs Acadèmic, alta"        
         Width="800" Height="500" MinWidth="720"
@@ -15,11 +15,6 @@
     <StackPanel Orientation="Vertical"
                 Margin="16, 16"
                 >
-
-        <StackPanel.Styles>
-        </StackPanel.Styles>                
-
-        <TextBlock Classes="Headline6 Subheadline2" Text="{Binding IdTxt}" />
 
         <TextBlock Classes="Body1"  Text="Introdueix l'any d'inici del curs (ex: 2030)"/>
         <NumericUpDown Value="{Binding AnyInici}" Increment="1"/>

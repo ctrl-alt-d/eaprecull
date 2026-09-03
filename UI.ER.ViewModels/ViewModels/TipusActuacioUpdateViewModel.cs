@@ -3,21 +3,23 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class TipusActuacioUpdateViewModel : ViewModelBase, IId
+    public class TipusActuacioUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.TipusActuacio>, IId
     {
 
-        public TipusActuacioUpdateViewModel(int id)
+        private readonly IServiceFactory _serveis;
+
+        public TipusActuacioUpdateViewModel(IServiceFactory serveis, int id)
         {
+            _serveis = serveis;
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadData);
 
@@ -61,7 +63,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.Resolve<ITipusActuacioSet>();
+            using var bl = _serveis.GetBLOperation<ITipusActuacioSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -87,7 +89,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.TipusActuacioUpdateParms(Id, Codi, Nom, EsActiu);
 
             // cridar backend
-            using var bl = SuperContext.Resolve<ITipusActuacioUpdate>();
+            using var bl = _serveis.GetBLOperation<ITipusActuacioUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 

@@ -1,5 +1,6 @@
 using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Exceptions;
+using BusinessLayer.Abstract.Generic;
 using CommonInterfaces;
 using DataLayer;
 using DTO.o.Interfaces;
@@ -32,6 +33,10 @@ namespace BusinessLayer.Common
             try
             {
                 var result = await batchOperation();
+                //
+                // Una operació massiva no diu quines entitats ha tocat: s'ha de refrescar tot.
+                Notificador?.Publica(CanviDeDomini.Tot);
+                //
                 return new OperationResult<TResult>(result);
             }
             catch (BrokenRuleException br)

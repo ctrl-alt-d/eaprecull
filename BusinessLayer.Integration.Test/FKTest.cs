@@ -1,11 +1,9 @@
-using DataLayer;
+﻿using DataLayer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using BusinessLayer.DI;
+using Microsoft.Extensions.DependencyInjection;
 using BusinessLayer.Abstract.Services;
-using System.IO;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,27 +18,12 @@ namespace BusinessLayer.Integration.Test
         public async Task Test()
         {
             // arrange
-            var dataSource = Path.Combine(Path.GetTempPath(), "Esborrar" + Guid.NewGuid().ToString().Substring(4, 4) + ".db");
-            var ConnectionString = $"Data Source={dataSource}";
-
-            var services = new ServiceCollection();
-            services.AddDbContextFactory<AppDbContext>(opt =>
-                opt.UseSqlite(ConnectionString)
-                   .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
-            services.BusinessLayerConfigureServices();
-
-            var serviceProvider = services.BuildServiceProvider();
+            using var serviceProvider = EntornDeTest.Nou();
 
             var centreCreate = serviceProvider.GetRequiredService<ICentreCreate>();
             var cursCreate = serviceProvider.GetRequiredService<ICursAcademicCreate>();
             var alumneCreate = serviceProvider.GetRequiredService<IAlumneCreate>();
             var alumnes = serviceProvider.GetRequiredService<IAlumneSet>();
-
-            serviceProvider
-                .GetRequiredService<IDbContextFactory<AppDbContext>>()
-                .CreateDbContext()
-                .Database
-                .Migrate();
 
 
             // act

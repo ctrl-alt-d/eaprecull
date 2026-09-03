@@ -3,22 +3,25 @@ using System.Reactive;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class EtapaCreateViewModel : ViewModelBase
+    public class EtapaCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Etapa>
     {
 
-        public EtapaCreateViewModel()
+        private readonly IServiceFactory _serveis;
+
+        public EtapaCreateViewModel(IServiceFactory serveis)
         {
+            _serveis = serveis;
+
             SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
         }
 
@@ -63,7 +66,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.EtapaCreateParms(Codi, Nom, SonEstudisObligatoris, true);
 
             // cridar backend
-            using var bl = SuperContext.Resolve<IEtapaCreate>();
+            using var bl = _serveis.GetBLOperation<IEtapaCreate>();
             var dto = await bl.Create(Parms);
             var data = dto.Data;
 

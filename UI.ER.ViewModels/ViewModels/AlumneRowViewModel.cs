@@ -3,7 +3,6 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -11,17 +10,21 @@ using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using System.Reactive.Concurrency;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class AlumneRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class AlumneRowViewModel : ViewModelBase, IRowViewModel<AlumneUpdateViewModel, Dtoo.Alumne, Dtoo.Alumne>, IEtiquetaDescripcio, IId
     {
 
         protected Dtoo.Alumne Model { get; set; }
         protected readonly Dtoo.CursAcademic? CursActual;
-        public AlumneRowViewModel(Dtoo.Alumne data, Dtoo.CursAcademic? cursActual, bool modeLookup = false)
+        private readonly IServiceFactory _serveis;
+
+        public AlumneRowViewModel(IServiceFactory serveis, Dtoo.Alumne data, Dtoo.CursAcademic? cursActual, bool modeLookup = false)
         {
+
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
@@ -30,7 +33,7 @@ namespace UI.ER.ViewModels.ViewModels
             CursActual = cursActual;
 
             // State
-            DTO2ModelView(data);
+            Actualitza(data);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -103,12 +106,19 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.Alumne? AlumneDto)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.Alumne? AlumneDto)
         {
             if (AlumneDto == null)
                 return;
 
             Model = AlumneDto;
+            ReferenciesPintades = Referencies.De(AlumneDto);
             Etiqueta = AlumneDto.Etiqueta;
             Descripcio = AlumneDto.Descripcio;
             CentreActual = AlumneDto.CentreActual?.Etiqueta ?? "** Sense centre assignat **";
@@ -129,9 +139,9 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.Resolve<IAlumneActivaDesactiva>();
+            using var bl = _serveis.GetBLOperation<IAlumneActivaDesactiva>();
             var dto = await bl.Toggle(Id);
-            DTO2ModelView(dto.Data);
+            Actualitza(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
         }
 
@@ -140,9 +150,9 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<AlumneUpdateViewModel, Dtoo.Alumne?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new AlumneUpdateViewModel(Id);
+            var update = new AlumneUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            if (data != null) Actualitza(data);
         }
 
         // --- Obrir Finestra Actuacions ---
@@ -150,20 +160,10 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<ActuacioSetViewModel, IIdEtiquetaDescripcio?> ShowActuacioSetDialog { get; } = new();
         private async Task ShowActuacioSetDialogHandle()
         {
-            var vm = new ActuacioSetViewModel(alumneId: Id);
-            var data = await ShowActuacioSetDialog.Handle(vm);
-            RxApp.MainThreadScheduler.Schedule(ReLoadData);
-        }
-        private async void ReLoadData()
-        {
-            BrokenRules.Clear();
-            using var blAlumneSet = SuperContext.Resolve<IAlumneSet>();
-            var dto = await blAlumneSet.FromId(Model.Id);
-            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
-            if (dto.Data == null) return;
-            var data = dto.Data!;
-            Model = data;
-            DTO2ModelView(data);
+            // Cap rellegida a mà en tancar: el que s'hagi fet a la finestra d'actuacions
+            // arriba pel bus de canvis i la llista d'alumnes ja es refresca sola.
+            var vm = new ActuacioSetViewModel(_serveis, alumneId: Id);
+            await ShowActuacioSetDialog.Handle(vm);
         }
 
         // --- Seleccionar si estem en mode lookup ---
@@ -175,7 +175,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoGeneraInforme()
         {
             ResultatInformeAlumne = "";
-            using var bl = SuperContext.Resolve<IAlumneInforme>();
+            using var bl = _serveis.GetBLOperation<IAlumneInforme>();
             var resultat = await bl.Run(Id);
             ResultatInformeAlumne =
                 resultat.Data != null ?
@@ -190,7 +190,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<AlumneInformeViewerViewModel, Unit> ShowInformeViewerDialog { get; } = new();
         private async Task ShowInformeViewerDialogHandle()
         {
-            var vm = new AlumneInformeViewerViewModel(Id);
+            var vm = new AlumneInformeViewerViewModel(_serveis, Id);
             await ShowInformeViewerDialog.Handle(vm);
         }
 

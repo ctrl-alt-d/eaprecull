@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        x:Class="UI.ER.AvaloniaUI.Pages.ConfirmacioWindow"
+        x:DataType="viewModels:ConfirmacioViewModel"
+        x:CompileBindings="True"
+        Title="{Binding Titol}"
+        Width="440" SizeToContent="Height"
+        CanResize="False"
+        ShowInTaskbar="False"
+        SystemDecorations="BorderOnly"
+        WindowStartupLocation="CenterOwner"
+        >
+
+    <StackPanel Margin="24,20">
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+            <avalonia:MaterialIcon Kind="AlertOutline" Width="22" Height="22"
+                                   Foreground="{DynamicResource DangerBrush}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0" />
+            <TextBlock Text="{Binding Titol}" Classes="Subtitle1" FontWeight="SemiBold"
+                       VerticalAlignment="Center" />
+        </StackPanel>
+
+        <TextBlock Text="{Binding Missatge}" Classes="Body1" TextWrapping="Wrap" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="{Binding TextNegatiu}" Command="{Binding CancelaCommand}"
+                    Classes="Flat" MinWidth="100" Margin="5" IsCancel="True" />
+            <Button Content="{Binding TextAfirmatiu}" Command="{Binding ConfirmaCommand}"
+                    Classes="Flat" MinWidth="100" Margin="5"
+                    Foreground="{DynamicResource DangerStrongBrush}" />
+        </StackPanel>
+
+    </StackPanel>
+
+</Window>

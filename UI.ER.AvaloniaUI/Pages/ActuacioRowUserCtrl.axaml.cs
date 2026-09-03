@@ -1,105 +1,41 @@
-using System.Threading.Tasks;
-using Avalonia.Controls;
+using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using Avalonia.Markup.Xaml;
-using UI.ER.ViewModels.ViewModels;
-using ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
 using Dtoo = DTO.o.DTOs;
-using ReactiveUI.Avalonia;
-using System;
-using System.Reactive.Linq;
+using UI.ER.AvaloniaUI.Helpers;
+using UI.ER.AvaloniaUI.Pages.Base;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public partial class ActuacioRowUserCtrl : ReactiveUserControl<ActuacioRowViewModel>
+    public partial class ActuacioRowUserCtrl
+        : EntityRowUserCtrl<ActuacioRowViewModel, ActuacioUpdateViewModel, ActuacioUpdateWindow,
+                            Dtoo.EditDialogResult<Dtoo.Actuacio>, Dtoo.Actuacio>
     {
-        public ActuacioRowUserCtrl()
+        // El ListBox.ItemTemplate instancia aquest control des de l'AXAML, no pas
+        // el contenidor: cal un constructor sense paràmetres que resolgui la factory.
+        public ActuacioRowUserCtrl() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public ActuacioRowUserCtrl(IWindowFactory windows) : base(windows) => InitializeComponent();
+
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+        protected override void Register(CompositeDisposable d)
         {
-            InitializeComponent();
+            // Diàleg d'edició i selecció en mode lookup.
+            base.Register(d);
 
-            this.WhenActivated(disposables =>
-            {
-                RegisterShowUpdateDialog(disposables);
-                RegisterShowExpedientAlumneDialog(disposables);
-                RegisterShowEditarAlumneDialog(disposables);
-                RegisterCloseOnSelect(disposables);
-            });
+            // Expedient de l'alumne de l'actuació.
+            PerCadaViewModel(d, (vm, dd) =>
+                this.RegistraDialeg<AlumneInformeViewerWindow, AlumneInformeViewerViewModel>(
+                    Windows, vm.ShowExpedientAlumneDialog).DisposeWith(dd));
 
-
+            // Fitxa de l'alumne de l'actuació.
+            PerCadaViewModel(d, (vm, dd) =>
+                this.RegistraDialeg<AlumneUpdateWindow, AlumneUpdateViewModel, Dtoo.Alumne>(
+                    Windows, vm.ShowEditarAlumneDialog).DisposeWith(dd));
         }
-
-        private void InitializeComponent()
-            =>
-            AvaloniaXamlLoader.Load(this);
-        private Window GetWindow()
-            =>
-            (Window)this.VisualRoot!;
-
-        // -- Show Dialog --
-        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new ActuacioUpdateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
-
-                    var result = await dialog.ShowDialog<Dtoo.EditDialogResult<Dtoo.Actuacio>?>(GetWindow());
-
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        // -- Show expedient alumne
-        protected virtual void RegisterShowExpedientAlumneDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowExpedientAlumneDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new AlumneInformeViewerWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
-                    await dialog.ShowDialog(GetWindow());
-                    interaction.SetOutput(System.Reactive.Unit.Default);
-                }))
-            );
-
-        // -- Show editar alumne
-        protected virtual void RegisterShowEditarAlumneDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowEditarAlumneDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new AlumneUpdateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
-                    var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        // -- Select Row
-        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
-            );
-
-
     }
 }

@@ -1,0 +1,110 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:CompileBindings="True">
+
+    <!--
+      Paleta semàntica de l'aplicació (R6).
+
+      Aquí hi ha *tots* els colors que no surten del MaterialTheme. Abans eren 95
+      literals repartits per 13 fitxers AXAML i un de C#, cosa que feia impossible
+      canviar de tema.
+
+      Les claus són semàntiques, no descriptives: «WarningBrush», no «Taronja». Així
+      canviar el color d'un avís és tocar una línia, i el tema fosc és omplir la segona
+      taula.
+
+      Quina de les dues taules s'aplica ho decideix `RequestedThemeVariant` d'App.axaml,
+      que `Helpers/Tema.cs` commuta en calent des del menú. El MaterialTheme el segueix
+      tot sol (`BaseTheme="Inherit"`), així que afegir un color és omplir la seva
+      entrada a les dues taules i prou.
+
+      Convenció de noms:
+        XxxBrush           el color de primer pla (text i icones) de la família Xxx
+        XxxContainerBrush  el fons del bloc que el conté
+        XxxBorderBrush     la vora d'aquest bloc
+    -->
+
+    <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Light">
+
+            <!-- Superfícies i vores neutres -->
+            <SolidColorBrush x:Key="SurfaceSubtleBrush" Color="#F5F7FA" />
+            <SolidColorBrush x:Key="SurfaceMutedBrush" Color="#FAFAFA" />
+            <SolidColorBrush x:Key="SurfaceCardBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="BorderSubtleBrush" Color="#E0E0E0" />
+
+            <!-- Text secundari -->
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#616161" />
+            <SolidColorBrush x:Key="TextTertiaryBrush" Color="#9E9E9E" />
+
+            <!-- Informatiu (blau): xips de paginació, dates, etiquetes de tipus -->
+            <SolidColorBrush x:Key="InfoBrush" Color="#1565C0" />
+            <SolidColorBrush x:Key="InfoContainerBrush" Color="#E3F2FD" />
+
+            <!-- Correcte (verd): confirmacions i el bloc «alumne i context» -->
+            <SolidColorBrush x:Key="SuccessBrush" Color="#2E7D32" />
+            <SolidColorBrush x:Key="SuccessContainerBrush" Color="#E8F5E9" />
+            <SolidColorBrush x:Key="SuccessBorderBrush" Color="#C8E6C9" />
+
+            <!-- Avís (taronja): NESE, resultats de sincronització -->
+            <SolidColorBrush x:Key="WarningBrush" Color="#E65100" />
+            <SolidColorBrush x:Key="WarningContainerBrush" Color="#FFF3E0" />
+            <SolidColorBrush x:Key="WarningBorderBrush" Color="#FFE0B2" />
+
+            <!-- Perill (vermell): zones d'esborrat i operacions massives -->
+            <SolidColorBrush x:Key="DangerBrush" Color="#C62828" />
+            <SolidColorBrush x:Key="DangerStrongBrush" Color="#D32F2F" />
+            <SolidColorBrush x:Key="DangerContainerBrush" Color="#FFEBEE" />
+            <SolidColorBrush x:Key="DangerBorderBrush" Color="#FFCDD2" />
+            <!-- Text damunt de DangerStrongBrush (botó d'esborrar) -->
+            <SolidColorBrush x:Key="DangerStrongForegroundBrush" Color="#FFFFFF" />
+
+            <!-- Accent (lila): badge de tipus d'actuació -->
+            <SolidColorBrush x:Key="AccentBrush" Color="#7B1FA2" />
+            <SolidColorBrush x:Key="AccentContainerBrush" Color="#F3E5F5" />
+
+            <!-- Capçalera de targeta (indigo): capçaleres de les utilitats -->
+            <SolidColorBrush x:Key="HeaderBrush" Color="#1A237E" />
+            <SolidColorBrush x:Key="HeaderContainerBrush" Color="#E8EAF6" />
+
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+
+            <SolidColorBrush x:Key="SurfaceSubtleBrush" Color="#1E1E24" />
+            <SolidColorBrush x:Key="SurfaceMutedBrush" Color="#17171B" />
+            <SolidColorBrush x:Key="SurfaceCardBrush" Color="#26262E" />
+            <SolidColorBrush x:Key="BorderSubtleBrush" Color="#3A3A42" />
+
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#B0B0B8" />
+            <SolidColorBrush x:Key="TextTertiaryBrush" Color="#7E7E88" />
+
+            <SolidColorBrush x:Key="InfoBrush" Color="#90CAF9" />
+            <SolidColorBrush x:Key="InfoContainerBrush" Color="#12314A" />
+
+            <SolidColorBrush x:Key="SuccessBrush" Color="#A5D6A7" />
+            <SolidColorBrush x:Key="SuccessContainerBrush" Color="#14331A" />
+            <SolidColorBrush x:Key="SuccessBorderBrush" Color="#2E5B34" />
+
+            <SolidColorBrush x:Key="WarningBrush" Color="#FFB74D" />
+            <SolidColorBrush x:Key="WarningContainerBrush" Color="#3A2A12" />
+            <SolidColorBrush x:Key="WarningBorderBrush" Color="#6B4A16" />
+
+            <SolidColorBrush x:Key="DangerBrush" Color="#EF9A9A" />
+            <SolidColorBrush x:Key="DangerStrongBrush" Color="#E57373" />
+            <SolidColorBrush x:Key="DangerContainerBrush" Color="#3A1618" />
+            <SolidColorBrush x:Key="DangerBorderBrush" Color="#6B2B31" />
+            <SolidColorBrush x:Key="DangerStrongForegroundBrush" Color="#1A1013" />
+
+            <SolidColorBrush x:Key="AccentBrush" Color="#CE93D8" />
+            <SolidColorBrush x:Key="AccentContainerBrush" Color="#2E1B33" />
+
+            <SolidColorBrush x:Key="HeaderBrush" Color="#9FA8DA" />
+            <SolidColorBrush x:Key="HeaderContainerBrush" Color="#1E2140" />
+
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+
+</ResourceDictionary>

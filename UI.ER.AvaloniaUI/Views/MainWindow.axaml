@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:assist="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        x:DataType="viewModels:AppStatusViewModel"
+        x:CompileBindings="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Width="1280" Height="720" MinWidth="720"
         Title="Eap Recull">
@@ -44,7 +45,7 @@
                                     <Setter Property="Height" Value="48" />
                                     <Setter Property="Padding" Value="16,0" />
                                     <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    <Setter Property="IsEnabled" Value="{Binding $self.Content.IsEnabled}" />
+                                    <Setter Property="IsEnabled" Value="{Binding $self.((Control)Content).IsEnabled}" />
                                 </Style>
                             </ListBox.Styles>
                             <TextBlock Classes="Body2" Text="Gestió" />
@@ -83,37 +84,37 @@
                                     <avalonia:MaterialIcon Kind="DotsVertical" Width="24" Height="24" />
                                 </MenuItem.Header>
 
-                                <MenuItem Header="Centres" Click="Centre_OnClick">
+                                <MenuItem Header="Centres" Command="{Binding CentreSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="OfficeBuildingOutline" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Etapes" Click="Etapa_OnClick">
+                                <MenuItem Header="Etapes" Command="{Binding EtapaSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="StairsUp" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Cursos" Click="CursAcademic_OnClick">
+                                <MenuItem Header="Cursos" Command="{Binding CursAcademicSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="CalendarCheck" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Tipus actuacions" Click="TipusActuacio_OnClick">
+                                <MenuItem Header="Tipus actuacions" Command="{Binding TipusActuacioSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="FormatListBulletedType" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Alumnes" Click="Alumne_OnClick">
+                                <MenuItem Header="Alumnes" Command="{Binding AlumneSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="School" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Actuacio" Click="Actuacio_OnClick">
+                                <MenuItem Header="Actuacio" Command="{Binding ActuacioSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="BookOpenVariant" Width="24" Height="24" />
                                     </MenuItem.Icon>
@@ -121,15 +122,23 @@
 
                                 <Separator />
 
-                                <MenuItem Header="Utilitats" Click="Utilitats_OnClick">
+                                <MenuItem Header="Utilitats" Command="{Binding UtilitatsCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="ChartDonutVariant" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
                                 <Separator />
-                                
-                                <MenuItem Header="Sortir" Click="GoodbyeButtonMenuItem_OnClick">
+
+                                <MenuItem Header="Canvia el tema" Click="TemaMenuItem_OnClick">
+                                    <MenuItem.Icon>
+                                        <avalonia:MaterialIcon Kind="ThemeLightDark" Width="24" Height="24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
+                                <Separator />
+
+                                <MenuItem Header="Sortir" Click="SortirMenuItem_OnClick">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="ExitRun" Width="24" Height="24" />
                                     </MenuItem.Icon>
@@ -190,7 +199,7 @@
                                                                     Kind="CalendarCheck" Width="48" Height="48" 
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding CursActual}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
-                                            <TextBlock Classes="Body2" Foreground="Red" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>
+                                            <TextBlock Classes="Body2" Foreground="{DynamicResource DangerStrongBrush}" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>
                                             <Button    Margin="0,12,0,0" Content="Gestiona cursos acadèmics" Command="{Binding CursAcademicSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
@@ -199,7 +208,7 @@
                             </WrapPanel>
 
                             <ScrollViewer>
-                                <Border BorderBrush="White"
+                                <Border BorderBrush="{DynamicResource SurfaceCardBrush}"
                                         BorderThickness="1"
                                         CornerRadius="4"
                                         Padding="30"
@@ -226,7 +235,7 @@ Programari lliure inclòs a EAPRecull:
 
 Incidències, propostes de millora, etc són benvingudes: https://github.com/ctrl-alt-d/eaprecull/issues/new
 
-Versió 1.0</TextBlock>
+Versió 0.7 (setembre 2026)</TextBlock>
                                 </Border>
                             </ScrollViewer>
 

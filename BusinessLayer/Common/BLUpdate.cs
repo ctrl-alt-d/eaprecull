@@ -49,6 +49,10 @@ namespace BusinessLayer.Common
                 //
                 var model = await Perfection<TModel>(parm.Id);
                 //
+                // El DTO d'abans de tocar res: sense ell, moure una actuació d'un alumne a
+                // un altre no refrescaria el comptador de l'alumne d'origen.
+                var dtoPrevi = await Model2Dto(model);
+                //
                 ResetReferences(model);
                 //
                 await PreUpdate(model, parm);
@@ -60,6 +64,8 @@ namespace BusinessLayer.Common
                 await GetContext().SaveChangesAsync();
                 //
                 var dto = await Model2Dto(model);
+                //
+                Notificador?.Publica(new CanviDeDomini(MenaDeCanvi.Modificacio, Referencies.De(dtoPrevi, dto)));
                 //
                 return new(dto);
             }

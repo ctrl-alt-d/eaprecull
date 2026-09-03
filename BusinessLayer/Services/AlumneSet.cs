@@ -8,6 +8,7 @@ using Project = DTO.Projections;
 using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
+using DataLayer.Sql;
 using System;
 using DataModels.Models;
 using DTO.i.DTOs;
@@ -166,10 +167,10 @@ namespace BusinessLayer.Services
 
             tokens.ForEach(token =>
                 query = query.Where(model =>
-                    (model.CentreActual != null && model.CentreActual.Nom.Contains(token)) ||
-                    EF.Functions.Like(model.Nom, $"%{token}%") ||
-                    EF.Functions.Like(model.Cognoms, $"%{token}%") ||
-                    model.Tags.Contains(token)
+                    (model.CentreActual != null && FuncionsSql.Conte(model.CentreActual.Nom, token)) ||
+                    FuncionsSql.Conte(model.Nom, token) ||
+                    FuncionsSql.Conte(model.Cognoms, token) ||
+                    FuncionsSql.Conte(model.Tags, token)
                 )
             );
             return query;
@@ -183,7 +184,7 @@ namespace BusinessLayer.Services
             var tokens = request.Tags.Split().Select(x => x.Trim()).ToList();
 
             tokens.ForEach(token =>
-                query = query.Where(model => EF.Functions.Like(model.Tags, $"%{token}%"))
+                query = query.Where(model => FuncionsSql.Conte(model.Tags, token))
             );
             return query;
         }

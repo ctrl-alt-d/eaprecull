@@ -3,9 +3,11 @@
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:controls="clr-namespace:UI.ER.AvaloniaUI.Controls"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
         x:Class="UI.ER.AvaloniaUI.Pages.ActuacioCreateWindow"
+        x:DataType="viewModels:ActuacioCreateViewModel"
+        x:CompileBindings="True"
         HorizontalContentAlignment="Stretch"
         Title="Actuació, alta"        
         Width="1100" Height="700" MinWidth="720"
@@ -18,8 +20,7 @@
                     Margin="24, 20">
 
             <!-- ==================== DADES DE L'ACTUACIÓ ==================== -->
-            <Border Background="#F5F7FA" CornerRadius="8" Padding="20" Margin="0,0,0,16"
-                    BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border Classes="Seccio">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <avalonia:MaterialIcon Kind="CalendarClock" Width="22" Height="22" 
@@ -44,7 +45,7 @@
                         <TextBox Grid.Row="1" Grid.Column="1" Margin="6,4"
                                        UseFloatingWatermark="True"
                                        Classes="Filled"
-                                       wpf:TextFieldAssist.Label="Minuts emprats"
+                                       assists:TextFieldAssist.Label="Minuts emprats"
                                        Text="{Binding MinutsDuradaActuacioTxt}"/>
                         <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="6,4"
                                     Text="{Binding ObservacionsTipusActuacio}"
@@ -53,20 +54,19 @@
                                     MinHeight="50"
                                     UseFloatingWatermark="True"
                                     Classes="Filled"
-                                    wpf:TextFieldAssist.Label="Observacions sobre el tipus d'actuació" />
+                                    assists:TextFieldAssist.Label="Observacions sobre el tipus d'actuació" />
                     </Grid>
                 </StackPanel>
             </Border>
 
             <!-- ==================== ALUMNE I CONTEXT ==================== -->
-            <Border Background="#E8F5E9" CornerRadius="8" Padding="20" Margin="0,0,0,16"
-                    BorderBrush="#C8E6C9" BorderThickness="1">
+            <Border Classes="Seccio Ok">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <avalonia:MaterialIcon Kind="AccountSchoolOutline" Width="22" Height="22" 
-                                               Foreground="#2E7D32" Margin="0,0,10,0"/>
+                                               Foreground="{DynamicResource SuccessBrush}" Margin="0,0,10,0"/>
                         <TextBlock Text="Alumne i context" Classes="Subtitle1" FontWeight="SemiBold"
-                                   Foreground="#2E7D32"/>
+                                   Foreground="{DynamicResource SuccessBrush}"/>
                     </StackPanel>
                     <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="1*,1*">
                         <controls:LookupInput Grid.Row="0" Grid.Column="0" Margin="6,4"
@@ -88,14 +88,13 @@
                             Text="{Binding NivellAlMomentDeLactuacio}"
                             UseFloatingWatermark="True"
                             Classes="Filled"
-                            wpf:TextFieldAssist.Label="Nivell al moment de l'actuació (ex: 1r)" />
+                            assists:TextFieldAssist.Label="Nivell al moment de l'actuació (ex: 1r)" />
                     </Grid>
                 </StackPanel>
             </Border>
 
             <!-- ==================== DESCRIPCIÓ ==================== -->
-            <Border Background="#F5F7FA" CornerRadius="8" Padding="20" Margin="0,0,0,16"
-                    BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border Classes="Seccio">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <avalonia:MaterialIcon Kind="TextBoxOutline" Width="22" Height="22" 
@@ -109,7 +108,7 @@
                                 MinHeight="80"
                                 UseFloatingWatermark="True"
                                 Classes="Filled"
-                                wpf:TextFieldAssist.Label="Descripció de l'actuació" />
+                                assists:TextFieldAssist.Label="Descripció de l'actuació" />
                 </StackPanel>
             </Border>
 
@@ -129,23 +128,8 @@
     </ScrollViewer>
 
         <!-- ==================== FAB DESAR ==================== -->
-        <material:FloatingButton
-            HorizontalAlignment="Right" VerticalAlignment="Bottom"
-            Margin="0,0,24,24"
-            IsExtended="True"
-            Command="{Binding SubmitCommand}"
-            HotKey="Ctrl+S"
-            ToolTip.Tip="Desar els canvis (Ctrl+S)">
-            <material:FloatingButton.Content>
-                <StackPanel Orientation="Horizontal" Height="24">
-                    <Viewbox Stretch="Fill" VerticalAlignment="Stretch">
-                        <avalonia:MaterialIcon Kind="ContentSave" Width="24" Height="24" />
-                    </Viewbox>
-                    <TextBlock Margin="8,0" Text="Desar" Classes="Subtitle2"
-                               VerticalAlignment="Center" />
-                </StackPanel>
-            </material:FloatingButton.Content>
-        </material:FloatingButton>
+        <material:FloatingButton Classes="Desar Ancorat" IsExtended="True"
+                                 Command="{Binding SubmitCommand}" />
 
     </Grid>
 </Window>

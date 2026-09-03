@@ -1,39 +1,46 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Material.Styles.Controls;
+using UI.ER.AvaloniaUI.Helpers;
 using UI.ER.AvaloniaUI.Pages;
+using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 using ReactiveUI.Avalonia;
 using System;
+using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
+using System.Reactive.Linq;
 using ReactiveUI;
-using System.Threading.Tasks;
-using System.Reactive;
-using CommonInterfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace UI.ER.AvaloniaUI.Views
 {
+    // MainWindow és l'única vista fora de convenció: el seu ViewModel no es diu
+    // MainViewModel. Es declara aquí en comptes de tractar-la com a cas especial
+    // dins de la factory.
+    [ViewModel(typeof(AppStatusViewModel))]
     public partial class MainWindow : ReactiveWindow<AppStatusViewModel>
     {
+        private readonly IWindowFactory _windows;
         private NavigationDrawer? _leftDrawer;
         private ToggleButton? _navSwitch;
 
-        public MainWindow()
+        // Constructor pont: el manté el carregador XAML en temps d'execució i el
+        // previsualitzador d'Avalonia, que instancien la vista sense passar pel
+        // contenidor. Encadena amb el de DI, així les dues vies deixen _windows a punt.
+        public MainWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+
+        public MainWindow(IWindowFactory windows)
         {
+            _windows = windows;
 
-            DataContext = new AppStatusViewModel();
-
-            this.WhenActivated(disposables =>
-            {
-                RegisterShowAlumneDialog(disposables);
-                RegisterShowActuacioDialog(disposables);
-                RegisterShowCursAcademicDialog(disposables);
-            });
+            this.WhenActivated(Registra);
 
             InitializeComponent();
             this.AttachDevTools(KeyGesture.Parse("Shift+F12"));
@@ -65,60 +72,31 @@ namespace UI.ER.AvaloniaUI.Views
             }
         }
 
-        //
-        protected virtual void RegisterShowAlumneDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
+        /// <summary>
+        /// Diu quina finestra atén cada petició de navegació del ViewModel. És l'única
+        /// cosa que la finestra principal sap de la navegació: quan s'obre i què passa
+        /// en tancar-se ho decideix <see cref="AppStatusViewModel"/>.
+        /// </summary>
+        /// <remarks>
+        /// El <see cref="CompositeDisposable"/> de l'activació recull tant la subscripció
+        /// exterior com els <c>RegisterHandler</c> que s'hi pengen; sense això
+        /// s'acumularien a cada reactivació de la finestra.
+        /// </remarks>
+        private void Registra(CompositeDisposable d)
+            => this
                 .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(async interaction =>
+                .Where(vm => vm is not null)
+                .Subscribe(vm =>
                 {
-                    var dialog = new AlumneSetWindow()
-                    {
-                        DataContext = new AlumneSetViewModel(modeLookup: false)
-                    };
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        //
-        protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new ActuacioSetWindow()
-                    {
-                        DataContext = new ActuacioSetViewModel(modeLookup: false)
-                    };
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        //
-        protected virtual void RegisterShowCursAcademicDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new CursAcademicSetWindow()
-                    {
-                        DataContext = new CursAcademicSetViewModel(modeLookup: false)
-                    };
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        private Window GetWindow()
-            =>
-            (Window)this.VisualRoot!;
+                    this.RegistraNavegacio<ActuacioSetWindow>(_windows, vm!.ShowActuacioSetDialog).DisposeWith(d);
+                    this.RegistraNavegacio<AlumneSetWindow>(_windows, vm.ShowAlumneSetDialog).DisposeWith(d);
+                    this.RegistraNavegacio<CentreSetWindow>(_windows, vm.ShowCentreSetDialog).DisposeWith(d);
+                    this.RegistraNavegacio<CursAcademicSetWindow>(_windows, vm.ShowCursAcademicSetDialog).DisposeWith(d);
+                    this.RegistraNavegacio<EtapaSetWindow>(_windows, vm.ShowEtapaSetDialog).DisposeWith(d);
+                    this.RegistraNavegacio<TipusActuacioSetWindow>(_windows, vm.ShowTipusActuacioSetDialog).DisposeWith(d);
+                    this.RegistraNavegacio<UtilitatsWindow>(_windows, vm.ShowUtilitatsDialog).DisposeWith(d);
+                })
+                .DisposeWith(d);
 
         private void InitializeComponent()
         {
@@ -148,17 +126,7 @@ namespace UI.ER.AvaloniaUI.Views
             var listBox = sender as ListBox;
             if (!listBox!.IsFocused && !listBox.IsKeyboardFocusWithin)
                 return;
-            try
-            {
-                PageCarousel.SelectedIndex = listBox.SelectedIndex;
-                //mainScroller.Offset = Vector.Zero;
-                //mainScroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                // listBox.SelectedIndex == 5 ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto;
-
-            }
-            catch
-            {
-            }
+            PageCarousel.SelectedIndex = listBox.SelectedIndex;
             NavDrawerSwitch.IsChecked = false;
         }
 
@@ -167,81 +135,17 @@ namespace UI.ER.AvaloniaUI.Views
             SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)", "Root", DispatcherPriority.Normal);
         }
 
-        private void Centre_OnClick(object? sender, RoutedEventArgs e)
+        private void SortirMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            var w = new CentreSetWindow()
-            {
-                DataContext = new CentreSetViewModel()
-            };
-
-            w.ShowDialog(this);
+            // Heretat de la plantilla de Material.Avalonia, l'entrada només escrivia
+            // un missatge a la snackbar i no tancava res.
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                desktop.Shutdown();
+            else
+                Close();
         }
 
-        private void Etapa_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var w = new EtapaSetWindow()
-            {
-                DataContext = new EtapaSetViewModel()
-            };
-
-            w.ShowDialog(this);
-        }
-
-        private void CursAcademic_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var w = new CursAcademicSetWindow()
-            {
-                DataContext = new CursAcademicSetViewModel()
-            };
-
-            w.ShowDialog(this);
-        }
-
-        private void TipusActuacio_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var w = new TipusActuacioSetWindow()
-            {
-                DataContext = new TipusActuacioSetViewModel()
-            };
-
-            w.ShowDialog(this);
-        }
-
-        private void Alumne_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var w = new AlumneSetWindow()
-            {
-                DataContext = new AlumneSetViewModel()
-            };
-
-            w.ShowDialog(this);
-        }
-
-        private void Actuacio_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var w = new ActuacioSetWindow()
-            {
-                DataContext = new ActuacioSetViewModel()
-            };
-
-            w.ShowDialog(this);
-        }
-
-
-        private void Utilitats_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var w = new UtilitatsWindow()
-            {
-                DataContext = new UtilitatsViewModel()
-            };
-
-            w.ShowDialog(this);
-        }
-
-        private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
-        {
-            SnackbarHost.Post("See ya next time, user!", "Root", DispatcherPriority.Normal);
-        }
+        private void TemaMenuItem_OnClick(object? sender, RoutedEventArgs e) => Tema.Alterna();
 
 
     }

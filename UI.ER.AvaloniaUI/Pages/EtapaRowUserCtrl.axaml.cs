@@ -1,66 +1,21 @@
-using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using UI.ER.ViewModels.ViewModels;
-using ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
 using Dtoo = DTO.o.DTOs;
-using ReactiveUI.Avalonia;
-using System;
-using System.Reactive.Linq;
+using UI.ER.AvaloniaUI.Pages.Base;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public partial class EtapaRowUserCtrl : ReactiveUserControl<EtapaRowViewModel>
+    public partial class EtapaRowUserCtrl
+        : EntityRowUserCtrl<EtapaRowViewModel, EtapaUpdateViewModel, EtapaUpdateWindow, Dtoo.Etapa>
     {
-        public EtapaRowUserCtrl()
-        {
-            InitializeComponent();
+        // El ListBox.ItemTemplate instancia aquest control des de l'AXAML, no pas
+        // el contenidor: cal un constructor sense paràmetres que resolgui la factory.
+        public EtapaRowUserCtrl() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
 
-            this.WhenActivated(disposables =>
-            {
-                RegisterShowUpdateDialog(disposables);
-                RegisterCloseOnSelect(disposables);
-            });
+        public EtapaRowUserCtrl(IWindowFactory windows) : base(windows) => InitializeComponent();
 
-
-        }
-
-        private void InitializeComponent()
-            =>
-            AvaloniaXamlLoader.Load(this);
-        private Window GetWindow()
-            =>
-            (Window)this.VisualRoot!;
-
-        // -- Show Dialog --
-        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = new EtapaUpdateWindow()
-                    {
-                        DataContext = interaction.Input
-                    };
-
-                    var result = await dialog.ShowDialog<Dtoo.Etapa?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        // -- Select Row
-        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
-            );
-
-
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

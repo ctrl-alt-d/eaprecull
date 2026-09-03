@@ -51,6 +51,10 @@ namespace BusinessLayer.Common
                 //
                 await GetContext().SaveChangesAsync();
                 //
+                // El DTO s'ha calculat abans del Remove, però només es publica quan el
+                // desat ha anat bé.
+                Notificador?.Publica(new CanviDeDomini(MenaDeCanvi.Baixa, Referencies.De(dto)));
+                //
                 return new(dto);
             }
             catch (BrokenRuleException br)

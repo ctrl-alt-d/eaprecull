@@ -3,42 +3,40 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class CursAcademicRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class CursAcademicRowViewModel : ViewModelBase, IRowViewModel<CursAcademicUpdateViewModel, Dtoo.CursAcademic, Dtoo.CursAcademic>, IEtiquetaDescripcio, IId
     {
 
-        protected Dtoo.CursAcademic Model { get; }
+        protected Dtoo.CursAcademic Model { get; set; }
         protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos { get; }
+        private readonly IServiceFactory _serveis;
+
         public CursAcademicRowViewModel(
+            IServiceFactory serveis,
             Dtoo.CursAcademic CursAcademicDto,
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
             bool modeLookup = false)
         {
-            var nombreActuacions = CursAcademicDto.NombreActuacions;
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
             TotsElsCursos = totsElsCursos;
 
             // State
-            Model = CursAcademicDto;
-            _Etiqueta = CursAcademicDto.Etiqueta;
-            _Descripcio = CursAcademicDto.Descripcio;
-            _Estat = CursAcademicDto.EsActiu ? "Activat" : "Desactivat";
-            _EsActiu = CursAcademicDto.EsActiu;
-            _NombreActuacions = nombreActuacions;
             Id = CursAcademicDto.Id;
+            Model = CursAcademicDto;
+            Actualitza(CursAcademicDto);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -81,22 +79,35 @@ namespace UI.ER.ViewModels.ViewModels
         public int NombreActuacions
         {
             get { return _NombreActuacions; }
-            protected set { this.RaiseAndSetIfChanged(ref _NombreActuacions, value); }
+            protected set
+            {
+                this.RaiseAndSetIfChanged(ref _NombreActuacions, value);
+                this.RaisePropertyChanged(nameof(NumActuacionsTxt));
+            }
         }
 
         public string NumActuacionsTxt => $"{NombreActuacions} actuacions";
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.CursAcademic? data)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.CursAcademic? data)
         {
             if (data == null)
                 return;
 
+            Model = data;
+            ReferenciesPintades = Referencies.De(data);
             Etiqueta = data.Etiqueta;
             Descripcio = data.Descripcio;
             Estat = data.EsActiu ? "Activat" : "Desactivat";
             EsActiu = data.EsActiu;
+            NombreActuacions = data.NombreActuacions;
         }
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
         private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
@@ -109,9 +120,9 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.Resolve<ICursAcademicActivaDesactiva>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicActivaDesactiva>();
             var dto = await bl.Toggle(Id);
-            DTO2ModelView(dto.Data);
+            Actualitza(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
 
             if (dto.Data == null)
@@ -128,9 +139,9 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<CursAcademicUpdateViewModel, Dtoo.CursAcademic?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new CursAcademicUpdateViewModel(Id);
+            var update = new CursAcademicUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            if (data != null) Actualitza(data);
         }
 
         // --- Seleccionar si estem en mode lookup ---

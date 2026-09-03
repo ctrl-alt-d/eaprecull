@@ -1,56 +1,40 @@
-using Avalonia.Controls;
+using System;
+using System.Reactive.Disposables.Fluent;
+using System.Reactive.Linq;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
-using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+using ReactiveUI.Avalonia;
+using UI.ER.AvaloniaUI.Helpers;
 using UI.ER.ViewModels.ViewModels;
-using Dtoo = DTO.o.DTOs;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public partial class AlumneInformeViewerWindow : Window
+    /// <summary>
+    /// Expedient d'un alumne, amb exportació a Word.
+    /// </summary>
+    public partial class AlumneInformeViewerWindow : ReactiveWindow<AlumneInformeViewerViewModel>
     {
         public AlumneInformeViewerWindow()
         {
             InitializeComponent();
 
-            // Quan s'obre la finestra, carregar les dades
-            this.Opened += async (s, e) =>
-            {
-                if (DataContext is AlumneInformeViewerViewModel vm)
-                {
-                    await vm.LoadDataCommand.Execute();
-                }
-            };
-
-            // Subscripcions als commands
-            this.WhenAnyValue(x => x.DataContext)
-                .Where(dc => dc != null)
-                .Subscribe(dc =>
-                {
-                    if (dc is AlumneInformeViewerViewModel vm)
+            this.WhenActivated(d =>
+                this.WhenAnyValue(x => x.ViewModel)
+                    .Where(vm => vm is not null)
+                    .Subscribe(vm =>
                     {
-                        vm.CloseCommand.Subscribe(_ => Close());
-                        vm.ExportarWordCommand.Subscribe(ObraFileExplorer);
-                    }
-                });
+                        vm!.CloseCommand.Subscribe(_ => Close()).DisposeWith(d);
+                        vm.ExportarWordCommand.Subscribe(FileExplorer.Obre).DisposeWith(d);
+
+                        // La càrrega inicial anava a l'esdeveniment Opened amb un
+                        // `async void`: una excepció de LoadData no tenia on anar a
+                        // parar. Executada com a command, els errors surten per
+                        // ThrownExceptions com els de la resta de l'aplicació.
+                        vm.LoadDataCommand.Execute().Subscribe().DisposeWith(d);
+                    })
+                    .DisposeWith(d));
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-
-        private void ObraFileExplorer(Dtoo.SaveResult? saveResult)
-        {
-            if (saveResult == null) return;
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-            {
-                FileName = saveResult.FolderPath,
-                UseShellExecute = true,
-                Verb = "open"
-            });
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }
