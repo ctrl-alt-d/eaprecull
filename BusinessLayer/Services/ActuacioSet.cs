@@ -8,6 +8,7 @@ using Project = DTO.Projections;
 using Models = DataModels.Models;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
+using DataLayer.Sql;
 using System;
 using DataModels.Models;
 using DTO.i.DTOs;
@@ -117,24 +118,24 @@ namespace BusinessLayer.Services
                 query = query.Where(model => (
 
                     // alumne nom, cognoms i tags
-                    EF.Functions.Like(model.Alumne.Nom, $"%{token}%") ||
-                    EF.Functions.Like(model.Alumne.Cognoms, $"%{token}%") ||
-                    EF.Functions.Like(model.Alumne.Tags, $"%{token}%") ||
+                    FuncionsSql.ConteSenseAccents(model.Alumne.Nom, token) ||
+                    FuncionsSql.ConteSenseAccents(model.Alumne.Cognoms, token) ||
+                    FuncionsSql.ConteSenseAccents(model.Alumne.Tags, token) ||
 
                     // centre
-                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Nom, $"%{token}%")) ||
-                    (model.Alumne.CentreActual != null && EF.Functions.Like(model.Alumne.CentreActual.Codi, $"%{token}%")) ||
+                    (model.Alumne.CentreActual != null && FuncionsSql.ConteSenseAccents(model.Alumne.CentreActual.Nom, token)) ||
+                    (model.Alumne.CentreActual != null && FuncionsSql.ConteSenseAccents(model.Alumne.CentreActual.Codi, token)) ||
 
                     // descripcions
-                    EF.Functions.Like(model.ObservacionsTipusActuacio, $"%{token}%") ||
-                    EF.Functions.Like(model.DescripcioActuacio, $"%{token}%") ||
+                    FuncionsSql.ConteSenseAccents(model.ObservacionsTipusActuacio, token) ||
+                    FuncionsSql.ConteSenseAccents(model.DescripcioActuacio, token) ||
 
                     // tipus actuacio
-                    EF.Functions.Like(model.TipusActuacio.Nom, $"%{token}%") ||
-                    EF.Functions.Like(model.TipusActuacio.Codi, $"%{token}%") ||
+                    FuncionsSql.ConteSenseAccents(model.TipusActuacio.Nom, token) ||
+                    FuncionsSql.ConteSenseAccents(model.TipusActuacio.Codi, token) ||
 
                     // curs actuacio
-                    EF.Functions.Like(model.CursActuacio.Nom, $"%{token}%")
+                    FuncionsSql.ConteSenseAccents(model.CursActuacio.Nom, token)
             )));
             return query;
         }
