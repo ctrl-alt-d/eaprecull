@@ -49,6 +49,45 @@ namespace UI.ER.AvaloniaUI.Helpers
             });
 
         /// <summary>
+        /// Navegació: entrada de menú o botó del taulell que obre una llista d'entitats.
+        /// A diferència de <c>RegistraDialeg</c>, aquí el ViewModel no arriba de fora —
+        /// no hi ha cap argument de runtime a passar— i el construeix la factory.
+        /// </summary>
+        /// <remarks>
+        /// La sortida és <see cref="IIdEtiquetaDescripcio"/> perquè les mateixes finestres
+        /// fan de lookup. Obertes des del menú es tanquen sense selecció i tornen
+        /// <c>null</c>, que qui ha llançat la comanda ignora.
+        /// </remarks>
+        public static IDisposable RegistraNavegacio<TWindow>(
+            this Visual owner,
+            IWindowFactory windows,
+            Interaction<Unit, IIdEtiquetaDescripcio?> navegacio)
+            where TWindow : Window
+            => navegacio.RegisterHandler(async interaction =>
+            {
+                var dialog = windows.Get<TWindow>();
+
+                var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(owner.GetOwnerWindow());
+                interaction.SetOutput(result);
+            });
+
+        /// <summary>
+        /// Navegació cap a una finestra que no retorna res (<c>UtilitatsWindow</c>).
+        /// </summary>
+        public static IDisposable RegistraNavegacio<TWindow>(
+            this Visual owner,
+            IWindowFactory windows,
+            Interaction<Unit, Unit> navegacio)
+            where TWindow : Window
+            => navegacio.RegisterHandler(async interaction =>
+            {
+                var dialog = windows.Get<TWindow>();
+
+                await dialog.ShowDialog(owner.GetOwnerWindow());
+                interaction.SetOutput(Unit.Default);
+            });
+
+        /// <summary>
         /// Lookup: obre una llista en mode selecció i en torna l'element triat. Els 16
         /// blocs de les finestres d'<c>Alumne</c> i d'<c>Actuacio</c> es redueixen a una
         /// línia cadascun.

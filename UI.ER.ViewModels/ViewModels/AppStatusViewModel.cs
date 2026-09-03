@@ -8,7 +8,6 @@ using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
 using System.Windows.Input;
-using System.Threading.Tasks;
 using CommonInterfaces;
 
 namespace UI.ER.ViewModels.ViewModels
@@ -20,11 +19,30 @@ namespace UI.ER.ViewModels.ViewModels
         public AppStatusViewModel()
         {
             RxApp.MainThreadScheduler.Schedule(LoadData);
-            ActuacioSetCommand = ReactiveCommand.CreateFromTask(ShowActuacioSetDialogHandle);
-            AlumneSetCommand = ReactiveCommand.CreateFromTask(ShowAlumneSetDialogHandle);
-            CursAcademicSetCommand = ReactiveCommand.CreateFromTask(ShowCursAcademicSetDialogHandle);
 
+            // Una comanda per cada entrada de navegació de la finestra principal: les tres
+            // targetes del taulell i les set entrades del menú. La vista només hi enganxa
+            // quina finestra atén cada Interaction; el que s'obre i què passa després es
+            // decideix aquí.
+            ActuacioSetCommand = ComandaDeNavegacio(ShowActuacioSetDialog);
+            AlumneSetCommand = ComandaDeNavegacio(ShowAlumneSetDialog);
+            CentreSetCommand = ComandaDeNavegacio(ShowCentreSetDialog);
+            CursAcademicSetCommand = ComandaDeNavegacio(ShowCursAcademicSetDialog);
+            EtapaSetCommand = ComandaDeNavegacio(ShowEtapaSetDialog);
+            TipusActuacioSetCommand = ComandaDeNavegacio(ShowTipusActuacioSetDialog);
+            UtilitatsCommand = ComandaDeNavegacio(ShowUtilitatsDialog);
         }
+
+        /// <summary>
+        /// Comanda que obre un diàleg i, en tancar-lo, refresca les xifres del taulell.
+        /// Qualsevol de les set finestres pot haver canviat dades que hi surten.
+        /// </summary>
+        private ICommand ComandaDeNavegacio<TSortida>(Interaction<Unit, TSortida> dialeg)
+            => ReactiveCommand.CreateFromTask(async () =>
+            {
+                await dialeg.Handle(Unit.Default);
+                RxApp.MainThreadScheduler.Schedule(LoadData);
+            });
 
         private async void LoadData()
         {
@@ -122,34 +140,33 @@ namespace UI.ER.ViewModels.ViewModels
             set => this.RaiseAndSetIfChanged(ref _TotalALumnesActualitzats, value);
         }
 
-        // ---
+        // --- Navegació -------------------------------------------------------------
+        //
+        // Cada parella {Entitat}SetCommand / Show{Entitat}SetDialog és un punt d'entrada
+        // de la finestra principal. Les llistes retornen IIdEtiquetaDescripcio? perquè les
+        // mateixes finestres fan de lookup; obertes des del menú el resultat és null i
+        // s'ignora.
+
         public ICommand ActuacioSetCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowActuacioSetDialog { get; } = new();
-        private async Task ShowActuacioSetDialogHandle()
-        {
-            var data = await ShowActuacioSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-        }
 
-        // ---
         public ICommand AlumneSetCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowAlumneSetDialog { get; } = new();
-        private async Task ShowAlumneSetDialogHandle()
-        {
-            var data = await ShowAlumneSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-        }
 
+        public ICommand CentreSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCentreSetDialog { get; } = new();
 
-        // ---
         public ICommand CursAcademicSetCommand { get; }
         public Interaction<Unit, IIdEtiquetaDescripcio?> ShowCursAcademicSetDialog { get; } = new();
-        private async Task ShowCursAcademicSetDialogHandle()
-        {
-            var data = await ShowCursAcademicSetDialog.Handle(Unit.Default);
-            RxApp.MainThreadScheduler.Schedule(LoadData);
-        }
 
+        public ICommand EtapaSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowEtapaSetDialog { get; } = new();
 
+        public ICommand TipusActuacioSetCommand { get; }
+        public Interaction<Unit, IIdEtiquetaDescripcio?> ShowTipusActuacioSetDialog { get; } = new();
+
+        /// <summary>Utilitats no és una llista d'entitats: només s'obre i es tanca.</summary>
+        public ICommand UtilitatsCommand { get; }
+        public Interaction<Unit, Unit> ShowUtilitatsDialog { get; } = new();
     }
 }

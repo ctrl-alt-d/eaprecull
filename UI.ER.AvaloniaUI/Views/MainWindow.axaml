@@ -83,37 +83,37 @@
                                     <avalonia:MaterialIcon Kind="DotsVertical" Width="24" Height="24" />
                                 </MenuItem.Header>
 
-                                <MenuItem Header="Centres" Click="Centre_OnClick">
+                                <MenuItem Header="Centres" Command="{Binding CentreSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="OfficeBuildingOutline" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Etapes" Click="Etapa_OnClick">
+                                <MenuItem Header="Etapes" Command="{Binding EtapaSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="StairsUp" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Cursos" Click="CursAcademic_OnClick">
+                                <MenuItem Header="Cursos" Command="{Binding CursAcademicSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="CalendarCheck" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Tipus actuacions" Click="TipusActuacio_OnClick">
+                                <MenuItem Header="Tipus actuacions" Command="{Binding TipusActuacioSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="FormatListBulletedType" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Alumnes" Click="Alumne_OnClick">
+                                <MenuItem Header="Alumnes" Command="{Binding AlumneSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="School" Width="24" Height="24" />
                                     </MenuItem.Icon>
                                 </MenuItem>
 
-                                <MenuItem Header="Actuacio" Click="Actuacio_OnClick">
+                                <MenuItem Header="Actuacio" Command="{Binding ActuacioSetCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="BookOpenVariant" Width="24" Height="24" />
                                     </MenuItem.Icon>
@@ -121,7 +121,7 @@
 
                                 <Separator />
 
-                                <MenuItem Header="Utilitats" Click="Utilitats_OnClick">
+                                <MenuItem Header="Utilitats" Command="{Binding UtilitatsCommand}">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="ChartDonutVariant" Width="24" Height="24" />
                                     </MenuItem.Icon>

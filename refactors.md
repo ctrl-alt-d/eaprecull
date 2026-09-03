@@ -12,8 +12,8 @@
 | **R3** — classes base + helpers | ✅ **FET** — veure §R3 |
 | **R2** — disposal de subscripcions | ✅ **FET dins de R3**, tret d'`AlumneInformeViewerWindow` — veure §R2 |
 | **R5** — codi mort | ✅ **FET** — veure §R5 |
-| R4 — navegació de `MainWindow` | ⬜ **següent** (ja pot consumir `IWindowFactory`) |
-| R1 — eliminar `SuperContext` | ⬜ pendent (51 crides vives) |
+| **R4** — navegació de `MainWindow` | ✅ **FET** — veure §R4 |
+| R1 — eliminar `SuperContext` | ⬜ **següent** (51 crides vives; cal **B3** abans) |
 | R6 — unificació visual | ⬜ pendent |
 | R7 — registre del BusinessLayer per comprensió | ⬜ pendent |
 
@@ -21,13 +21,14 @@
 
 ## 1. Estat actual de `UI.ER.AvaloniaUI`
 
-**Volum després de R3 i R5**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.256 línies**
-(−977: −925 de R3, −52 de R5), a canvi de **368 línies** de codi compartit nou: tres classes base
+**Volum després de R3, R5 i R4**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.177 línies**
+(−1.056: −925 de R3, −52 de R5, −79 de R4), a canvi de **407 línies** de codi compartit: tres classes base
 (`Pages/Base/`), tres helpers (`Helpers/{DialegExtensions,FileExplorer,VisualRootExtensions}.cs`)
 i les tres interfícies de contracte dels ViewModels
 (`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`). Els 30 fitxers `.axaml` (3.189 línies)
-no s'han tocat. Tot el projecte suma **2.061 línies** de `.cs`.
-`UI.ER.AvaloniaUI.Test`: 7 fitxers, 24 tests.
+només s'han tocat a `MainWindow` (R4: 7 `Click=` → `Command=`).
+Tot el projecte suma **2.021 línies** de `.cs`.
+`UI.ER.AvaloniaUI.Test`: 8 fitxers, 27 tests.
 
 ### Patrons en ús
 
@@ -35,6 +36,7 @@ no s'han tocat. Tot el projecte suma **2.061 línies** de `.cs`.
 |---|---|
 | **MVVM + ReactiveUI** | `ReactiveWindow<TVm>` / `ReactiveUserControl<TVm>` + `WhenActivated` |
 | **Interaction pattern** | `vm.ShowXDialog.RegisterHandler(...)` — el VM demana un diàleg sense conèixer Avalonia |
+| **Navegació per comanda** | `Command="{Binding XSetCommand}"` a l'AXAML + `RegistraNavegacio<XWindow>` a la vista (R4) |
 | **Composition Root** | `App.OnFrameworkInitializationCompleted` → `DataLayerConfigureServices()` + `BusinessLayerConfigureServices()` + `UIConfigureServices()` |
 | **Factory de vistes** | `IWindowFactory.Get<T>()` / `GetWith<T>(dc)` — cap `new XWindow(` al codi (R0) |
 | **Classes base genèriques** | `EntityEditWindow<TVm,TDto>`, `EntitySetWindow<…>`, `EntityRowUserCtrl<…>` a `Pages/Base/` (R3) |
@@ -81,11 +83,12 @@ no s'han tocat. Tot el projecte suma **2.061 línies** de `.cs`.
    `WhenAnyValue` emet immediatament → `LoadX()` s'executa durant la construcció i ja llegeix `ModeLookup`.
    ⚠️ **`ModeLookup` NO es pot convertir en `{ get; init; }` assignat després del constructor.** Ha de continuar sent argument del constructor.
 4. `Design.DataContext` (13 blocs a l'AXAML) instancia el VM amb **constructor sense paràmetres**. Afegir injecció per constructor als VMs trencarà aquests blocs. *(B3 — encara pendent, blocador de R1.)*
-5. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0 i R3** (convenció, registre, cicles de vida, constructors, herència de les classes base). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9 i §R3.5.
+5. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0, R3 i R4** (convenció, registre, cicles de vida, constructors, herència de les classes base, navegació per comanda). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9 i §R3.5.
 6. **Tota vista ha de conservar un constructor `public` sense paràmetres.** Els `*RowUserCtrl` perquè els instancia el `ListBox.ItemTemplate`; les finestres perquè, si no, el compilador d'Avalonia emet `AVLN3001`. Les que necessiten serveis fan servir el constructor pont encadenat sobre `App.Services` (§R0.5).
 7. **Les vistes ja no fan `new` d'altres vistes.** Tot passa per `IWindowFactory`. La validació d'arrencada de `DI/Injection.cs` peta si s'afegeix una finestra fora de convenció sense `[ViewModel(typeof(...))]`.
 8. **Cada vista amb `x:Class` conserva el seu `InitializeComponent()`.** `AvaloniaXamlLoader.Load(this)` es queda a la classe derivada, mai a la classe base: el compilador d'Avalonia el reescriu a una crida directa al mètode generat només quan el troba dins del tipus que declara l'AXAML. Pujar-lo a la base compilaria igual però passaria a resoldre's per reflexió en temps d'execució.
 9. **Els escanejos de `DI/Injection.cs` i de `Vistes.cs` filtren `IsAbstract` i `IsGenericTypeDefinition`.** És el que manté les classes base de R3 fora del registre i fora dels tests d'inventari. No treure aquests filtres.
+10. **Cap vista navega des d'un handler de `Click`.** Cada entrada de menú i cada botó que obre una finestra és una `ICommand` del ViewModel amb la seva `Interaction`; la vista només diu quina finestra l'atén (`RegistraNavegacio<TWindow>`). Ho vigila `NavegacioTest` (§R4.3). Els handlers que queden a `MainWindow` no naveguen: escriuen a la snackbar o mouen el `Carousel`.
 
 ---
 
@@ -331,7 +334,11 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 
 **Objectiu**: injectar `IServiceFactory` (o els serveis BL concrets) pel constructor dels VMs.
 
-**Dependència**: R0 ✅ i R3 ✅ fets. La factory ja és qui construeix els VMs sense arguments (`Get<T>()`, des de l'scope del diàleg); falta la variant amb arguments de runtime.
+**Dependència**: R0 ✅, R3 ✅ i R4 ✅ fets. La factory ja és qui construeix els VMs sense arguments (`Get<T>()`, des de l'scope del diàleg); falta la variant amb arguments de runtime.
+
+**Punt de partida després de R4** (verificat avui): **51 crides** a `SuperContext.Resolve<T>()` repartides per **26 fitxers**. R4 no n'ha tocat cap —només ha mogut *qui dispara* els diàlegs—, però hi deixa dues coses a favor:
+- Les **set finestres de navegació** de `MainWindow` s'obren totes amb `Get<T>()`, no amb `GetWith`. Són les primeres que veuran l'scope per diàleg funcionar de debò, sense cap canvi al punt de crida (§R0.3).
+- `AppStatusViewModel` ha quedat com el cas de prova més net per començar: tres `SuperContext.Resolve<T>()` a `LoadData()`, cap argument de constructor, i `ComandaDeNavegacio` ja aïlla tota la navegació de la càrrega de dades.
 
 **Disseny acordat** (discussió del 2026-09-03):
 
@@ -358,6 +365,7 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 - El filtre de registre de ViewModels a `DI/Injection.cs` (§R0.1) mira *«tots els paràmetres tenen valor per defecte»*. Quan els VMs rebin serveis pel constructor deixarà de valer: caldrà canviar-lo per *«tots els paràmetres són resolubles pel contenidor»*.
 - Els `{…}RowViewModel` es creen en bucle dins dels `*SetViewModel`; caldrà un `Func<TDto, bool, TRowVm>` injectat, o passar la `IServiceFactory` avall.
 - Les tres interfícies de `Contracts/DialegContracts.cs` (R3) **no** es toquen: no diuen res de com el VM obté els seus serveis. Les classes base de R3 continuen valent tal com són.
+- `RegistraNavegacio` (R4) **tampoc**: ja passa per `Get<T>()`, que resol des de l'scope. Qui canvia és `RegistraLookup`, que és l'únic helper amb un `new` a dins.
 - Abast: 2 projectes, ~30 fitxers. **Fer-ho en un commit separat.**
 
 ---
@@ -526,18 +534,131 @@ a mà:
 
 ---
 
-## R4 — Treure la navegació del code-behind de `MainWindow`
+## R4 — Treure la navegació del code-behind de `MainWindow` ✅ FET
 
-`MainWindow.axaml.cs` té 8 handlers `X_OnClick` idèntics:
+> `MainWindow.axaml.cs`: **222 → 143 línies** (−79). `Helpers/DialegExtensions.cs` +39,
+> `AppStatusViewModel` +17, `NavegacioTest.cs` +101. Net al projecte de la UI: **−40 línies**.
+> `dotnet build` net i **27 tests verds** (24 + 3 de nous).
+
+### R4.1 — Què hi havia i què hi ha
+
+Hi havia **set handlers `X_OnClick` idèntics** al code-behind…
+
 ```csharp
-private void Centre_OnClick(object? s, RoutedEventArgs e)
-    => new CentreSetWindow { DataContext = new CentreSetViewModel() }.ShowDialog(this);
+private void Centre_OnClick(object? sender, RoutedEventArgs e)
+{
+    var w = _windows.Get<CentreSetWindow>();
+    w.ShowDialog(this);
+}
 ```
-més 3 `RegisterShowXDialog` gairebé iguals.
 
-**Objectiu**: comandes a `AppStatusViewModel` + `IWindowFactory`, i `Command=` a l'AXAML en comptes de `Click=`.
+…i **tres `RegisterShowXDialog`** gairebé iguals per a les targetes del taulell, cadascun amb
+la seva còpia de `WhenAnyValue(x => x.ViewModel).Subscribe(...)`.
 
-També: `try { } catch { }` buit a `DrawerSelectionChanged` (`MainWindow.axaml.cs:150`) que amaga errors — o es documenta què s'espera empassar, o desapareix.
+Ara la navegació és **una sola llista de set línies** dins d'un únic `WhenActivated`:
+
+```csharp
+private void Registra(CompositeDisposable d)
+    => this
+        .WhenAnyValue(x => x.ViewModel)
+        .Where(vm => vm is not null)
+        .Subscribe(vm =>
+        {
+            this.RegistraNavegacio<ActuacioSetWindow>(_windows, vm!.ShowActuacioSetDialog).DisposeWith(d);
+            …
+            this.RegistraNavegacio<UtilitatsWindow>(_windows, vm.ShowUtilitatsDialog).DisposeWith(d);
+        })
+        .DisposeWith(d);
+```
+
+i l'AXAML passa de `Click="Centre_OnClick"` a `Command="{Binding CentreSetCommand}"`.
+
+**El menú i el taulell comparteixen comanda**: «Alumnes» del menú i el botó *Gestiona alumnes*
+de la targeta són el mateix `AlumneSetCommand`. Abans eren dos camins independents —el menú
+obria la finestra i no refrescava les xifres; la targeta sí. Ara les dues refresquen.
+
+### R4.2 — Fitxers tocats
+
+| Fitxer | Canvi |
+|---|---|
+| `UI.ER.ViewModels/ViewModels/AppStatusViewModel.cs` | Set parelles `{X}SetCommand` / `Show{X}SetDialog` (n'hi havia tres) + `UtilitatsCommand` / `ShowUtilitatsDialog`. Els tres `ShowXSetDialogHandle` idèntics es fonen en `ComandaDeNavegacio<TSortida>(Interaction<Unit,TSortida>)`. |
+| `UI.ER.AvaloniaUI/Helpers/DialegExtensions.cs` | `RegistraNavegacio<TWindow>`, dues sobrecàrregues (sortida `IIdEtiquetaDescripcio?` i sortida `Unit`). |
+| `UI.ER.AvaloniaUI/Views/MainWindow.axaml.cs` | −7 handlers, −3 `RegisterShowXDialog`, +1 `Registra(CompositeDisposable)`. Fora el `try { } catch { }` buit. |
+| `UI.ER.AvaloniaUI/Views/MainWindow.axaml` | 7 `Click=` → `Command=`. |
+| `UI.ER.AvaloniaUI.Test/NavegacioTest.cs` | Nou, 3 tests. |
+
+**Per què una `RegistraNavegacio` nova i no `RegistraDialeg`**: `RegistraDialeg` rep el ViewModel
+per l'`Interaction` (`interaction.Input`) i el passa a `GetWith`. A la navegació no hi ha cap
+argument de runtime: l'entrada és `Unit` i el ViewModel el construeix la factory amb `Get<T>()`.
+Són els dos costats de la mateixa moneda i per això viuen al mateix helper.
+
+**Per què les sis llistes retornen `IIdEtiquetaDescripcio?`**: són les mateixes finestres que fan
+de lookup. Obertes des del menú es tanquen sense selecció i tornen `null`, que la comanda ignora.
+Mantenir-ho uniforme estalvia una segona sobrecàrrega; `UtilitatsWindow`, que no és cap llista,
+és l'única amb `Interaction<Unit, Unit>`.
+
+**El `try { } catch { }` buit de `DrawerSelectionChanged`**: eliminat. L'única línia que en
+quedava dins era `PageCarousel.SelectedIndex = listBox.SelectedIndex;`, que no llança —
+`SelectedIndex` fora de rang no és excepció a Avalonia. Les tres línies que sí que podien
+llançar ja estaven comentades des d'abans; també fora.
+
+### R4.3 — Tests (`UI.ER.AvaloniaUI.Test/NavegacioTest.cs`)
+
+| Test | Què fixa |
+|---|---|
+| `CadaLlistaDEntitatEsArribableDesDelTaulell` | **Per comprensió** sobre `Vistes.Finestres`: cada `{X}SetWindow` ha de tenir `{X}SetCommand` i `Show{X}SetDialog` a `AppStatusViewModel`. Una entitat nova entra sola al test i obliga a donar-li entrada al menú. |
+| `TotaInteraccioDelTaulellTeLaSevaComanda` | Cap `Interaction` d'`AppStatusViewModel` sense la comanda que la dispari. Una interacció òrfena només es pot llançar des del code-behind: exactament el que R4 ha tret. |
+| `MainWindowNoNavegaAmbHandlersDeClick` | `MainWindow` no declara cap mètode amb la signatura exacta d'un handler de `Click` (`(_, RoutedEventArgs)`). |
+
+**Verificat per mutació:**
+
+| Mutació | Resultat |
+|---|---|
+| Tornar a posar `Centre_OnClick` que obre `CentreSetWindow` | ❌ `MainWindowNoNavegaAmbHandlersDeClick`, amb el nom del handler al missatge |
+| Treure `CentreSetCommand` d'`AppStatusViewModel` | ❌ 2 tests: `…ArribableDesDelTaulell` («Entitats sense …: Centre») i `TotaInteraccio…` («… sense la comanda corresponent: ShowCentreSetDialog») |
+
+⚠️ **Dos detalls del tercer test**, per si algú el toca:
+- Filtra els mètodes amb `<` al nom: les lambdes de sincronització del calaix de navegació
+  (`_navSwitch.IsCheckedChanged += (s, e) => …`) capturen `this` i el compilador les converteix
+  en mètodes de `MainWindow` amb signatura `(object, RoutedEventArgs)`. Sense el filtre, el test
+  falla amb `<.ctor>b__4_0`.
+- Compara el segon paràmetre amb `== typeof(RoutedEventArgs)`, no amb `IsAssignableFrom`. Els
+  handlers que queden (`DrawerList_KeyUp`, `DrawerSelectionChanged`,
+  `TemplatedControl_OnTemplateApplied`) reben **subtipus** de `RoutedEventArgs` i han de passar.
+
+### R4.4 — Què NO ha entrat a R4, i per què
+
+- **`GoodbyeButtonMenuItem_OnClick`** («Sortir») i `TemplatedControl_OnTemplateApplied` es
+  queden com a handlers. No naveguen: criden `SnackbarHost.Post(...)`, que és API de vista pura.
+  L'excepció està escrita a `NavegacioTest.HandlersDeVista`.
+  > 🐛 **De passada**: l'entrada «Sortir» **no tanca l'aplicació**, només escriu «See ya next
+  > time, user!» a la snackbar (i en anglès). És codi heretat de la plantilla de Material.Avalonia.
+  > Arreglar-ho és un canvi de comportament, no un refactor: queda per a **R6**, que ja ha de
+  > repassar textos i diàlegs.
+- **La sincronització `NavDrawerSwitch` ↔ `LeftDrawer`** i `DrawerSelectionChanged` continuen al
+  code-behind. Són estat de la pròpia finestra (quin element del `Carousel` es veu, si el calaix
+  és obert), no navegació: no hi ha cap finestra pel mig i el ViewModel no en sap res.
+- **El quart clon de `PerCadaViewModel`.** `MainWindow` fa el seu propi
+  `WhenAnyValue(x => x.ViewModel).Where(...).Subscribe(...).DisposeWith(d)` perquè no hereta de
+  cap de les tres classes base de R3, que en tenen una còpia cadascuna. Extreure'l a una extensió
+  demanaria tipar-la sobre `IViewFor<TVm>` i que `WhenAnyValue` continués resolent
+  l'`ICreatesObservableForProperty` d'Avalonia amb el `PropertyInfo` de la interfície en comptes
+  del de `ReactiveWindow<T>` — verificable només amb `Avalonia.Headless`, que avui no hi és.
+  **Deute obert**, no de R4.
+
+---
+
+### R4.5 — Pendent de validació manual
+
+Cap test obre una finestra: el que R4 canvia de veritat —que el menú dispari la comanda i que
+el handler resolgui la finestra— només es veu executant l'aplicació.
+
+- [ ] Obrir les **set entrades del menú** (Centres, Etapes, Cursos, Tipus actuacions, Alumnes,
+      Actuacio, Utilitats) i comprovar que cadascuna obre la seva finestra i que el menú es tanca.
+- [ ] Obrir «Alumnes» des del menú, donar d'alta un alumne, tancar: **les xifres del taulell
+      s'han de refrescar** (abans, des del menú, no ho feien).
+- [ ] Obrir i tancar la mateixa entrada **3 vegades seguides** (invariant 1 + disposal d'scope).
+- [ ] Comprovar que els **tres botons de les targetes** continuen funcionant igual.
 
 ---
 
@@ -620,9 +741,9 @@ R2  disposal de subscripcions      ✅ FET dins de R3, tret d'AlumneInformeViewe
  │
 R5  neteja de codi mort            ✅ FET  (-121 línies de C#, cap afegida)
  │
-R4  navegació de MainWindow        ← següent pas: consumeix IWindowFactory
+R4  navegació de MainWindow        ✅ FET  (-79 línies a MainWindow, +39 al helper compartit)
  │
-R1  eliminar SuperContext          ← commit separat, travessa 2 projectes; cal B3 abans
+R1  eliminar SuperContext          ← següent pas: commit separat, travessa 2 projectes; cal B3 abans
  │
 R7  BusinessLayer per comprensió   ← natural just després de R1
  │
@@ -635,6 +756,9 @@ R6  unificació visual              ← independent, es pot paral·lelitzar
 > (§R2).
 > R5, fet després, ha estat el que preveia: només esborrats, sense tocar cap test.
 > El que costava no era esborrar sinó **trobar** els `using` sobrants — veure §R5.2.
+> R4 ha sortit més barat del previst perquè R0 i R3 ja hi havien deixat les dues peces:
+> `IWindowFactory` i el helper de diàlegs. La feina real ha estat decidir **on posa la ratlla**
+> entre navegació (va al ViewModel) i estat de la finestra (es queda al code-behind) — §R4.4.
 
 ---
 
