@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using CommonInterfaces;
 using ReactiveUI;
+using UI.ER.AvaloniaUI.Pages;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 
@@ -85,6 +86,26 @@ namespace UI.ER.AvaloniaUI.Helpers
 
                 await dialog.ShowDialog(owner.GetOwnerWindow());
                 interaction.SetOutput(Unit.Default);
+            });
+
+        /// <summary>
+        /// Confirmació d'una acció irreversible. El <paramref name="textAfirmatiu"/> ha
+        /// de dir què passarà — «Sí, esborrar» —, perquè qui obre el diàleg és qui sap
+        /// de quina acció es tracta.
+        /// </summary>
+        public static IDisposable RegistraConfirmacio(
+            this Visual owner,
+            IWindowFactory windows,
+            Interaction<string, bool> confirmacio,
+            string titol,
+            string textAfirmatiu)
+            => confirmacio.RegisterHandler(async interaction =>
+            {
+                var dialog = windows.GetWith<ConfirmacioWindow>(
+                    new ConfirmacioViewModel(titol, interaction.Input, textAfirmatiu));
+
+                var result = await dialog.ShowDialog<bool>(owner.GetOwnerWindow());
+                interaction.SetOutput(result);
             });
 
         /// <summary>

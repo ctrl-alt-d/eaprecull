@@ -4,8 +4,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:styles="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneInformeViewerWindow"
         Title="Informe de l'Alumne"
@@ -45,7 +43,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Classes="Body1" 
-                                       Foreground="Red" 
+                                       Foreground="{DynamicResource DangerStrongBrush}" 
                                        Text="{Binding}" 
                                        Margin="0,5"/>
                         </DataTemplate>
@@ -56,7 +54,7 @@
                 <StackPanel IsVisible="{Binding !IsLoading}">
 
                     <!-- ==================== CAPÇALERA ALUMNE ==================== -->
-                    <Border Background="#E3F2FD" 
+                    <Border Background="{DynamicResource InfoContainerBrush}" 
                             CornerRadius="8" 
                             Padding="20" 
                             Margin="0,0,0,20">
@@ -72,11 +70,11 @@
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,12"
                                         IsVisible="{Binding Desactualitzat}">
                                 <avalonia:MaterialIcon Kind="AlertOutline" Width="18" Height="18" 
-                                                       Foreground="Red" Margin="0,0,8,0"
+                                                       Foreground="{DynamicResource DangerStrongBrush}" Margin="0,0,8,0"
                                                        VerticalAlignment="Center"/>
                                 <TextBlock Text="Les dades relatives a centre i etapa poden estar desactualitzades."
                                            Classes="Body2" 
-                                           Foreground="Red"
+                                           Foreground="{DynamicResource DangerStrongBrush}"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
 
@@ -147,27 +145,27 @@
                                            Text="{Binding Tags}" 
                                            Classes="Body1"
                                            TextWrapping="Wrap"
-                                           Foreground="Gray"/>
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
                             </Grid>
                         </StackPanel>
                     </Border>
 
                     <!-- ==================== NESE NEE ==================== -->
                     <Border IsVisible="{Binding TeNESENEE}"
-                            Background="#FFF3E0" 
+                            Background="{DynamicResource WarningContainerBrush}" 
                             CornerRadius="8" 
                             Padding="20" 
                             Margin="0,0,0,15">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <avalonia:MaterialIcon Kind="AlertCircle" 
-                                                       Foreground="#E65100" 
+                                                       Foreground="{DynamicResource WarningBrush}" 
                                                        Width="24" Height="24"
                                                        Margin="0,0,10,0"/>
                                 <TextBlock Text="NESE NEE" 
                                            Classes="Subtitle1" 
                                            FontWeight="Bold"
-                                           Foreground="#E65100"/>
+                                           Foreground="{DynamicResource WarningBrush}"/>
                             </StackPanel>
                             
                             <Grid ColumnDefinitions="Auto, *">
@@ -195,20 +193,20 @@
 
                     <!-- ==================== NESE No NEE ==================== -->
                     <Border IsVisible="{Binding TeNESENoNEE}"
-                            Background="#E8F5E9" 
+                            Background="{DynamicResource SuccessContainerBrush}" 
                             CornerRadius="8" 
                             Padding="20" 
                             Margin="0,0,0,15">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <avalonia:MaterialIcon Kind="InformationOutline" 
-                                                       Foreground="#2E7D32" 
+                                                       Foreground="{DynamicResource SuccessBrush}" 
                                                        Width="24" Height="24"
                                                        Margin="0,0,10,0"/>
                                 <TextBlock Text="NESE No NEE" 
                                            Classes="Subtitle1" 
                                            FontWeight="Bold"
-                                           Foreground="#2E7D32"/>
+                                           Foreground="{DynamicResource SuccessBrush}"/>
                             </StackPanel>
                             
                             <Grid ColumnDefinitions="Auto, *">
@@ -235,7 +233,7 @@
                     </Border>
 
                     <!-- ==================== ACTUACIONS ==================== -->
-                    <Border Background="#FAFAFA" 
+                    <Border Background="{DynamicResource SurfaceMutedBrush}" 
                             CornerRadius="8" 
                             Padding="20">
                         <StackPanel>
@@ -249,22 +247,22 @@
                                            FontWeight="Bold"/>
                                 <TextBlock Text="{Binding TotalActuacions, StringFormat='({0})'}" 
                                            Classes="Subtitle1"
-                                           Foreground="Gray"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Center"/>
                                 <TextBlock Text="·" 
                                            Classes="Subtitle1"
-                                           Foreground="Gray"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
                                            Margin="10,0,10,0"
                                            VerticalAlignment="Center"/>
                                 <avalonia:MaterialIcon Kind="ClockOutline" 
                                                        Width="18" Height="18"
-                                                       Foreground="Gray"
+                                                       Foreground="{DynamicResource TextSecondaryBrush}"
                                                        VerticalAlignment="Center"
                                                        Margin="0,0,5,0"/>
                                 <TextBlock Text="{Binding TempsTotalTxt}" 
                                            Classes="Subtitle1"
-                                           Foreground="Gray"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
 
@@ -272,11 +270,11 @@
                             <ItemsControl ItemsSource="{Binding Actuacions}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Background="White" 
+                                        <Border Background="{DynamicResource SurfaceCardBrush}" 
                                                 CornerRadius="6" 
                                                 Padding="15" 
                                                 Margin="0,0,0,12"
-                                                BorderBrush="#E0E0E0"
+                                                BorderBrush="{DynamicResource BorderSubtleBrush}"
                                                 BorderThickness="1">
                                             <StackPanel>
                                                 <!-- Capçalera de l'actuació -->
@@ -285,34 +283,34 @@
                                                         <TextBlock Text="{Binding DataTxt}" 
                                                                    Classes="Subtitle1" 
                                                                    FontWeight="Bold"
-                                                                   Foreground="#1976D2"/>
+                                                                   Foreground="{DynamicResource InfoBrush}"/>
                                                         <TextBlock Text=" · " 
                                                                    Classes="Subtitle1" 
-                                                                   Foreground="Gray"/>
+                                                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
                                                         <TextBlock Text="{Binding CursActuacio}" 
                                                                    Classes="Subtitle1"
-                                                                   Foreground="Gray"/>
+                                                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
                                                     </StackPanel>
                                                     <TextBlock Grid.Column="2" 
                                                                Text="{Binding DuradaTxt}" 
                                                                Classes="Caption"
-                                                               Foreground="Gray"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}"
                                                                VerticalAlignment="Center"/>
                                                 </Grid>
 
                                                 <!-- Tipus d'actuació -->
                                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                    <Border Background="#E3F2FD" 
+                                                    <Border Background="{DynamicResource InfoContainerBrush}" 
                                                             CornerRadius="4" 
                                                             Padding="8,4">
                                                         <TextBlock Text="{Binding TipusActuacio}" 
                                                                    Classes="Caption" 
                                                                    FontWeight="SemiBold"
-                                                                   Foreground="#1565C0"/>
+                                                                   Foreground="{DynamicResource InfoBrush}"/>
                                                     </Border>
                                                     <TextBlock Text="{Binding ObservacionsTipusActuacio}" 
                                                                Classes="Body2"
-                                                               Foreground="Gray"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}"
                                                                Margin="10,0,0,0"
                                                                VerticalAlignment="Center"
                                                                IsVisible="{Binding ObservacionsTipusActuacio, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
@@ -321,7 +319,7 @@
                                                 <!-- Context (Centre, Etapa, Nivell) -->
                                                 <TextBlock Text="{Binding ContextTxt}" 
                                                            Classes="Caption"
-                                                           Foreground="Gray"
+                                                           Foreground="{DynamicResource TextSecondaryBrush}"
                                                            Margin="0,6,0,0"/>
 
                                                 <!-- Descripció -->
@@ -339,7 +337,7 @@
                             <!-- Missatge si no hi ha actuacions -->
                             <TextBlock Text="No hi ha actuacions registrades per aquest alumne."
                                        Classes="Body1"
-                                       Foreground="Gray"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
                                        FontStyle="Italic"
                                        HorizontalAlignment="Center"
                                        Margin="0,20"
@@ -353,16 +351,16 @@
 
         <!-- Barra inferior amb botons -->
         <Border Grid.Row="1" 
-                Background="#F5F5F5" 
+                Background="{DynamicResource SurfaceMutedBrush}" 
                 Padding="16"
-                BorderBrush="#E0E0E0"
+                BorderBrush="{DynamicResource BorderSubtleBrush}"
                 BorderThickness="0,1,0,0">
             <Grid ColumnDefinitions="*, Auto, Auto">
                 <!-- Resultat exportació -->
                 <TextBlock Grid.Column="0"
                            Text="{Binding ResultatExportacio}"
                            Classes="Caption"
-                           Foreground="#1976D2"
+                           Foreground="{DynamicResource InfoBrush}"
                            VerticalAlignment="Center"
                            TextWrapping="Wrap"/>
                 

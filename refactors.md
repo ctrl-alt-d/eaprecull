@@ -13,22 +13,26 @@
 | **R2** — disposal de subscripcions | ✅ **FET dins de R3**, tret d'`AlumneInformeViewerWindow` — veure §R2 |
 | **R5** — codi mort | ✅ **FET** — veure §R5 |
 | **R4** — navegació de `MainWindow` | ✅ **FET** — veure §R4 |
+| **R6** — unificació visual i paleta | ✅ **FET** — veure §R6 |
 | R1 — eliminar `SuperContext` | ⬜ **següent** (51 crides vives; cal **B3** abans) |
-| R6 — unificació visual | ⬜ pendent |
 | R7 — registre del BusinessLayer per comprensió | ⬜ pendent |
 
 ---
 
 ## 1. Estat actual de `UI.ER.AvaloniaUI`
 
-**Volum després de R3, R5 i R4**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.177 línies**
-(−1.056: −925 de R3, −52 de R5, −79 de R4), a canvi de **407 línies** de codi compartit: tres classes base
+**Volum després de R3, R5, R4 i R6**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.239 línies**
+(−1.056 de R3/R5/R4, +62 de R6: dues vistes noves), a canvi de **407 línies** de codi compartit: tres classes base
 (`Pages/Base/`), tres helpers (`Helpers/{DialegExtensions,FileExplorer,VisualRootExtensions}.cs`)
 i les tres interfícies de contracte dels ViewModels
-(`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`). Els 30 fitxers `.axaml` (3.189 línies)
-només s'han tocat a `MainWindow` (R4: 7 `Click=` → `Command=`).
-Tot el projecte suma **2.021 línies** de `.cs`.
-`UI.ER.AvaloniaUI.Test`: 8 fitxers, 27 tests.
+(`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`).
+Tot el projecte suma **2.022 línies** de `.cs`.
+
+L'AXAML, intocat fins a R4, és el que ha mogut R6: els **30 fitxers preexistents** han passat de
+**3.189 a 2.865 línies** (−324) tot i que `App.axaml` n'hi ha guanyat 139, i n'hi ha **3 de nous**
+(`Themes/Paleta.axaml`, `Controls/IndicadorCarrega.axaml`, `Pages/ConfirmacioWindow.axaml`, 165 línies).
+Total: **33 fitxers, 3.030 línies**. Els **96 colors literals** són **0**.
+`UI.ER.AvaloniaUI.Test`: 9 fitxers, 32 tests.
 
 ### Patrons en ús
 
@@ -45,17 +49,20 @@ Tot el projecte suma **2.021 línies** de `.cs`.
 | **Service Locator estàtic** | `SuperContext.Resolve<T>()` — **51 crides** des dels ViewModels (viu fins a R1) |
 | **Attached behavior** | `WindowHelper.ClampToWorkingArea` aplicada globalment amb `Style Selector="Window"` |
 | **Custom controls** | `DateInput`, `LookupInput` amb `StyledProperty` |
-| **Styling per classes** | `LookupCss`, `ClearCss`, `EditarCss`, `InformeCss`, `PivotCss`… a `App.axaml` |
+| **Styling per classes** | `LookupCss`, `ClearCss`, `EditarCss`, `Fitxa`, `BarraFiltres`, `Xip`, `Seccio{,.Ok,.Avis,.Perill}`, `Desar`, `Afegir`… tot a `App.axaml` (R6) |
+| **Paleta semàntica** | `Themes/Paleta.axaml`: `ThemeDictionaries` Light/Dark amb 23 pinzells (`InfoBrush`, `DangerContainerBrush`…). Cap `#RRGGBB` a cap altre fitxer (R6) |
 | **Convenció CRUD** | `X{Create,Update,Set}Window` + `XRowUserCtrl`, per a 6 entitats |
 
 ### Inventari de vistes
 
-**21 `Window`**:
+**22 `Window`**:
 `MainWindow` · `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}CreateWindow` ·
-`{…}UpdateWindow` (6) · `{…}SetWindow` (6) · `UtilitatsWindow` · `AlumneInformeViewerWindow`
+`{…}UpdateWindow` (6) · `{…}SetWindow` (6) · `UtilitatsWindow` · `AlumneInformeViewerWindow` ·
+`ConfirmacioWindow` (R6)
 
-**6 `UserControl`**: `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}RowUserCtrl`
-*(instanciats pel `ListBox.ItemTemplate`, amb `DataContext` heretat de l'`ItemsSource` — el contenidor no els construeix; obtenen la factory pel constructor pont, veure §R0.5)*
+**9 `UserControl`**: `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}RowUserCtrl`
+*(instanciats pel `ListBox.ItemTemplate`, amb `DataContext` heretat de l'`ItemsSource` — el contenidor no els construeix; obtenen la factory pel constructor pont, veure §R0.5)* ·
+`DateInput` · `LookupInput` · `IndicadorCarrega` (R6) *(controls de presentació, sense ViewModel)*
 
 ### Signatures dels ViewModels (determinen què pot fer la factory)
 
@@ -63,6 +70,7 @@ Tot el projecte suma **2.021 línies** de `.cs`.
 |---|---|---|
 | `{Alumne,Centre,CursAcademic,Etapa,TipusActuacio}CreateViewModel` | `()` | ✅ Sí |
 | `AppStatusViewModel`, `UtilitatsViewModel` | `()` | ✅ Sí |
+| `ConfirmacioViewModel` | `(string titol = …, string missatge = …, string textAfirmatiu = …)` | ✅ Sí (tot amb default) |
 | `ActuacioCreateViewModel` | `(int? alumneId = null)` | ✅ Sí (té default) |
 | `{Alumne,Centre,CursAcademic,Etapa,TipusActuacio}SetViewModel` | `(bool modeLookup = false)` | ⚠️ Sí, però cal `true` en 16 punts |
 | `ActuacioSetViewModel` | `(bool modeLookup = false, int? alumneId = null)` | ⚠️ Igual |
@@ -82,13 +90,15 @@ Tot el projecte suma **2.021 línies** de `.cs`.
    ```
    `WhenAnyValue` emet immediatament → `LoadX()` s'executa durant la construcció i ja llegeix `ModeLookup`.
    ⚠️ **`ModeLookup` NO es pot convertir en `{ get; init; }` assignat després del constructor.** Ha de continuar sent argument del constructor.
-4. `Design.DataContext` (13 blocs a l'AXAML) instancia el VM amb **constructor sense paràmetres**. Afegir injecció per constructor als VMs trencarà aquests blocs. *(B3 — encara pendent, blocador de R1.)*
+4. `Design.DataContext` (14 blocs a l'AXAML) instancia el VM amb **constructor sense paràmetres**. Afegir injecció per constructor als VMs trencarà aquests blocs. *(B3 — encara pendent, blocador de R1.)*
 5. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0, R3 i R4** (convenció, registre, cicles de vida, constructors, herència de les classes base, navegació per comanda). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9 i §R3.5.
 6. **Tota vista ha de conservar un constructor `public` sense paràmetres.** Els `*RowUserCtrl` perquè els instancia el `ListBox.ItemTemplate`; les finestres perquè, si no, el compilador d'Avalonia emet `AVLN3001`. Les que necessiten serveis fan servir el constructor pont encadenat sobre `App.Services` (§R0.5).
 7. **Les vistes ja no fan `new` d'altres vistes.** Tot passa per `IWindowFactory`. La validació d'arrencada de `DI/Injection.cs` peta si s'afegeix una finestra fora de convenció sense `[ViewModel(typeof(...))]`.
 8. **Cada vista amb `x:Class` conserva el seu `InitializeComponent()`.** `AvaloniaXamlLoader.Load(this)` es queda a la classe derivada, mai a la classe base: el compilador d'Avalonia el reescriu a una crida directa al mètode generat només quan el troba dins del tipus que declara l'AXAML. Pujar-lo a la base compilaria igual però passaria a resoldre's per reflexió en temps d'execució.
 9. **Els escanejos de `DI/Injection.cs` i de `Vistes.cs` filtren `IsAbstract` i `IsGenericTypeDefinition`.** És el que manté les classes base de R3 fora del registre i fora dels tests d'inventari. No treure aquests filtres.
-10. **Cap vista navega des d'un handler de `Click`.** Cada entrada de menú i cada botó que obre una finestra és una `ICommand` del ViewModel amb la seva `Interaction`; la vista només diu quina finestra l'atén (`RegistraNavegacio<TWindow>`). Ho vigila `NavegacioTest` (§R4.3). Els handlers que queden a `MainWindow` no naveguen: escriuen a la snackbar o mouen el `Carousel`.
+10. **`RequestedThemeVariant` (App.axaml) i `BaseTheme` (`MaterialTheme`) han d'anar sempre iguals.** El primer tria quina taula de `Themes/Paleta.axaml` s'aplica; el segon, la del `MaterialTheme`. Si es deixa `RequestedThemeVariant` sense fixar, Avalonia segueix el tema del sistema operatiu i la paleta pròpia se'n va a fosc mentre Material es queda clar. Canviar de tema és tocar-los tots dos.
+11. **Cap color s'escriu a pèl.** Tot surt d'una clau de `Themes/Paleta.axaml` o del `MaterialTheme`. Ho vigila `DissenyTest` (§R6.4), que escaneja el *codi font* — un literal compila igual de bé que una clau, i el que es vol vigilar és què s'escriu.
+12. **Cap vista navega des d'un handler de `Click`.** Cada entrada de menú i cada botó que obre una finestra és una `ICommand` del ViewModel amb la seva `Interaction`; la vista només diu quina finestra l'atén (`RegistraNavegacio<TWindow>`). Ho vigila `NavegacioTest` (§R4.3). Els handlers que queden a `MainWindow` no naveguen: escriuen a la snackbar o mouen el `Carousel`.
 
 ---
 
@@ -276,7 +286,7 @@ de fer-los desaparèixer és que l'AXAML deixi d'instanciar vistes pel seu compt
 
 ### R0.7 — Criteris d'acceptació
 
-- [x] Cap `new XWindow(` als fitxers `.cs` de `UI.ER.AvaloniaUI` (43 punts de crida eliminats; només queda `new Window` dins de `Helpers/ConfirmationDialog.cs`, que és un `Window` anònim construït en C# i que R6 ha de convertir en AXAML).
+- [x] Cap `new XWindow(` als fitxers `.cs` de `UI.ER.AvaloniaUI` (43 punts de crida eliminats). L'excepció que quedava —el `new Window` anònim de `Helpers/ConfirmationDialog.cs`— ha desaparegut a **R6**: ara és `Pages/ConfirmacioWindow.axaml`, resolta per la factory.
 - [x] Cap registre de vista escrit a mà a `App.axaml.cs` — tot per escaneig a `DI/Injection.cs`.
 - [x] Validació d'arrencada que itera totes les finestres i comprova que `ViewModelTypeFor` resol.
 - [x] **Tests de regressió**: `UI.ER.AvaloniaUI.Test`, 19 tests verds, verificats per mutació (§R0.9).
@@ -336,7 +346,7 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 
 **Dependència**: R0 ✅, R3 ✅ i R4 ✅ fets. La factory ja és qui construeix els VMs sense arguments (`Get<T>()`, des de l'scope del diàleg); falta la variant amb arguments de runtime.
 
-**Punt de partida després de R4** (verificat avui): **51 crides** a `SuperContext.Resolve<T>()` repartides per **26 fitxers**. R4 no n'ha tocat cap —només ha mogut *qui dispara* els diàlegs—, però hi deixa dues coses a favor:
+**Punt de partida després de R4 i R6**: **51 crides** a `SuperContext.Resolve<T>()` repartides per **26 fitxers**. R6 no n'ha tocat cap — l'únic ViewModel que hi ha afegit, `ConfirmacioViewModel`, no parla amb el BusinessLayer i per tant tampoc no entra a R1. R4 no n'ha tocat cap —només ha mogut *qui dispara* els diàlegs—, però hi deixa dues coses a favor:
 - Les **set finestres de navegació** de `MainWindow` s'obren totes amb `Get<T>()`, no amb `GetWith`. Són les primeres que veuran l'scope per diàleg funcionar de debò, sense cap canvi al punt de crida (§R0.3).
 - `AppStatusViewModel` ha quedat com el cas de prova més net per començar: tres `SuperContext.Resolve<T>()` a `LoadData()`, cap argument de constructor, i `ComandaDeNavegacio` ja aïlla tota la navegació de la càrrega de dades.
 
@@ -361,7 +371,7 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 4. Només llavors l'scope per diàleg de R0.3 comença a alliberar serveis de debò.
 
 **Trampes**:
-- Trencarà els 13 `<Design.DataContext>` → resoldre B3 primer (migrar a `x:DataType` + `x:CompileBindings="True"`).
+- Trencarà els 14 `<Design.DataContext>` → resoldre B3 primer (migrar a `x:DataType` + `x:CompileBindings="True"`). *(R6 n'hi ha afegit un, el de `ConfirmacioWindow`; en canvi els 4 `IdTxt` morts que hauria calgut arreglar en compilar els bindings ja no hi són — §R6.5.)*
 - El filtre de registre de ViewModels a `DI/Injection.cs` (§R0.1) mira *«tots els paràmetres tenen valor per defecte»*. Quan els VMs rebin serveis pel constructor deixarà de valer: caldrà canviar-lo per *«tots els paràmetres són resolubles pel contenidor»*.
 - Els `{…}RowViewModel` es creen en bucle dins dels `*SetViewModel`; caldrà un `Func<TDto, bool, TRowVm>` injectat, o passar la `IServiceFactory` avall.
 - Les tres interfícies de `Contracts/DialegContracts.cs` (R3) **no** es toquen: no diuen res de com el VM obté els seus serveis. Les classes base de R3 continuen valent tal com són.
@@ -722,11 +732,160 @@ R3 ja s'havia endut per davant les altres dues entrades de la llista original: l
 
 ---
 
-## R6 — Deriva de disseny i colors literals
+## R6 — Deriva de disseny i colors literals ✅ FET
 
-- **`CentreSetWindow.axaml` s'ha quedat enrere**: encara fa servir el disseny antic (`DockPanel` + botó `DesarCss`), mentre `Etapa/CursAcademic/TipusActuacio` ja tenen el nou (`Border` de filtres + `material:FloatingButton`). Unificar.
-- **95 colors literals** a l'AXAML (`#F5F7FA`, `#E3F2FD`, `#1565C0`, `#D32F2F`…) en comptes de recursos del `MaterialTheme`. Impedeix qualsevol canvi a tema fosc.
-- **`Helpers/ConfirmationDialog.cs`** construeix la UI en C# amb colors literals, i el botó afirmatiu diu sempre *"Sí, esborrar"* independentment del missatge. Convertir-lo en AXAML parametritzat.
+> R6 s'ha fet abans que R1 perquè R1 continua bloquejat per **B3** i R6 no depèn de res
+> (§3). És també l'únic refactor que toca de debò l'AXAML: R0–R5 gairebé no l'havien mirat.
+
+### R6.1 — Els tres problemes que anotava el pla, i què s'ha fet
+
+| Problema | Solució |
+|---|---|
+| `CentreSetWindow.axaml` amb el disseny antic (`DockPanel` + botó `DesarCss` de 20 línies declarat inline) | Reescrita amb el mateix esquelet que les altres cinc llistes. De 89 a 73 línies |
+| **96 colors literals** (`#F5F7FA`, `#E3F2FD`, `#1565C0`…) repartits per 13 AXAML i un `.cs` | `Themes/Paleta.axaml`: 23 pinzells semàntics × 2 temes. **Ara en queden 0** fora de la paleta |
+| `Helpers/ConfirmationDialog.cs` muntava la UI en C#, amb `Color.Parse("#D32F2F")`, i deia sempre «Sí, esborrar» | Esborrat. El substitueix `Pages/ConfirmacioWindow.axaml` + `ConfirmacioViewModel`, amb el text afirmatiu com a paràmetre |
+
+### R6.2 — La paleta
+
+`UI.ER.AvaloniaUI/Themes/Paleta.axaml` és un `ResourceDictionary` amb
+`ResourceDictionary.ThemeDictionaries` (`Light` i `Dark`), fusionat a `Application.Resources`.
+
+Les claus són **semàntiques, no descriptives** — `WarningBrush`, no `Taronja` — amb tres sufixos:
+
+| Sufix | Què és |
+|---|---|
+| `XxxBrush` | primer pla: text i icones de la família |
+| `XxxContainerBrush` | fons del bloc que el conté |
+| `XxxBorderBrush` | vora d'aquest bloc |
+
+Set famílies: neutres (`SurfaceSubtle`, `SurfaceMuted`, `SurfaceCard`, `BorderSubtle`,
+`TextSecondary`, `TextTertiary`), `Info`, `Success`, `Warning`, `Danger` (+`DangerStrong`
+i `DangerStrongForeground`), `Accent` i `Header`.
+
+**Col·lapses deliberats** en fer el mapatge: `#FFF8E1`/`#FFF3E0` → un sol `WarningContainerBrush`;
+`#1976D2`/`#1565C0` → `InfoBrush`; `#FAFAFA`/`#F5F5F5` → `SurfaceMutedBrush`;
+`#E53935` → `DangerStrongBrush`. Eren la mateixa idea escrita dos cops.
+
+Els colors **amb nom** (`Foreground="Gray"`, `"Red"`, `"Blue"`, `BorderBrush="White"`) hi han
+entrat igual: no els comptava el pla, però són igual de refractaris al tema fosc.
+
+**Com passar a fosc**: canviar `RequestedThemeVariant` i `BaseTheme` a `Dark` a `App.axaml`.
+Els dos junts — invariant 10. Els valors foscos ja hi són; caldrà repassar-los amb la
+pantalla al davant, no s'han pogut validar.
+
+### R6.3 — Classes d'estil noves a `App.axaml`
+
+El mateix moviment que R3 va fer amb el C#, aplicat a l'AXAML: el que estava copiat va a
+`App.axaml` i la vista només diu quina classe vol.
+
+| Classe | Substitueix | Cops |
+|---|---|---|
+| `Border.Fitxa` | la targeta d'una fila (`BorderBrush` + `CornerRadius` + `Padding` + `Margin` + `BoxShadow`) | 6 |
+| `Border.Apareix` / `.Desapareix` | les animacions, declarades dins d'un `<UserControl.Styles>` a cada fila | 6 |
+| `Border.BarraFiltres` | la barra superior d'un llistat | 6 |
+| `Border.Xip` | el xip del missatge de paginació | 6 |
+| `Border.Seccio` + `.Ok` / `.Avis` / `.Perill` | les seccions dels formularis rics | 13 |
+| `material:FloatingButton.Afegir` | el FAB d'alta: 14 línies d'icona + text a cada llista | 6 |
+| `material:FloatingButton.Desar` (+`.Ancorat`) | el FAB de desar, que tenia **dues** versions (icona `FolderDownload` sense drecera a les 8 finestres simples, `ContentSave` + `Ctrl+S` a les 4 riques) | 12 |
+
+Dues decisions que valen la pena:
+
+- **El text del FAB va per `ContentTemplate`, no per `Content`.** L'estil defineix la
+  plantilla (icona + `TextBlock` amb `{Binding}`) i cada finestra només escriu
+  `Content="Nova etapa"`. La primera versió feia `Content` + `{Binding $parent[…].Tag}`:
+  funciona igual, però depèn de com quedi l'arbre lògic dins de la plantilla i això no es
+  pot comprovar amb un test. `ContentTemplate` fa que el `DataContext` de la plantilla
+  sigui el `Content` mateix — cap indirecció.
+- **`Border.Apareix` puja a `App.axaml` i, de retruc, arregla `MainWindow`**: la pàgina de
+  llicència ja portava `Classes="Apareix"` però la finestra no definia l'estil enlloc, així
+  que la classe no feia res.
+
+**Unificació de dreceres i textos**: les 12 finestres d'edició tenen ara el mateix FAB, amb
+`Ctrl+S` i el mateix tooltip. Abans les 8 simples no tenien drecera i deien «Desar els
+canvis», i les 4 riques deien «Desar» amb una altra icona.
+
+### R6.4 — Tests (`UI.ER.AvaloniaUI.Test/DissenyTest.cs`)
+
+Cinc tests, que **escanegen el codi font** (via `[CallerFilePath]`, per no endevinar quantes
+carpetes hi ha des de `bin/`). És deliberat: un color literal compila igual de bé que una
+clau de recurs, i un `DynamicResource` que no resol **no peta** — el control es queda sense
+color i ningú se n'assabenta fins que algú mira la pantalla.
+
+| Test | Què impedeix |
+|---|---|
+| `CapAxamlEscriuUnColorLiteral` | tornar a escriure `#RRGGBB` o `Foreground="Red"` a una vista |
+| `CapCodiRereLaVistaConstrueixUnColor` | tornar a muntar UI en C# amb `Color.Parse` / `new SolidColorBrush` |
+| `ElsDosTemesDefineixenLesMateixesClaus` | afegir un pinzell al tema clar i oblidar-lo al fosc |
+| `CadaClauQueSUsaExisteixAlaPaleta` | una errata a un `{DynamicResource …}` |
+| `LaPaletaNoTeClausMortes` | que la paleta creixi amb colors que no fa servir ningú |
+
+`ConvencioVistaViewModelTest.HiHaLesFinestresQueEsperem` passa de **21 a 22** finestres
+(`ConfirmacioWindow`).
+
+### R6.5 — Plantilles mortes esborrades
+
+Trobades comparant cada `{Binding X}` de l'AXAML amb els membres del ViewModel que la
+convenció li assigna:
+
+- **4 `<TextBlock Text="{Binding IdTxt}"/>`** a `{Centre,CursAcademic,Etapa,TipusActuacio}CreateWindow`.
+  `IdTxt` no existeix a cap `*CreateViewModel`: el `TextBlock` sortia sempre buit.
+- **8 blocs `<StackPanel.Styles></StackPanel.Styles>` buits**, hereus d'un copia-i-enganxa.
+- **L'estil `Button.DesarCss`** declarat dins de `CentreSetWindow` (20 línies), l'única
+  finestra que el tenia.
+- **Un `<Grid ColumnDefinitions="*,Auto">`** a la zona de perill d'`ActuacioUpdateWindow`
+  que només embolcallava un `StackPanel`.
+- **60 declaracions `xmlns:` menys.** Cap vista en declarava menys de dues que no feia
+  servir. A més, l'àlies `wpf` (que apunta a `Material.Styles.Assists`, que no és WPF) i
+  `assists` apuntaven al **mateix** namespace a 14 fitxers, amb `assists` sense fer servir
+  mai. Ara n'hi ha un de sol, `assists`.
+
+> **No s'ha tocat el `ToggleSwitch` de `DangerModeEnabled`** d'`ActuacioUpdateWindow`, que
+> semblava desconnectat: és el `canExecute` de `DeleteCommand`, i el botó ja s'inhabilita sol.
+
+### R6.6 — `IndicadorCarrega`
+
+`Controls/IndicadorCarrega.axaml`: el «Carregant dades…» amb la icona giratòria, que estava
+copiat idèntic a les sis llistes. Sis blocs de vuit línies passen a una línia cadascun. Té
+`StyledProperty<string> Text` per si algun llistat vol un altre missatge.
+
+### R6.7 — `ConfirmacioWindow`
+
+- `UI.ER.ViewModels/ViewModels/ConfirmacioViewModel.cs`: `Titol`, `Missatge`,
+  `TextAfirmatiu` i dues `ReactiveCommand<Unit, bool>`. **Tots els paràmetres amb valor per
+  defecte**, perquè el contenidor el registri (regla de §R0.1) i el `Design.DataContext`
+  el pugui instanciar.
+- `Pages/ConfirmacioWindow.axaml(.cs)`: `ReactiveWindow<ConfirmacioViewModel>`; el
+  code-behind només tanca amb el resultat de la comanda, com fa `TancaSiDesat` a les
+  classes base de R3.
+- `DialegExtensions.RegistraConfirmacio(...)`: una línia al punt de crida, i la finestra
+  s'obté per `IWindowFactory.GetWith` — invariant 7, cap `new XWindow(` a una vista.
+- **Canvi de comportament volgut**: el botó afirmatiu ja no diu sempre «Sí, esborrar».
+  Ara és el paràmetre `textAfirmatiu`, i qui obre el diàleg és qui sap de quina acció es
+  tracta. L'únic punt de crida (esborrar una actuació) hi passa el mateix text d'abans.
+
+### R6.8 — Pendent de validació manual
+
+`dotnet build` net i `dotnet test` verd (32 tests). L'aplicació arrenca i pinta
+`MainWindow` sense cap error de binding ni res a `error.log`. Els tests **no obren cap
+finestra**, així que cal repassar amb la pantalla al davant:
+
+1. Les sis llistes: barra de filtres, xip de paginació, indicador de càrrega i FAB d'alta
+   amb el text correcte a cadascuna.
+2. Les dotze finestres d'edició: el FAB de desar i el `Ctrl+S`.
+3. `ActuacioUpdateWindow` → zona de perill → esborrar: ha de sortir el nou
+   `ConfirmacioWindow` amb «Sí, esborrar», i `Esc` ha de cancel·lar.
+4. `UtilitatsWindow` i `AlumneInformeViewerWindow`, que són les que més colors tenien.
+
+### R6.9 — El que R6 **no** ha fet
+
+- **Tema fosc de debò.** La infraestructura hi és i els valors foscos també, però ningú els
+  ha vist. Activar-lo és un canvi de dues línies (invariant 10) i una repassada de contrast.
+- **`AlumneInformeViewerWindow` continua sent un `Window` pelat** amb subscripcions al
+  constructor: és el deute de R2, i és de subscripcions, no de disseny.
+- **La duplicació que queda a les sis llistes** (l'esquelet `DockPanel` + `ItemsControl` de
+  `BrokenRules` + `ListBox`) no s'ha extret a un control compost. Amb les classes d'estil ja
+  són 71 línies cadascuna i el que queda és estructura, no estil; fer-ne un `UserControl`
+  amb sis punts d'extensió costaria més del que estalvia.
 
 ---
 
@@ -743,11 +902,11 @@ R5  neteja de codi mort            ✅ FET  (-121 línies de C#, cap afegida)
  │
 R4  navegació de MainWindow        ✅ FET  (-79 línies a MainWindow, +39 al helper compartit)
  │
+R6  unificació visual i paleta     ✅ FET  (-324 línies als 30 AXAML preexistents, 96 colors literals → 0)
+ │
 R1  eliminar SuperContext          ← següent pas: commit separat, travessa 2 projectes; cal B3 abans
  │
 R7  BusinessLayer per comprensió   ← natural just després de R1
- │
-R6  unificació visual              ← independent, es pot paral·lelitzar
 ```
 
 > R3 s'ha fet abans que R5 a petició de l'usuari. No ha costat res: R5 era «redueix soroll per
@@ -759,6 +918,11 @@ R6  unificació visual              ← independent, es pot paral·lelitzar
 > R4 ha sortit més barat del previst perquè R0 i R3 ja hi havien deixat les dues peces:
 > `IWindowFactory` i el helper de diàlegs. La feina real ha estat decidir **on posa la ratlla**
 > entre navegació (va al ViewModel) i estat de la finestra (es queda al code-behind) — §R4.4.
+> R6 s'ha avançat a R1 perquè R1 continua bloquejat per B3 i R6 no depenia de res. Ha resultat
+> ser el mateix moviment de R3 però a l'AXAML: el que estava copiat 6 o 13 cops puja a
+> `App.axaml` com a classe d'estil i la vista només diu quina vol. El que costava no era
+> substituir els colors sinó **decidir el joc de claus**: 96 literals eren 23 idees, i unes
+> quantes estaven escrites dues vegades amb valors lleugerament diferents — §R6.2.
 
 ---
 
@@ -772,6 +936,9 @@ R6  unificació visual              ← independent, es pot paral·lelitzar
 - **`dotnet test UI.ER.AvaloniaUI.Test` ha de quedar verd després de cada pas.** Si un refactor canvia una invariant a consciència (p. ex. R3 introdueix classes base i el nombre de finestres es manté però els constructors canvien), s'actualitza el test amb el canvi, mai després.
 - **Vistes noves**: no s'instancien amb `new`. Registrar-les no cal (l'escaneig les agafa soles), però han de complir la convenció de noms o portar `[ViewModel(typeof(...))]`, altrament l'aplicació no arrenca.
 - Els fitxers `.axaml` i `.axaml.cs` van sempre junts: si es canvia l'`x:Class` o la classe base, revisar-ne els dos.
+- **Colors**: cap literal. Clau de `Themes/Paleta.axaml` o del `MaterialTheme` (§R6.2). Si en cal un de nou, s'afegeix a les **dues** taules de tema.
+- **Estils repetits**: si un bloc de disseny surt a més de dues vistes, va a `App.axaml` com a classe (§R6.3).
+- **Atenció als finals de línia**: `App.axaml` i `Views/MainWindow.axaml` són CRLF, la resta LF. Un script de reescriptura en Python els normalitza sense voler i converteix un canvi de dues línies en un diff de 478.
 
 ---
 

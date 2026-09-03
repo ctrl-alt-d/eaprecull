@@ -4,55 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime.Extensions"
-             xmlns:styles="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UI.ER.AvaloniaUI.Pages.ActuacioRowUserCtrl">
     <Design.DataContext>
         <viewModels:ActuacioRowViewModel />
     </Design.DataContext>
 
-    <UserControl.Styles>
 
-        <Style Selector="Border.Apareix">
-            <Style.Animations>
-                <Animation Duration="0:0:1"> 
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0.0"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1.0"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-
-        <Style Selector="Border.Desapareix">
-            <Style.Animations>
-                <Animation Duration="0:0:0.4" FillMode="Forward"> 
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="1.0"/>
-                        <Setter Property="TranslateTransform.X" Value="0"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="0.0"/>
-                        <Setter Property="TranslateTransform.X" Value="-50"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-
-    </UserControl.Styles>
-
-    <Border BorderBrush="White"
-            BorderThickness="1"
-            CornerRadius="4"
-            Padding="10"
-            Margin="5,0,20,10"
-            Classes="Apareix"
+    <Border Classes="Fitxa Apareix" Padding="10"
             Classes.Desapareix="{Binding IsDeleting}"
-            BoxShadow="5 5 10 2 Gray"
             RenderTransform="translate(0,0)">
 
         <DockPanel>
@@ -85,17 +45,17 @@
 
                 <!-- Línia 1: Data + Curs + Durada -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                    <Border Background="#E3F2FD" CornerRadius="4" Padding="8,3" Margin="0,0,10,0">
+                    <Border Classes="Xip" CornerRadius="4" Padding="8,3" Margin="0,0,10,0">
                         <StackPanel Orientation="Horizontal">
                             <avalonia:MaterialIcon Kind="CalendarOutline" Width="14" Height="14" 
-                                                   Foreground="#1565C0" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                                   Foreground="{DynamicResource InfoBrush}" Margin="0,0,5,0" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding DataTxt}" Classes="Body2" FontWeight="SemiBold" 
-                                       Foreground="#1565C0" VerticalAlignment="Center"/>
+                                       Foreground="{DynamicResource InfoBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
-                    <TextBlock Text="{Binding CursActuacio}" Classes="Caption" Foreground="Gray" 
+                    <TextBlock Text="{Binding CursActuacio}" Classes="Caption" Foreground="{DynamicResource TextSecondaryBrush}" 
                                VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <TextBlock Text="{Binding DuradaTxt}" Classes="Caption" Foreground="Gray" 
+                    <TextBlock Text="{Binding DuradaTxt}" Classes="Caption" Foreground="{DynamicResource TextSecondaryBrush}" 
                                VerticalAlignment="Center"
                                IsVisible="{Binding DuradaTxt, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
                 </StackPanel>
@@ -104,18 +64,18 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
                     <TextBlock Classes="Body1" Text="{Binding AlumneNom}" FontWeight="SemiBold" 
                                MinWidth="250" Margin="0,0,10,0"/>
-                    <Border Background="#F3E5F5" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
+                    <Border Background="{DynamicResource AccentContainerBrush}" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
                         <TextBlock Text="{Binding TipusActuacio}" Classes="Caption" FontWeight="SemiBold"
-                                   Foreground="#7B1FA2"/>
+                                   Foreground="{DynamicResource AccentBrush}"/>
                     </Border>
-                    <TextBlock Text="{Binding CentreActuacio}" Classes="Caption" Foreground="Gray" 
+                    <TextBlock Text="{Binding CentreActuacio}" Classes="Caption" Foreground="{DynamicResource TextSecondaryBrush}" 
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Línia 3: Descripció (resum) -->
                 <TextBlock Classes="Body2" Text="{Binding DescripcioActuacio}" 
                            TextTrimming="CharacterEllipsis" MaxLines="1"
-                           Foreground="Gray" Margin="0,2,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"
                            IsVisible="{Binding DescripcioActuacio, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
                 <ItemsControl Margin="10,4,10,0"

@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:assist="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Width="1280" Height="720" MinWidth="720"
         Title="Eap Recull">
@@ -190,7 +188,7 @@
                                                                     Kind="CalendarCheck" Width="48" Height="48" 
                                                                     />
                                             <TextBlock Classes="Headline6" Text="{Binding CursActual}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
-                                            <TextBlock Classes="Body2" Foreground="Red" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>
+                                            <TextBlock Classes="Body2" Foreground="{DynamicResource DangerStrongBrush}" Margin="0,12,0,0" TextWrapping="Wrap" Text="{Binding CursActualWarning}" HorizontalAlignment="Center"/>
                                             <Button    Margin="0,12,0,0" Content="Gestiona cursos acadèmics" Command="{Binding CursAcademicSetCommand}" HorizontalAlignment="Center" />    
                                         </StackPanel>
                                     </StackPanel>
@@ -199,7 +197,7 @@
                             </WrapPanel>
 
                             <ScrollViewer>
-                                <Border BorderBrush="White"
+                                <Border BorderBrush="{DynamicResource SurfaceCardBrush}"
                                         BorderThickness="1"
                                         CornerRadius="4"
                                         Padding="30"

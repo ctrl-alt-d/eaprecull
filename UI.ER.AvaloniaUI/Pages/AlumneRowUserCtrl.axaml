@@ -4,39 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime.Extensions"
-             xmlns:styles="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UI.ER.AvaloniaUI.Pages.AlumneRowUserCtrl">
     <Design.DataContext>
         <viewModels:AlumneRowViewModel />
     </Design.DataContext>
 
-    <UserControl.Styles>
 
-        <Style Selector="Border.Apareix">
-            <Style.Animations>
-                <Animation Duration="0:0:1"> 
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0.0"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1.0"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-
-    </UserControl.Styles>
-
-    <Border BorderBrush="White"
-            BorderThickness="1"
-            CornerRadius="4"
-            Padding="6"
-            Margin="5,0,20,10"
-            Classes="Apareix"
-            BoxShadow="5 5 10 2 Gray">
+    <Border Classes="Fitxa Apareix">
 
         <DockPanel>
 
@@ -83,7 +58,7 @@
                 <StackPanel Orientation="Horizontal" ToolTip.Tip="{Binding CursDarreraActualitzacio}">
                     <avalonia:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center"
                                            Kind="AlertOutline" Width="10" Height="10" 
-                                           Foreground="Red"
+                                           Foreground="{DynamicResource DangerStrongBrush}"
                                            IsVisible="{Binding Desactualitzat}"
                                            Margin="0,0,10,0"
                                         />
@@ -94,7 +69,7 @@
                     <TextBlock Classes="Body2"  Text="{Binding CentreActual}"/>
                 </StackPanel>
 
-                <TextBlock Classes="Overline" Foreground="Blue" Text="{Binding ResultatInformeAlumne}" Margin="0,5,0,0"/>
+                <TextBlock Classes="Overline" Foreground="{DynamicResource InfoBrush}" Text="{Binding ResultatInformeAlumne}" Margin="0,5,0,0"/>
 
                 <TextBlock Classes="Overline" Text="{Binding Descripcio}" Margin="0,5,0,0"/>
 

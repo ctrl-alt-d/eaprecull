@@ -48,12 +48,9 @@ namespace UI.ER.AvaloniaUI.Pages
                 vm.DeleteCommand.Subscribe(TancaSiEsborrat).DisposeWith(dd);
 
                 // Diàleg de confirmació per esborrar.
-                vm.ShowDeleteConfirmation.RegisterHandler(async interaction =>
-                {
-                    var result = await ConfirmationDialog.Show(
-                        this.GetOwnerWindow(), interaction.Input, "Esborrar actuació");
-                    interaction.SetOutput(result);
-                }).DisposeWith(dd);
+                this.RegistraConfirmacio(_windows, vm.ShowDeleteConfirmation,
+                    "Esborrar actuació", "Sí, esborrar")
+                    .DisposeWith(dd);
 
                 // Lookups.
                 this.RegistraLookup<AlumneSetWindow>(_windows, vm.ShowAlumneLookup,
