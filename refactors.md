@@ -16,7 +16,7 @@
 | **R6** — unificació visual i paleta | ✅ **FET** — veure §R6 |
 | **R1** — eliminar `SuperContext` | ✅ **FET** — veure §R1 |
 | **R7** — registre del BusinessLayer per comprensió | ✅ **FET** — veure §R7 |
-| R8 — estendre els *compiled bindings* a l'AXAML que R1 no ha tocat | ⬜ **següent** — veure §R1.7 |
+| **R8** — estendre els *compiled bindings* a l'AXAML que R1 no ha tocat | ✅ **FET** — veure §R8 |
 
 ---
 
@@ -30,15 +30,16 @@ i les tres interfícies de contracte dels ViewModels
 (`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`).
 Tot el projecte suma **2.053 línies** de `.cs`.
 
-L'AXAML: **33 fitxers, 3.016 línies**. R6 va deixar els **96 colors literals** a **0**; R1 hi ha
+L'AXAML: **33 fitxers, 3.066 línies**. R6 va deixar els **96 colors literals** a **0**; R1 hi ha
 tret els **14 blocs `<Design.DataContext>`** i n'ha posat `x:DataType` + `x:CompileBindings="True"`
-(§R1.5). Els **19 fitxers restants** encara van amb bindings per reflexió — R8.
+(§R1.5). R8 ha acabat els **19 restants**: els **33 fitxers** porten `x:CompileBindings="True"` i
+cap dels **349 `{Binding ...}`** es resol ja per reflexió (§R8).
 
 `UI.ER.ViewModels`: **5.144 línies** de `.cs` (5.089 abans de R1). R1 hi ha afegit `Services/ServiceFactory.cs` i
 l'`IServiceFactory` al constructor de **27 ViewModels**; hi ha esborrat `Services/SuperContext.cs`
 i els 4 *seams* `protected virtual IXxx BLxxx()`.
 
-`UI.ER.AvaloniaUI.Test`: 9 fitxers de `.cs` (8 de tests + `Vistes.cs`), **40 tests**.
+`UI.ER.AvaloniaUI.Test`: 10 fitxers de `.cs` (9 de tests + `Vistes.cs`), **43 tests** (40 abans de R8).
 `BusinessLayer.Integration.Test`: 3 fitxers, **6 tests** (3 abans de R7).
 
 ### Patrons en ús
@@ -542,13 +543,9 @@ regla del registre canvia sense actualitzar el mirall,
 
 ### R1.7 — El que R1 **no** ha fet
 
-1. **Els 19 fitxers d'AXAML que no tenien `<Design.DataContext>`** continuen amb bindings per
-   reflexió: les 12 finestres `{Create,Update}`, `MainWindow`, `UtilitatsWindow`, `App.axaml`,
-   `Themes/Paleta.axaml` i els controls `DateInput`, `LookupInput`, `IndicadorCarrega`.
-   Posar-los `x:DataType` + `x:CompileBindings` és **R8**, i és on hi ha més a guanyar: les
-   finestres d'edició són les que tenen més bindings i on una propietat mal escrita passa més
-   desapercebuda. Els dos controls amb `StyledProperty` són un cas diferent —no tenen un
-   ViewModel propi— i probablement només vulguin `x:CompileBindings` a les plantilles.
+1. ~~**Els 19 fitxers d'AXAML que no tenien `<Design.DataContext>`**~~ — **fet a R8** (§R8).
+   La previsió sobre els controls amb `StyledProperty` era correcta a mitges: efectivament no
+   volen `x:DataType`, però tampoc n'hi havia prou amb afegir-hi `x:CompileBindings` — §R8.3.
 2. **`AlumneInformeViewerWindow` continua sent un `Window` pelat** (B4/R2): el seu ViewModel
    sí que rep la fàbrica, però la finestra segueix subscrivint-se dins del constructor, sense
    `WhenActivated` ni disposal, i amb `async void` a `Opened`. Convertir-lo a
@@ -1111,8 +1108,8 @@ R1  eliminar SuperContext          ✅ FET  (51 crides estàtiques → 0, 27 VMs
  │
 R7  BusinessLayer per comprensió   ✅ FET  (30 registres a mà → 0; +3 tests)
  │
-R8  compiled bindings als 19 AXAML ← següent pas; on hi ha més a guanyar és a les 12
-    que R1 no ha tocat                finestres d'edició (§R1.7)
+R8  compiled bindings als 19 AXAML ✅ FET  (33 de 33 fitxers, 349 bindings; +3 tests)
+    que R1 no ha tocat
 ```
 
 > R3 s'ha fet abans que R5 a petició de l'usuari. No ha costat res: R5 era «redueix soroll per
@@ -1140,6 +1137,12 @@ R8  compiled bindings als 19 AXAML ← següent pas; on hi ha més a guanyar és
 > que la llista no pugui derivar mai més. L'única sorpresa ha estat que l'escaneig que proposava
 > el pla no funciona tal com estava escrit — hi ha herència entre implementacions i tipus
 > generats pel compilador que hi entren pel mig — §R7.2.
+> R8 era el més mecànic de tots —dos atributs per fitxer— i el que ha desmentit més coses que
+> aquest mateix document donava per fetes: que als controls amb `StyledProperty` n'hi havia prou
+> amb `x:CompileBindings` (§R8.3), i que un `<Design.DataContext>` amb un ViewModel sense
+> constructor buit no compila (§R8.4; compila, i per això R1 necessita un test que no tenia).
+> Dels 349 bindings només un ha calgut reescriure'l, i no perquè estigués malament sinó perquè
+> passava per un `object` que la reflexió resolia sola — §R8.2.
 
 ---
 
@@ -1263,3 +1266,137 @@ operació que en depèn de sis més pel constructor.
   (Hi queda, això sí, el `BuildServiceProvider()` que fa dins del mètode de registre per aplicar
   les migracions — un provider intermedi que es llença; és una altra conversa.)
 - **No canvia el cicle de vida de res** (§R7.4).
+
+---
+
+## R8 — Compiled bindings a tot l'AXAML ✅ FET
+
+### R8.1 — Resultat
+
+Els **19 fitxers** que R1 no havia tocat (§R1.7) ja porten `x:CompileBindings="True"`. Amb els
+14 de R1 són **33 de 33**: cap `{Binding ...}` de l'aplicació —n'hi ha **349**— es resol per
+reflexió.
+
+| Grup | Fitxers | Què hi ha calgut |
+|---|---|---|
+| Les 12 finestres `{Create,Update}` | `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}{Create,Update}Window` | `xmlns:viewModels` + `x:DataType` + `x:CompileBindings` |
+| `UtilitatsWindow` | 1 | idem, contra `UtilitatsViewModel` |
+| `MainWindow` | 1 | idem, contra `AppStatusViewModel` — i un *cast*, §R8.2 |
+| Els 3 controls amb `StyledProperty` | `DateInput`, `LookupInput`, `IndicadorCarrega` | `x:CompileBindings` **i** `AncestorType` concret, §R8.3 |
+| `App.axaml`, `Themes/Paleta.axaml` | 2 | només `x:CompileBindings`: no hi ha res a comprovar avui, però sí demà |
+
+Cap fitxer queda exclòs. Que la regla no tingui excepcions és el que permet escriure-la com a
+test d'una sola línia (§R8.5); `Paleta.axaml`, que és un `ResourceDictionary` pelat sense cap
+binding, admet l'atribut igualment.
+
+### R8.2 — L'únic binding que ha calgut reescriure
+
+L'estil dels `ListBoxItem` del calaix de `MainWindow` deia:
+
+```xml
+<Setter Property="IsEnabled" Value="{Binding $self.Content.IsEnabled}" />
+```
+
+Compilar-ho dona `AVLN2000: Unable to resolve property or method of name 'IsEnabled' on type
+'System.Object'`, i té raó: `ContentControl.Content` és `object`, i `object` no té `IsEnabled`.
+
+**No era un bug.** Per reflexió el camí es resol contra el tipus **en temps d'execució** —el
+`Content` de cada ítem és un `TextBlock`, que sí que té `IsEnabled`— i el binding funcionava.
+El que passa és que el binding compilat només coneix el tipus **declarat**, i aquest és `object`.
+Cal dir-li el que la reflexió esbrinava sola:
+
+```xml
+<Setter Property="IsEnabled" Value="{Binding $self.((Control)Content).IsEnabled}" />
+```
+
+El comportament és idèntic (`TextBlock` és un `Control`); el que hi guanyem és que ara està
+escrit. És també l'avís que R8 no pot ser del tot mecànic: allà on la reflexió mirava l'objecte
+real, el compilador demana un *cast*, i posar-lo malament sí que canviaria el comportament.
+
+### R8.3 — Els tres controls: `x:CompileBindings` sol no n'hi ha prou
+
+§R1.7 preveia que els controls amb `StyledProperty` «probablement només vulguin
+`x:CompileBindings`». No és cert, i el motiu és subtil: els seus bindings van contra el control,
+no contra cap DataContext, i estaven escrits així:
+
+```xml
+Text="{Binding DateText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+```
+
+Amb `x:CompileBindings` això **compila** — però contra `Avalonia.Controls.UserControl`, on
+`DateText` no existeix. El binding es compilaria com a `object` i seguiria sense comprovar-se.
+Cal el tipus concret:
+
+```xml
+Text="{Binding DateText, RelativeSource={RelativeSource AncestorType=controls:DateInput}}"
+```
+
+Ara sí: tornar-hi a posar `AncestorType=UserControl` dona tres `AVLN2000` a `LookupInput`
+(`Text`, `Label`, `LookupCommand`). Per això aquests tres fitxers no porten `x:DataType`: no
+tenen ViewModel propi i cap dels seus bindings mira el DataContext.
+
+### R8.4 — El que el compilador **no** atrapa
+
+Dues coses que semblaven donades i s'han comprovat:
+
+| Es donava per fet | Realitat |
+|---|---|
+| Un `{Binding X, RelativeSource=…AncestorType=UserControl}` amb `x:CompileBindings` es comprova | ❌ Compila contra `UserControl` i no comprova res — §R8.3 |
+| Un `<Design.DataContext>` amb un VM que només té constructor d'injecció no compila (§R1.5) | ❌ **Compila**. R1 el va treure per raons de disseny, no perquè el compilador l'hi obligués; només peta al dissenyador |
+
+La segona és la que justifica el test `CapAxamlTornaAInstanciarElViewModelPerAlDissenyador`: si
+el compilador ho deixés passar i no hi hagués test, R1 es podria desfer sol.
+
+### R8.5 — Tests (`UI.ER.AvaloniaUI.Test`, 40 → 43)
+
+`BindingsCompilatsTest.cs`. Escanegen el **codi font**, com els de `DissenyTest`: el que es
+vigila és què s'escriu a l'AXAML, i un fitxer que torni a la reflexió compila igual de bé.
+
+| Test | Què fixa |
+|---|---|
+| `TotsElsAxamlDeclarenCompileBindings` | Els 33 fitxers, sense excepcions. Un `.axaml` nou sense l'atribut es posa vermell. |
+| `CadaAxamlQueLligaAlDataContextDeclaraElSeuTipus` | Qui té un `{Binding Nom}` ha de dir contra quin tipus. En queden fora `RelativeSource`, `ElementName`, `$self`/`$parent` i el `{Binding}` sense camí. |
+| `CapAxamlTornaAInstanciarElViewModelPerAlDissenyador` | Cap `<Design.DataContext>`. És l'invariant de R1 que el compilador **no** guarda — §R8.4. |
+
+**Verificat per mutació:**
+
+| Mutació | Resultat |
+|---|---|
+| `{Binding Nom}` → `{Binding NomXX}` a `CentreCreateWindow.axaml` | ❌ compilació (`AVLN2000` contra `CentreCreateViewModel`) |
+| `{Binding DateText, …}` → `DateTextXX` a `DateInput.axaml` | ❌ compilació (`AVLN2000` contra `DateInput`) |
+| `{Binding TotalALumnes}` → `…XX` a `MainWindow.axaml` | ❌ compilació (contra `AppStatusViewModel`) |
+| `{Binding GeneraPivotCommand}` → `…XX` a `UtilitatsWindow.axaml` | ❌ compilació (contra `UtilitatsViewModel`) |
+| `{Binding DeleteCommand}` → `…XX` a `ActuacioUpdateWindow.axaml` | ❌ compilació (contra `ActuacioUpdateViewModel`) |
+| Treure `x:DataType` **i** `x:CompileBindings` de `CentreCreateWindow.axaml` | ❌ 2 tests. Compila —i aquest és el problema— però els dos primers tests l'enxampen |
+| Treure `x:CompileBindings` de `Paleta.axaml` (que no té cap binding) | ❌ 1 test (`TotsElsAxaml…`): la regla no té excepcions |
+| Tornar a posar `<Design.DataContext>` a `CentreCreateWindow.axaml` | ❌ 1 test (`CapAxamlTorna…`), i **compila**: sense el test passaria |
+
+Un quart test que hi havia (`ElsControlsAmbStyledPropertyApuntenAlSeuPropiTipus`, contra
+`AncestorType=UserControl`) s'ha **esborrat**: la seva mutació la para el compilador abans que
+el test arribi a executar-se, i aquí no es deixen tests que no es puguin verificar per mutació.
+
+### R8.6 — Comprovacions
+
+`dotnet build eaprecull.sln --no-incremental` → net (l'incremental **no** recompila l'AXAML;
+sense `--no-incremental` no hauria sortit ni un sol `AVLN2000`).
+`dotnet test UI.ER.AvaloniaUI.Test` → **43/43**.
+
+### R8.7 — Pendent de validació manual
+
+- [ ] Obrir el calaix lateral de `MainWindow` i comprovar que les dues entrades («Gestió»,
+      «Llicència») segueixen seleccionables i que el Carousel canvia de pàgina. És l'únic
+      binding que R8 ha reescrit (§R8.2); hauria de comportar-se exactament igual que abans.
+- [ ] Obrir una fitxa d'alta i una de modificació de cada entitat i comprovar que els camps
+      s'omplen i es desen. Els bindings són els mateixos; el que ha canviat és **com** es
+      resolen.
+- [ ] Recórrer els lookups i el botó d'esborrar data d'un `DateInput` (§R8.3: els seus
+      bindings han canviat de `RelativeSource`).
+
+### R8.8 — El que R8 **no** ha fet
+
+- **No toca cap `.axaml.cs`**: R8 és només l'AXAML més el fitxer de tests nou.
+- **No tanca `AlumneInformeViewerWindow`** (B4/R2, §R1.7.2): el seu AXAML ja anava compilat des
+  de R1; el que li falta és passar de `Window` pelat a `ReactiveWindow<T>`, que és codi, no
+  bindings.
+- **No treu els `DynamicResource`**: no són bindings i no els afecta `x:CompileBindings`. Qui
+  els vigila és `DissenyTest.CadaClauQueSUsaExisteixAlaPaleta` (§R6.4).

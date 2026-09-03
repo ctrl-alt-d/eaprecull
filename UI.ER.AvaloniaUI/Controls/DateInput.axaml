@@ -4,16 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:controls="clr-namespace:UI.ER.AvaloniaUI.Controls"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="50"
-             x:Class="UI.ER.AvaloniaUI.Controls.DateInput">
+             x:Class="UI.ER.AvaloniaUI.Controls.DateInput"
+             x:CompileBindings="True">
     
     <Grid ColumnDefinitions="*,Auto,Auto">
         <TextBox x:Name="DateTextBox"
                  Grid.Column="0"
-                 Text="{Binding DateText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 Text="{Binding DateText, RelativeSource={RelativeSource AncestorType=controls:DateInput}}"
                  UseFloatingWatermark="True"
                  Classes="Filled"
-                 wpf:TextFieldAssist.Label="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                 wpf:TextFieldAssist.Label="{Binding Label, RelativeSource={RelativeSource AncestorType=controls:DateInput}}"
                  Watermark="d.m.aaaa"
                  Margin="0"/>
         

@@ -5,6 +5,7 @@
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:helpers="clr-namespace:UI.ER.AvaloniaUI.Helpers;assembly=UI.ER.AvaloniaUI"
              x:Class="UI.ER.AvaloniaUI.App"
+             x:CompileBindings="True"
              RequestedThemeVariant="Light">
 
     <!--

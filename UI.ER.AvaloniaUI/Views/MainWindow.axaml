@@ -5,6 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        x:DataType="viewModels:AppStatusViewModel"
+        x:CompileBindings="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Width="1280" Height="720" MinWidth="720"
         Title="Eap Recull">
@@ -42,7 +45,7 @@
                                     <Setter Property="Height" Value="48" />
                                     <Setter Property="Padding" Value="16,0" />
                                     <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    <Setter Property="IsEnabled" Value="{Binding $self.Content.IsEnabled}" />
+                                    <Setter Property="IsEnabled" Value="{Binding $self.((Control)Content).IsEnabled}" />
                                 </Style>
                             </ListBox.Styles>
                             <TextBlock Classes="Body2" Text="Gestió" />
