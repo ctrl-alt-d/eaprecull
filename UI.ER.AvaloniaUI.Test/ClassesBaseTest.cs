@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UI.ER.AvaloniaUI.Pages.Base;
+using UI.ER.ViewModels.ViewModels.Base;
 using Xunit;
 
 namespace UI.ER.AvaloniaUI.Test
@@ -35,6 +36,47 @@ namespace UI.ER.AvaloniaUI.Test
         public void LesFilesHeretenDeEntityRowUserCtrl()
             => AssertHeretaDe("UserControl", typeof(EntityRowUserCtrl<,,,,>),
                 v => v.Name.EndsWith("RowUserCtrl"));
+
+        [Fact]
+        public void LesLlistesHeretenDeSetViewModelBase()
+        {
+            var candidats = Vistes.ViewModels
+                .Where(vm => vm.Name.EndsWith("SetViewModel", StringComparison.Ordinal))
+                .ToList();
+
+            Assert.NotEmpty(candidats);
+
+            var fora = candidats
+                .Where(vm => !HeretaDe(vm, typeof(SetViewModelBase<,>)))
+                .Select(vm => vm.Name)
+                .ToList();
+
+            Assert.True(fora.Count == 0,
+                "*SetViewModel que no hereten de SetViewModelBase: " + string.Join(", ", fora));
+        }
+
+        [Fact]
+        public void CapLlistaEsFaElSeuPropiBucleDeCarrega()
+        {
+            // El que SetViewModelBase absorbeix: la col·lecció de files, l'estat de
+            // càrrega i el missatge de paginació. Una llista que se'n torni a declarar
+            // cap d'aquests membres es queda fora del refresc silenciós sense que res
+            // més ho digui.
+            string[] absorbits = ["MyItems", "BrokenRules", "Loading", "PaginatedMsg"];
+
+            var copies =
+                (from vm in Vistes.ViewModels
+                 where vm.Name.EndsWith("SetViewModel", StringComparison.Ordinal)
+                 from membre in vm.GetMembers(BindingFlags.Instance | BindingFlags.Public
+                                              | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                 where absorbits.Contains(membre.Name)
+                 select $"{vm.Name}.{membre.Name}")
+                .ToList();
+
+            Assert.True(copies.Count == 0,
+                "Llistes que es tornen a declarar el que absorbeix SetViewModelBase: "
+                + string.Join(", ", copies));
+        }
 
         [Fact]
         public void CapVistaEsFaLaSevaPropiaGetWindow()
@@ -85,9 +127,9 @@ namespace UI.ER.AvaloniaUI.Test
                 + string.Join(", ", fora));
         }
 
-        private static bool HeretaDe(Type vista, Type definicioGenerica)
+        private static bool HeretaDe(Type tipus, Type definicioGenerica)
         {
-            for (var t = vista.BaseType; t is not null; t = t.BaseType)
+            for (var t = tipus.BaseType; t is not null; t = t.BaseType)
                 if (t.IsGenericType && t.GetGenericTypeDefinition() == definicioGenerica)
                     return true;
 

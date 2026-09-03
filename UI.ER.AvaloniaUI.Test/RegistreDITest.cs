@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using BusinessLayer.Abstract.Generic;
+using BusinessLayer.DI;
 using UI.ER.AvaloniaUI.DI;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
@@ -19,6 +21,11 @@ namespace UI.ER.AvaloniaUI.Test
         // les migracions són a IServiceProvider.MigraBaseDeDades(), fora del registre.
         private static readonly IServiceCollection Serveis =
             new ServiceCollection().UIConfigureServices();
+
+        // La composition root registra primer el BusinessLayer i després la UI. Cal el
+        // muntatge sencer per veure el bus, que el registra el BusinessLayer.
+        private static readonly IServiceCollection ServeisComplets =
+            new ServiceCollection().BusinessLayerConfigureServices().UIConfigureServices();
 
         [Fact]
         public void TotesLesFinestresEstanRegistrades()
@@ -140,6 +147,57 @@ namespace UI.ER.AvaloniaUI.Test
             Assert.True(problemes.Count == 0,
                 "Constructors de finestra amb dependències sense registrar: "
                 + string.Join(", ", problemes));
+        }
+
+        [Fact]
+        public void ElBusDeCanvisEsSingletonIEsRegistraAbansDeLEscaneig()
+        {
+            // Singleton perquè n'hi ha d'haver un de sol, i abans de l'escaneig de
+            // ViewModels pel mateix motiu que l'IServiceFactory: és una dependència que
+            // el filtre de registre ha de poder veure.
+            var descriptor = Assert.Single(ServeisComplets,
+                d => d.ServiceType == typeof(INotificadorDeCanvis));
+
+            Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
+
+            var posicioBus = ServeisComplets
+                .Select((d, i) => (d, i))
+                .First(x => x.d.ServiceType == typeof(INotificadorDeCanvis)).i;
+
+            var primerViewModel = ServeisComplets
+                .Select((d, i) => (d, i))
+                .First(x => typeof(ViewModelBase).IsAssignableFrom(x.d.ServiceType)).i;
+
+            Assert.True(posicioBus < primerViewModel,
+                "El bus de canvis s'ha de registrar abans de l'escaneig dels ViewModels.");
+        }
+
+        [Fact]
+        public void LaClasseBaseDeLesLlistesNoEntraAlRegistre()
+        {
+            // Invariant §9.6: els escanejos filtren IsAbstract. SetViewModelBase és
+            // abstracta a posta, i el compte de ViewModels registrats no ha de canviar
+            // perquè les sis llistes ara en derivin.
+            var registrats = ServeisComplets
+                .Select(d => d.ServiceType)
+                .Where(t => typeof(ViewModelBase).IsAssignableFrom(t))
+                .ToList();
+
+            Assert.DoesNotContain(registrats, t => t.IsAbstract || t.IsGenericTypeDefinition);
+            Assert.Equal(6, registrats.Count(t => t.Name.EndsWith("SetViewModel", StringComparison.Ordinal)));
+        }
+
+        [Fact]
+        public void LaFabricaDeServeisArribaAlBusQueHaRegistratElBusinessLayer()
+        {
+            // Les dues meitats les registren dos mètodes diferents i cap test de cadascuna
+            // per separat ho veuria: la fàbrica és de la UI, el bus és del BusinessLayer.
+            using var provider = ServeisComplets.BuildServiceProvider(validateScopes: true);
+            using var scope = provider.CreateScope();
+
+            var fabrica = scope.ServiceProvider.GetRequiredService<IServiceFactory>();
+
+            Assert.Same(provider.GetRequiredService<INotificadorDeCanvis>(), fabrica.Canvis);
         }
 
         [Fact]

@@ -23,13 +23,19 @@ namespace UI.ER.ViewModels.Services
     /// <c>SuperContext</c>— hi quedaven vives fins a tancar l'aplicació.
     /// </para>
     /// <para>
-    /// El tipus genèric està acotat a <see cref="IBLOperation"/>: no és un
-    /// <see cref="IServiceProvider"/> disfressat, des d'aquí no s'arriba a cap altre servei.
+    /// Té dues cares —demanar operacions i escoltar-ne els canvis— i segueix sense ser un
+    /// <see cref="IServiceProvider"/> disfressat: el genèric està acotat a
+    /// <see cref="IBLOperation"/> i des d'aquí no s'arriba a cap altre servei. La segona
+    /// cara hi és perquè els 27 punts on un ViewModel en construeix un altre haurien
+    /// d'anar propagant qualsevol paràmetre de constructor nou amunt i avall de la
+    /// jerarquia, i la fàbrica ja hi arriba a tots.
     /// </para>
     /// </remarks>
     public sealed class ServiceFactory(IServiceProvider provider) : IServiceFactory
     {
         public T GetBLOperation<T>() where T : IBLOperation
             => provider.GetRequiredService<T>();
+
+        public INotificadorDeCanvis Canvis => provider.GetRequiredService<INotificadorDeCanvis>();
     }
 }

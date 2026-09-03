@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Reactive;
+using BusinessLayer.Abstract.Generic;
+using CommonInterfaces;
 using ReactiveUI;
 
 namespace UI.ER.ViewModels.ViewModels
@@ -28,6 +31,28 @@ namespace UI.ER.ViewModels.ViewModels
     }
 
     /// <summary>
+    /// El que una llista necessita saber de les seves files per poder-les refrescar en
+    /// silenci: quin Id tenen, quines entitats pinten i com se'ls hi torna a donar el DTO.
+    /// </summary>
+    /// <remarks>
+    /// Separada d'<see cref="IRowViewModel{TUpdateVm,TResultat,TDto}"/> perquè
+    /// <c>SetViewModelBase</c> només necessita aquests tres membres i no els ViewModels de
+    /// diàleg que l'altra arrossega.
+    /// </remarks>
+    public interface IFilaDeLlista<TDto> : IId
+        where TDto : class
+    {
+        /// <summary>
+        /// Les entitats que la fila té pintades, recalculades a cada
+        /// <see cref="Actualitza"/>: una fila que canvia de centre canvia de referències.
+        /// </summary>
+        IReadOnlySet<Referencia> ReferenciesPintades { get; }
+
+        /// <summary>Torna a pintar la fila amb el DTO que ha arribat de la consulta.</summary>
+        void Actualitza(TDto dto);
+    }
+
+    /// <summary>
     /// ViewModel d'una fila de llista: sap demanar el diàleg d'edició i sap retornar-se
     /// a si mateix quan la llista treballa en mode lookup.
     /// </summary>
@@ -38,7 +63,7 @@ namespace UI.ER.ViewModels.ViewModels
     /// també pot esborrar.
     /// </typeparam>
     /// <typeparam name="TDto">DTO que la fila retorna en seleccionar-se.</typeparam>
-    public interface IRowViewModel<TUpdateVm, TResultat, TDto>
+    public interface IRowViewModel<TUpdateVm, TResultat, TDto> : IFilaDeLlista<TDto>
         where TUpdateVm : ViewModelBase
         where TResultat : class
         where TDto : class

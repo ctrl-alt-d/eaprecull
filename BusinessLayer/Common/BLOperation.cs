@@ -18,6 +18,13 @@ namespace BusinessLayer.Common
             AppDbContextFactory = appDbContextFactory;
         }
 
+        /// <summary>
+        /// Bus on l'operació publica què ha escrit. L'assigna el registre
+        /// (<c>BusinessLayer/DI/Injection.cs</c>) per propietat, no pel constructor.
+        /// Pot ser nul: una operació construïda a mà —als tests— no ha de petar per això.
+        /// </summary>
+        internal INotificadorDeCanvis? Notificador { get; set; }
+
         private AppDbContext? _DbContext;
         private bool disposedValue;
 

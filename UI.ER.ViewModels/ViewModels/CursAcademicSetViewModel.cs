@@ -1,32 +1,31 @@
 ﻿using System.Linq;
+using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
+using Dtoi = DTO.i.DTOs;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using DynamicData.Binding;
 using BusinessLayer.Abstract.Generic;
+using UI.ER.ViewModels.ViewModels.Base;
 
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class CursAcademicSetViewModel : ViewModelBase, ISetViewModel<CursAcademicCreateViewModel, Dtoo.CursAcademic>
+    public class CursAcademicSetViewModel
+        : SetViewModelBase<CursAcademicRowViewModel, Dtoo.CursAcademic>,
+          ISetViewModel<CursAcademicCreateViewModel, Dtoo.CursAcademic>
     {
-        public bool ModeLookup { get; }
-        private readonly IServiceFactory _serveis;
-
         public CursAcademicSetViewModel(IServiceFactory serveis, bool modeLookup = false)
+            : base(serveis, modeLookup)
         {
-            _serveis = serveis;
-            ModeLookup = modeLookup;
-
             // Filtre
             this
                 .WhenAnyValue(x => x.NomesActius)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(nomesActius => LoadCursAcademics(nomesActius))
+                .Subscribe(_ => CarregaAra())
                 ;
 
             // Create
@@ -34,14 +33,13 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new CursAcademicCreateViewModel(_serveis);
+                var update = new CursAcademicCreateViewModel(Serveis);
 
                 var data = await ShowDialog.Handle(update);
 
                 if (data != null)
                 {
-                    var item = new CursAcademicRowViewModel(_serveis, data, MyItems, ModeLookup);
-                    MyItems.Insert(0, item);
+                    MyItems.Insert(0, CreaFila(data));
 
                     // Si el nou curs és actiu, desactivar tots els altres a la UI
                     if (data.EsActiu)
@@ -57,68 +55,20 @@ namespace UI.ER.ViewModels.ViewModels
 
 
         }
-        public ObservableCollectionExtended<CursAcademicRowViewModel> MyItems { get; } = new();
 
-        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
-
-        protected virtual async void LoadCursAcademics(bool nomesActius)
-        {
-            Loading = true;
-            MyItems.Clear();
-            await OmplirAmbElsNousValors(nomesActius);
-            Loading = false;
-        }
-
-        private async Task OmplirAmbElsNousValors(bool nomesActius)
+        protected override async Task<OperationResults<Dtoo.CursAcademic>> Consulta()
         {
             // Preparar paràmetres al backend
-            var esActiu = nomesActius ? true : (bool?)null;
-            var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
+            var esActiu = NomesActius ? true : (bool?)null;
+            var Parms = new Dtoi.EsActiuParms(esActiu: esActiu);
 
-            // Petició al backend            
-            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
-            var dto = await bl.FromPredicate(Parms);
-
-            // 
-            BrokenRules.Clear();
-            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
-
-
-            // Ha fallat la petició
-            if (dto.Data == null)
-                throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
-
-            // Tenim els resultats
-            var newItems =
-                dto
-                .Data
-                .Select(x => new CursAcademicRowViewModel(_serveis, x, MyItems, ModeLookup));
-
-            MyItems.AddRange(newItems);
-
-            //
-            PaginatedMsg =
-                (dto.Total > dto.TakeRequested) ?
-                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats" :
-                $"Seleccionats {newItems.Count()} items";
-
+            // Petició al backend
+            using var bl = Serveis.GetBLOperation<ICursAcademicSet>();
+            return await bl.FromPredicate(Parms);
         }
 
-        // Warning
-        private string _PaginatedMsg = string.Empty;
-        public string PaginatedMsg
-        {
-            get => _PaginatedMsg;
-            set => this.RaiseAndSetIfChanged(ref _PaginatedMsg, value);
-        }
-
-        // Loading
-        private bool _Loading = true;
-        public bool Loading
-        {
-            get => _Loading;
-            set => this.RaiseAndSetIfChanged(ref _Loading, value);
-        }
+        protected override CursAcademicRowViewModel CreaFila(Dtoo.CursAcademic dto)
+            => new(Serveis, dto, MyItems, ModeLookup);
 
         // Filtre
         private bool _NomesActius = false;

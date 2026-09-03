@@ -17,7 +17,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class TipusActuacioRowViewModel : ViewModelBase, IRowViewModel<TipusActuacioUpdateViewModel, Dtoo.TipusActuacio, Dtoo.TipusActuacio>, IEtiquetaDescripcio, IId
     {
 
-        protected Dtoo.TipusActuacio Model { get; }
+        protected Dtoo.TipusActuacio Model { get; set; }
         private readonly IServiceFactory _serveis;
 
         public TipusActuacioRowViewModel(IServiceFactory serveis, Dtoo.TipusActuacio TipusActuacioDto, bool modeLookup = false)
@@ -29,12 +29,9 @@ namespace UI.ER.ViewModels.ViewModels
             ModeLookup = modeLookup;
 
             // State
-            Model = TipusActuacioDto;
-            _Etiqueta = TipusActuacioDto.Etiqueta;
-            _Descripcio = TipusActuacioDto.Descripcio;
-            _Estat = TipusActuacioDto.EsActiu ? "Activat" : "Desactivat";
-            _EsActiu = TipusActuacioDto.EsActiu;
             Id = TipusActuacioDto.Id;
+            Model = TipusActuacioDto;
+            Actualitza(TipusActuacioDto);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -75,11 +72,19 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.TipusActuacio? data)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.TipusActuacio? data)
         {
             if (data == null)
                 return;
 
+            Model = data;
+            ReferenciesPintades = Referencies.De(data);
             Etiqueta = data.Etiqueta;
             Descripcio = data.Descripcio;
             Estat = data.EsActiu ? "Activat" : "Desactivat";
@@ -98,7 +103,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             using var bl = _serveis.GetBLOperation<ITipusActuacioActivaDesactiva>();
             var dto = await bl.Toggle(Id);
-            DTO2ModelView(dto.Data);
+            Actualitza(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
         }
 
@@ -109,7 +114,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             var update = new TipusActuacioUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            if (data != null) Actualitza(data);
         }
 
         // --- Seleccionar si estem en mode lookup ---

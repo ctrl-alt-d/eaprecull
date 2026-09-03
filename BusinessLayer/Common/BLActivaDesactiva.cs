@@ -56,6 +56,8 @@ namespace BusinessLayer.Common
                 //
                 var dto = await Model2Dto(model);
                 //
+                Notificador?.Publica(new CanviDeDomini(MenaDeCanvi.Modificacio, Referencies.De(dto)));
+                //
                 return new(dto);
             }
             catch (BrokenRuleException br)

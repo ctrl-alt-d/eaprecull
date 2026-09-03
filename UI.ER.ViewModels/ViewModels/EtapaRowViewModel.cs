@@ -17,7 +17,7 @@ namespace UI.ER.ViewModels.ViewModels
     public class EtapaRowViewModel : ViewModelBase, IRowViewModel<EtapaUpdateViewModel, Dtoo.Etapa, Dtoo.Etapa>, IEtiquetaDescripcio, IId
     {
 
-        protected Dtoo.Etapa Model { get; }
+        protected Dtoo.Etapa Model { get; set; }
         private readonly IServiceFactory _serveis;
 
         public EtapaRowViewModel(IServiceFactory serveis, Dtoo.Etapa EtapaDto, bool modeLookup = false)
@@ -29,12 +29,9 @@ namespace UI.ER.ViewModels.ViewModels
             ModeLookup = modeLookup;
 
             // State
-            Model = EtapaDto;
-            _Etiqueta = EtapaDto.Etiqueta;
-            _Descripcio = EtapaDto.Descripcio;
-            _Estat = EtapaDto.EsActiu ? "Activat" : "Desactivat";
-            _EsActiu = EtapaDto.EsActiu;
             Id = EtapaDto.Id;
+            Model = EtapaDto;
+            Actualitza(EtapaDto);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -75,11 +72,19 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.Etapa? data)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.Etapa? data)
         {
             if (data == null)
                 return;
 
+            Model = data;
+            ReferenciesPintades = Referencies.De(data);
             Etiqueta = data.Etiqueta;
             Descripcio = data.Descripcio;
             Estat = data.EsActiu ? "Activat" : "Desactivat";
@@ -98,7 +103,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             using var bl = _serveis.GetBLOperation<IEtapaActivaDesactiva>();
             var dto = await bl.Toggle(Id);
-            DTO2ModelView(dto.Data);
+            Actualitza(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
         }
 
@@ -109,7 +114,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             var update = new EtapaUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            if (data != null) Actualitza(data);
         }
 
         // --- Seleccionar si estem en mode lookup ---

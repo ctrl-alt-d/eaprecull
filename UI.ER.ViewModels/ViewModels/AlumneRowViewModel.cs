@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using System.Reactive.Concurrency;
 using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
@@ -34,7 +33,7 @@ namespace UI.ER.ViewModels.ViewModels
             CursActual = cursActual;
 
             // State
-            DTO2ModelView(data);
+            Actualitza(data);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -107,12 +106,19 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.Alumne? AlumneDto)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.Alumne? AlumneDto)
         {
             if (AlumneDto == null)
                 return;
 
             Model = AlumneDto;
+            ReferenciesPintades = Referencies.De(AlumneDto);
             Etiqueta = AlumneDto.Etiqueta;
             Descripcio = AlumneDto.Descripcio;
             CentreActual = AlumneDto.CentreActual?.Etiqueta ?? "** Sense centre assignat **";
@@ -135,7 +141,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             using var bl = _serveis.GetBLOperation<IAlumneActivaDesactiva>();
             var dto = await bl.Toggle(Id);
-            DTO2ModelView(dto.Data);
+            Actualitza(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
         }
 
@@ -146,7 +152,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             var update = new AlumneUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            if (data != null) Actualitza(data);
         }
 
         // --- Obrir Finestra Actuacions ---
@@ -154,20 +160,10 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<ActuacioSetViewModel, IIdEtiquetaDescripcio?> ShowActuacioSetDialog { get; } = new();
         private async Task ShowActuacioSetDialogHandle()
         {
+            // Cap rellegida a mà en tancar: el que s'hagi fet a la finestra d'actuacions
+            // arriba pel bus de canvis i la llista d'alumnes ja es refresca sola.
             var vm = new ActuacioSetViewModel(_serveis, alumneId: Id);
-            var data = await ShowActuacioSetDialog.Handle(vm);
-            RxApp.MainThreadScheduler.Schedule(ReLoadData);
-        }
-        private async void ReLoadData()
-        {
-            BrokenRules.Clear();
-            using var blAlumneSet = _serveis.GetBLOperation<IAlumneSet>();
-            var dto = await blAlumneSet.FromId(Model.Id);
-            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
-            if (dto.Data == null) return;
-            var data = dto.Data!;
-            Model = data;
-            DTO2ModelView(data);
+            await ShowActuacioSetDialog.Handle(vm);
         }
 
         // --- Seleccionar si estem en mode lookup ---

@@ -1,5 +1,4 @@
 ﻿using System.Reactive;
-using System.Reactive.Subjects;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
@@ -32,7 +31,7 @@ namespace UI.ER.ViewModels.ViewModels
             Model = data;
 
             // State
-            DTO2ModelView(data);
+            Actualitza(data);
 
             // Behavior
             SeleccionarCommand = ReactiveCommand.Create(SelectRow);
@@ -109,12 +108,19 @@ namespace UI.ER.ViewModels.ViewModels
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.Actuacio? ActuacioDto)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.Actuacio? ActuacioDto)
         {
             if (ActuacioDto == null)
                 return;
 
             Model = ActuacioDto;
+            ReferenciesPintades = Referencies.De(ActuacioDto);
             Etiqueta = ActuacioDto.Etiqueta;
             Descripcio = ActuacioDto.Descripcio;
             CentreActuacio = ActuacioDto.CentreAlMomentDeLactuacio.Etiqueta;
@@ -134,9 +140,6 @@ namespace UI.ER.ViewModels.ViewModels
         }
 
         // --- Esborrat ---
-        private readonly Subject<int> _wasDeleted = new();
-        public IObservable<int> WasDeleted => _wasDeleted.AsObservable();
-
         private bool _IsDeleting;
         public bool IsDeleting
         {
@@ -156,16 +159,15 @@ namespace UI.ER.ViewModels.ViewModels
 
             if (result.WasUpdated && result.Data != null)
             {
-                DTO2ModelView(result.Data);
+                Actualitza(result.Data);
             }
             else if (result.WasDeleted && result.DeletedId.HasValue)
             {
                 // Activar animació de fade out
                 IsDeleting = true;
-                // Esperar que acabi l'animació (400ms)
+                // Esperar que acabi l'animació (400ms). Qui treu la fila de la llista és
+                // el refresc silenciós que arriba pel bus de canvis.
                 await Task.Delay(400);
-                // Notificar per eliminar de la llista
-                _wasDeleted.OnNext(result.DeletedId.Value);
             }
         }
 

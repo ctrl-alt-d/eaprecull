@@ -17,20 +17,10 @@ namespace UI.ER.ViewModels.ViewModels
     public class CentreRowViewModel : ViewModelBase, IRowViewModel<CentreUpdateViewModel, Dtoo.Centre, Dtoo.Centre>, IEtiquetaDescripcio, IId
     {
 
-        protected Dtoo.Centre Model { get; }
+        protected Dtoo.Centre Model { get; set; }
         private readonly IServiceFactory _serveis;
 
         public CentreRowViewModel(IServiceFactory serveis, Dtoo.Centre centreDto, bool modeLookup = false)
-            : this(serveis, centreDto, modeLookup, 0, 0)
-        {
-        }
-
-        public CentreRowViewModel(IServiceFactory serveis, Dtoo.CentreAmbActuacions centreDto, bool modeLookup = false)
-            : this(serveis, centreDto, modeLookup, centreDto.TotalActuacions, centreDto.ActuacionsCursActiu)
-        {
-        }
-
-        private CentreRowViewModel(IServiceFactory serveis, Dtoo.Centre centreDto, bool modeLookup, int totalActuacions, int actuacionsCursActiu)
         {
 
             _serveis = serveis;
@@ -39,14 +29,9 @@ namespace UI.ER.ViewModels.ViewModels
             ModeLookup = modeLookup;
 
             // State
-            Model = centreDto;
-            _Etiqueta = centreDto.Etiqueta;
-            _Descripcio = centreDto.Descripcio;
-            _Estat = centreDto.EsActiu ? "Activat" : "Desactivat";
-            _EsActiu = centreDto.EsActiu;
-            _TotalActuacions = totalActuacions;
-            _ActuacionsCursActiu = actuacionsCursActiu;
             Id = centreDto.Id;
+            Model = centreDto;
+            Actualitza(centreDto);
 
             // Behavior
             DoActiuToggleCommand = ReactiveCommand.CreateFromTask(RunActiuToggle);
@@ -89,29 +74,54 @@ namespace UI.ER.ViewModels.ViewModels
         public int TotalActuacions
         {
             get { return _TotalActuacions; }
-            protected set { this.RaiseAndSetIfChanged(ref _TotalActuacions, value); }
+            protected set
+            {
+                this.RaiseAndSetIfChanged(ref _TotalActuacions, value);
+                this.RaisePropertyChanged(nameof(ActuacionsTxt));
+            }
         }
 
         private int _ActuacionsCursActiu;
         public int ActuacionsCursActiu
         {
             get { return _ActuacionsCursActiu; }
-            protected set { this.RaiseAndSetIfChanged(ref _ActuacionsCursActiu, value); }
+            protected set
+            {
+                this.RaiseAndSetIfChanged(ref _ActuacionsCursActiu, value);
+                this.RaisePropertyChanged(nameof(ActuacionsTxt));
+            }
         }
 
         public string ActuacionsTxt => $"{ActuacionsCursActiu} actuacions (curs actiu) / {TotalActuacions} total";
 
         public int Id { get; }
 
-        private void DTO2ModelView(Dtoo.Centre? data)
+        /// <summary>
+        /// Les entitats que la fila pinta. Es recalculen a cada <see cref="Actualitza"/>:
+        /// una fila que canvia de centre canvia de referències.
+        /// </summary>
+        public IReadOnlySet<Referencia> ReferenciesPintades { get; private set; } = new HashSet<Referencia>();
+
+        public void Actualitza(Dtoo.Centre? data)
         {
             if (data == null)
                 return;
 
+            Model = data;
+            ReferenciesPintades = Referencies.De(data);
             Etiqueta = data.Etiqueta;
             Descripcio = data.Descripcio;
             Estat = data.EsActiu ? "Activat" : "Desactivat";
             EsActiu = data.EsActiu;
+
+            // Els comptadors només els porta la consulta de la llista. Un DTO que no en
+            // dugui —el que torna el diàleg d'edició, o el toggle d'actiu— deixa els que
+            // ja hi ha: posar-los a zero els faria parpellejar fins al refresc següent.
+            if (data is Dtoo.CentreAmbActuacions ambActuacions)
+            {
+                TotalActuacions = ambActuacions.TotalActuacions;
+                ActuacionsCursActiu = ambActuacions.ActuacionsCursActiu;
+            }
         }
         public ObservableCollectionExtended<string> BrokenRules { get; } = new();
         private void BrokenRules2ModelView(List<BrokenRule> brokenRules)
@@ -126,7 +136,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             using var bl = _serveis.GetBLOperation<ICentreActivaDesactiva>();
             var dto = await bl.Toggle(Id);
-            DTO2ModelView(dto.Data);
+            Actualitza(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
         }
 
@@ -137,7 +147,7 @@ namespace UI.ER.ViewModels.ViewModels
         {
             var update = new CentreUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
-            if (data != null) DTO2ModelView(data);
+            if (data != null) Actualitza(data);
         }
 
         // --- Seleccionar si estem en mode lookup ---

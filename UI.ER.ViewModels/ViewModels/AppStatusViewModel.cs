@@ -6,8 +6,12 @@ using BusinessLayer.Abstract.Generic;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Windows.Input;
 using CommonInterfaces;
+using System;
+using UI.ER.ViewModels.Services;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -23,29 +27,27 @@ namespace UI.ER.ViewModels.ViewModels
 
             RxApp.MainThreadScheduler.Schedule(LoadData);
 
+            // Les xifres del taulell les fa obsoletes qualsevol escriptura, vingui de la
+            // finestra que vingui. En comptes de rellegir-les en tancar cada diàleg,
+            // s'escolta el bus de canvis: aquí sí que interessa tot el que passi.
+            this.WhenActivated(d =>
+                _serveis.Canvis.ComObservable()
+                    .Throttle(TimeSpan.FromMilliseconds(300))
+                    .ObserveOn(RxApp.MainThreadScheduler)
+                    .Subscribe(_ => LoadData())
+                    .DisposeWith(d));
+
             // Una comanda per cada entrada de navegació de la finestra principal: les tres
             // targetes del taulell i les set entrades del menú. La vista només hi enganxa
-            // quina finestra atén cada Interaction; el que s'obre i què passa després es
-            // decideix aquí.
-            ActuacioSetCommand = ComandaDeNavegacio(ShowActuacioSetDialog);
-            AlumneSetCommand = ComandaDeNavegacio(ShowAlumneSetDialog);
-            CentreSetCommand = ComandaDeNavegacio(ShowCentreSetDialog);
-            CursAcademicSetCommand = ComandaDeNavegacio(ShowCursAcademicSetDialog);
-            EtapaSetCommand = ComandaDeNavegacio(ShowEtapaSetDialog);
-            TipusActuacioSetCommand = ComandaDeNavegacio(ShowTipusActuacioSetDialog);
-            UtilitatsCommand = ComandaDeNavegacio(ShowUtilitatsDialog);
+            // quina finestra atén cada Interaction; el que s'obre es decideix aquí.
+            ActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowActuacioSetDialog.Handle(Unit.Default));
+            AlumneSetCommand = ReactiveCommand.CreateFromObservable(() => ShowAlumneSetDialog.Handle(Unit.Default));
+            CentreSetCommand = ReactiveCommand.CreateFromObservable(() => ShowCentreSetDialog.Handle(Unit.Default));
+            CursAcademicSetCommand = ReactiveCommand.CreateFromObservable(() => ShowCursAcademicSetDialog.Handle(Unit.Default));
+            EtapaSetCommand = ReactiveCommand.CreateFromObservable(() => ShowEtapaSetDialog.Handle(Unit.Default));
+            TipusActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowTipusActuacioSetDialog.Handle(Unit.Default));
+            UtilitatsCommand = ReactiveCommand.CreateFromObservable(() => ShowUtilitatsDialog.Handle(Unit.Default));
         }
-
-        /// <summary>
-        /// Comanda que obre un diàleg i, en tancar-lo, refresca les xifres del taulell.
-        /// Qualsevol de les set finestres pot haver canviat dades que hi surten.
-        /// </summary>
-        private ICommand ComandaDeNavegacio<TSortida>(Interaction<Unit, TSortida> dialeg)
-            => ReactiveCommand.CreateFromTask(async () =>
-            {
-                await dialeg.Handle(Unit.Default);
-                RxApp.MainThreadScheduler.Schedule(LoadData);
-            });
 
         private async void LoadData()
         {

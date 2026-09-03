@@ -137,6 +137,9 @@ namespace UI.ER.AvaloniaUI.Test
         {
             public T GetBLOperation<T>() where T : IBLOperation
                 => throw new NotSupportedException("Cap test d'aquest fitxer toca el backend.");
+
+            public INotificadorDeCanvis Canvis
+                => throw new NotSupportedException("Cap test d'aquest fitxer escolta el bus.");
         }
     }
 }

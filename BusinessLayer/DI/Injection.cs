@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BusinessLayer.Abstract.Generic;
 using BusinessLayer.Abstract.Services;
+using BusinessLayer.Common;
 using BusinessLayer.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,10 +16,29 @@ namespace BusinessLayer.DI
     {
         public static IServiceCollection BusinessLayerConfigureServices(this IServiceCollection services)
         {
+            // Singleton, i abans de les operacions: el bus és un de sol per a tota
+            // l'aplicació i el reben totes les escriptures. També ha d'anar abans de
+            // l'escaneig de ViewModels d'UIConfigureServices(), cosa que a la composition
+            // root ja passa sola perquè BusinessLayerConfigureServices() hi va primer.
+            services.AddSingleton<INotificadorDeCanvis, NotificadorDeCanvis>();
+
             // Transient, com abans de R7: cada operació és d'un sol ús i el consumidor
             // la demana per l'IServiceFactory, que és Scoped i li marca el cicle de vida (R1).
+            //
+            // El notificador s'injecta per propietat i no pel constructor: les operacions
+            // són Transient i el bus Singleton, i posar-l'hi voldria dir tocar 19
+            // constructors. Aquí és un sol lloc, i una operació nova hereta l'emissió pel
+            // sol fet d'heretar la classe base.
             foreach (var (contracte, implementacio) in Operacions())
-                services.AddTransient(contracte, implementacio);
+                services.AddTransient(contracte, sp =>
+                {
+                    var operacio = ActivatorUtilities.CreateInstance(sp, implementacio);
+
+                    if (operacio is BLOperation blOperation)
+                        blOperation.Notificador = sp.GetRequiredService<INotificadorDeCanvis>();
+
+                    return operacio;
+                });
 
             return services;
         }

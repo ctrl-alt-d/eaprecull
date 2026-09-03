@@ -37,7 +37,11 @@ namespace BusinessLayer.Integration.Test
         [Fact]
         public void CadaContracteTeLaSevaImplementacioPerConvencio()
         {
+            // El registre és per fàbrica des que el bus de canvis s'injecta per propietat,
+            // i per tant el descriptor ja no diu quina classe hi ha darrere: la convenció
+            // es comprova sobre el tipus que en surt de debò.
             var serveis = Serveis();
+            using var provider = serveis.BuildServiceProvider(validateScopes: true);
 
             var errors = Contractes()
                 .Select(contracte =>
@@ -47,13 +51,13 @@ namespace BusinessLayer.Integration.Test
                     if (registres.Count != 1)
                         return $"{contracte.Name}: {registres.Count} registres, se n'esperava 1.";
 
-                    var registre = registres[0];
+                    if (registres[0].Lifetime != ServiceLifetime.Transient)
+                        return $"{contracte.Name}: {registres[0].Lifetime}, s'esperava Transient.";
 
-                    if (registre.ImplementationType?.Name != contracte.Name[1..])
-                        return $"{contracte.Name}: registrat amb {registre.ImplementationType?.Name ?? "res"}.";
+                    using var operacio = (IBLOperation)provider.GetRequiredService(contracte);
 
-                    if (registre.Lifetime != ServiceLifetime.Transient)
-                        return $"{contracte.Name}: {registre.Lifetime}, s'esperava Transient.";
+                    if (operacio.GetType().Name != contracte.Name[1..])
+                        return $"{contracte.Name}: resolt amb {operacio.GetType().Name}.";
 
                     return null;
                 })
@@ -61,6 +65,31 @@ namespace BusinessLayer.Integration.Test
                 .ToList();
 
             Assert.Empty(errors);
+        }
+
+        [Fact]
+        public void ElBusDeCanvisEsSingletonIEsRegistraAbansDeLesOperacions()
+        {
+            // Singleton: hi ha un sol bus per a tota l'aplicació. I abans de les
+            // operacions, que és qui l'ha de rebre quan la fàbrica les construeix.
+            var serveis = Serveis();
+
+            var descriptor = Assert.Single(serveis, d => d.ServiceType == typeof(INotificadorDeCanvis));
+            Assert.Equal(ServiceLifetime.Singleton, descriptor.Lifetime);
+
+            var posicioBus = serveis.Select((d, i) => (d, i))
+                .First(x => x.d.ServiceType == typeof(INotificadorDeCanvis)).i;
+
+            var primeraOperacio = serveis.Select((d, i) => (d, i))
+                .First(x => typeof(IBLOperation).IsAssignableFrom(x.d.ServiceType)).i;
+
+            Assert.True(posicioBus < primeraOperacio,
+                "El notificador s'ha de registrar abans de les operacions.");
+
+            using var provider = serveis.BuildServiceProvider(validateScopes: true);
+            Assert.Same(
+                provider.GetRequiredService<INotificadorDeCanvis>(),
+                provider.GetRequiredService<INotificadorDeCanvis>());
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BusinessLayer.Abstract;
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
@@ -7,22 +8,19 @@ using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using DynamicData.Binding;
 using BusinessLayer.Abstract.Generic;
+using UI.ER.ViewModels.ViewModels.Base;
 
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class AlumneSetViewModel : ViewModelBase, ISetViewModel<AlumneCreateViewModel, Dtoo.Alumne>
+    public class AlumneSetViewModel
+        : SetViewModelBase<AlumneRowViewModel, Dtoo.Alumne>,
+          ISetViewModel<AlumneCreateViewModel, Dtoo.Alumne>
     {
-        public bool ModeLookup { get; }
-        private readonly IServiceFactory _serveis;
-
         public AlumneSetViewModel(IServiceFactory serveis, bool modeLookup = false)
+            : base(serveis, modeLookup)
         {
-            _serveis = serveis;
-            ModeLookup = modeLookup;
-
             // Filtre
             var NomCognomsCentreObserver =
                 this
@@ -42,7 +40,7 @@ namespace UI.ER.ViewModels.ViewModels
                         (nomesActius, NomCognomsTagCentre, ordreAlfabetic)
                 )
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(t => LoadAlumnes(t.nomesActius, t.NomCognomsTagCentre, t.ordreAlfabetic))
+                .Subscribe(_ => CarregaAra())
                 ;
 
             // Create
@@ -50,103 +48,56 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new AlumneCreateViewModel(_serveis);
+                var update = new AlumneCreateViewModel(Serveis);
                 var data = await ShowDialog.Handle(update);
-                using var blCurs = _serveis.GetBLOperation<ICursAcademicSet>();
-                var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
-                var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
-                if (data != null)
-                {
-                    var item = new AlumneRowViewModel(_serveis, data, cursActual, ModeLookup);
-                    MyItems.Insert(0, item);
-                }
+                if (data == null)
+                    return;
+
+                await AbansDeCrearFiles();
+                MyItems.Insert(0, CreaFila(data));
             });
 
-
-        }
-        public ObservableCollectionExtended<AlumneRowViewModel> MyItems { get; } = new();
-
-        public ObservableCollectionExtended<string> BrokenRules { get; } = new();
-
-        protected virtual async void LoadAlumnes(bool nomesActius, string NomCognomsTagCentre, bool ordreAlfabetic)
-        {
-            Loading = true;
-            MyItems.Clear();
-            await OmplirAmbElsNousValors(nomesActius, NomCognomsTagCentre, ordreAlfabetic);
         }
 
-        private async Task OmplirAmbElsNousValors(bool nomesActius, string NomCognomsTagCentre, bool ordreAlfabetic)
+        protected override async Task<OperationResults<Dtoo.Alumne>> Consulta()
         {
             // Preparar paràmetres al backend
             var esActiu =
-                nomesActius ?
+                NomesActius ?
                 true :
                 (bool?)null;
 
             var ordre =
-                ordreAlfabetic ?
+                OrdreAlfabetic ?
                 Dtoi.AlumneSearchParms.OrdreResultatsChoice.CognomsNom :
                 Dtoi.AlumneSearchParms.OrdreResultatsChoice.DarreraModificacio;
 
-            var Parms = new DTO.i.DTOs.AlumneSearchParms(
+            var Parms = new Dtoi.AlumneSearchParms(
                 esActiu: esActiu,
                 nomCognomsTagCentre: NomCognomsTagCentre,
                 ordreResultats: ordre
             );
 
-            // Petició al backend            
-            using var bl = _serveis.GetBLOperation<IAlumneSet>();
-            var dto = await bl.FromPredicate(Parms);
-
-            // 
-            BrokenRules.Clear();
-            BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
-
-
-            // Ha fallat la petició
-            if (dto.Data == null)
-                throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
-
-            //
-            using var blCurs = _serveis.GetBLOperation<ICursAcademicSet>();
-            var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
-            var cursActual = cursActual_dto.Data?.FirstOrDefault();
-
-            // Tenim els resultats
-            var newItems =
-                dto
-                .Data
-                .Select(x => new AlumneRowViewModel(_serveis, x, cursActual, ModeLookup));
-
-            MyItems.AddRange(newItems);
-
-            //
-            PaginatedMsg =
-                (dto.Total > dto.TakeRequested) ?
-                $"Mostrant els {newItems.Count()} primers resultats de {dto.Total} seleccionats" :
-                $"Seleccionats {newItems.Count()} items";
-
-
-            Loading = false;
+            // Petició al backend
+            using var bl = Serveis.GetBLOperation<IAlumneSet>();
+            return await bl.FromPredicate(Parms);
         }
 
-        // Warning
-        private string _PaginatedMsg = string.Empty;
-        public string PaginatedMsg
+        /// <summary>El curs actiu: la fila el necessita per saber si l'alumne està al dia.</summary>
+        protected override async Task AbansDeCrearFiles()
         {
-            get => _PaginatedMsg;
-            set => this.RaiseAndSetIfChanged(ref _PaginatedMsg, value);
+            using var blCurs = Serveis.GetBLOperation<ICursAcademicSet>();
+            var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
+            CursActual = cursActual_dto.Data?.FirstOrDefault();
         }
+
+        private Dtoo.CursAcademic? CursActual;
+
+        protected override AlumneRowViewModel CreaFila(Dtoo.Alumne dto)
+            => new(Serveis, dto, CursActual, ModeLookup);
 
         // Filtre
-        private bool _Loading = true;
-        public bool Loading
-        {
-            get => _Loading;
-            set => this.RaiseAndSetIfChanged(ref _Loading, value);
-        }
-
         private bool _NomesActius = true;
         public bool NomesActius
         {
