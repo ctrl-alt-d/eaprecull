@@ -14,7 +14,7 @@ using System.Reactive.Disposables;
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class ActuacioSetViewModel : ViewModelBase
+    public class ActuacioSetViewModel : ViewModelBase, ISetViewModel<ActuacioCreateViewModel, Dtoo.Actuacio>
     {
         private readonly CompositeDisposable _itemSubscriptions = new();
 

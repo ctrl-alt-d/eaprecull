@@ -15,7 +15,7 @@ using System.Reactive.Concurrency;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class AlumneRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class AlumneRowViewModel : ViewModelBase, IRowViewModel<AlumneUpdateViewModel, Dtoo.Alumne, Dtoo.Alumne>, IEtiquetaDescripcio, IId
     {
 
         protected Dtoo.Alumne Model { get; set; }

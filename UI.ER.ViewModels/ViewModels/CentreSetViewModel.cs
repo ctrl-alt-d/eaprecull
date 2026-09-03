@@ -13,7 +13,7 @@ using DynamicData.Binding;
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class CentreSetViewModel : ViewModelBase
+    public class CentreSetViewModel : ViewModelBase, ISetViewModel<CentreCreateViewModel, Dtoo.Centre>
     {
         public bool ModeLookup { get; }
         public CentreSetViewModel(bool modeLookup = false)

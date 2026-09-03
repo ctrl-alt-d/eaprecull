@@ -17,7 +17,7 @@ using System.Reactive.Linq;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class AlumneUpdateViewModel : ViewModelBase, IId
+    public class AlumneUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Alumne>, IId
     {
 
         public AlumneUpdateViewModel(int id)

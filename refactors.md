@@ -9,9 +9,9 @@
 | Refactor | Estat |
 |---|---|
 | **R0** — `IWindowFactory` + registre per comprensió | ✅ **FET** — veure §R0 |
-| R5 — codi mort | ⬜ pendent |
-| R3 — classes base + helpers | ⬜ pendent (ja pot consumir `IWindowFactory`) |
-| R2 — disposal de subscripcions | ⬜ pendent |
+| **R3** — classes base + helpers | ✅ **FET** — veure §R3 |
+| **R2** — disposal de subscripcions | ✅ **FET dins de R3**, tret d'`AlumneInformeViewerWindow` — veure §R2 |
+| R5 — codi mort | ⬜ pendent (11 propietats `Result` ja marcades amb `ToDo (R5)`) |
 | R4 — navegació de `MainWindow` | ⬜ pendent (ja pot consumir `IWindowFactory`) |
 | R1 — eliminar `SuperContext` | ⬜ pendent (51 crides vives) |
 | R6 — unificació visual | ⬜ pendent |
@@ -21,8 +21,12 @@
 
 ## 1. Estat actual de `UI.ER.AvaloniaUI`
 
-**Volum**: 40 fitxers `.cs` (2.789 línies) + 30 fitxers `.axaml` (3.189 línies), més `UI.ER.AvaloniaUI.Test` (6 fitxers).
-*(Els 4 fitxers nous són els de R0: `Services/{IWindowFactory,WindowFactory,ViewModelAttribute}.cs` i `DI/Injection.cs`.)*
+**Volum després de R3**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.308 línies**
+(−925), a canvi de **368 línies** de codi compartit nou: tres classes base
+(`Pages/Base/`), tres helpers (`Helpers/{DialegExtensions,FileExplorer,VisualRootExtensions}.cs`)
+i les tres interfícies de contracte dels ViewModels
+(`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`). Els 30 fitxers `.axaml` (3.189 línies)
+no s'han tocat. `UI.ER.AvaloniaUI.Test`: 7 fitxers, 24 tests.
 
 ### Patrons en ús
 
@@ -32,6 +36,8 @@
 | **Interaction pattern** | `vm.ShowXDialog.RegisterHandler(...)` — el VM demana un diàleg sense conèixer Avalonia |
 | **Composition Root** | `App.OnFrameworkInitializationCompleted` → `DataLayerConfigureServices()` + `BusinessLayerConfigureServices()` + `UIConfigureServices()` |
 | **Factory de vistes** | `IWindowFactory.Get<T>()` / `GetWith<T>(dc)` — cap `new XWindow(` al codi (R0) |
+| **Classes base genèriques** | `EntityEditWindow<TVm,TDto>`, `EntitySetWindow<…>`, `EntityRowUserCtrl<…>` a `Pages/Base/` (R3) |
+| **Contractes de ViewModel** | `ISubmitViewModel<TDto>`, `ISetViewModel<…>`, `IRowViewModel<…>` — el que les classes base poden donar per fet (R3) |
 | **Registre per comprensió** | `UI.ER.AvaloniaUI/DI/Injection.cs` escaneja finestres i ViewModels |
 | **Service Locator estàtic** | `SuperContext.Resolve<T>()` — **51 crides** des dels ViewModels (viu fins a R1) |
 | **Attached behavior** | `WindowHelper.ClampToWorkingArea` aplicada globalment amb `Style Selector="Window"` |
@@ -74,9 +80,11 @@
    `WhenAnyValue` emet immediatament → `LoadX()` s'executa durant la construcció i ja llegeix `ModeLookup`.
    ⚠️ **`ModeLookup` NO es pot convertir en `{ get; init; }` assignat després del constructor.** Ha de continuar sent argument del constructor.
 4. `Design.DataContext` (13 blocs a l'AXAML) instancia el VM amb **constructor sense paràmetres**. Afegir injecció per constructor als VMs trencarà aquests blocs. *(B3 — encara pendent, blocador de R1.)*
-5. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0** (convenció, registre, cicles de vida, constructors). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9.
+5. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0 i R3** (convenció, registre, cicles de vida, constructors, herència de les classes base). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9 i §R3.5.
 6. **Tota vista ha de conservar un constructor `public` sense paràmetres.** Els `*RowUserCtrl` perquè els instancia el `ListBox.ItemTemplate`; les finestres perquè, si no, el compilador d'Avalonia emet `AVLN3001`. Les que necessiten serveis fan servir el constructor pont encadenat sobre `App.Services` (§R0.5).
 7. **Les vistes ja no fan `new` d'altres vistes.** Tot passa per `IWindowFactory`. La validació d'arrencada de `DI/Injection.cs` peta si s'afegeix una finestra fora de convenció sense `[ViewModel(typeof(...))]`.
+8. **Cada vista amb `x:Class` conserva el seu `InitializeComponent()`.** `AvaloniaXamlLoader.Load(this)` es queda a la classe derivada, mai a la classe base: el compilador d'Avalonia el reescriu a una crida directa al mètode generat només quan el troba dins del tipus que declara l'AXAML. Pujar-lo a la base compilaria igual però passaria a resoldre's per reflexió en temps d'execució.
+9. **Els escanejos de `DI/Injection.cs` i de `Vistes.cs` filtren `IsAbstract` i `IsGenericTypeDefinition`.** És el que manté les classes base de R3 fora del registre i fora dels tests d'inventari. No treure aquests filtres.
 
 ---
 
@@ -246,8 +254,10 @@ Els `*RowUserCtrl` necessiten el pont per una raó diferent i inevitable: els in
 `App.Services` és el provider arrel, exposat com a `public static` **exclusivament** per a aquests
 constructors pont. És l'únic localitzador de serveis que queda a la capa de vistes, i és
 deliberat mentre l'AXAML pugui instanciar vistes pel seu compte.
-R3 el pot reduir a 4 punts, un per classe base (`EntityCreateWindow<…>`, `EntityUpdateWindow<…>`,
-`EntitySetWindow<…>`, `EntityRowUserCtrl<…>`).
+⚠️ **R3 no l'ha pogut reduir, i no el reduirà mai cap classe base**: els constructors no
+s'hereten en C#, i l'invariant 6 obliga cada vista a tenir el seu constructor sense
+paràmetres. Continuen sent 16 punts de crida, ara d'una sola línia cadascun. L'única manera
+de fer-los desaparèixer és que l'AXAML deixi d'instanciar vistes pel seu compte.
 
 ### R0.6 — Blocadors: estat final
 
@@ -305,11 +315,11 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 - La parella vista↔ViewModel als punts de crida: és una propietat del codi font, verificada
   pel compilador (§R0.2), no per un test.
 
-### R0.8 — Deutes que R0 deixa oberts
+### R0.8 — Deutes que R0 deixava oberts
 
-1. `GetWindow() => (Window)this.VisualRoot!` continua duplicat a 10 fitxers → `TopLevelExtensions.GetOwnerWindow()` a **R3**.
-2. Els 16 punts de lookup segueixen fent `new XSetViewModel(modeLookup: true)` a mà → helper `RegisterLookup<TWindow>` a **R3**.
-3. `App.Services` com a localitzador estàtic als 17 constructors pont → reduir a 4 punts amb les classes base de **R3**.
+1. ~~`GetWindow() => (Window)this.VisualRoot!` duplicat a 10 fitxers~~ → ✅ **R3**: `Helpers/VisualRootExtensions.GetOwnerWindow()`. Nom final `VisualRootExtensions`, no `TopLevelExtensions`, i el mètode fa servir `visual.GetVisualRoot()` perquè `Visual.VisualRoot` és `protected` i no es pot llegir des d'una extensió.
+2. ~~Els 16 punts de lookup fent `new XSetViewModel(modeLookup: true)` a mà~~ → ✅ **R3**: `RegistraLookup<TSetWindow>`, una línia per lookup. El `new` hi continua sent, com a `Func<ViewModelBase>`; el mata **R1**.
+3. `App.Services` als 16 constructors pont → ❌ **no reduïble**, veure §R0.5.
 4. La signatura `Get<TWindow>(params object[] vmArgs)` que substituirà els `GetWith` → **R1**.
 
 ---
@@ -320,13 +330,25 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 
 **Objectiu**: injectar `IServiceFactory` (o els serveis BL concrets) pel constructor dels VMs.
 
-**Dependència**: R0 ✅ fet. La factory ja és qui construeix els VMs sense arguments (`Get<T>()`, des de l'scope del diàleg); falta la variant amb arguments de runtime.
+**Dependència**: R0 ✅ i R3 ✅ fets. La factory ja és qui construeix els VMs sense arguments (`Get<T>()`, des de l'scope del diàleg); falta la variant amb arguments de runtime.
+
+**Disseny acordat** (discussió del 2026-09-03):
+
+- Els VMs reben **`IServiceFactory`** pel constructor, no els serveis BL concrets. No és opcional: les operacions BL són `AddTransient` i `IBLOperation : IDisposable`, i els VMs les consumeixen amb `using var bl = …` a cada crida. Una instància injectada quedaria disposada després del primer ús. Ha de ser una fàbrica: `IServiceFactory` o `Func<IXxx>`.
+- `IServiceFactory` **no és un `IServiceProvider` disfressat**: `T GetBLOperation<T>() where T : IBLOperation` només pot arribar a operacions de BL.
+- **`SuperContext` desapareix del tot.** El substitueix `ServiceFactory(IServiceProvider provider)` registrat com a **`AddScoped`**. Avui `SuperContext` resol des del provider **arrel**, i MS.DI registra allà els transitoris `IDisposable` per disposar-los al final: les 51 crides deixen una referència viva fins que es tanca l'aplicació. Injectar una fàbrica *scoped* ho arregla i fa que l'scope per diàleg de §R0.3 tingui efecte de debò.
+- Els 4 *seams* `protected virtual IXxx BLxxx()` (a `Actuacio{Create,Update}` i `AlumneCreate`) s'esborren: amb la fàbrica injectada ja no calen, i a més només cobrien l'operació d'escriptura, no les càrregues.
+- El test d'un VM passa a ser un `FakeBL : IServiceFactory` amb un diccionari, sense estat global.
+- Si més endavant un VM concret demana constructors més explícits, migrar-lo a `Func<IXxx>` és un canvi d'un sol fitxer, perquè la fàbrica ja hi arriba pel constructor.
 
 **Feina concreta que R0 deixa preparada**:
 1. Afegir `TWindow Get<TWindow>(params object[] vmArgs)` a `IWindowFactory`, implementat amb
    `ActivatorUtilities.CreateInstance(scope.ServiceProvider, WindowFactory.ViewModelTypeFor(typeof(TWindow)), vmArgs)`.
    Compte amb els `int?` (`ActuacioSetViewModel(bool, int?)`): cal treure'ls dels constructors abans, o passar-hi un tipus explícit.
-2. Migrar els 16 `GetWith<XSetWindow>(new XSetViewModel(modeLookup: true))` a la nova sobrecàrrega.
+2. Migrar els 16 lookups a la nova sobrecàrrega. Des de R3 són 16 crides a
+   `RegistraLookup<XSetWindow>(…, () => new XSetViewModel(modeLookup: true))` repartides per
+   `Actuacio{Create,Update}Window` i `Alumne{Create,Update}Window`: el `Func<ViewModelBase>`
+   desapareix i `RegistraLookup` passa a demanar només el tipus de finestra i els arguments.
 3. Els `GetWith<XUpdateWindow>(interaction.Input)` són un cas diferent: el VM el construeix el `*SetViewModel`. O bé el VM pare rep una `Func<int, XUpdateViewModel>` injectada, o bé la `Interaction` passa a portar l'`id` en comptes del VM sencer (més net: el VM pare deixa de construir VMs).
 4. Només llavors l'scope per diàleg de R0.3 comença a alliberar serveis de debò.
 
@@ -334,67 +356,170 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 - Trencarà els 13 `<Design.DataContext>` → resoldre B3 primer (migrar a `x:DataType` + `x:CompileBindings="True"`).
 - El filtre de registre de ViewModels a `DI/Injection.cs` (§R0.1) mira *«tots els paràmetres tenen valor per defecte»*. Quan els VMs rebin serveis pel constructor deixarà de valer: caldrà canviar-lo per *«tots els paràmetres són resolubles pel contenidor»*.
 - Els `{…}RowViewModel` es creen en bucle dins dels `*SetViewModel`; caldrà un `Func<TDto, bool, TRowVm>` injectat, o passar la `IServiceFactory` avall.
+- Les tres interfícies de `Contracts/DialegContracts.cs` (R3) **no** es toquen: no diuen res de com el VM obté els seus serveis. Les classes base de R3 continuen valent tal com són.
 - Abast: 2 projectes, ~30 fitxers. **Fer-ho en un commit separat.**
 
 ---
 
-## R2 — Subscripcions imbricades no alliberades (bug real)
+## R2 — Subscripcions imbricades no alliberades ✅ FET dins de R3
 
-Patró repetit a **totes** les Create/Update windows:
+**Era el bug**: a totes les Create/Update/Set windows i a tots els RowUserCtrl només es
+registrava la subscripció **exterior**; la interior — i cada `RegisterHandler`, que també
+retorna `IDisposable` — quedava viva. En reactivar-se la vista, `CloseIfSaved` s'executava
+N vegades i els handlers d'`Interaction` s'acumulaven.
+
+**Per què s'ha fet aquí i no en un commit propi**: R3 movia justament aquestes subscripcions
+a tres classes base. Escriure-les amb el bug a dins per treure'l acte seguit no tenia sentit,
+i deixar-les com estaven hauria estat una **regressió** a les quatre finestres d'`Alumne`/
+`Actuacio`, que sí que registraven bé la seva subscripció a `SubmitCommand` perquè no era
+imbricada.
+
+**La correcció**: `Register` rep un `CompositeDisposable` (no un `Action<IDisposable>`) i
+`PerCadaViewModel` el propaga cap endins:
 
 ```csharp
-disposables(
-    this.WhenAnyValue(x => x.ViewModel)
-        .Subscribe(vm => vm!.SubmitCommand.Subscribe(CloseIfSaved))   // ← mai es fa dispose
-);
+protected void PerCadaViewModel(CompositeDisposable d, Action<TVm, CompositeDisposable> accio)
+    => this.WhenAnyValue(x => x.ViewModel)
+           .Where(vm => vm is not null)
+           .Subscribe(vm => accio(vm!, d))
+           .DisposeWith(d);          // ← exterior
+
+// i cada crida registra la seva:
+PerCadaViewModel(d, (vm, dd) => vm.SubmitCommand.Subscribe(TancaSiDesat).DisposeWith(dd));
 ```
 
-Només es registra la subscripció **exterior**. La interior — i cada `RegisterHandler`, que retorna `IDisposable` — queda viva. Si la finestra es reactiva, `CloseIfSaved` s'executa N vegades i els handlers d'`Interaction` s'acumulen.
+> ⚠️ `DisposeWith` viu a `System.Reactive.Disposables.Fluent` (System.Reactive 6.1), **no** a
+> `System.Reactive.Disposables`. Calen els dos `using` al mateix fitxer.
 
-**Correcció**:
-```csharp
-this.WhenAnyValue(x => x.ViewModel)
-    .Where(vm => vm is not null)
-    .Subscribe(vm => vm!.SubmitCommand.Subscribe(CloseIfSaved).DisposeWith(d))
-    .DisposeWith(d);
-```
-
-**Cas pitjor**: `AlumneInformeViewerWindow.axaml.cs:35` — subscriu dins del constructor, sense `WhenActivated` ni disposal, i amb `async void` a `Opened`.
-
-**Cost baix, impacte alt.** Si es fa després de R3, només cal arreglar-ho en un lloc.
+**Què queda**: `AlumneInformeViewerWindow.axaml.cs` — el cas pitjor que ja anotava R0/B4.
+Subscriu dins del constructor, sense `WhenActivated` ni disposal, i amb `async void` a
+`Opened`. No hereta de cap classe base perquè és un `Window` pelat, no un
+`ReactiveWindow<T>`. Convertir-lo a `ReactiveWindow<AlumneInformeViewerViewModel>` i moure
+les subscripcions a `WhenActivated` és un canvi d'un sol fitxer.
 
 ---
 
-## R3 — Eliminar el boilerplate de diàlegs (~1.000 de 2.488 línies)
+## R3 — Eliminar el boilerplate de diàlegs ✅ FET
 
-Duplicació mesurada:
+### R3.1 — Resultat
 
-| Grup | Fitxers idèntics | Línies |
+| Grup | Abans | Ara |
 |---|---|---|
-| `{Centre,CursAcademic,Etapa,TipusActuacio}CreateWindow.axaml.cs` | 4, byte a byte tret del tipus | 45 c/u |
-| `{…}UpdateWindow.axaml.cs` | 4 | 45 c/u |
-| `{…}SetWindow.axaml.cs` | 6 | 50 c/u |
-| `{…}RowUserCtrl.axaml.cs` | 4 | 65 c/u |
-| Blocs de lookup a `Actuacio{Create,Update}` + `Alumne{Create,Update}` | 16 blocs gairebé iguals | ~180 total |
-| `GetWindow() => (Window)this.VisualRoot!` | 10 còpies | — |
-| `ObraFileExplorer()` amb `Process.Start` | 3 còpies (`AlumneRowUserCtrl`, `UtilitatsWindow`, `AlumneInformeViewerWindow`) | — |
+| `{Centre,CursAcademic,Etapa,TipusActuacio}{Create,Update}Window.axaml.cs` | 8 × 45–47 línies, idèntics tret del tipus (i d'un salt de línia a `TipusActuacioUpdateWindow`) | 8 × **18** |
+| `{…}SetWindow.axaml.cs` (6, amb `Alumne` i `Actuacio`) | 6 × 57–58 | 6 × **22** |
+| `{…}RowUserCtrl.axaml.cs` (4 simples) | 4 × 72 | 4 × **21** |
+| `AlumneRowUserCtrl` / `ActuacioRowUserCtrl` | 127 / 105 | **46** / **42** |
+| `Alumne{Create,Update}Window` / `Actuacio{Create,Update}Window` | 85 / 82 / 101 / 122 | **60** / **57** / **68** / **90** |
+| **Total `*.axaml.cs` del projecte** | **2.233** | **1.308** (−925) |
 
-**Solució**:
-- Classes base genèriques: `EntityCreateWindow<TVm, TDto>`, `EntityUpdateWindow<TVm, TDto>`, `EntitySetWindow<TVm, TCreateVm, TDto>`, `EntityRowUserCtrl<TVm, TDto>`.
-  L'`x:Class` de l'AXAML admet perfectament una classe base genèrica tancada.
-- Helper de lookups sobre `IWindowFactory` (ja disponible des de R0):
-  ```csharp
-  d(this.RegisterLookup<AlumneSetWindow>(vm.ShowAlumneLookup, _windows));
-  ```
-  Els 16 blocs passen a 16 línies.
-- Les classes base han de dur el paràmetre `IWindowFactory` al constructor i propagar-lo
-  (`protected EntitySetWindow(IWindowFactory windows)`). Per als `EntityRowUserCtrl<…>`,
-  posar-hi el constructor pont sobre `App.Services` **una sola vegada** i esborrar-lo dels 6 fitxers.
-- Extensions: `TopLevelExtensions.GetOwnerWindow()`, `FileExplorer.Open(saveResult)`.
+A canvi, **368 línies** de codi compartit nou, escrit un sol cop.
 
-⚠️ `Process.Start(… Verb = "open")` és específic de Windows. En centralitzar-lo, val la pena gestionar `open` (macOS) i `xdg-open` (Linux) o deixar-ho documentat.
+### R3.2 — Fitxers nous
 
-**Sinergia**: R3 fa que R2 s'hagi d'arreglar en 4 classes base en comptes de 20 fitxers. **Fer R3 abans que R2.**
+| Fitxer | Contingut |
+|---|---|
+| `UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs` | `ISubmitViewModel<TDto>`, `ISetViewModel<TCreateVm,TDto>`, `IRowViewModel<TUpdateVm,TResultat,TDto>` |
+| `UI.ER.AvaloniaUI/Pages/Base/EntityEditWindow.cs` | `EntityEditWindow<TVm,TDto>` — tancament automàtic en desar |
+| `UI.ER.AvaloniaUI/Pages/Base/EntitySetWindow.cs` | `EntitySetWindow<TVm,TCreateVm,TCreateWindow,TDto>` — diàleg d'alta |
+| `UI.ER.AvaloniaUI/Pages/Base/EntityRowUserCtrl.cs` | `EntityRowUserCtrl<TVm,TUpdateVm,TUpdateWindow,TResultat,TDto>` + sobrecàrrega de 4 paràmetres per al cas `TResultat == TDto` |
+| `UI.ER.AvaloniaUI/Helpers/DialegExtensions.cs` | `RegistraDialeg<…>` (amb resultat i sense) i `RegistraLookup<TSetWindow>` |
+| `UI.ER.AvaloniaUI/Helpers/FileExplorer.cs` | `Obre(SaveResult?)` / `Obre(string)`, multiplataforma |
+| `UI.ER.AvaloniaUI/Helpers/VisualRootExtensions.cs` | `GetOwnerWindow()` |
+| `UI.ER.AvaloniaUI.Test/ClassesBaseTest.cs` | 5 tests que impedeixen que el boilerplate torni |
+
+### R3.3 — Decisions que es desvien del pla original
+
+1. **Una sola classe base per als diàlegs d'edició, no dues.** El pla deia
+   `EntityCreateWindow<…>` i `EntityUpdateWindow<…>`; els vuit fitxers eren idèntics byte a
+   byte tret del tipus, i dues classes base idèntiques haurien estat la mateixa duplicació
+   una capa més amunt. És `EntityEditWindow<TVm,TDto>`, i la diferència real d'`Actuacio`
+   (que també esborra) s'expressa amb un `override` de `ResultatDeTancament`.
+
+2. **Els ViewModels han hagut d'implementar tres interfícies.** Una classe base genèrica no
+   pot cridar `vm.SubmitCommand` sense una restricció que ho garanteixi. L'alternativa era
+   un membre abstracte per vista (`protected abstract IObservable<TDto?> Submitted(TVm vm);`),
+   que hauria tornat a posar una línia a cada fitxer. Les interfícies són **purament
+   declaratives**: cap ViewModel canvia de comportament ni de signatura, i el projecte
+   compila sense cap warning de nul·labilitat.
+
+3. **R2 s'ha fet aquí.** Veure §R2.
+
+4. **`InitializeComponent()` es queda a cada vista.** Veure invariant 8.
+
+5. **`Process.Start` passa a ser multiplataforma.** `Verb = "open"` només s'informa a
+   Windows; a macOS i Linux `UseShellExecute = true` ja delega a `open` i `xdg-open`.
+
+6. **Les propietats `OperationResult<T> Result` (11) no s'han esborrat**: són codi mort,
+   però esborrar-les és R5. Duen un comentari `// ToDo (R5)` perquè no semblin oblit.
+
+### R3.4 — Com queda una vista
+
+```csharp
+// 18 línies en total
+public partial class CentreCreateWindow : EntityEditWindow<CentreCreateViewModel, Dtoo.Centre>
+{
+    public CentreCreateWindow() => InitializeComponent();
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+}
+
+public partial class CentreSetWindow
+    : EntitySetWindow<CentreSetViewModel, CentreCreateViewModel, CentreCreateWindow, Dtoo.Centre>
+{
+    public CentreSetWindow() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
+    public CentreSetWindow(IWindowFactory windows) : base(windows) => InitializeComponent();
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+}
+```
+
+I una que hi afegeix coses, sense repetir res del que ja fa la base:
+
+```csharp
+protected override void Register(CompositeDisposable d)
+{
+    base.Register(d);                       // tancar en desar
+
+    PerCadaViewModel(d, (vm, dd) =>
+    {
+        this.RegistraLookup<AlumneSetWindow>(_windows, vm.ShowAlumneLookup,
+            () => new AlumneSetViewModel(modeLookup: true)).DisposeWith(dd);
+        // …quatre lookups més
+    });
+}
+```
+
+### R3.5 — Tests
+
+`ClassesBaseTest.cs`, 5 tests nous (24 en total al projecte, tots verds):
+
+| Test | Què impedeix |
+|---|---|
+| `ElsDialegsDEdicioHeretenDeEntityEditWindow` | que una `*{Create,Update}Window` nova es torni a escriure el patró |
+| `LesLlistesHeretenDeEntitySetWindow` | idem per a les `*SetWindow` |
+| `LesFilesHeretenDeEntityRowUserCtrl` | idem per als `*RowUserCtrl` |
+| `CapVistaEsFaLaSevaPropiaGetWindow` | que tornin les 10 còpies de `GetWindow()` |
+| `CapVistaObreLExploradorPelSeuCompte` | que tornin les 3 còpies d'`ObraFileExplorer()` |
+
+Els tres primers duen una llista explícita d'excepcions (`MainWindow`, `UtilitatsWindow`,
+`AlumneInformeViewerWindow`) i un `Assert.NotEmpty` sobre els candidats, perquè no puguin
+passar en va.
+
+També s'ha reforçat `ConstructorsDeVistaTest.LesVistesQueObrenDialegsDemanenLaFactory`:
+mirava els camps del tipus, i des de R3 qui guarda la `IWindowFactory` sol ser la classe base
+(`Vistes.UsaLaFactory` ara recorre tota la jerarquia — `GetFields` no retorna els camps
+privats de les classes base).
+
+### R3.6 — Pendent de validació manual
+
+El build compila net (0 errors, cap warning de C# ni d'Avalonia) i els 24 tests passen, però
+**cap test obre una finestra**: cal una plataforma d'Avalonia i una BD (§R0.9). Cal comprovar
+a mà:
+
+- Obrir i tancar cada `*SetWindow` i donar d'alta un ítem (valida `EntitySetWindow`).
+- Editar una fila des de la llista (valida `EntityRowUserCtrl` + `EntityEditWindow`).
+- Els 16 lookups d'`Actuacio{Create,Update}` i `Alumne{Create,Update}`.
+- Esborrar una actuació des d'`ActuacioUpdateWindow` (valida `ResultatDeTancament`).
+- Seleccionar una fila en mode lookup (valida `SeleccionarCommand` → `Close`).
+- Generar un informe d'alumne i el pivot d'`Utilitats` (valida `FileExplorer.Obre`).
 
 ---
 
@@ -419,11 +544,13 @@ També: `try { } catch { }` buit a `DrawerSelectionChanged` (`MainWindow.axaml.c
 |---|---|
 | `ViewLocator.cs` | Cap referència. **No està registrat a `App.axaml`.** |
 | `Converters/StringDateConverter.cs` | Zero referències a cap `.axaml`. Existeix una còpia viva a `UI.ER.ViewModels/Services/`. |
-| `public OperationResult<T> Result { get; set; }` | Present a 7 finestres Create/Update. **Mai llegida ni escrita** (0 coincidències de `.Result`). |
+| `public OperationResult<T> Result { get; set; }` | Present a **11** finestres Create/Update, totes marcades amb `// ToDo (R5)` per R3. **Mai llegida ni escrita** (0 coincidències de `.Result`). Esborrant-les cauen també els `using BusinessLayer.Abstract;` d'aquells fitxers. |
 | `UI.ER.AvaloniaUI.csproj` | `<AvaloniaResource Include="Assets\**" />` duplicat; `<Folder Include="Models\" />` apunta a una carpeta inexistent. |
-| `using` no utilitzats | Desenes: `System.Linq`, `System.Threading.Tasks`, l'àlies `Dtoo` en fitxers que no el fan servir. |
+| `using` no utilitzats | Molts menys que abans de R3, que va reescriure 24 fitxers de dalt a baix. Queden a `MainWindow`, `DateInput`, `LookupInput` i `AlumneInformeViewerWindow`. |
 
-Neteja gratuïta, sense risc. Es pot fer en qualsevol moment.
+Neteja gratuïta, sense risc. Es pot fer en qualsevol moment. R3 ja s'ha endut per davant les
+altres dues entrades que hi havia a la llista original: les 10 còpies de `GetWindow()` i les 3
+d'`ObraFileExplorer()`, ara cobertes per un test (§R3.5).
 
 ---
 
@@ -440,11 +567,11 @@ Neteja gratuïta, sense risc. Es pot fer en qualsevol moment.
 ```
 R0  IWindowFactory + comprensió    ✅ FET
  │
-R5  neteja de codi mort            ← sense risc, redueix soroll per a la resta
+R3  classes base + helpers         ✅ FET  (-925 línies de codi rere les vistes)
  │
-R3  classes base + helpers         ← consumeix IWindowFactory; -1.000 línies
+R2  disposal de subscripcions      ✅ FET dins de R3, tret d'AlumneInformeViewerWindow
  │
-R2  disposal de subscripcions      ← ja només a les 4 classes base
+R5  neteja de codi mort            ← següent pas: sense risc, i R3 ja n'ha fet la meitat
  │
 R4  navegació de MainWindow        ← consumeix IWindowFactory
  │
@@ -455,8 +582,10 @@ R7  BusinessLayer per comprensió   ← natural just després de R1
 R6  unificació visual              ← independent, es pot paral·lelitzar
 ```
 
-> R5 s'ha desplaçat per darrere de R0 perquè R0 ja estava fet quan es va escriure aquest ordre.
-> R5 continua sent el següent pas recomanat: és el de menys risc i neteja soroll per a R3.
+> R3 s'ha fet abans que R5 a petició de l'usuari. No ha costat res: R5 era «redueix soroll per
+> a R3», i R3 ha reescrit igualment els 24 fitxers on hi havia el soroll.
+> R2 ha entrat dins de R3 perquè escriure les classes base amb el bug a dins no tenia sentit
+> (§R2).
 
 ---
 
@@ -465,8 +594,8 @@ R6  unificació visual              ← independent, es pot paral·lelitzar
 - **Idioma**: comentaris de codi, missatges d'error i textos d'UI en **català**. Identificadors en anglès o català segons el que ja hi hagi al fitxer.
 - **Un refactor, un commit.** No barrejar R0 amb R1.
 - **No introduir dependències noves** sense preguntar. L'stack actual és: Avalonia 11.3.11, ReactiveUI.Avalonia, Material.Avalonia, Material.Icons.Avalonia, Serilog.Sinks.File.
-- **`dotnet build` ha de quedar net** després de cada pas. No hi ha tests d'UI: cada canvi estructural es valida obrint i tancant el diàleg afectat.
-- **No tocar** `BusinessLayer`, `DataLayer`, `DataModels` ni les migracions durant R0/R2/R3/R4. R1 i R7 sí que hi entren.
+- **`dotnet build` ha de quedar net** després de cada pas. Els tests no obren cap finestra: cada canvi estructural es valida també obrint i tancant el diàleg afectat.
+- **No tocar** `BusinessLayer`, `DataLayer`, `DataModels` ni les migracions durant R0/R2/R3/R4. R1 i R7 sí que hi entren. `UI.ER.ViewModels` sí que es pot tocar: R3 hi ha afegit `Contracts/DialegContracts.cs`.
 - **`dotnet test UI.ER.AvaloniaUI.Test` ha de quedar verd després de cada pas.** Si un refactor canvia una invariant a consciència (p. ex. R3 introdueix classes base i el nombre de finestres es manté però els constructors canvien), s'actualitza el test amb el canvi, mai després.
 - **Vistes noves**: no s'instancien amb `new`. Registrar-les no cal (l'escaneig les agafa soles), però han de complir la convenció de noms o portar `[ViewModel(typeof(...))]`, altrament l'aplicació no arrenca.
 - Els fitxers `.axaml` i `.axaml.cs` van sempre junts: si es canvia l'`x:Class` o la classe base, revisar-ne els dos.

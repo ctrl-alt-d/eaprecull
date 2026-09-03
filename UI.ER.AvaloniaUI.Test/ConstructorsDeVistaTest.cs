@@ -56,8 +56,7 @@ namespace UI.ER.AvaloniaUI.Test
             // Contrapartida del test anterior: si una vista guarda un IWindowFactory,
             // ha de tenir per força el constructor que el rep.
             var problemes = Vistes.Totes
-                .Where(v => v.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                             .Any(f => f.FieldType == typeof(IWindowFactory)))
+                .Where(Vistes.UsaLaFactory)
                 .Where(v => v.GetConstructor([typeof(IWindowFactory)]) is null)
                 .Select(v => v.Name)
                 .ToList();

@@ -16,7 +16,7 @@ using ReactiveUI.Validation.Extensions;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class AlumneCreateViewModel : ViewModelBase
+    public class AlumneCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Alumne>
     {
 
         protected virtual IAlumneCreate BLCreate() => SuperContext.Resolve<IAlumneCreate>();

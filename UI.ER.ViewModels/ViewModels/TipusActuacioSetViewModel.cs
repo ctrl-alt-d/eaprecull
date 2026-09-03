@@ -13,7 +13,7 @@ using DynamicData.Binding;
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class TipusActuacioSetViewModel : ViewModelBase
+    public class TipusActuacioSetViewModel : ViewModelBase, ISetViewModel<TipusActuacioCreateViewModel, Dtoo.TipusActuacio>
     {
         public bool ModeLookup { get; }
         public TipusActuacioSetViewModel(bool modeLookup = false)

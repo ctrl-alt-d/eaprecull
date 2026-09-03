@@ -5,7 +5,7 @@ using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using UI.ER.ViewModels.ViewModels;
-using Dtoo = DTO.o.DTOs;
+using UI.ER.AvaloniaUI.Helpers;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
@@ -32,7 +32,7 @@ namespace UI.ER.AvaloniaUI.Pages
                     if (dc is AlumneInformeViewerViewModel vm)
                     {
                         vm.CloseCommand.Subscribe(_ => Close());
-                        vm.ExportarWordCommand.Subscribe(ObraFileExplorer);
+                        vm.ExportarWordCommand.Subscribe(FileExplorer.Obre);
                     }
                 });
         }
@@ -42,15 +42,5 @@ namespace UI.ER.AvaloniaUI.Pages
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void ObraFileExplorer(Dtoo.SaveResult? saveResult)
-        {
-            if (saveResult == null) return;
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-            {
-                FileName = saveResult.FolderPath,
-                UseShellExecute = true,
-                Verb = "open"
-            });
-        }
     }
 }

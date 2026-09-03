@@ -15,7 +15,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class CursAcademicRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class CursAcademicRowViewModel : ViewModelBase, IRowViewModel<CursAcademicUpdateViewModel, Dtoo.CursAcademic, Dtoo.CursAcademic>, IEtiquetaDescripcio, IId
     {
 
         protected Dtoo.CursAcademic Model { get; }

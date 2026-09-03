@@ -13,7 +13,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class CentreCreateViewModel : ViewModelBase
+    public class CentreCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Centre>
     {
 
         public CentreCreateViewModel()

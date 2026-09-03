@@ -15,7 +15,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class CentreRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class CentreRowViewModel : ViewModelBase, IRowViewModel<CentreUpdateViewModel, Dtoo.Centre, Dtoo.Centre>, IEtiquetaDescripcio, IId
     {
 
         protected Dtoo.Centre Model { get; }

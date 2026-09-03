@@ -13,7 +13,7 @@ using DynamicData.Binding;
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class EtapaSetViewModel : ViewModelBase
+    public class EtapaSetViewModel : ViewModelBase, ISetViewModel<EtapaCreateViewModel, Dtoo.Etapa>
     {
         public bool ModeLookup { get; }
         public EtapaSetViewModel(bool modeLookup = false)

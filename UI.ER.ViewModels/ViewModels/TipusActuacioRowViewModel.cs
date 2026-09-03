@@ -15,7 +15,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class TipusActuacioRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class TipusActuacioRowViewModel : ViewModelBase, IRowViewModel<TipusActuacioUpdateViewModel, Dtoo.TipusActuacio, Dtoo.TipusActuacio>, IEtiquetaDescripcio, IId
     {
 
         protected Dtoo.TipusActuacio Model { get; }

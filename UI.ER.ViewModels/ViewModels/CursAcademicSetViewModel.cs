@@ -13,7 +13,7 @@ using DynamicData.Binding;
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class CursAcademicSetViewModel : ViewModelBase
+    public class CursAcademicSetViewModel : ViewModelBase, ISetViewModel<CursAcademicCreateViewModel, Dtoo.CursAcademic>
     {
         public bool ModeLookup { get; }
         public CursAcademicSetViewModel(bool modeLookup = false)

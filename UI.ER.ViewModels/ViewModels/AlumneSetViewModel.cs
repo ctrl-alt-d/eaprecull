@@ -13,7 +13,7 @@ using DynamicData.Binding;
 namespace UI.ER.ViewModels.ViewModels
 {
 
-    public class AlumneSetViewModel : ViewModelBase
+    public class AlumneSetViewModel : ViewModelBase, ISetViewModel<AlumneCreateViewModel, Dtoo.Alumne>
     {
         public bool ModeLookup { get; }
         public AlumneSetViewModel(bool modeLookup = false)

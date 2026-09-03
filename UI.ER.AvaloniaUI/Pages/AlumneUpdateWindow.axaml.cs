@@ -1,25 +1,22 @@
+using System;
+using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using Avalonia.Markup.Xaml;
 using BusinessLayer.Abstract;
-using Dtoo = DTO.o.DTOs;
-using ReactiveUI;
-using ReactiveUI.Avalonia;
-using UI.ER.ViewModels.ViewModels;
-using System;
-using System.Reactive.Linq;
-using DTO.o.DTOs;
-using System.Threading.Tasks;
-using System.Reactive;
-using CommonInterfaces;
-using Avalonia.Controls;
-using UI.ER.AvaloniaUI.Services;
 using Microsoft.Extensions.DependencyInjection;
-
+using Dtoo = DTO.o.DTOs;
+using UI.ER.AvaloniaUI.Helpers;
+using UI.ER.AvaloniaUI.Pages.Base;
+using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public partial class AlumneUpdateWindow : ReactiveWindow<AlumneUpdateViewModel>
+    public partial class AlumneUpdateWindow : EntityEditWindow<AlumneUpdateViewModel, Dtoo.Alumne>
     {
+        // ToDo (R5): propietat morta, ningú no la llegeix ni l'escriu.
         public OperationResult<Dtoo.Alumne> Result { get; set; } = default!;
+
         private readonly IWindowFactory _windows;
 
         // Constructor pont: el manté el carregador XAML en temps d'execució i el
@@ -31,52 +28,30 @@ namespace UI.ER.AvaloniaUI.Pages
         {
             _windows = windows;
 
-            this.InitializeComponent();
-
-            this.WhenActivated(d =>
-            {
-                // Tancar finestre
-                d(
-                    ViewModel!
-                    .SubmitCommand
-                    .Subscribe(CloseIfSaved)
-                );
-
-                // Lookups
-                d(ViewModel!.ShowCentreLookup.RegisterHandler(async interaction =>
-                {
-                    var dialog = _windows.GetWith<CentreSetWindow>(new CentreSetViewModel(modeLookup: true));
-
-                    var window = (Window)this.VisualRoot!;
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-                    interaction.SetOutput(result);
-                }));
-                d(ViewModel!.ShowEtapaActualLookup.RegisterHandler(async interaction =>
-                {
-                    var dialog = _windows.GetWith<EtapaSetWindow>(new EtapaSetViewModel(modeLookup: true));
-
-                    var window = (Window)this.VisualRoot!;
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-                    interaction.SetOutput(result);
-                }));
-                d(ViewModel!.ShowCursDarreraActualitacioDadesLookup.RegisterHandler(async interaction =>
-                {
-                    var dialog = _windows.GetWith<CursAcademicSetWindow>(new CursAcademicSetViewModel(modeLookup: true));
-
-                    var window = (Window)this.VisualRoot!;
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(window);
-                    interaction.SetOutput(result);
-                }));
-            });
+            InitializeComponent();
         }
+
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
-        // -- Close if saved --
-        private void CloseIfSaved(Alumne? obj)
+        protected override void Register(CompositeDisposable d)
         {
-            if (obj != null)
-                Close(obj);
-        }
+            // Tancar la finestra quan s'hagi desat.
+            base.Register(d);
 
+            PerCadaViewModel(d, (vm, dd) =>
+            {
+                this.RegistraLookup<CentreSetWindow>(_windows, vm.ShowCentreLookup,
+                    () => new CentreSetViewModel(modeLookup: true))
+                    .DisposeWith(dd);
+
+                this.RegistraLookup<EtapaSetWindow>(_windows, vm.ShowEtapaActualLookup,
+                    () => new EtapaSetViewModel(modeLookup: true))
+                    .DisposeWith(dd);
+
+                this.RegistraLookup<CursAcademicSetWindow>(_windows, vm.ShowCursDarreraActualitacioDadesLookup,
+                    () => new CursAcademicSetViewModel(modeLookup: true))
+                    .DisposeWith(dd);
+            });
+        }
     }
 }

@@ -14,7 +14,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class EtapaCreateViewModel : ViewModelBase
+    public class EtapaCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Etapa>
     {
 
         public EtapaCreateViewModel()

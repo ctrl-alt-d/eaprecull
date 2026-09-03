@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Material.Styles.Controls;
+using UI.ER.AvaloniaUI.Helpers;
 using UI.ER.AvaloniaUI.Pages;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
@@ -85,7 +86,7 @@ namespace UI.ER.AvaloniaUI.Views
                 .Subscribe(vm => vm!.ShowAlumneSetDialog.RegisterHandler(async interaction =>
                 {
                     var dialog = _windows.Get<AlumneSetWindow>();
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(this.GetOwnerWindow());
                     interaction.SetOutput(result);
                 }))
             );
@@ -99,7 +100,7 @@ namespace UI.ER.AvaloniaUI.Views
                 .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
                 {
                     var dialog = _windows.Get<ActuacioSetWindow>();
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(this.GetOwnerWindow());
                     interaction.SetOutput(result);
                 }))
             );
@@ -113,14 +114,10 @@ namespace UI.ER.AvaloniaUI.Views
                 .Subscribe(vm => vm!.ShowCursAcademicSetDialog.RegisterHandler(async interaction =>
                 {
                     var dialog = _windows.Get<CursAcademicSetWindow>();
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
+                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(this.GetOwnerWindow());
                     interaction.SetOutput(result);
                 }))
             );
-
-        private Window GetWindow()
-            =>
-            (Window)this.VisualRoot!;
 
         private void InitializeComponent()
         {

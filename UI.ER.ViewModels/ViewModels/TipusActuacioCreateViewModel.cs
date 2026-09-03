@@ -13,7 +13,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class TipusActuacioCreateViewModel : ViewModelBase
+    public class TipusActuacioCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.TipusActuacio>
     {
 
         public TipusActuacioCreateViewModel()

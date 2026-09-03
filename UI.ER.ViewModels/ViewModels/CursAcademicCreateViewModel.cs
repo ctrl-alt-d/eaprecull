@@ -14,7 +14,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class CursAcademicCreateViewModel : ViewModelBase
+    public class CursAcademicCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.CursAcademic>
     {
 
         public CursAcademicCreateViewModel()

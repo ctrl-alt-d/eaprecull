@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Avalonia.Controls;
 using UI.ER.AvaloniaUI;
+using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Test
@@ -40,6 +41,23 @@ namespace UI.ER.AvaloniaUI.Test
         public static bool EsConstruiblePelContenidor(Type viewModel)
             => viewModel.GetConstructors()
                 .Any(c => c.GetParameters().All(p => p.HasDefaultValue));
+
+        /// <summary>
+        /// La vista fa servir la <c>IWindowFactory</c>? Mira tota la jerarquia, perquè
+        /// des de R3 qui la guarda sol ser la classe base genèrica
+        /// (<c>EntitySetWindow&lt;…&gt;</c>, <c>EntityRowUserCtrl&lt;…&gt;</c>) i els
+        /// camps privats d'una classe base no surten a <c>GetFields</c> de la derivada.
+        /// </summary>
+        public static bool UsaLaFactory(Type vista)
+        {
+            for (var t = vista; t is not null; t = t.BaseType)
+                if (t.GetFields(BindingFlags.Instance | BindingFlags.NonPublic
+                                | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                     .Any(f => f.FieldType == typeof(IWindowFactory)))
+                    return true;
+
+            return false;
+        }
 
         private static List<Type> Instanciables(Assembly assembly, Type baseType)
             => assembly.GetTypes()

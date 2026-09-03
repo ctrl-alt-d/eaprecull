@@ -17,7 +17,7 @@ using ReactiveUI.Validation.Extensions;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class ActuacioUpdateViewModel : ViewModelBase
+    public class ActuacioUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Actuacio>
     {
 
         protected virtual IActuacioUpdate BLUpdate() => SuperContext.Resolve<IActuacioUpdate>();

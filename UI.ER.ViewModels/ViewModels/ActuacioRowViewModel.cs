@@ -16,7 +16,7 @@ using System;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class ActuacioRowViewModel : ViewModelBase, IEtiquetaDescripcio, IId
+    public class ActuacioRowViewModel : ViewModelBase, IRowViewModel<ActuacioUpdateViewModel, Dtoo.EditDialogResult<Dtoo.Actuacio>, Dtoo.Actuacio>, IEtiquetaDescripcio, IId
     {
 
         protected Dtoo.Actuacio Model { get; set; }

@@ -13,7 +13,7 @@ using DynamicData.Binding;
 
 namespace UI.ER.ViewModels.ViewModels
 {
-    public class EtapaUpdateViewModel : ViewModelBase, IId
+    public class EtapaUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Etapa>, IId
     {
 
         public EtapaUpdateViewModel(int id)

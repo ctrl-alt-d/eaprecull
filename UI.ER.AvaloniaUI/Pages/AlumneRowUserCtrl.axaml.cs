@@ -1,128 +1,46 @@
-using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using UI.ER.ViewModels.ViewModels;
-using ReactiveUI;
-using Dtoo = DTO.o.DTOs;
-using ReactiveUI.Avalonia;
 using System;
-using System.Reactive;
-using System.Reactive.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
+using Avalonia.Markup.Xaml;
 using CommonInterfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Dtoo = DTO.o.DTOs;
+using UI.ER.AvaloniaUI.Helpers;
+using UI.ER.AvaloniaUI.Pages.Base;
 using UI.ER.AvaloniaUI.Services;
+using UI.ER.ViewModels.ViewModels;
 
 namespace UI.ER.AvaloniaUI.Pages
 {
-    public partial class AlumneRowUserCtrl : ReactiveUserControl<AlumneRowViewModel>
+    public partial class AlumneRowUserCtrl
+        : EntityRowUserCtrl<AlumneRowViewModel, AlumneUpdateViewModel, AlumneUpdateWindow, Dtoo.Alumne>
     {
-        private readonly IWindowFactory _windows;
-
         // El ListBox.ItemTemplate instancia aquest control des de l'AXAML, no pas
         // el contenidor: cal un constructor sense paràmetres que resolgui la factory.
         public AlumneRowUserCtrl() : this(App.Services.GetRequiredService<IWindowFactory>()) { }
 
-        public AlumneRowUserCtrl(IWindowFactory windows)
+        public AlumneRowUserCtrl(IWindowFactory windows) : base(windows) => InitializeComponent();
+
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+        protected override void Register(CompositeDisposable d)
         {
-            _windows = windows;
+            // Diàleg d'edició i selecció en mode lookup.
+            base.Register(d);
 
-            InitializeComponent();
+            // Actuacions de l'alumne.
+            PerCadaViewModel(d, (vm, dd) =>
+                this.RegistraDialeg<ActuacioSetWindow, ActuacioSetViewModel, IIdEtiquetaDescripcio>(
+                    Windows, vm.ShowActuacioSetDialog).DisposeWith(dd));
 
-            this.WhenActivated(disposables =>
-            {
-                RegisterShowUpdateDialog(disposables);
-                RegisterShowActuacioDialog(disposables);
-                RegisterShowInformeViewerDialog(disposables);
-                RegisterCloseOnSelect(disposables);
-                RegisterInformeActuacions(disposables);
-            });
+            // Expedient de l'alumne.
+            PerCadaViewModel(d, (vm, dd) =>
+                this.RegistraDialeg<AlumneInformeViewerWindow, AlumneInformeViewerViewModel>(
+                    Windows, vm.ShowInformeViewerDialog).DisposeWith(dd));
 
-
-        }
-
-        private void InitializeComponent()
-            =>
-            AvaloniaXamlLoader.Load(this);
-        private Window GetWindow()
-            =>
-            (Window)this.VisualRoot!;
-
-        // -- Show Dialog --
-        protected virtual void RegisterShowUpdateDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowUpdateDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = _windows.GetWith<AlumneUpdateWindow>(interaction.Input);
-
-                    var result = await dialog.ShowDialog<Dtoo.Alumne?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        // -- Show actuacions
-        protected virtual void RegisterShowActuacioDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowActuacioSetDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = _windows.GetWith<ActuacioSetWindow>(interaction.Input);
-                    var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(GetWindow());
-                    interaction.SetOutput(result);
-                }))
-            );
-
-        // -- Show informe viewer
-        protected virtual void RegisterShowInformeViewerDialog(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.ShowInformeViewerDialog.RegisterHandler(async interaction =>
-                {
-                    var dialog = _windows.GetWith<AlumneInformeViewerWindow>(interaction.Input);
-                    await dialog.ShowDialog(GetWindow());
-                    interaction.SetOutput(System.Reactive.Unit.Default);
-                }))
-            );
-
-        // -- Select Row
-        private void RegisterCloseOnSelect(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.SeleccionarCommand.Subscribe(GetWindow().Close))
-            );
-
-
-        // -- Infoem Actuacions
-        private void RegisterInformeActuacions(Action<IDisposable> disposables)
-            =>
-            disposables(
-                this
-                .WhenAnyValue(x => x.ViewModel)
-                .Where(vm => vm != null)
-                .Subscribe(vm => vm!.GeneraInformeCommand.Subscribe(ObraFileExplorer))
-            );
-
-        private void ObraFileExplorer(Dtoo.SaveResult? saveResult)
-        {
-            if (saveResult == null) return;
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-            {
-                FileName = saveResult.FolderPath,
-                UseShellExecute = true,
-                Verb = "open"
-            });
+            // L'informe generat: obrir la carpeta on ha anat a parar.
+            PerCadaViewModel(d, (vm, dd) =>
+                vm.GeneraInformeCommand.Subscribe(FileExplorer.Obre).DisposeWith(dd));
         }
     }
 }
