@@ -15,8 +15,8 @@
 | **R4** — navegació de `MainWindow` | ✅ **FET** — veure §R4 |
 | **R6** — unificació visual i paleta | ✅ **FET** — veure §R6 |
 | **R1** — eliminar `SuperContext` | ✅ **FET** — veure §R1 |
-| R7 — registre del BusinessLayer per comprensió | ⬜ **següent** |
-| R8 — estendre els *compiled bindings* a l'AXAML que R1 no ha tocat | ⬜ pendent — veure §R1.7 |
+| **R7** — registre del BusinessLayer per comprensió | ✅ **FET** — veure §R7 |
+| R8 — estendre els *compiled bindings* a l'AXAML que R1 no ha tocat | ⬜ **següent** — veure §R1.7 |
 
 ---
 
@@ -39,6 +39,7 @@ l'`IServiceFactory` al constructor de **27 ViewModels**; hi ha esborrat `Service
 i els 4 *seams* `protected virtual IXxx BLxxx()`.
 
 `UI.ER.AvaloniaUI.Test`: 9 fitxers de `.cs` (8 de tests + `Vistes.cs`), **40 tests**.
+`BusinessLayer.Integration.Test`: 3 fitxers, **6 tests** (3 abans de R7).
 
 ### Patrons en ús
 
@@ -1108,9 +1109,9 @@ R6  unificació visual i paleta     ✅ FET  (-324 línies als 30 AXAML preexist
  │
 R1  eliminar SuperContext          ✅ FET  (51 crides estàtiques → 0, 27 VMs injectats, B3 resolt)
  │
-R7  BusinessLayer per comprensió   ← següent pas: natural just després de R1
+R7  BusinessLayer per comprensió   ✅ FET  (30 registres a mà → 0; +3 tests)
  │
-R8  compiled bindings als 19 AXAML ← independent; on hi ha més a guanyar és a les 12
+R8  compiled bindings als 19 AXAML ← següent pas; on hi ha més a guanyar és a les 12
     que R1 no ha tocat                finestres d'edició (§R1.7)
 ```
 
@@ -1135,6 +1136,10 @@ R8  compiled bindings als 19 AXAML ← independent; on hi ha més a guanyar és 
 > operacions del diàleg d'edició apuntades a l'scope del pare — §R1.4. B3, l'únic blocador
 > real, no ha estat cap dels 14 blocs `<Design.DataContext>` sinó el `;assembly=` que els
 > `xmlns` no portaven, i que només es veu compilant amb `--no-incremental` — §R1.5.
+> R7 ha estat el més petit de tots i **no estalvia línies** (43 → 49 de codi): el que compra és
+> que la llista no pugui derivar mai més. L'única sorpresa ha estat que l'escaneig que proposava
+> el pla no funciona tal com estava escrit — hi ha herència entre implementacions i tipus
+> generats pel compilador que hi entren pel mig — §R7.2.
 
 ---
 
@@ -1144,7 +1149,7 @@ R8  compiled bindings als 19 AXAML ← independent; on hi ha més a guanyar és 
 - **Un refactor, un commit.** No barrejar R0 amb R1.
 - **No introduir dependències noves** sense preguntar. L'stack actual és: Avalonia 11.3.11, ReactiveUI.Avalonia, Material.Avalonia, Material.Icons.Avalonia, Serilog.Sinks.File.
 - **`dotnet build` ha de quedar net** després de cada pas. Els tests no obren cap finestra: cada canvi estructural es valida també obrint i tancant el diàleg afectat.
-- **No tocar** `BusinessLayer`, `DataLayer`, `DataModels` ni les migracions durant R0/R2/R3/R4. R7 sí que hi entra. R1 hi havia de poder entrar i no ha calgut: l'`IServiceFactory` ja hi era, a `BusinessLayer.Abstract/Generic/`, i només li faltava una implementació injectable. `UI.ER.ViewModels` sí que es pot tocar: R3 hi ha afegit `Contracts/DialegContracts.cs` i R1 `Services/ServiceFactory.cs`.
+- **No tocar** `BusinessLayer`, `DataLayer`, `DataModels` ni les migracions durant R0/R2/R3/R4. R7 hi ha entrat, i només a `BusinessLayer/DI/Injection.cs`. R1 hi havia de poder entrar i no ha calgut: l'`IServiceFactory` ja hi era, a `BusinessLayer.Abstract/Generic/`, i només li faltava una implementació injectable. `UI.ER.ViewModels` sí que es pot tocar: R3 hi ha afegit `Contracts/DialegContracts.cs` i R1 `Services/ServiceFactory.cs`.
 - **`dotnet test UI.ER.AvaloniaUI.Test` ha de quedar verd després de cada pas.** Si un refactor canvia una invariant a consciència (p. ex. R3 introdueix classes base i el nombre de finestres es manté però els constructors canvien), s'actualitza el test amb el canvi, mai després.
 - **Vistes noves**: no s'instancien amb `new`. Registrar-les no cal (l'escaneig les agafa soles), però han de complir la convenció de noms o portar `[ViewModel(typeof(...))]`, altrament l'aplicació no arrenca.
 - Els fitxers `.axaml` i `.axaml.cs` van sempre junts: si es canvia l'`x:Class` o la classe base, revisar-ne els dos.
@@ -1156,29 +1161,105 @@ R8  compiled bindings als 19 AXAML ← independent; on hi ha més a guanyar és 
 
 ---
 
-## R7 — (Relacionat) Registre del BusinessLayer per comprensió
+## R7 — Registre del BusinessLayer per comprensió ✅ FET
 
-`BusinessLayer/DI/Injection.cs` ja porta el comentari `// Services (ToDo: per comprensió)` i llista **31 serveis a mà**.
+### R7.1 — Resultat
 
-La convenció és perfectament regular: cada `IXxx` a `BusinessLayer.Abstract.Services` té la implementació `Xxx` a `BusinessLayer.Services`.
+`BusinessLayer/DI/Injection.cs` llistava **30 serveis a mà** rere el comentari
+`// Services (ToDo: per comprensió)`. Ara no en llista cap: els descobreix per convenció.
+
+| | Abans | Després |
+|---|---|---|
+| `AddTransient<IXxx, Xxx>()` escrits a mà | 30 | **0** |
+| Línies de codi de `Injection.cs` (sense comentaris ni blancs) | 43 | 49 |
+| Tests a `BusinessLayer.Integration.Test` | 3 | **6** |
+
+R7 **no estalvia línies** — n'afegeix 6 de codi i unes quantes de documentació. El que compra
+és la invariant: afegir una operació al BusinessLayer ja no demana tocar el contenidor, i una
+interfície nova sense implementació **peta a l'arrencada** en comptes de fer-ho en runtime dins
+d'un diàleg. Els 30 registres resultants són **exactament els mateixos** que hi havia a mà
+(verificat comparant les dues llistes ordenades).
+
+> El pla parlava de «31 serveis». Són **30**: 30 fitxers a `BusinessLayer.Abstract/Services/`,
+> 30 a `BusinessLayer/Services/` i 30 `AddTransient` al fitxer que hi havia abans.
+
+### R7.2 — L'escaneig del pla no funciona, i per què
+
+El fragment que proposava el pla —recórrer els `IBLOperation` i buscar-ne la implementació amb
+`SingleOrDefault(t => contract.IsAssignableFrom(t))`— peta de tres maneres:
+
+1. **Els contractes genèrics hi entren.** `ISet<,>`, `ICreate<>`, `IUpdate<>`, `IDelete<>` i
+   `IActivaDesactiva<>` (a `BusinessLayer.Abstract.Generic`) també deriven d'`IBLOperation`, i
+   com que són *open generics* cap classe no compleix `ISet<,>.IsAssignableFrom(…)`: el bucle
+   llançaria «sense implementació» per cinc contractes que no s'han de registrar.
+   → El filtre és el **namespace** (`BusinessLayer.Abstract.Services`), no només l'herència.
+2. **Hi ha herència entre implementacions.** `CentreSetAmbActuacions : CentreSet` fa que
+   `ICentreSet.IsAssignableFrom(…)` sigui cert per **dues** classes, i el `SingleOrDefault`
+   llança *«Sequence contains more than one element»*.
+   → La parella es busca **pel nom** (`IXxx` → `Xxx`); l'assignabilitat es queda com a
+   validació, no com a criteri de cerca.
+3. **Els tipus generats pel compilador comparteixen namespace.** Una primera versió indexava
+   les classes de `BusinessLayer.Services` per nom amb `ToDictionary(t => t.Name)` i petava amb
+   *«An item with the same key has already been added. Key: `<>c`»*: les classes de closures que
+   genera el compilador per cada lambda són tipus imbricats i `Namespace` els retorna el del
+   tipus que les declara.
+   → No es fa cap diccionari: es demana el tipus concret amb
+   `Assembly.GetType($"{ns}.{nom}")`.
+
+### R7.3 — Com queda
 
 ```csharp
-var abstractAsm = typeof(IBLOperation).Assembly;
-var implAsm     = typeof(CentreSet).Assembly;
-
-foreach (var contract in abstractAsm.GetTypes()
-             .Where(t => t.IsInterface && typeof(IBLOperation).IsAssignableFrom(t) && t != typeof(IBLOperation)))
+public static IServiceCollection BusinessLayerConfigureServices(this IServiceCollection services)
 {
-    var impl = implAsm.GetTypes()
-        .SingleOrDefault(t => !t.IsAbstract && contract.IsAssignableFrom(t));
+    foreach (var (contracte, implementacio) in Operacions())
+        services.AddTransient(contracte, implementacio);
 
-    if (impl is null)
-        throw new InvalidOperationException($"Sense implementació per a {contract.Name}");
-
-    services.AddTransient(contract, impl);
+    return services;
 }
+
+internal static IEnumerable<Type> Contractes()
+    => typeof(IBLOperation).Assembly.GetTypes()
+        .Where(t => t.IsInterface
+                 && t.Namespace == typeof(ICentreSet).Namespace
+                 && typeof(IBLOperation).IsAssignableFrom(t))
+        .OrderBy(t => t.Name);
 ```
 
-Llançar en comptes d'ignorar silenciosament: així afegir una interfície sense implementació peta a l'arrencada, no en runtime dins d'un diàleg.
+`Operacions()` aparella cada contracte amb `BusinessLayer.Services.{nom sense la I}`, acumula
+**tots** els errors i llança un sol `InvalidOperationException` que els llista. Acumular en
+comptes de petar al primer és el mateix criteri que `ValidaConvencioVistaViewModel()` a
+`UI.ER.AvaloniaUI/DI/Injection.cs` (R0): qui hi afegeix serveis els veu tots de cop.
 
-⚠️ **Recordatori**: `IBLOperation : IDisposable`. Combinat amb `AddTransient` i resolució des del provider **arrel**, el contenidor reté totes les instàncies creades fins que es tanca l'aplicació — encara que el `using var bl = …` cridi `Dispose()`. Era una fuita real i creixent, i **la va tancar R1**: l'`IServiceFactory` és `AddScoped`, els VMs la reben pel constructor i les operacions queden apuntades a l'scope del diàleg (§R1.2). R7 no ha de tornar-hi: el que li toca és **només** substituir la llista de 31 registres a mà per l'escaneig, sense canviar-ne el cicle de vida (`AddTransient` és el correcte).
+### R7.4 — El cicle de vida no canvia
+
+`AddTransient`, com abans. L'avís del pla sobre la fuita d'`IBLOperation : IDisposable` retingut
+pel provider **arrel** el va tancar R1 i R7 no hi torna: l'`IServiceFactory` és `AddScoped`, els
+VMs la reben pel constructor i les operacions queden apuntades a l'scope del diàleg (§R1.2).
+El test `CadaContracteTeLaSevaImplementacioPerConvencio` fixa el `Transient` explícitament perquè
+un canvi de cicle de vida no hi entri per descuit.
+
+### R7.5 — Tests (`BusinessLayer.Integration.Test/InjeccioTest.cs`, 3 → 6)
+
+| Test | Què fixa |
+|---|---|
+| `CadaContracteTeLaSevaImplementacioPerConvencio` | cada contracte té **un** registre, amb la implementació de nom convencional i `Transient` |
+| `NomesEsRegistrenLesOperacionsDelNamespaceServices` | l'escaneig no arrossega ni els contractes genèrics ni les classes base de `BusinessLayer/Common` |
+| `TotesLesOperacionsEsResolen` | les 30 es construeixen de debò des del provider (`validateScopes: true`), amb un `IDbContextFactory<AppDbContext>` de SQLite |
+
+Els tests no toquen els `internal` de `Injection`: llegeixen l'`IServiceCollection` i el provider,
+que és el que veuen els consumidors. El tercer és el que hauria detectat l'`ImportAll`, l'única
+operació que en depèn de sis més pel constructor.
+
+`dotnet test BusinessLayer.Integration.Test` → **6/6**.
+`dotnet test UI.ER.AvaloniaUI.Test` → **40/40** (sense canvis).
+`dotnet build eaprecull.sln` → net.
+
+### R7.6 — El que R7 **no** ha fet
+
+- **No toca els altres tres punts d'entrada** (`UI.ER.AvaloniaUI/App.axaml.cs`,
+  `ImportData/Program.cs`, `CreateDemoData/Program.cs`): tots tres criden
+  `BusinessLayerConfigureServices()` i no s'han d'assabentar del canvi.
+- **No toca `DataLayer/DI/Injection.cs`**, que registra una sola cosa i no té llista a treure.
+  (Hi queda, això sí, el `BuildServiceProvider()` que fa dins del mètode de registre per aplicar
+  les migracions — un provider intermedi que es llença; és una altra conversa.)
+- **No canvia el cicle de vida de res** (§R7.4).

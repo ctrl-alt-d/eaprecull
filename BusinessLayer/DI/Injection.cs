@@ -1,63 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using BusinessLayer.Abstract.Generic;
 using BusinessLayer.Abstract.Services;
 using BusinessLayer.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BusinessLayer.DI
 {
+    /// <summary>
+    /// Registre del BusinessLayer. Per comprensió: cap operació s'enumera a mà.
+    /// </summary>
     public static class Injection
     {
         public static IServiceCollection BusinessLayerConfigureServices(this IServiceCollection services)
         {
-            // Services (ToDo: per comprensió)
-
-            // centre
-            services.AddTransient<ICentreSet, CentreSet>();
-            services.AddTransient<ICentreSetAmbActuacions, CentreSetAmbActuacions>();
-            services.AddTransient<ICentreCreate, CentreCreate>();
-            services.AddTransient<ICentreUpdate, CentreUpdate>();
-            services.AddTransient<ICentreActivaDesactiva, CentreActivaDesactiva>();
-
-            // TipusActuacio
-            services.AddTransient<ITipusActuacioSet, TipusActuacioSet>();
-            services.AddTransient<ITipusActuacioCreate, TipusActuacioCreate>();
-            services.AddTransient<ITipusActuacioUpdate, TipusActuacioUpdate>();
-            services.AddTransient<ITipusActuacioActivaDesactiva, TipusActuacioActivaDesactiva>();
-
-            // Etapa
-            services.AddTransient<IEtapaSet, EtapaSet>();
-            services.AddTransient<IEtapaCreate, EtapaCreate>();
-            services.AddTransient<IEtapaUpdate, EtapaUpdate>();
-            services.AddTransient<IEtapaActivaDesactiva, EtapaActivaDesactiva>();
-
-            // alumnes
-            services.AddTransient<IAlumneSet, AlumneSet>();
-            services.AddTransient<IAlumneSyncActiuByCentre, AlumneSyncActiuByCentre>();
-            services.AddTransient<IAlumneCreate, AlumneCreate>();
-            services.AddTransient<IAlumneUpdate, AlumneUpdate>();
-            services.AddTransient<IAlumneActivaDesactiva, AlumneActivaDesactiva>();
-
-            // alumnes - reports
-            services.AddTransient<IAlumneInforme, AlumneInforme>();
-            services.AddTransient<IAlumneInformeViewer, AlumneInformeViewer>();
-
-            // curs acadèmic
-            services.AddTransient<ICursAcademicCreate, CursAcademicCreate>();
-            services.AddTransient<ICursAcademicUpdate, CursAcademicUpdate>();
-            services.AddTransient<ICursAcademicSet, CursAcademicSet>();
-            services.AddTransient<ICursAcademicActivaDesactiva, CursAcademicActivaDesactiva>();
-
-            // actuacio
-            services.AddTransient<IActuacioSet, ActuacioSet>();
-            services.AddTransient<IActuacioCreate, ActuacioCreate>();
-            services.AddTransient<IActuacioUpdate, ActuacioUpdate>();
-            services.AddTransient<IActuacioDelete, ActuacioDelete>();
-
-            // altres
-            services.AddTransient<IImportAll, ImportAll>();
-            services.AddTransient<IPivotActuacions, PivotActuacions>();
-
+            // Transient, com abans de R7: cada operació és d'un sol ús i el consumidor
+            // la demana per l'IServiceFactory, que és Scoped i li marca el cicle de vida (R1).
+            foreach (var (contracte, implementacio) in Operacions())
+                services.AddTransient(contracte, implementacio);
 
             return services;
         }
+
+        /// <summary>
+        /// Els parells contracte → implementació del BusinessLayer, per convenció:
+        /// cada <c>IXxx</c> de <c>BusinessLayer.Abstract.Services</c> es resol amb la
+        /// classe <c>Xxx</c> de <c>BusinessLayer.Services</c>.
+        /// </summary>
+        /// <remarks>
+        /// El filtre és el namespace, no només <see cref="IBLOperation"/>: els contractes
+        /// genèrics (<c>ISet&lt;,&gt;</c>, <c>ICreate&lt;&gt;</c>…) també en deriven, viuen
+        /// a <c>BusinessLayer.Abstract.Generic</c> i no es registren.
+        /// <para>
+        /// I la parella es busca pel nom, no per assignabilitat: hi ha herència entre
+        /// implementacions —<c>CentreSetAmbActuacions : CentreSet</c>— i per tant més d'una
+        /// classe compleix <c>ICentreSet.IsAssignableFrom(…)</c>, cosa que faria ambigu
+        /// l'escaneig. El nom desempata; l'assignabilitat es queda com a validació.
+        /// </para>
+        /// </remarks>
+        internal static IEnumerable<(Type Contracte, Type Implementacio)> Operacions()
+        {
+            var implAsm = typeof(CentreSet).Assembly;
+            var implNs = typeof(CentreSet).Namespace;
+
+            var parells = new List<(Type, Type)>();
+            var errors = new List<string>();
+
+            foreach (var contracte in Contractes())
+            {
+                var nom = $"{implNs}.{contracte.Name[1..]}";
+                var implementacio = implAsm.GetType(nom);
+
+                if (implementacio is null || implementacio.IsAbstract)
+                    errors.Add($"{contracte.Name}: falta la classe {nom}.");
+                else if (!contracte.IsAssignableFrom(implementacio))
+                    errors.Add($"{contracte.Name}: {nom} no implementa el contracte.");
+                else
+                    parells.Add((contracte, implementacio));
+            }
+
+            // Petar aquí i no silenciar-ho: una interfície nova sense implementació ha de
+            // fallar a l'arrencada, no en runtime dins d'un diàleg.
+            if (errors.Count > 0)
+                throw new InvalidOperationException(
+                    "Operacions del BusinessLayer sense implementació per convenció:"
+                    + Environment.NewLine
+                    + string.Join(Environment.NewLine, errors));
+
+            return parells;
+        }
+
+        /// <summary>Les operacions declarades a <c>BusinessLayer.Abstract.Services</c>.</summary>
+        internal static IEnumerable<Type> Contractes()
+            => typeof(IBLOperation).Assembly.GetTypes()
+                .Where(t => t.IsInterface
+                         && t.Namespace == typeof(ICentreSet).Namespace
+                         && typeof(IBLOperation).IsAssignableFrom(t))
+                .OrderBy(t => t.Name);
     }
 }
