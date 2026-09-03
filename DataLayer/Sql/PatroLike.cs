@@ -11,21 +11,26 @@ namespace DataLayer.Sql
         internal const char Escapada = '\\';
 
         /// <summary>
-        /// El patró que cerca el text a qualsevol posició: sense accents i entre
-        /// comodins.
+        /// El patró que cerca el text a qualsevol posició: reduït a clau de cerca i
+        /// entre comodins.
         /// </summary>
         /// <remarks>
         /// El text de l'usuari s'escapa: un <c>%</c> o un <c>_</c> escrits al cercador
         /// són el que semblen i no pas comodins, que és el que espera qui els escriu.
+        /// <para>
+        /// Un text que es queda sense res —algú que només ha escrit signes de
+        /// puntuació— dóna <c>%%</c>, que ho troba tot: el terme no filtra, en comptes
+        /// de no trobar ningú. És la lectura amable, i la volguda.
+        /// </para>
         /// </remarks>
         internal static string Conte(string? text)
         {
-            var net = Accents.Treu(text) ?? string.Empty;
-            var sb = new StringBuilder(net.Length + 2);
+            var clau = ClauDeCerca.De(text) ?? string.Empty;
+            var sb = new StringBuilder(clau.Length + 2);
 
             sb.Append('%');
 
-            foreach (var caracter in net)
+            foreach (var caracter in clau)
             {
                 if (caracter is Escapada or '%' or '_')
                     sb.Append(Escapada);

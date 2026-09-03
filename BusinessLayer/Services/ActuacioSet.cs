@@ -118,24 +118,24 @@ namespace BusinessLayer.Services
                 query = query.Where(model => (
 
                     // alumne nom, cognoms i tags
-                    FuncionsSql.ConteSenseAccents(model.Alumne.Nom, token) ||
-                    FuncionsSql.ConteSenseAccents(model.Alumne.Cognoms, token) ||
-                    FuncionsSql.ConteSenseAccents(model.Alumne.Tags, token) ||
+                    FuncionsSql.Conte(model.Alumne.Nom, token) ||
+                    FuncionsSql.Conte(model.Alumne.Cognoms, token) ||
+                    FuncionsSql.Conte(model.Alumne.Tags, token) ||
 
                     // centre
-                    (model.Alumne.CentreActual != null && FuncionsSql.ConteSenseAccents(model.Alumne.CentreActual.Nom, token)) ||
-                    (model.Alumne.CentreActual != null && FuncionsSql.ConteSenseAccents(model.Alumne.CentreActual.Codi, token)) ||
+                    (model.Alumne.CentreActual != null && FuncionsSql.Conte(model.Alumne.CentreActual.Nom, token)) ||
+                    (model.Alumne.CentreActual != null && FuncionsSql.Conte(model.Alumne.CentreActual.Codi, token)) ||
 
                     // descripcions
-                    FuncionsSql.ConteSenseAccents(model.ObservacionsTipusActuacio, token) ||
-                    FuncionsSql.ConteSenseAccents(model.DescripcioActuacio, token) ||
+                    FuncionsSql.Conte(model.ObservacionsTipusActuacio, token) ||
+                    FuncionsSql.Conte(model.DescripcioActuacio, token) ||
 
                     // tipus actuacio
-                    FuncionsSql.ConteSenseAccents(model.TipusActuacio.Nom, token) ||
-                    FuncionsSql.ConteSenseAccents(model.TipusActuacio.Codi, token) ||
+                    FuncionsSql.Conte(model.TipusActuacio.Nom, token) ||
+                    FuncionsSql.Conte(model.TipusActuacio.Codi, token) ||
 
                     // curs actuacio
-                    FuncionsSql.ConteSenseAccents(model.CursActuacio.Nom, token)
+                    FuncionsSql.Conte(model.CursActuacio.Nom, token)
             )));
             return query;
         }

@@ -15,12 +15,12 @@ namespace BusinessLayer.Integration.Test
     /// <summary>
     /// SQLite compara el LIKE lletra a lletra, i «í» i «i» són lletres diferents: qui
     /// escriu «marti» al cercador no troba en «Martí». Ho resol
-    /// <c>FuncionsSql.ConteSenseAccents</c>, que treu els accents dels dos costats de
+    /// <c>FuncionsSql.Conte</c>, que treu els accents dels dos costats de
     /// la comparació. Aquests tests fixen les dues direccions, que el LIKE segueixi
     /// ignorant majúscules i minúscules, i que els comodins escrits al cercador no
     /// arribin al patró.
     /// </summary>
-    public class CercaSenseAccentsTest
+    public class ClauDeCercaTest
     {
         [Theory]
         [InlineData("Martí")]      // tal com està desat
@@ -47,6 +47,59 @@ namespace BusinessLayer.Integration.Test
         {
             using var provider = Provider();
             await UnAlumne(provider, nom: "Martí", cognoms: "Peñíscola Çabater");
+
+            var trobats = await provider.GetRequiredService<IAlumneSet>()
+                .FromPredicate(new DTO.i.DTOs.AlumneSearchParms(nomCognomsTagCentre: cercat));
+
+            Assert.Single(trobats.Data!);
+        }
+
+        [Theory]
+        [InlineData("l'Anna", "l'Anna")]      // apòstrof recte, el del teclat
+        [InlineData("l'Anna", "l\u2019Anna")]  // el tipogràfic, el que hi posa el Word
+        [InlineData("l\u2019Anna", "l'Anna")]
+        [InlineData("l\u00B4Anna", "l'Anna")]  // accent agut fet servir d'apòstrof
+        [InlineData("lAnna", "l'Anna")]       // sense apòstrof
+        public async Task LApostrofSEscriuDeMoltesManeresIVolDirElMateix(string cercat, string desat)
+        {
+            using var provider = Provider();
+            await UnAlumne(provider, nom: desat, cognoms: "Puig");
+
+            var trobats = await provider.GetRequiredService<IAlumneSet>()
+                .FromPredicate(new DTO.i.DTOs.AlumneSearchParms(nomCognomsTagCentre: cercat));
+
+            Assert.Single(trobats.Data!);
+        }
+
+        [Theory]
+        [InlineData("Parallel", "Paral\u00B7lel")]   // punt volat, ben escrit
+        [InlineData("Paral.lel", "Paral\u00B7lel")]
+        [InlineData("Paral\u00B7lel", "Para\u0140lel")] // ela geminada precomposada
+        [InlineData("Vilareal", "Vila-real")]        // guions
+        [InlineData("Vila-real", "Vila\u2013real")]  // guionet i guió mitjà
+        [InlineData("Marti", "Mart\u00ADi")]         // guionet tou: invisible, ve de PDF
+        [InlineData("Marti", "Mart\u200Bi")]         // amplada zero, igual d'invisible
+        public async Task ElsSeparadorsInvisiblesIElsQueSEscriuenDeDuesManeres(string cercat, string desat)
+        {
+            using var provider = Provider();
+            await UnAlumne(provider, nom: "Nom", cognoms: desat);
+
+            var trobats = await provider.GetRequiredService<IAlumneSet>()
+                .FromPredicate(new DTO.i.DTOs.AlumneSearchParms(nomCognomsTagCentre: cercat));
+
+            Assert.Single(trobats.Data!);
+        }
+
+        [Theory]
+        [InlineData("Lukasz", "\u0141ukasz")]   // la ela polonesa amb traç
+        [InlineData("Walesa", "Wa\u0142\u0119sa")] // traç i ogonek alhora
+        [InlineData("Strasse", "Stra\u00DFe")]  // ess-zet alemanya
+        [InlineData("Oresund", "\u00D8resund")] // o nòrdica amb traç
+        [InlineData("Encyclopaedia", "Encyclop\u00E6dia")]
+        public async Task LesLletresAmbTracILesLigaturesTambe(string cercat, string desat)
+        {
+            using var provider = Provider();
+            await UnAlumne(provider, nom: "Nom", cognoms: desat);
 
             var trobats = await provider.GetRequiredService<IAlumneSet>()
                 .FromPredicate(new DTO.i.DTOs.AlumneSearchParms(nomCognomsTagCentre: cercat));

@@ -45,8 +45,8 @@ namespace DataLayer.Sql
                 return;
 
             sqlite.CreateFunction<string?, string?>(
-                FuncionsSql.SenseAccentsNom,
-                Accents.Treu,
+                FuncionsSql.ClauDeCercaNom,
+                ClauDeCerca.De,
                 isDeterministic: true);
 
             sqlite.CreateFunction<string?, string>(

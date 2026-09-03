@@ -12,9 +12,9 @@ namespace DataLayer.Sql
         public static ModelBuilder RegistraFuncionsSql(this ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasDbFunction(typeof(FuncionsSql).GetMethod(nameof(FuncionsSql.ConteSenseAccents))!)
+                .HasDbFunction(typeof(FuncionsSql).GetMethod(nameof(FuncionsSql.Conte))!)
                 .HasTranslation(arguments => new LikeExpression(
-                    match: Crida(FuncionsSql.SenseAccentsNom, arguments[0]),
+                    match: Crida(FuncionsSql.ClauDeCercaNom, arguments[0]),
                     pattern: Crida(FuncionsSql.PatroConteNom, arguments[1]),
                     escapeChar: Escapada(arguments[1].TypeMapping),
                     typeMapping: null));
