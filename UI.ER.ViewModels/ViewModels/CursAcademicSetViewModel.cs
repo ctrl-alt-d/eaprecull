@@ -2,13 +2,12 @@
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
-using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Common;
 using System.Windows.Input;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -16,9 +15,11 @@ namespace UI.ER.ViewModels.ViewModels
     public class CursAcademicSetViewModel : ViewModelBase, ISetViewModel<CursAcademicCreateViewModel, Dtoo.CursAcademic>
     {
         public bool ModeLookup { get; }
-        public CursAcademicSetViewModel(bool modeLookup = false)
-        {
+        private readonly IServiceFactory _serveis;
 
+        public CursAcademicSetViewModel(IServiceFactory serveis, bool modeLookup = false)
+        {
+            _serveis = serveis;
             ModeLookup = modeLookup;
 
             // Filtre
@@ -33,13 +34,13 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new CursAcademicCreateViewModel();
+                var update = new CursAcademicCreateViewModel(_serveis);
 
                 var data = await ShowDialog.Handle(update);
 
                 if (data != null)
                 {
-                    var item = new CursAcademicRowViewModel(data, MyItems, ModeLookup);
+                    var item = new CursAcademicRowViewModel(_serveis, data, MyItems, ModeLookup);
                     MyItems.Insert(0, item);
 
                     // Si el nou curs és actiu, desactivar tots els altres a la UI
@@ -75,7 +76,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = SuperContext.Resolve<ICursAcademicSet>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 
@@ -91,7 +92,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new CursAcademicRowViewModel(x, MyItems, ModeLookup));
+                .Select(x => new CursAcademicRowViewModel(_serveis, x, MyItems, ModeLookup));
 
             MyItems.AddRange(newItems);
 

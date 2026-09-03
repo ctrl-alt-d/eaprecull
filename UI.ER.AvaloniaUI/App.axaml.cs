@@ -8,8 +8,6 @@ using DataLayer.DI;
 using UI.ER.AvaloniaUI.DI;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.AvaloniaUI.Views;
-using UI.ER.ViewModels.Services;
-using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.AvaloniaUI
 {
@@ -35,15 +33,11 @@ namespace UI.ER.AvaloniaUI
 
         public override void OnFrameworkInitializationCompleted()
         {
-            var services = new ServiceCollection()
+            _services = new ServiceCollection()
                 .DataLayerConfigureServices()
                 .BusinessLayerConfigureServices()
-                .UIConfigureServices();
-
-            services.AddSingleton<IServiceFactory, SuperContext>();
-
-            _services = services.BuildServiceProvider();
-            SuperContext.Initialize(_services);
+                .UIConfigureServices()
+                .BuildServiceProvider();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

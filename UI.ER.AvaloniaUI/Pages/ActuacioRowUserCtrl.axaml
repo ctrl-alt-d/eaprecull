@@ -2,13 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+             xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="UI.ER.AvaloniaUI.Pages.ActuacioRowUserCtrl">
-    <Design.DataContext>
-        <viewModels:ActuacioRowViewModel />
-    </Design.DataContext>
+             x:Class="UI.ER.AvaloniaUI.Pages.ActuacioRowUserCtrl"
+             x:DataType="viewModels:ActuacioRowViewModel"
+             x:CompileBindings="True">
 
 
     <Border Classes="Fitxa Apareix" Padding="10"

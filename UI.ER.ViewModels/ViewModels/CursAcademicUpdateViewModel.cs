@@ -3,22 +3,24 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using System;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class CursAcademicUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.CursAcademic>, IId
     {
 
-        public CursAcademicUpdateViewModel(int id)
+        private readonly IServiceFactory _serveis;
+
+        public CursAcademicUpdateViewModel(IServiceFactory serveis, int id)
         {
+            _serveis = serveis;
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadData);
 
@@ -48,7 +50,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.Resolve<ICursAcademicSet>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -73,7 +75,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.CursAcademicUpdateParms(Id, Convert.ToInt32(AnyInici), EsActiu);
 
             // cridar backend
-            using var bl = SuperContext.Resolve<ICursAcademicUpdate>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 

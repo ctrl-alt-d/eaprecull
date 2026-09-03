@@ -3,7 +3,6 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
@@ -12,6 +11,7 @@ using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
 using System.Reactive.Concurrency;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -20,8 +20,12 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected Dtoo.Alumne Model { get; set; }
         protected readonly Dtoo.CursAcademic? CursActual;
-        public AlumneRowViewModel(Dtoo.Alumne data, Dtoo.CursAcademic? cursActual, bool modeLookup = false)
+        private readonly IServiceFactory _serveis;
+
+        public AlumneRowViewModel(IServiceFactory serveis, Dtoo.Alumne data, Dtoo.CursAcademic? cursActual, bool modeLookup = false)
         {
+
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
@@ -129,7 +133,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.Resolve<IAlumneActivaDesactiva>();
+            using var bl = _serveis.GetBLOperation<IAlumneActivaDesactiva>();
             var dto = await bl.Toggle(Id);
             DTO2ModelView(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
@@ -140,7 +144,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<AlumneUpdateViewModel, Dtoo.Alumne?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new AlumneUpdateViewModel(Id);
+            var update = new AlumneUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
             if (data != null) DTO2ModelView(data);
         }
@@ -150,14 +154,14 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<ActuacioSetViewModel, IIdEtiquetaDescripcio?> ShowActuacioSetDialog { get; } = new();
         private async Task ShowActuacioSetDialogHandle()
         {
-            var vm = new ActuacioSetViewModel(alumneId: Id);
+            var vm = new ActuacioSetViewModel(_serveis, alumneId: Id);
             var data = await ShowActuacioSetDialog.Handle(vm);
             RxApp.MainThreadScheduler.Schedule(ReLoadData);
         }
         private async void ReLoadData()
         {
             BrokenRules.Clear();
-            using var blAlumneSet = SuperContext.Resolve<IAlumneSet>();
+            using var blAlumneSet = _serveis.GetBLOperation<IAlumneSet>();
             var dto = await blAlumneSet.FromId(Model.Id);
             BrokenRules.AddRange(dto.BrokenRules.Select(x => x.Message));
             if (dto.Data == null) return;
@@ -175,7 +179,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoGeneraInforme()
         {
             ResultatInformeAlumne = "";
-            using var bl = SuperContext.Resolve<IAlumneInforme>();
+            using var bl = _serveis.GetBLOperation<IAlumneInforme>();
             var resultat = await bl.Run(Id);
             ResultatInformeAlumne =
                 resultat.Data != null ?
@@ -190,7 +194,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<AlumneInformeViewerViewModel, Unit> ShowInformeViewerDialog { get; } = new();
         private async Task ShowInformeViewerDialogHandle()
         {
-            var vm = new AlumneInformeViewerViewModel(Id);
+            var vm = new AlumneInformeViewerViewModel(_serveis, Id);
             await ShowInformeViewerDialog.Handle(vm);
         }
 

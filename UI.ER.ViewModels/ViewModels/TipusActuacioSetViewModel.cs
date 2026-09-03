@@ -2,13 +2,12 @@
 using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
-using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Common;
 using System.Windows.Input;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -16,9 +15,11 @@ namespace UI.ER.ViewModels.ViewModels
     public class TipusActuacioSetViewModel : ViewModelBase, ISetViewModel<TipusActuacioCreateViewModel, Dtoo.TipusActuacio>
     {
         public bool ModeLookup { get; }
-        public TipusActuacioSetViewModel(bool modeLookup = false)
-        {
+        private readonly IServiceFactory _serveis;
 
+        public TipusActuacioSetViewModel(IServiceFactory serveis, bool modeLookup = false)
+        {
+            _serveis = serveis;
             ModeLookup = modeLookup;
 
             // Filtre
@@ -33,13 +34,13 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new TipusActuacioCreateViewModel();
+                var update = new TipusActuacioCreateViewModel(_serveis);
 
                 var data = await ShowDialog.Handle(update);
 
                 if (data != null)
                 {
-                    var item = new TipusActuacioRowViewModel(data, ModeLookup);
+                    var item = new TipusActuacioRowViewModel(_serveis, data, ModeLookup);
                     MyItems.Insert(0, item);
                 }
             });
@@ -65,7 +66,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new DTO.i.DTOs.EsActiuParms(esActiu: esActiu);
 
             // Petició al backend            
-            using var bl = SuperContext.Resolve<ITipusActuacioSet>();
+            using var bl = _serveis.GetBLOperation<ITipusActuacioSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 
@@ -81,7 +82,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new TipusActuacioRowViewModel(x, ModeLookup));
+                .Select(x => new TipusActuacioRowViewModel(_serveis, x, ModeLookup));
 
             MyItems.AddRange(newItems);
 

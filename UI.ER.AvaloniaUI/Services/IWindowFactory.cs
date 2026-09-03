@@ -12,15 +12,20 @@ namespace UI.ER.AvaloniaUI.Services
     {
         /// <summary>
         /// Resol la finestra i el seu ViewModel per convenció (o per
-        /// <see cref="ViewModelAttribute"/>). Només per als ViewModels que es poden
-        /// construir sense arguments de runtime.
+        /// <see cref="ViewModelAttribute"/>).
         /// </summary>
-        TWindow Get<TWindow>() where TWindow : Window;
+        /// <param name="vmArgs">
+        /// Arguments de runtime del ViewModel — <c>modeLookup</c>, <c>alumneId</c>… La
+        /// resta de paràmetres del constructor (l'<c>IServiceFactory</c>, sobretot) els
+        /// resol l'scope del diàleg. Sense arguments, el ViewModel surt directament del
+        /// contenidor.
+        /// </param>
+        TWindow Get<TWindow>(params object[] vmArgs) where TWindow : Window;
 
         /// <summary>
         /// Resol la finestra i li assigna un ViewModel ja construït. És el cas dels
-        /// ViewModels que arriben d'una <c>Interaction</c> i el dels que necessiten
-        /// arguments de runtime (<c>modeLookup</c>, <c>id</c>, <c>alumneId</c>).
+        /// ViewModels que arriben d'una <c>Interaction</c>: els construeix el ViewModel
+        /// pare, que ja té la <c>IServiceFactory</c> per passar-los-hi.
         /// </summary>
         /// <remarks>
         /// Es diferencia de <see cref="Get{TWindow}"/> només en <em>qui construeix</em> el

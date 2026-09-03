@@ -1,9 +1,8 @@
 ﻿using ReactiveUI;
 using System.Reactive.Linq;
 using BusinessLayer.Abstract.Exceptions;
-using System.Linq;
 using DynamicData.Binding;
-using UI.ER.ViewModels.Services;
+using BusinessLayer.Abstract.Generic;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using System.Reactive;
@@ -16,8 +15,12 @@ namespace UI.ER.ViewModels.ViewModels
     {
         private readonly string SPACE = " ";
         private readonly string NA = "N/A";
-        public AppStatusViewModel()
+        private readonly IServiceFactory _serveis;
+
+        public AppStatusViewModel(IServiceFactory serveis)
         {
+            _serveis = serveis;
+
             RxApp.MainThreadScheduler.Schedule(LoadData);
 
             // Una comanda per cada entrada de navegació de la finestra principal: les tres
@@ -59,9 +62,9 @@ namespace UI.ER.ViewModels.ViewModels
 
 
 
-            using var blActuacioSet = SuperContext.Resolve<IActuacioSet>();
-            using var blAlumneSet = SuperContext.Resolve<IAlumneSet>();
-            using var blCursAcademicSet = SuperContext.Resolve<ICursAcademicSet>();
+            using var blActuacioSet = _serveis.GetBLOperation<IActuacioSet>();
+            using var blAlumneSet = _serveis.GetBLOperation<IAlumneSet>();
+            using var blCursAcademicSet = _serveis.GetBLOperation<ICursAcademicSet>();
 
             var dtoCursActual = await blCursAcademicSet.GetCursActiu();
 

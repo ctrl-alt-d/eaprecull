@@ -3,12 +3,12 @@ using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -16,9 +16,11 @@ namespace UI.ER.ViewModels.ViewModels
     public class AlumneSetViewModel : ViewModelBase, ISetViewModel<AlumneCreateViewModel, Dtoo.Alumne>
     {
         public bool ModeLookup { get; }
-        public AlumneSetViewModel(bool modeLookup = false)
-        {
+        private readonly IServiceFactory _serveis;
 
+        public AlumneSetViewModel(IServiceFactory serveis, bool modeLookup = false)
+        {
+            _serveis = serveis;
             ModeLookup = modeLookup;
 
             // Filtre
@@ -48,15 +50,15 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new AlumneCreateViewModel();
+                var update = new AlumneCreateViewModel(_serveis);
                 var data = await ShowDialog.Handle(update);
-                using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
+                using var blCurs = _serveis.GetBLOperation<ICursAcademicSet>();
                 var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
                 if (data != null)
                 {
-                    var item = new AlumneRowViewModel(data, cursActual, ModeLookup);
+                    var item = new AlumneRowViewModel(_serveis, data, cursActual, ModeLookup);
                     MyItems.Insert(0, item);
                 }
             });
@@ -94,7 +96,7 @@ namespace UI.ER.ViewModels.ViewModels
             );
 
             // Petició al backend            
-            using var bl = SuperContext.Resolve<IAlumneSet>();
+            using var bl = _serveis.GetBLOperation<IAlumneSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 
@@ -107,7 +109,7 @@ namespace UI.ER.ViewModels.ViewModels
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             //
-            using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
+            using var blCurs = _serveis.GetBLOperation<ICursAcademicSet>();
             var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
@@ -115,7 +117,7 @@ namespace UI.ER.ViewModels.ViewModels
             var newItems =
                 dto
                 .Data
-                .Select(x => new AlumneRowViewModel(x, cursActual, ModeLookup));
+                .Select(x => new AlumneRowViewModel(_serveis, x, cursActual, ModeLookup));
 
             MyItems.AddRange(newItems);
 

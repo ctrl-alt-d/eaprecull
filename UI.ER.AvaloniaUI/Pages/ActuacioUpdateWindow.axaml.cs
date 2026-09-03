@@ -53,24 +53,19 @@ namespace UI.ER.AvaloniaUI.Pages
                     .DisposeWith(dd);
 
                 // Lookups.
-                this.RegistraLookup<AlumneSetWindow>(_windows, vm.ShowAlumneLookup,
-                    () => new AlumneSetViewModel(modeLookup: true))
+                this.RegistraLookup<AlumneSetWindow>(_windows, vm.ShowAlumneLookup)
                     .DisposeWith(dd);
 
-                this.RegistraLookup<TipusActuacioSetWindow>(_windows, vm.ShowTipusActuacioLookup,
-                    () => new TipusActuacioSetViewModel(modeLookup: true))
+                this.RegistraLookup<TipusActuacioSetWindow>(_windows, vm.ShowTipusActuacioLookup)
                     .DisposeWith(dd);
 
-                this.RegistraLookup<CentreSetWindow>(_windows, vm.ShowCentreLookup,
-                    () => new CentreSetViewModel(modeLookup: true))
+                this.RegistraLookup<CentreSetWindow>(_windows, vm.ShowCentreLookup)
                     .DisposeWith(dd);
 
-                this.RegistraLookup<EtapaSetWindow>(_windows, vm.ShowEtapaAlMomentDeLactuacioLookup,
-                    () => new EtapaSetViewModel(modeLookup: true))
+                this.RegistraLookup<EtapaSetWindow>(_windows, vm.ShowEtapaAlMomentDeLactuacioLookup)
                     .DisposeWith(dd);
 
-                this.RegistraLookup<CursAcademicSetWindow>(_windows, vm.ShowCursActuacioLookup,
-                    () => new CursAcademicSetViewModel(modeLookup: true))
+                this.RegistraLookup<CursAcademicSetWindow>(_windows, vm.ShowCursActuacioLookup)
                     .DisposeWith(dd);
             });
         }

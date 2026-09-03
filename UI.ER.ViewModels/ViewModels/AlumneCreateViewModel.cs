@@ -13,15 +13,18 @@ using System.Reactive.Linq;
 using DynamicData.Binding;
 using System;
 using ReactiveUI.Validation.Extensions;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class AlumneCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Alumne>
     {
 
-        protected virtual IAlumneCreate BLCreate() => SuperContext.Resolve<IAlumneCreate>();
-        public AlumneCreateViewModel()
+        private readonly IServiceFactory _serveis;
+
+        public AlumneCreateViewModel(IServiceFactory serveis)
         {
+            _serveis = serveis;
 
             RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);
 
@@ -48,7 +51,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadDadesInicials()
         {
-            using var bl = SuperContext.Resolve<ICursAcademicSet>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursDarreraActualitacioDadesId = cursActual?.Id;
@@ -280,7 +283,7 @@ namespace UI.ER.ViewModels.ViewModels
             );
 
             // cridar backend
-            using var bl = BLCreate();
+            using var bl = _serveis.GetBLOperation<IAlumneCreate>();
             var dto = await bl.Create(Parms);
             var data = dto.Data;
 

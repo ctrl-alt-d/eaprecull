@@ -1,18 +1,17 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
         xmlns:controls="clr-namespace:UI.ER.AvaloniaUI.Controls"
         xmlns:pages="clr-namespace:UI.ER.AvaloniaUI.Pages"
         x:Class="UI.ER.AvaloniaUI.Pages.TipusActuacioSetWindow"
+        x:DataType="viewModels:TipusActuacioSetViewModel"
+        x:CompileBindings="True"
         HorizontalContentAlignment="Stretch"
         Title="Tipus d'Actuació, llistat"
         Width="1000" Height="700" MinWidth="720"
         WindowStartupLocation="CenterOwner"
         >
-    <Design.DataContext>
-        <viewModels:TipusActuacioSetViewModel />
-    </Design.DataContext>
 
     <Grid>
 

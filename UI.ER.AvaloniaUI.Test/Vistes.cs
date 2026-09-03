@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Avalonia.Controls;
-using UI.ER.AvaloniaUI;
+using Microsoft.Extensions.DependencyInjection;
 using UI.ER.AvaloniaUI.Services;
 using UI.ER.ViewModels.ViewModels;
 
@@ -35,12 +35,22 @@ namespace UI.ER.AvaloniaUI.Test
 
         /// <summary>
         /// Els ViewModels que el contenidor pot construir sol, segons la regla que
-        /// aplica <c>DI.Injection</c>: tenir un constructor amb tots els paràmetres
-        /// amb valor per defecte.
+        /// aplica <c>DI.Injection</c> des de R1: tenir un constructor amb tots els
+        /// paràmetres resolubles — registrats al contenidor, o amb valor per defecte.
         /// </summary>
-        public static bool EsConstruiblePelContenidor(Type viewModel)
+        /// <remarks>
+        /// Aquesta còpia de la regla és deliberada: si <c>DI.Injection</c> canvia de
+        /// criteri sense actualitzar-la,
+        /// <c>RegistreDITest.EsRegistrenExactamentElsViewModelsConstruiblesSenseArguments</c>
+        /// es posa vermell i obliga a mirar-s'ho.
+        /// </remarks>
+        public static bool EsConstruiblePelContenidor(Type viewModel, IServiceCollection serveis)
             => viewModel.GetConstructors()
-                .Any(c => c.GetParameters().All(p => p.HasDefaultValue));
+                .Any(c => c.GetParameters().All(p => EsResoluble(p, serveis)));
+
+        private static bool EsResoluble(ParameterInfo parametre, IServiceCollection serveis)
+            => parametre.HasDefaultValue
+               || serveis.Any(d => d.ServiceType == parametre.ParameterType);
 
         /// <summary>
         /// La vista fa servir la <c>IWindowFactory</c>? Mira tota la jerarquia, perquè

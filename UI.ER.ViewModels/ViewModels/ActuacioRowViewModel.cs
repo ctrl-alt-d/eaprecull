@@ -10,9 +10,8 @@ using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using System.Linq;
 using DynamicData.Binding;
-using UI.ER.ViewModels.Services;
-using BusinessLayer.Abstract.Services;
 using System;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -20,8 +19,12 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected Dtoo.Actuacio Model { get; set; }
-        public ActuacioRowViewModel(Dtoo.Actuacio data, bool modeLookup = false)
+        private readonly IServiceFactory _serveis;
+
+        public ActuacioRowViewModel(IServiceFactory serveis, Dtoo.Actuacio data, bool modeLookup = false)
         {
+
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
@@ -146,7 +149,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<ActuacioUpdateViewModel, Dtoo.EditDialogResult<Dtoo.Actuacio>?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new ActuacioUpdateViewModel(Id);
+            var update = new ActuacioUpdateViewModel(_serveis, Id);
             var result = await ShowUpdateDialog.Handle(update);
 
             if (result == null) return;
@@ -176,7 +179,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task ShowExpedientAlumneDialogHandle()
         {
             var alumneId = Model.Alumne.Id;
-            var vm = new AlumneInformeViewerViewModel(alumneId);
+            var vm = new AlumneInformeViewerViewModel(_serveis, alumneId);
             await ShowExpedientAlumneDialog.Handle(vm);
         }
 
@@ -186,7 +189,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task ShowEditarAlumneDialogHandle()
         {
             var alumneId = Model.Alumne.Id;
-            var vm = new AlumneUpdateViewModel(alumneId);
+            var vm = new AlumneUpdateViewModel(_serveis, alumneId);
             await ShowEditarAlumneDialog.Handle(vm);
         }
 

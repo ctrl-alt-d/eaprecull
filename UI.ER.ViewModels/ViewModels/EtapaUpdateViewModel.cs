@@ -3,21 +3,23 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Reactive.Concurrency;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class EtapaUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Etapa>, IId
     {
 
-        public EtapaUpdateViewModel(int id)
+        private readonly IServiceFactory _serveis;
+
+        public EtapaUpdateViewModel(IServiceFactory serveis, int id)
         {
+            _serveis = serveis;
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadData);
 
@@ -63,7 +65,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.Resolve<IEtapaSet>();
+            using var bl = _serveis.GetBLOperation<IEtapaSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -90,7 +92,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.EtapaUpdateParms(Id, Codi, Nom, SonEstudisObligatoris, EsActiu);
 
             // cridar backend
-            using var bl = SuperContext.Resolve<IEtapaUpdate>();
+            using var bl = _serveis.GetBLOperation<IEtapaUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 

@@ -35,16 +35,13 @@ namespace UI.ER.AvaloniaUI.Pages
 
             PerCadaViewModel(d, (vm, dd) =>
             {
-                this.RegistraLookup<CentreSetWindow>(_windows, vm.ShowCentreLookup,
-                    () => new CentreSetViewModel(modeLookup: true))
+                this.RegistraLookup<CentreSetWindow>(_windows, vm.ShowCentreLookup)
                     .DisposeWith(dd);
 
-                this.RegistraLookup<EtapaSetWindow>(_windows, vm.ShowEtapaActualLookup,
-                    () => new EtapaSetViewModel(modeLookup: true))
+                this.RegistraLookup<EtapaSetWindow>(_windows, vm.ShowEtapaActualLookup)
                     .DisposeWith(dd);
 
-                this.RegistraLookup<CursAcademicSetWindow>(_windows, vm.ShowCursDarreraActualitacioDadesLookup,
-                    () => new CursAcademicSetViewModel(modeLookup: true))
+                this.RegistraLookup<CursAcademicSetWindow>(_windows, vm.ShowCursDarreraActualitacioDadesLookup)
                     .DisposeWith(dd);
             });
         }

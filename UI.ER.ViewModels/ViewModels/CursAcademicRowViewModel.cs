@@ -3,15 +3,14 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -20,12 +19,17 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected Dtoo.CursAcademic Model { get; }
         protected ObservableCollectionExtended<CursAcademicRowViewModel> TotsElsCursos { get; }
+        private readonly IServiceFactory _serveis;
+
         public CursAcademicRowViewModel(
+            IServiceFactory serveis,
             Dtoo.CursAcademic CursAcademicDto,
             ObservableCollectionExtended<CursAcademicRowViewModel> totsElsCursos,
             bool modeLookup = false)
         {
             var nombreActuacions = CursAcademicDto.NombreActuacions;
+
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
@@ -109,7 +113,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.Resolve<ICursAcademicActivaDesactiva>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicActivaDesactiva>();
             var dto = await bl.Toggle(Id);
             DTO2ModelView(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
@@ -128,7 +132,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<CursAcademicUpdateViewModel, Dtoo.CursAcademic?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new CursAcademicUpdateViewModel(Id);
+            var update = new CursAcademicUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
             if (data != null) DTO2ModelView(data);
         }

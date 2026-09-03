@@ -3,13 +3,12 @@ using BusinessLayer.Abstract.Services;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Services;
 using System.Reactive.Linq;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData.Binding;
 using System.Reactive.Disposables;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -19,9 +18,11 @@ namespace UI.ER.ViewModels.ViewModels
         private readonly CompositeDisposable _itemSubscriptions = new();
 
         public bool ModeLookup { get; }
-        public ActuacioSetViewModel(bool modeLookup = false, int? alumneId = null)
-        {
+        private readonly IServiceFactory _serveis;
 
+        public ActuacioSetViewModel(IServiceFactory serveis, bool modeLookup = false, int? alumneId = null)
+        {
+            _serveis = serveis;
             ModeLookup = modeLookup;
             AlumneId = alumneId;
 
@@ -52,9 +53,9 @@ namespace UI.ER.ViewModels.ViewModels
 
             Create = ReactiveCommand.CreateFromTask(async () =>
             {
-                var update = new ActuacioCreateViewModel(alumneId: AlumneId);
+                var update = new ActuacioCreateViewModel(_serveis, alumneId: AlumneId);
                 var data = await ShowDialog.Handle(update);
-                using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
+                using var blCurs = _serveis.GetBLOperation<ICursAcademicSet>();
                 var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
                 var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
@@ -90,7 +91,7 @@ namespace UI.ER.ViewModels.ViewModels
             );
 
             // Petició al backend            
-            using var bl = SuperContext.Resolve<IActuacioSet>();
+            using var bl = _serveis.GetBLOperation<IActuacioSet>();
             var dto = await bl.FromPredicate(Parms);
 
             // 
@@ -103,7 +104,7 @@ namespace UI.ER.ViewModels.ViewModels
                 throw new Exception("Error en fer petició al backend"); // ToDo: gestionar broken rules            
 
             //
-            using var blCurs = SuperContext.Resolve<ICursAcademicSet>();
+            using var blCurs = _serveis.GetBLOperation<ICursAcademicSet>();
             var cursActual_dto = await blCurs.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = cursActual_dto.Data?.FirstOrDefault();
 
@@ -170,7 +171,7 @@ namespace UI.ER.ViewModels.ViewModels
         /// </summary>
         private ActuacioRowViewModel CreateRowViewModel(Dtoo.Actuacio data)
         {
-            var item = new ActuacioRowViewModel(data, ModeLookup);
+            var item = new ActuacioRowViewModel(_serveis, data, ModeLookup);
 
             // Subscriure's a l'event d'esborrat
             var subscription = item.WasDeleted

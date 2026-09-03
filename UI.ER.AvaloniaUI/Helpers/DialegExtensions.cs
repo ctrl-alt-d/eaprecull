@@ -113,20 +113,23 @@ namespace UI.ER.AvaloniaUI.Helpers
         /// blocs de les finestres d'<c>Alumne</c> i d'<c>Actuacio</c> es redueixen a una
         /// línia cadascun.
         /// </summary>
-        /// <param name="setViewModel">
-        /// Fàbrica, no instància: cada obertura del lookup vol una llista acabada de
-        /// carregar. Desapareixerà a R1, quan la <see cref="IWindowFactory"/> sàpiga
-        /// construir el ViewModel amb arguments de runtime.
-        /// </param>
+        /// <remarks>
+        /// Cada obertura del lookup vol una llista acabada de carregar, i per això el
+        /// ViewModel es construeix dins del handler i no abans. Fins a R1 això demanava
+        /// passar-hi una <c>Func&lt;ViewModelBase&gt;</c> amb un <c>new</c> a dins; ara ho
+        /// fa la factory, que és qui té l'scope d'on surten els serveis del ViewModel.
+        /// </remarks>
         public static IDisposable RegistraLookup<TSetWindow>(
             this Visual owner,
             IWindowFactory windows,
-            Interaction<Unit, IIdEtiquetaDescripcio?> lookup,
-            Func<ViewModelBase> setViewModel)
+            Interaction<Unit, IIdEtiquetaDescripcio?> lookup)
             where TSetWindow : Window
             => lookup.RegisterHandler(async interaction =>
             {
-                var dialog = windows.GetWith<TSetWindow>(setViewModel());
+                // L'argument de runtime que tots els {…}SetViewModel comparteixen.
+                const bool modeLookup = true;
+
+                var dialog = windows.Get<TSetWindow>(modeLookup);
 
                 var result = await dialog.ShowDialog<IIdEtiquetaDescripcio?>(owner.GetOwnerWindow());
                 interaction.SetOutput(result);

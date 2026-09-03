@@ -1,8 +1,10 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
         x:Class="UI.ER.AvaloniaUI.Pages.ConfirmacioWindow"
+        x:DataType="viewModels:ConfirmacioViewModel"
+        x:CompileBindings="True"
         Title="{Binding Titol}"
         Width="440" SizeToContent="Height"
         CanResize="False"
@@ -10,9 +12,6 @@
         SystemDecorations="BorderOnly"
         WindowStartupLocation="CenterOwner"
         >
-    <Design.DataContext>
-        <viewModels:ConfirmacioViewModel />
-    </Design.DataContext>
 
     <StackPanel Margin="24,20">
 

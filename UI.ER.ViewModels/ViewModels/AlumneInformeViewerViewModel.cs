@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using BusinessLayer.Abstract.Services;
 using DynamicData.Binding;
 using ReactiveUI;
-using UI.ER.ViewModels.Services;
 using Dtoo = DTO.o.DTOs;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -15,10 +14,12 @@ namespace UI.ER.ViewModels.ViewModels
     /// </summary>
     public class AlumneInformeViewerViewModel : ViewModelBase
     {
+        private readonly IServiceFactory _serveis;
         private readonly int _alumneId;
 
-        public AlumneInformeViewerViewModel(int alumneId)
+        public AlumneInformeViewerViewModel(IServiceFactory serveis, int alumneId)
         {
+            _serveis = serveis;
             _alumneId = alumneId;
             CloseCommand = ReactiveCommand.Create(() => { });
             LoadDataCommand = ReactiveCommand.CreateFromTask(LoadData);
@@ -186,7 +187,7 @@ namespace UI.ER.ViewModels.ViewModels
             HasError = false;
             BrokenRules.Clear();
 
-            using var bl = SuperContext.Resolve<IAlumneInformeViewer>();
+            using var bl = _serveis.GetBLOperation<IAlumneInformeViewer>();
             var result = await bl.Run(_alumneId);
 
             if (result.BrokenRules.Any())
@@ -232,7 +233,7 @@ namespace UI.ER.ViewModels.ViewModels
         private async Task<Dtoo.SaveResult?> DoExportarWord()
         {
             ResultatExportacio = "";
-            using var bl = SuperContext.Resolve<IAlumneInforme>();
+            using var bl = _serveis.GetBLOperation<IAlumneInforme>();
             var resultat = await bl.Run(_alumneId);
             ResultatExportacio =
                 resultat.Data != null ?

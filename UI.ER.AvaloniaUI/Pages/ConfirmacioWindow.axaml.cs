@@ -1,5 +1,4 @@
 using System;
-using System.Reactive.Disposables;
 using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using Avalonia.Markup.Xaml;

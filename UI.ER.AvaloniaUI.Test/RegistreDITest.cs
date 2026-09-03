@@ -51,7 +51,7 @@ namespace UI.ER.AvaloniaUI.Test
         public void EsRegistrenExactamentElsViewModelsConstruiblesSenseArguments()
         {
             var esperats = Vistes.ViewModels
-                .Where(Vistes.EsConstruiblePelContenidor)
+                .Where(vm => Vistes.EsConstruiblePelContenidor(vm, Serveis))
                 .OrderBy(t => t.Name)
                 .ToList();
 

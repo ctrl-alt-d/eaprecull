@@ -14,25 +14,31 @@
 | **R5** — codi mort | ✅ **FET** — veure §R5 |
 | **R4** — navegació de `MainWindow` | ✅ **FET** — veure §R4 |
 | **R6** — unificació visual i paleta | ✅ **FET** — veure §R6 |
-| R1 — eliminar `SuperContext` | ⬜ **següent** (51 crides vives; cal **B3** abans) |
-| R7 — registre del BusinessLayer per comprensió | ⬜ pendent |
+| **R1** — eliminar `SuperContext` | ✅ **FET** — veure §R1 |
+| R7 — registre del BusinessLayer per comprensió | ⬜ **següent** |
+| R8 — estendre els *compiled bindings* a l'AXAML que R1 no ha tocat | ⬜ pendent — veure §R1.7 |
 
 ---
 
 ## 1. Estat actual de `UI.ER.AvaloniaUI`
 
-**Volum després de R3, R5, R4 i R6**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.239 línies**
-(−1.056 de R3/R5/R4, +62 de R6: dues vistes noves), a canvi de **407 línies** de codi compartit: tres classes base
+**Volum després de R3, R5, R4, R6 i R1**: el codi rere les vistes (`*.axaml.cs`) ha passat de
+**2.233 a 1.164 línies** (−1.056 de R3/R5/R4, +62 de R6: dues vistes noves, −17 de R1: els 16
+`Func<ViewModelBase>` dels lookups), a canvi de **407 línies** de codi compartit: tres classes base
 (`Pages/Base/`), tres helpers (`Helpers/{DialegExtensions,FileExplorer,VisualRootExtensions}.cs`)
 i les tres interfícies de contracte dels ViewModels
 (`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`).
-Tot el projecte suma **2.022 línies** de `.cs`.
+Tot el projecte suma **2.053 línies** de `.cs`.
 
-L'AXAML, intocat fins a R4, és el que ha mogut R6: els **30 fitxers preexistents** han passat de
-**3.189 a 2.865 línies** (−324) tot i que `App.axaml` n'hi ha guanyat 139, i n'hi ha **3 de nous**
-(`Themes/Paleta.axaml`, `Controls/IndicadorCarrega.axaml`, `Pages/ConfirmacioWindow.axaml`, 165 línies).
-Total: **33 fitxers, 3.030 línies**. Els **96 colors literals** són **0**.
-`UI.ER.AvaloniaUI.Test`: 9 fitxers, 32 tests.
+L'AXAML: **33 fitxers, 3.016 línies**. R6 va deixar els **96 colors literals** a **0**; R1 hi ha
+tret els **14 blocs `<Design.DataContext>`** i n'ha posat `x:DataType` + `x:CompileBindings="True"`
+(§R1.5). Els **19 fitxers restants** encara van amb bindings per reflexió — R8.
+
+`UI.ER.ViewModels`: **5.144 línies** de `.cs` (5.089 abans de R1). R1 hi ha afegit `Services/ServiceFactory.cs` i
+l'`IServiceFactory` al constructor de **27 ViewModels**; hi ha esborrat `Services/SuperContext.cs`
+i els 4 *seams* `protected virtual IXxx BLxxx()`.
+
+`UI.ER.AvaloniaUI.Test`: 9 fitxers de `.cs` (8 de tests + `Vistes.cs`), **40 tests**.
 
 ### Patrons en ús
 
@@ -42,11 +48,12 @@ Total: **33 fitxers, 3.030 línies**. Els **96 colors literals** són **0**.
 | **Interaction pattern** | `vm.ShowXDialog.RegisterHandler(...)` — el VM demana un diàleg sense conèixer Avalonia |
 | **Navegació per comanda** | `Command="{Binding XSetCommand}"` a l'AXAML + `RegistraNavegacio<XWindow>` a la vista (R4) |
 | **Composition Root** | `App.OnFrameworkInitializationCompleted` → `DataLayerConfigureServices()` + `BusinessLayerConfigureServices()` + `UIConfigureServices()` |
-| **Factory de vistes** | `IWindowFactory.Get<T>()` / `GetWith<T>(dc)` — cap `new XWindow(` al codi (R0) |
+| **Factory de vistes** | `IWindowFactory.Get<T>(vmArgs)` / `GetWith<T>(dc)` — cap `new XWindow(` al codi (R0, R1) |
 | **Classes base genèriques** | `EntityEditWindow<TVm,TDto>`, `EntitySetWindow<…>`, `EntityRowUserCtrl<…>` a `Pages/Base/` (R3) |
 | **Contractes de ViewModel** | `ISubmitViewModel<TDto>`, `ISetViewModel<…>`, `IRowViewModel<…>` — el que les classes base poden donar per fet (R3) |
 | **Registre per comprensió** | `UI.ER.AvaloniaUI/DI/Injection.cs` escaneja finestres i ViewModels |
-| **Service Locator estàtic** | `SuperContext.Resolve<T>()` — **51 crides** des dels ViewModels (viu fins a R1) |
+| **Fàbrica de serveis injectada** | `IServiceFactory.GetBLOperation<T>()` — **51 crides**, sempre des d'un camp `_serveis` rebut pel constructor (R1) |
+| **Compiled bindings** | `x:DataType` + `x:CompileBindings="True"` als 14 fitxers que abans tenien `<Design.DataContext>` (R1) |
 | **Attached behavior** | `WindowHelper.ClampToWorkingArea` aplicada globalment amb `Style Selector="Window"` |
 | **Custom controls** | `DateInput`, `LookupInput` amb `StyledProperty` |
 | **Styling per classes** | `LookupCss`, `ClearCss`, `EditarCss`, `Fitxa`, `BarraFiltres`, `Xip`, `Seccio{,.Ok,.Avis,.Perill}`, `Desar`, `Afegir`… tot a `App.axaml` (R6) |
@@ -66,17 +73,20 @@ Total: **33 fitxers, 3.030 línies**. Els **96 colors literals** són **0**.
 
 ### Signatures dels ViewModels (determinen què pot fer la factory)
 
-| Grup | Signatura | Resoluble per DI sense args? |
-|---|---|---|
-| `{Alumne,Centre,CursAcademic,Etapa,TipusActuacio}CreateViewModel` | `()` | ✅ Sí |
-| `AppStatusViewModel`, `UtilitatsViewModel` | `()` | ✅ Sí |
-| `ConfirmacioViewModel` | `(string titol = …, string missatge = …, string textAfirmatiu = …)` | ✅ Sí (tot amb default) |
-| `ActuacioCreateViewModel` | `(int? alumneId = null)` | ✅ Sí (té default) |
-| `{Alumne,Centre,CursAcademic,Etapa,TipusActuacio}SetViewModel` | `(bool modeLookup = false)` | ⚠️ Sí, però cal `true` en 16 punts |
-| `ActuacioSetViewModel` | `(bool modeLookup = false, int? alumneId = null)` | ⚠️ Igual |
-| `{…}UpdateViewModel` (6) | `(int id)` | ❌ Requereix arg de runtime |
-| `AlumneInformeViewerViewModel` | `(int alumneId)` | ❌ Requereix arg de runtime |
-| `{…}RowViewModel` (6) | `(DTO data, …, bool modeLookup)` | ❌ Fora d'abast (per ítem) |
+Des de R1 tots porten l'`IServiceFactory` com a **primer** paràmetre — l'ordre el vigila
+`FabricaDeServeisTest` (§R1.6). `serveis` s'abrevia a `IServiceFactory` a la taula.
+
+| Grup | Signatura | Resoluble per DI sense args? | Qui el construeix |
+|---|---|---|---|
+| `{Alumne,Centre,CursAcademic,Etapa,TipusActuacio}CreateViewModel` | `(IServiceFactory)` | ✅ Sí | el `*SetViewModel` pare, via `Interaction` |
+| `AppStatusViewModel`, `UtilitatsViewModel` | `(IServiceFactory)` | ✅ Sí | `Get<T>()` |
+| `ConfirmacioViewModel` | `(string titol = …, string missatge = …, string textAfirmatiu = …)` | ✅ Sí (tot amb default) | `RegistraConfirmacio` — **no parla amb el BL**, i per això no rep la fàbrica |
+| `ActuacioCreateViewModel` | `(IServiceFactory, int? alumneId = null)` | ✅ Sí | `ActuacioSetViewModel`, via `Interaction` |
+| `{Alumne,Centre,CursAcademic,Etapa,TipusActuacio}SetViewModel` | `(IServiceFactory, bool modeLookup = false)` | ✅ Sí | `Get<T>()` des del menú, `Get<T>(modeLookup)` als 16 lookups |
+| `ActuacioSetViewModel` | `(IServiceFactory, bool modeLookup = false, int? alumneId = null)` | ✅ Sí | igual, i `AlumneRowViewModel` amb `alumneId` |
+| `{…}UpdateViewModel` (6) | `(IServiceFactory, int id)` | ❌ Requereix arg de runtime | el `*RowViewModel` pare, via `Interaction` |
+| `AlumneInformeViewerViewModel` | `(IServiceFactory, int alumneId)` | ❌ Requereix arg de runtime | `Alumne`/`ActuacioRowViewModel`, via `Interaction` |
+| `{…}RowViewModel` (6) | `(IServiceFactory, DTO data, …, bool modeLookup)` | ❌ Requereix arg de runtime | el `*SetViewModel` pare, en bucle |
 
 ---
 
@@ -90,15 +100,16 @@ Total: **33 fitxers, 3.030 línies**. Els **96 colors literals** són **0**.
    ```
    `WhenAnyValue` emet immediatament → `LoadX()` s'executa durant la construcció i ja llegeix `ModeLookup`.
    ⚠️ **`ModeLookup` NO es pot convertir en `{ get; init; }` assignat després del constructor.** Ha de continuar sent argument del constructor.
-4. `Design.DataContext` (14 blocs a l'AXAML) instancia el VM amb **constructor sense paràmetres**. Afegir injecció per constructor als VMs trencarà aquests blocs. *(B3 — encara pendent, blocador de R1.)*
-5. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0, R3 i R4** (convenció, registre, cicles de vida, constructors, herència de les classes base, navegació per comanda). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9 i §R3.5.
-6. **Tota vista ha de conservar un constructor `public` sense paràmetres.** Els `*RowUserCtrl` perquè els instancia el `ListBox.ItemTemplate`; les finestres perquè, si no, el compilador d'Avalonia emet `AVLN3001`. Les que necessiten serveis fan servir el constructor pont encadenat sobre `App.Services` (§R0.5).
-7. **Les vistes ja no fan `new` d'altres vistes.** Tot passa per `IWindowFactory`. La validació d'arrencada de `DI/Injection.cs` peta si s'afegeix una finestra fora de convenció sense `[ViewModel(typeof(...))]`.
-8. **Cada vista amb `x:Class` conserva el seu `InitializeComponent()`.** `AvaloniaXamlLoader.Load(this)` es queda a la classe derivada, mai a la classe base: el compilador d'Avalonia el reescriu a una crida directa al mètode generat només quan el troba dins del tipus que declara l'AXAML. Pujar-lo a la base compilaria igual però passaria a resoldre's per reflexió en temps d'execució.
-9. **Els escanejos de `DI/Injection.cs` i de `Vistes.cs` filtren `IsAbstract` i `IsGenericTypeDefinition`.** És el que manté les classes base de R3 fora del registre i fora dels tests d'inventari. No treure aquests filtres.
-10. **`RequestedThemeVariant` (App.axaml) i `BaseTheme` (`MaterialTheme`) han d'anar sempre iguals.** El primer tria quina taula de `Themes/Paleta.axaml` s'aplica; el segon, la del `MaterialTheme`. Si es deixa `RequestedThemeVariant` sense fixar, Avalonia segueix el tema del sistema operatiu i la paleta pròpia se'n va a fosc mentre Material es queda clar. Canviar de tema és tocar-los tots dos.
-11. **Cap color s'escriu a pèl.** Tot surt d'una clau de `Themes/Paleta.axaml` o del `MaterialTheme`. Ho vigila `DissenyTest` (§R6.4), que escaneja el *codi font* — un literal compila igual de bé que una clau, i el que es vol vigilar és què s'escriu.
-12. **Cap vista navega des d'un handler de `Click`.** Cada entrada de menú i cada botó que obre una finestra és una `ICommand` del ViewModel amb la seva `Interaction`; la vista només diu quina finestra l'atén (`RegistraNavegacio<TWindow>`). Ho vigila `NavegacioTest` (§R4.3). Els handlers que queden a `MainWindow` no naveguen: escriuen a la snackbar o mouen el `Carousel`.
+4. **A l'AXAML no hi ha `Design.DataContext`: hi ha `x:DataType`.** Els 14 blocs que hi havia instanciaven el ViewModel, i per tant li exigien constructor sense paràmetres — incompatible amb la injecció de R1. `x:DataType` només en diu el *tipus*. Va acompanyat de `x:CompileBindings="True"`, i això vol dir que **cada `{Binding}` d'aquells 14 fitxers es comprova en compilar**: un nom de propietat mal escrit ja no és un binding buit en silenci, és un `AVLN2000`. Compte amb dues coses: el `clr-namespace` dels ViewModels **necessita el `;assembly=UI.ER.ViewModels`** (sense ell `x:DataType` no resol, tot i que `Design.DataContext` sí que ho feia), i dins d'un `DataTemplate` el tipus l'infereix de l'`ItemsSource`, així que els bindings de les plantilles també es comproven.
+5. **Cap ViewModel resol serveis pel seu compte.** Reben `IServiceFactory` pel constructor i el guarden a `_serveis`; les operacions de BL surten sempre de `using var bl = _serveis.GetBLOperation<IXxx>()`. La fàbrica és **`AddScoped`**: resolta des del provider arrel —el que feia `SuperContext`— les operacions transitòries `IDisposable` s'acumularien fins a tancar l'aplicació. Ho vigila `FabricaDeServeisTest` (§R1.6). Conseqüència al registre: el filtre de `DI/Injection.cs` demana que **tots els paràmetres del constructor siguin resolubles** —registrats o amb valor per defecte—, no que tots tinguin valor per defecte; i per això l'`IServiceFactory` s'ha de registrar **abans** de l'escaneig dels ViewModels.
+6. **`UI.ER.AvaloniaUI.Test` cobreix les invariants estructurals de R0, R1, R3 i R4** (convenció, registre, cicles de vida, constructors, herència de les classes base, navegació per comanda, injecció de la fàbrica de serveis). No cobreix res que necessiti una plataforma d'Avalonia ni la base de dades: això es valida amb `dotnet build` + prova manual. Veure §R0.9, §R1.6 i §R3.5.
+7. **Tota vista ha de conservar un constructor `public` sense paràmetres.** Els `*RowUserCtrl` perquè els instancia el `ListBox.ItemTemplate`; les finestres perquè, si no, el compilador d'Avalonia emet `AVLN3001`. Les que necessiten serveis fan servir el constructor pont encadenat sobre `App.Services` (§R0.5).
+8. **Les vistes ja no fan `new` d'altres vistes.** Tot passa per `IWindowFactory`. La validació d'arrencada de `DI/Injection.cs` peta si s'afegeix una finestra fora de convenció sense `[ViewModel(typeof(...))]`.
+9. **Cada vista amb `x:Class` conserva el seu `InitializeComponent()`.** `AvaloniaXamlLoader.Load(this)` es queda a la classe derivada, mai a la classe base: el compilador d'Avalonia el reescriu a una crida directa al mètode generat només quan el troba dins del tipus que declara l'AXAML. Pujar-lo a la base compilaria igual però passaria a resoldre's per reflexió en temps d'execució.
+10. **Els escanejos de `DI/Injection.cs` i de `Vistes.cs` filtren `IsAbstract` i `IsGenericTypeDefinition`.** És el que manté les classes base de R3 fora del registre i fora dels tests d'inventari. No treure aquests filtres.
+11. **`RequestedThemeVariant` (App.axaml) i `BaseTheme` (`MaterialTheme`) han d'anar sempre iguals.** El primer tria quina taula de `Themes/Paleta.axaml` s'aplica; el segon, la del `MaterialTheme`. Si es deixa `RequestedThemeVariant` sense fixar, Avalonia segueix el tema del sistema operatiu i la paleta pròpia se'n va a fosc mentre Material es queda clar. Canviar de tema és tocar-los tots dos.
+12. **Cap color s'escriu a pèl.** Tot surt d'una clau de `Themes/Paleta.axaml` o del `MaterialTheme`. Ho vigila `DissenyTest` (§R6.4), que escaneja el *codi font* — un literal compila igual de bé que una clau, i el que es vol vigilar és què s'escriu.
+13. **Cap vista navega des d'un handler de `Click`.** Cada entrada de menú i cada botó que obre una finestra és una `ICommand` del ViewModel amb la seva `Interaction`; la vista només diu quina finestra l'atén (`RegistraNavegacio<TWindow>`). Ho vigila `NavegacioTest` (§R4.3). Els handlers que queden a `MainWindow` no naveguen: escriuen a la snackbar o mouen el `Carousel`.
 
 ---
 
@@ -117,18 +128,15 @@ Total: **33 fitxers, 3.030 línies**. Els **96 colors literals** són **0**.
 | `UI.ER.AvaloniaUI/DI/Injection.cs` | `UIConfigureServices()`: escaneig de vistes i ViewModels + validació d'arrencada |
 | `UI.ER.AvaloniaUI/App.axaml.cs` | Composition root; exposa `App.Services`; `desktop.MainWindow = factory.Get<MainWindow>()` |
 
-Composition root actual:
+Composition root actual (R1 hi ha esborrat les dues línies de `SuperContext`; l'`IServiceFactory`
+ara el registra `UIConfigureServices()` — §R1.2):
 
 ```csharp
-var services = new ServiceCollection()
+_services = new ServiceCollection()
     .DataLayerConfigureServices()
     .BusinessLayerConfigureServices()
-    .UIConfigureServices();          // ← nou
-
-services.AddSingleton<IServiceFactory, SuperContext>();   // desapareix a R1
-
-_services = services.BuildServiceProvider();
-SuperContext.Initialize(_services);                        // desapareix a R1
+    .UIConfigureServices()
+    .BuildServiceProvider();
 
 desktop.MainWindow = _services.GetRequiredService<IWindowFactory>().Get<MainWindow>();
 ```
@@ -182,19 +190,20 @@ private TWindow Build<TWindow>(Func<IServiceScope, object> dataContextFactory) w
 }
 ```
 
-⚠️ **Honestedat sobre la fuita**: la infraestructura hi és, però **encara no arregla res**.
-Els ViewModels continuen demanant els serveis BL amb `SuperContext.Resolve<T>()`, que resol
-**al provider arrel** — fora de l'scope del diàleg. La llista de disposables de l'arrel segueix
-creixent igual que abans.
+⚠️ **A R0 això no arreglava res encara**: els ViewModels demanaven els serveis BL amb
+`SuperContext.Resolve<T>()`, que resolia **al provider arrel**, fora de l'scope del diàleg.
 
-L'scope només tindrà efecte quan **R1** faci que els ViewModels rebin els serveis pel constructor:
-- Amb `Get<T>()` ja funcionarà sol: el VM es resol de `scope.ServiceProvider`.
-- Amb `GetWith<T>(dc)` **no**, perquè el VM ja arriba construït des de fora.
-  → R1 haurà d'afegir `Get<TWindow>(params object[] vmArgs)` que faci
-  `ActivatorUtilities.CreateInstance(scope.ServiceProvider, vmType, vmArgs)`, i migrar-hi
-  els punts de crida amb `modeLookup: true` i els `interaction.Input`.
+✅ **Des de R1 l'scope té efecte de debò.** Els ViewModels reben una `IServiceFactory`
+`AddScoped` pel constructor, i per tant les operacions de BL que creen queden apuntades a
+l'scope del diàleg (§R1.2). Amb dos matisos:
+- Amb `Get<T>(vmArgs)` funciona sol: el VM es resol de `scope.ServiceProvider`.
+- Amb `GetWith<T>(dc)` el VM arriba construït des de fora, i fa servir la fàbrica de l'scope
+  de **qui l'ha construït** — el ViewModel pare. Les seves operacions s'alliberen quan es
+  tanca la finestra pare, no la seva. Veure §R1.4.
 
 ### R0.4 — API i quan fer servir cada operació
+
+L'API de R0 era aquesta:
 
 ```csharp
 TWindow Get<TWindow>()                                where TWindow : Window;
@@ -210,8 +219,12 @@ var w = _windows.GetWith<CentreUpdateWindow>(interaction.Input);
 var w = _windows.GetWith<AlumneSetWindow>(new AlumneSetViewModel(modeLookup: true));
 ```
 
-`Get<T>()` només funciona si el ViewModel està registrat, és a dir si tots els paràmetres del
-seu constructor tenen valor per defecte. Per a la resta, `GetWith`.
+`Get<T>()` només funcionava si el ViewModel estava registrat, és a dir si tots els paràmetres
+del seu constructor tenien valor per defecte. Per a la resta, `GetWith`.
+
+**R1 ha eixamplat la primera** a `Get<TWindow>(params object[] vmArgs)`, i amb això el tercer
+exemple ha passat a `_windows.Get<AlumneSetWindow>(modeLookup)`, sense cap `new`. El segon no
+ha canviat: veure §R1.3 i §R1.4.
 
 **`GetWith` no difereix de `Get` en el *tipus* de ViewModel, només en *qui el construeix*.**
 Per això el paràmetre és `ViewModelBase` (no `object`) i, a més, `WindowFactory.VerificaParella`
@@ -229,9 +242,11 @@ com un diàleg amb els bindings buits i cap error.
 > Val la pena reconsiderar-ho quan R3 tingui les classes base genèriques: allà la parella
 > vista↔ViewModel ja queda fixada pel tipus base i la verificació en runtime esdevé redundant.
 
-> **Per què no `Get<T>(params object[] args)` avui**: `ActivatorUtilities.CreateInstance` fa el
-> matching per tipus i no gestiona bé els `int?` (`ActuacioSetViewModel(bool, int?)`,
-> `ActuacioCreateViewModel(int?)`). A més seria posicional i opac. Veure R1.
+> **Per què no `Get<T>(params object[] args)` a R0**: `ActivatorUtilities.CreateInstance` fa el
+> matching per tipus, és posicional i és opac. La reserva sobre els `int?`
+> (`ActuacioSetViewModel(bool, int?)`, `ActuacioCreateViewModel(int?)`) **ha resultat infundada**
+> — R1 ho ha comprovat i hi ha deixat un test (§R1.3). La resta de la crítica es manté, i per
+> això `Get(vmArgs)` només s'usa on l'argument és un de sol i té nom al punt de crida.
 
 ### R0.5 — Com les vistes obtenen la factory
 
@@ -279,10 +294,15 @@ de fer-los desaparèixer és que l'AXAML deixi d'instanciar vistes pel seu compt
 |---|---|---|
 | **B1** | `this.DataContext = new XCreateViewModel();` al constructor d'`Actuacio/AlumneCreateWindow` | ✅ **Eliminat.** Construïa un VM que disparava les seves subscripcions i que l'`object initializer` llençava tot seguit. |
 | **B2** | `new MainWindow()` a `App.axaml.cs` + `DataContext = new AppStatusViewModel()` | ✅ **Resolt** amb `factory.Get<MainWindow>()` + `[ViewModel(typeof(AppStatusViewModel))]`. |
-| **B3** | 13 blocs `<Design.DataContext>` | ⏭️ **Ajornat a R1.** R0 no els toca perquè no calia: cap `Window` s'instancia des de l'AXAML i els `RowUserCtrl` conserven constructor sense paràmetres. **Serà blocador real de R1**, quan els VMs rebin injecció per constructor. Migrar a `x:DataType` + `x:CompileBindings="True"`. Nota: `AlumneInformeViewerWindow.axaml` ja està trencat avui (`AlumneInformeViewerViewModel(int alumneId)` no té constructor buit). |
+| **B3** | 13 blocs `<Design.DataContext>` (14 amb el que hi va afegir R6) | ✅ **Resolt a R1** amb `x:DataType` + `x:CompileBindings="True"` — §R1.5. |
 | **B4** | `AlumneInformeViewerWindow` és `Window` pelat, no `ReactiveWindow<T>` | ⏭️ **Sense canvis.** Funciona amb la factory (fa servir `DataContext`). Unificar-lo a R2. |
 | **B5** | Lifetime | ✅ **`AddTransient` per a totes les vistes**, verificat. |
-| **B6** | `SuperContext.Resolve<T>()` | ⏭️ **Viu, 51 crides.** R0 només tanca el `new` de les *vistes*. R1. |
+| **B6** | `SuperContext.Resolve<T>()` | ✅ **Resolt a R1.** Les 51 crides passen per una `IServiceFactory` injectada; `SuperContext.cs` esborrat. |
+
+> ⚠️ **Actualització de R1**: `Get<TWindow>()` ha passat a ser
+> `Get<TWindow>(params object[] vmArgs)`. Sense arguments es comporta exactament igual
+> que abans (el ViewModel surt del contenidor); amb arguments els combina amb les
+> dependències registrades. Veure §R1.3.
 
 ### R0.7 — Criteris d'acceptació
 
@@ -290,7 +310,7 @@ de fer-los desaparèixer és que l'AXAML deixi d'instanciar vistes pel seu compt
 - [x] Cap registre de vista escrit a mà a `App.axaml.cs` — tot per escaneig a `DI/Injection.cs`.
 - [x] Validació d'arrencada que itera totes les finestres i comprova que `ViewModelTypeFor` resol.
 - [x] **Tests de regressió**: `UI.ER.AvaloniaUI.Test`, 19 tests verds, verificats per mutació (§R0.9).
-- [x] Cada diàleg allibera el seu `IServiceScope` a `Closed` *(cablejat; sense efecte pràctic fins a R1, veure R0.3)*.
+- [x] Cada diàleg allibera el seu `IServiceScope` a `Closed` *(a R0 era només cablejat; té efecte des de R1, veure R0.3)*.
 - [x] `dotnet build eaprecull.sln --no-incremental` net: **0 errors i cap warning d'Avalonia, de C# ni dels analitzadors**. Els 100 warnings són tots `NU1903` de vulnerabilitats de paquets (82 abans de R0; els 18 nous els aporta el projecte de tests, que arrossega els mateixos paquets).
 - [x] L'aplicació arrenca sense excepcions (`error.log` buit).
 - [ ] **Prova manual pendent de l'usuari**: obrir i tancar el mateix diàleg 3 vegades seguides (valida B5 i el disposal d'scope), i recórrer els lookups d'`Actuacio{Create,Update}` i `Alumne{Create,Update}`.
@@ -298,7 +318,8 @@ de fer-los desaparèixer és que l'AXAML deixi d'instanciar vistes pel seu compt
 ### R0.9 — Tests de regressió (`UI.ER.AvaloniaUI.Test`)
 
 Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test`.
-**19 tests, ~60 ms, sense base de dades i sense plataforma gràfica.**
+**19 tests a R0; 40 després de R3, R4, R6 i R1. ~60 ms, sense base de dades i sense
+plataforma gràfica.**
 
 > ⚠️ `DataLayerConfigureServices()` **executa les migracions** com a efecte secundari del
 > registre. Els tests només criden `UIConfigureServices()`, que no toca ni disc ni BD.
@@ -309,7 +330,8 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 | `ConvencioVistaViewModelTest.cs` | Cada finestra resol el seu ViewModel; l'atribut guanya a la convenció; el missatge d'error diu què s'esperava i com arreglar-ho; `UIConfigureServices()` no llança. |
 | `RegistreDITest.cs` | Totes les finestres registrades i `Transient`; es registren **exactament** els ViewModels construïbles sense arguments; els d'arguments de runtime **no** hi són; les dependències de cada constructor de finestra existeixen; `IWindowFactory` és `Singleton`. |
 | `ConstructorsDeVistaTest.cs` | Tota vista té constructor públic sense paràmetres (AVLN3001 + `ItemTemplate`); **el constructor pont encadena de debò amb el de DI** (inspecció de l'IL: busca el `call` al token de l'altre constructor); tota vista amb un camp `IWindowFactory` té el constructor que el rep. |
-| `WindowFactoryTest.cs` | `GetWith` rebutja un ViewModel que no és el de la finestra, i ho fa **abans** de construir res. |
+| `WindowFactoryTest.cs` | `GetWith` rebutja un ViewModel que no és el de la finestra, i ho fa **abans** de construir res. R1 hi ha afegit `CreaViewModel`: sense arguments surt del contenidor, amb arguments els barreja amb les dependències de l'scope, i els paràmetres nullables s'omplen igual (§R1.3). |
+| `FabricaDeServeisTest.cs` | **R1** — l'`IServiceFactory` és `Scoped`, no es pot resoldre fora d'un scope, es registra abans de l'escaneig dels ViewModels, cap ViewModel torna a guardar serveis en un camp estàtic, i els que porten arguments de runtime reben la fàbrica com a primer paràmetre. |
 
 **Verificat per mutació** — no n'hi ha prou que passin, han de fallar quan toca:
 
@@ -332,51 +354,229 @@ Projecte xUnit nou, amb els mateixos paquets que `BusinessLayer.Integration.Test
 ### R0.8 — Deutes que R0 deixava oberts
 
 1. ~~`GetWindow() => (Window)this.VisualRoot!` duplicat a 10 fitxers~~ → ✅ **R3**: `Helpers/VisualRootExtensions.GetOwnerWindow()`. Nom final `VisualRootExtensions`, no `TopLevelExtensions`, i el mètode fa servir `visual.GetVisualRoot()` perquè `Visual.VisualRoot` és `protected` i no es pot llegir des d'una extensió.
-2. ~~Els 16 punts de lookup fent `new XSetViewModel(modeLookup: true)` a mà~~ → ✅ **R3**: `RegistraLookup<TSetWindow>`, una línia per lookup. El `new` hi continua sent, com a `Func<ViewModelBase>`; el mata **R1**.
+2. ~~Els 16 punts de lookup fent `new XSetViewModel(modeLookup: true)` a mà~~ → ✅ **R3**: `RegistraLookup<TSetWindow>`, una línia per lookup; ✅ **R1**: sense el `Func<ViewModelBase>`, el `new` ha desaparegut del tot.
 3. `App.Services` als 16 constructors pont → ❌ **no reduïble**, veure §R0.5.
-4. La signatura `Get<TWindow>(params object[] vmArgs)` que substituirà els `GetWith` → **R1**.
+4. ~~La signatura `Get<TWindow>(params object[] vmArgs)`~~ → ✅ **R1**. No substitueix `GetWith`, hi conviu: veure §R1.3.
 
 ---
 
-## R1 — Eliminar el Service Locator estàtic `SuperContext`
+## R1 — Eliminar el Service Locator estàtic `SuperContext` ✅ FET
 
-**Estat**: `IServiceFactory` està registrat a `App.axaml.cs:27` però **no s'injecta enlloc**. És una abstracció morta. Els 51 `SuperContext.Resolve<T>()` fan que cap ViewModel sigui construïble ni testejable.
+> Estat: implementat, compilant net i amb 40 tests verds. Aquesta secció descriu **el que
+> hi ha al codi**, no una proposta.
 
-**Objectiu**: injectar `IServiceFactory` (o els serveis BL concrets) pel constructor dels VMs.
+### R1.1 — Resultat
 
-**Dependència**: R0 ✅, R3 ✅ i R4 ✅ fets. La factory ja és qui construeix els VMs sense arguments (`Get<T>()`, des de l'scope del diàleg); falta la variant amb arguments de runtime.
+`SuperContext` era un `IServiceProvider` estàtic amb un `Resolve<T>()` que els ViewModels
+cridaven **51 vegades des de 26 fitxers**. Ja no existeix: `Services/SuperContext.cs` està
+esborrat i cap ViewModel es pot construir sense que algú li doni les seves dependències.
 
-**Punt de partida després de R4 i R6**: **51 crides** a `SuperContext.Resolve<T>()` repartides per **26 fitxers**. R6 no n'ha tocat cap — l'únic ViewModel que hi ha afegit, `ConfirmacioViewModel`, no parla amb el BusinessLayer i per tant tampoc no entra a R1. R4 no n'ha tocat cap —només ha mogut *qui dispara* els diàlegs—, però hi deixa dues coses a favor:
-- Les **set finestres de navegació** de `MainWindow` s'obren totes amb `Get<T>()`, no amb `GetWith`. Són les primeres que veuran l'scope per diàleg funcionar de debò, sense cap canvi al punt de crida (§R0.3).
-- `AppStatusViewModel` ha quedat com el cas de prova més net per començar: tres `SuperContext.Resolve<T>()` a `LoadData()`, cap argument de constructor, i `ComandaDeNavegacio` ja aïlla tota la navegació de la càrrega de dades.
+| | Abans | Ara |
+|---|---|---|
+| Com arriba un VM al BusinessLayer | `SuperContext.Resolve<ICentreCreate>()` | `_serveis.GetBLOperation<ICentreCreate>()` |
+| D'on surt `_serveis` | enlloc: era estàtic | `IServiceFactory`, primer paràmetre del constructor |
+| Registre de la fàbrica | `AddSingleton<IServiceFactory, SuperContext>` a `App.axaml.cs`, **sense injectar-se enlloc** | `AddScoped<IServiceFactory, ServiceFactory>` a `DI/Injection.cs` |
+| D'on surten les operacions de BL | provider **arrel** → vives fins a tancar l'app | scope **del diàleg** → alliberades en tancar-lo |
+| VMs amb constructor injectat | 0 | **27** |
+| Crides a `SuperContext` | 51 | **0** |
+| `new XViewModel(...)` al codi de les *vistes* | 16 (`Func<ViewModelBase>` dels lookups) + 1 (confirmació) | **1** (`ConfirmacioViewModel`, que no parla amb el BL) |
+| Blocs `<Design.DataContext>` | 14 | **0** — `x:DataType` + `x:CompileBindings="True"` |
 
-**Disseny acordat** (discussió del 2026-09-03):
+Fitxers nous: `UI.ER.ViewModels/Services/ServiceFactory.cs` (35 línies, gairebé tot comentari)
+i `UI.ER.AvaloniaUI.Test/FabricaDeServeisTest.cs`.
 
-- Els VMs reben **`IServiceFactory`** pel constructor, no els serveis BL concrets. No és opcional: les operacions BL són `AddTransient` i `IBLOperation : IDisposable`, i els VMs les consumeixen amb `using var bl = …` a cada crida. Una instància injectada quedaria disposada després del primer ús. Ha de ser una fàbrica: `IServiceFactory` o `Func<IXxx>`.
-- `IServiceFactory` **no és un `IServiceProvider` disfressat**: `T GetBLOperation<T>() where T : IBLOperation` només pot arribar a operacions de BL.
-- **`SuperContext` desapareix del tot.** El substitueix `ServiceFactory(IServiceProvider provider)` registrat com a **`AddScoped`**. Avui `SuperContext` resol des del provider **arrel**, i MS.DI registra allà els transitoris `IDisposable` per disposar-los al final: les 51 crides deixen una referència viva fins que es tanca l'aplicació. Injectar una fàbrica *scoped* ho arregla i fa que l'scope per diàleg de §R0.3 tingui efecte de debò.
-- Els 4 *seams* `protected virtual IXxx BLxxx()` (a `Actuacio{Create,Update}` i `AlumneCreate`) s'esborren: amb la fàbrica injectada ja no calen, i a més només cobrien l'operació d'escriptura, no les càrregues.
-- El test d'un VM passa a ser un `FakeBL : IServiceFactory` amb un diccionari, sense estat global.
-- Si més endavant un VM concret demana constructors més explícits, migrar-lo a `Func<IXxx>` és un canvi d'un sol fitxer, perquè la fàbrica ja hi arriba pel constructor.
+### R1.2 — Per què una fàbrica i no els serveis concrets
 
-**Feina concreta que R0 deixa preparada**:
-1. Afegir `TWindow Get<TWindow>(params object[] vmArgs)` a `IWindowFactory`, implementat amb
-   `ActivatorUtilities.CreateInstance(scope.ServiceProvider, WindowFactory.ViewModelTypeFor(typeof(TWindow)), vmArgs)`.
-   Compte amb els `int?` (`ActuacioSetViewModel(bool, int?)`): cal treure'ls dels constructors abans, o passar-hi un tipus explícit.
-2. Migrar els 16 lookups a la nova sobrecàrrega. Des de R3 són 16 crides a
-   `RegistraLookup<XSetWindow>(…, () => new XSetViewModel(modeLookup: true))` repartides per
-   `Actuacio{Create,Update}Window` i `Alumne{Create,Update}Window`: el `Func<ViewModelBase>`
-   desapareix i `RegistraLookup` passa a demanar només el tipus de finestra i els arguments.
-3. Els `GetWith<XUpdateWindow>(interaction.Input)` són un cas diferent: el VM el construeix el `*SetViewModel`. O bé el VM pare rep una `Func<int, XUpdateViewModel>` injectada, o bé la `Interaction` passa a portar l'`id` en comptes del VM sencer (més net: el VM pare deixa de construir VMs).
-4. Només llavors l'scope per diàleg de R0.3 comença a alliberar serveis de debò.
+Els ViewModels **no** poden rebre `ICentreCreate` i companyia pel constructor: les operacions
+de BL són `AddTransient` i `IBLOperation : IDisposable`, i els VMs les consumeixen amb
+`using var bl = …` a **cada** crida. Una instància injectada quedaria disposada després del
+primer ús i la segona obertura del diàleg petaria. Cal una fàbrica: `IServiceFactory` (o un
+`Func<IXxx>` per servei, que és el mateix amb més soroll).
 
-**Trampes**:
-- Trencarà els 14 `<Design.DataContext>` → resoldre B3 primer (migrar a `x:DataType` + `x:CompileBindings="True"`). *(R6 n'hi ha afegit un, el de `ConfirmacioWindow`; en canvi els 4 `IdTxt` morts que hauria calgut arreglar en compilar els bindings ja no hi són — §R6.5.)*
-- El filtre de registre de ViewModels a `DI/Injection.cs` (§R0.1) mira *«tots els paràmetres tenen valor per defecte»*. Quan els VMs rebin serveis pel constructor deixarà de valer: caldrà canviar-lo per *«tots els paràmetres són resolubles pel contenidor»*.
-- Els `{…}RowViewModel` es creen en bucle dins dels `*SetViewModel`; caldrà un `Func<TDto, bool, TRowVm>` injectat, o passar la `IServiceFactory` avall.
-- Les tres interfícies de `Contracts/DialegContracts.cs` (R3) **no** es toquen: no diuen res de com el VM obté els seus serveis. Les classes base de R3 continuen valent tal com són.
-- `RegistraNavegacio` (R4) **tampoc**: ja passa per `Get<T>()`, que resol des de l'scope. Qui canvia és `RegistraLookup`, que és l'únic helper amb un `new` a dins.
-- Abast: 2 projectes, ~30 fitxers. **Fer-ho en un commit separat.**
+`IServiceFactory` **no és un `IServiceProvider` disfressat**: la seva única operació és
+`T GetBLOperation<T>() where T : IBLOperation`, i des d'aquí no s'arriba a cap altre servei
+del contenidor.
+
+**`AddScoped` no és cosmètic.** És el que fa que l'scope per diàleg de la `IWindowFactory`
+(§R0.3) serveixi de debò: MS.DI apunta els transitoris `IDisposable` a l'scope que els ha
+creat, per disposar-los quan es tanca. `SuperContext` resolia des de l'**arrel**, i per tant
+cada crida afegia l'operació a una llista que només es buidava en tancar l'aplicació. El
+`using var bl = …` **sí** que n'alliberava el `DbContext` (`BLOperation.Dispose()` el disposa
+i el posa a `null`), i per tant no era una fuita de connexions; el que creixia sense aturador
+era la llista de disposables de l'arrel, amb un objecte per cada operació que s'hagués fet mai.
+Ara la llista és la de l'scope del diàleg i mor amb ell. Dues coses ho vigilen:
+`FabricaDeServeisTest.LaFabricaDeServeisNomesSurtDUnScope`, que comprova que
+`BuildServiceProvider(validateScopes: true)` **es nega** a resoldre-la des de l'arrel, i
+`LaFabricaDeServeisEsScoped`, que fixa el cicle de vida.
+
+### R1.3 — `Get<TWindow>(params object[] vmArgs)`
+
+`IWindowFactory.Get<TWindow>()` ha passat a acceptar arguments de runtime:
+
+```csharp
+TWindow Get<TWindow>(params object[] vmArgs) where TWindow : Window;
+```
+
+Sense arguments es comporta **exactament** com abans, i per això els set punts de navegació
+de R4 i l'arrencada de `MainWindow` no han canviat ni una línia. Amb arguments, la
+construcció passa per `ActivatorUtilities.CreateInstance`, que barreja els arguments donats
+amb el que el contenidor sap resoldre — l'`IServiceFactory` de l'scope, en tots els casos
+d'avui.
+
+La lògica viu en un mètode `public static` a part, `WindowFactory.CreaViewModel(provider,
+viewModelType, vmArgs)`, precisament perquè els tests hi arribin: és l'única part de la
+factory que no necessita una plataforma d'Avalonia inicialitzada.
+
+Dues coses que el pla original donava per certes i **no ho són**:
+
+- «*Compte amb els `int?`: cal treure'ls dels constructors abans*». No cal.
+  `ActivatorUtilities` omple els paràmetres nullables tant si l'argument ve tipat (`(int?)7`)
+  com si ve pelat (`7`). Hi ha un test que ho fixa
+  (`CreaViewModelOmpleElsParametresNullables`), perquè és una garantia de la implementació de
+  `Microsoft.Extensions.DependencyInjection`, no del llenguatge.
+- «*la signatura que substituirà els `GetWith`*». No els substitueix — veure §R1.4.
+
+L'aparellament és **per tipus**, no per posició: dos paràmetres del mateix tipus no es poden
+distingir. És per això que la `ConfirmacioWindow` —tres `string` seguits— continua passant
+per `GetWith` amb un `new ConfirmacioViewModel(...)` explícit.
+
+### R1.4 — Els diàlegs d'edició continuen amb `GetWith`, i per què
+
+El pla proposava dues sortides per als `GetWith<XUpdateWindow>(interaction.Input)`: injectar
+una `Func<int, XUpdateViewModel>` al VM pare, o fer que la `Interaction` portés l'`id` en
+comptes del ViewModel sencer. **No s'ha fet cap de les dues.** Amb la fàbrica injectada, el
+VM pare ja té tot el que li cal per construir el fill:
+
+```csharp
+// CentreRowViewModel
+var update = new CentreUpdateViewModel(_serveis, Id);
+var data = await ShowUpdateDialog.Handle(update);
+```
+
+El motiu és d'abast: la segona opció obliga a canviar les tres interfícies de
+`Contracts/DialegContracts.cs` i les tres classes base de R3, i R1 ja toca 58 fitxers. La
+primera afegeix 6 delegats al contenidor per estalviar 6 `new` que ara són trivials.
+
+**El que això deixa obert**, i que convé saber: el VM del diàleg d'edició fa servir la fàbrica
+de l'scope del **pare**. Obrir i tancar la fitxa d'un centre 20 vegades acumula les seves
+operacions de BL a l'scope de la `CentreSetWindow`, no a la de la finestra d'edició, i
+s'alliberen quan es tanca la llista. Segueix sent una millora estricta sobre el provider
+arrel —abans era «fins a tancar l'aplicació»—, però no és el comportament ideal. Qui vulgui
+tancar-ho ha de fer que la `Interaction` porti l'`id`.
+
+### R1.5 — B3: `Design.DataContext` → `x:DataType` + compiled bindings
+
+Els 14 blocs
+
+```xml
+<Design.DataContext>
+    <viewModels:CentreSetViewModel />
+</Design.DataContext>
+```
+
+**instanciaven** el ViewModel, i per tant li exigien constructor sense paràmetres. Han passat
+a dos atributs a l'element arrel:
+
+```xml
+x:DataType="viewModels:CentreSetViewModel"
+x:CompileBindings="True"
+```
+
+Dues troballes que costa endevinar:
+
+1. **El `clr-namespace` necessitava el `;assembly=`.** 13 dels 14 fitxers declaraven
+   `xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels"` sense assembly. Amb
+   `<Design.DataContext>` funcionava; amb `x:DataType` no, i el compilador escup
+   `AVLN2000: Unable to resolve type`. Ara tots porten
+   `;assembly=UI.ER.ViewModels`.
+2. **La primera compilació neta és enganyosa.** `dotnet build` incremental no recompila
+   l'AXAML: els 13 `AVLN2000` no van sortir fins a fer `--no-incremental`. Qualsevol canvi a
+   l'AXAML s'ha de verificar amb `--no-incremental`.
+
+**Els compiled bindings són reals i estan verificats per mutació**: canviar
+`{Binding NomesActius}` per `{Binding NomesActiusXX}` a `CentreSetWindow.axaml` dona
+`AVLN2000: Unable to resolve property or method of name 'NomesActiusXX' on type
+'CentreSetViewModel'`. I dins d'un `DataTemplate` sense `x:DataType` propi el tipus
+**s'infereix de l'`ItemsSource`**: trencar `{Binding DataTxt}` dins de l'`ItemTemplate`
+d'`AlumneInformeViewerWindow` dona l'error sobre `DTO.o.DTOs.ActuacioInformeItem`. Tots els
+bindings d'aquells 14 fitxers, plantilles incloses, quadren tal com estaven.
+
+El `{Binding}` sense camí (els `ItemsControl` de `BrokenRules`, que iteren `string`) no
+declara cap propietat i per tant compila sense necessitar `x:DataType` a la plantilla.
+
+### R1.6 — Tests (`UI.ER.AvaloniaUI.Test`, 32 → 40)
+
+`FabricaDeServeisTest.cs` (5 tests) i tres tests nous a `WindowFactoryTest.cs`.
+
+| Test | Què fixa |
+|---|---|
+| `LaFabricaDeServeisEsScoped` | Cicle de vida i implementació: `Scoped` + `ServiceFactory`. |
+| `LaFabricaDeServeisNomesSurtDUnScope` | Amb `validateScopes: true` l'arrel **es nega** a resoldre-la; des d'un scope, sí. És l'invariant de §R1.2 escrit com a test. |
+| `LaFabricaDeServeisEsRegistraAbansDelsViewModels` | Ordre dins de `UIConfigureServices`. Si es registrés després, el filtre no en sabria res i **no es registraria cap ViewModel**. |
+| `CapViewModelGuardaElsServeisEnUnCampEstatic` | Escaneja tot l'assembly de ViewModels buscant camps estàtics d'`IServiceProvider` o d'`IServiceFactory`. És la guarda contra el retorn de `SuperContext` sota un altre nom. |
+| `ElsViewModelsAmbArgumentsDeRuntimeReepLaFabricaPelConstructor` | Els que el contenidor no pot construir (Update, Row, InformeViewer) reben la fàbrica com a **primer** paràmetre; és el que permet que el VM pare els la passi. |
+| `CreaViewModelSenseArgumentsElTreuDelContenidor` | El camí de sempre no ha canviat. |
+| `CreaViewModelBarrejaElsArgumentsDeRuntimeAmbLesDependencies` | El cas dels 16 lookups: la vista només diu `modeLookup`, la fàbrica de serveis la posa l'scope. |
+| `CreaViewModelOmpleElsParametresNullables` | La trampa dels `int?` que el pla anunciava i que no s'ha materialitzat (§R1.3). |
+
+Els dos primers fan servir un `FakeBL : IServiceFactory` i un ViewModel de mentida amb la
+mateixa forma de constructor que `ActuacioSetViewModel` — que és exactament el
+`FakeBL` amb un diccionari que el pla anunciava com a benefici de R1: **provar un ViewModel
+ja no demana estat global**.
+
+**Verificat per mutació:**
+
+| Mutació | Resultat |
+|---|---|
+| `AddScoped` → `AddSingleton` per a `IServiceFactory` | ❌ 2 tests (`…EsScoped`, `…NomesSurtDUnScope`) |
+| Registrar la fàbrica **després** de l'escaneig dels ViewModels | ❌ 3 tests, i el missatge diu que no s'ha registrat cap ViewModel |
+| `private static IServiceFactory? _global;` a `AppStatusViewModel` | ❌ 1 test (`CapViewModelGuardaElsServeis…`) |
+| Moure l'`IServiceFactory` al segon lloc del constructor d'`EtapaRowViewModel` | ❌ 1 test (`…ReepLaFabricaPelConstructor`) |
+| `{Binding NomesActiusXX}` a `CentreSetWindow.axaml` | ❌ compilació (`AVLN2000`), no test — §R1.5 |
+
+`Vistes.EsConstruiblePelContenidor` ha canviat de signatura (`(Type, IServiceCollection)`)
+per continuar sent el mirall de la regla de `DI/Injection.cs`. La còpia és deliberada: si la
+regla del registre canvia sense actualitzar el mirall,
+`RegistreDITest.EsRegistrenExactamentElsViewModelsConstruiblesSenseArguments` es posa vermell.
+
+### R1.7 — El que R1 **no** ha fet
+
+1. **Els 19 fitxers d'AXAML que no tenien `<Design.DataContext>`** continuen amb bindings per
+   reflexió: les 12 finestres `{Create,Update}`, `MainWindow`, `UtilitatsWindow`, `App.axaml`,
+   `Themes/Paleta.axaml` i els controls `DateInput`, `LookupInput`, `IndicadorCarrega`.
+   Posar-los `x:DataType` + `x:CompileBindings` és **R8**, i és on hi ha més a guanyar: les
+   finestres d'edició són les que tenen més bindings i on una propietat mal escrita passa més
+   desapercebuda. Els dos controls amb `StyledProperty` són un cas diferent —no tenen un
+   ViewModel propi— i probablement només vulguin `x:CompileBindings` a les plantilles.
+2. **`AlumneInformeViewerWindow` continua sent un `Window` pelat** (B4/R2): el seu ViewModel
+   sí que rep la fàbrica, però la finestra segueix subscrivint-se dins del constructor, sense
+   `WhenActivated` ni disposal, i amb `async void` a `Opened`. Convertir-lo a
+   `ReactiveWindow<AlumneInformeViewerViewModel>` és un canvi d'un sol fitxer — veure §R2.
+3. **El `new ConfirmacioViewModel(...)` de `RegistraConfirmacio`** es queda: aquell VM no parla
+   amb el BusinessLayer i porta tres `string`, que `ActivatorUtilities` no sap distingir
+   (§R1.3).
+4. **Els 16 `App.Services.GetRequiredService<IWindowFactory>()` dels constructors pont**: no
+   són reduïbles, §R0.5.
+
+### R1.8 — Pendent de validació manual
+
+- [ ] Obrir cada llista des del menú i comprovar que carrega dades (valida
+      `Get<T>()` + `IServiceFactory` de l'scope).
+- [ ] Recórrer els **16 lookups** d'`Actuacio{Create,Update}` i `Alumne{Create,Update}`:
+      cada un ha d'obrir la llista **en mode selecció** (botó de triar visible) i tornar
+      l'element. És el camí que ha canviat de `GetWith(new XSetViewModel(true))` a
+      `Get<XSetWindow>(modeLookup)`.
+- [ ] Obrir la fitxa d'edició d'una fila de cada entitat (valida que el VM pare passa bé la
+      fàbrica al fill).
+- [ ] Esborrar una actuació (valida `ShowDeleteConfirmation` + `ConfirmacioWindow`, l'únic
+      `GetWith` amb `new` que queda).
+- [ ] Obrir l'expedient d'un alumne i exportar-lo a Word (valida
+      `AlumneInformeViewerViewModel`, que rep la fàbrica i és l'únic VM amb `DataContext`
+      pelat).
+- [ ] Obrir i tancar el mateix diàleg 3 vegades seguides. Ara sí que té sentit mirar-s'ho:
+      des de R1 cada tancament allibera operacions de BL de debò.
+- [ ] `error.log` buit. L'arrencada ja està comprovada (l'app aixeca `MainWindow` +
+      `AppStatusViewModel`, que fa tres crides al BL des de l'scope, sense excepcions).
 
 ---
 
@@ -734,8 +934,9 @@ R3 ja s'havia endut per davant les altres dues entrades de la llista original: l
 
 ## R6 — Deriva de disseny i colors literals ✅ FET
 
-> R6 s'ha fet abans que R1 perquè R1 continua bloquejat per **B3** i R6 no depèn de res
-> (§3). És també l'únic refactor que toca de debò l'AXAML: R0–R5 gairebé no l'havien mirat.
+> R6 es va fer abans que R1 perquè aleshores R1 estava bloquejat per **B3** i R6 no depenia de
+> res (§3). Va ser el primer refactor que tocava de debò l'AXAML: R0–R5 gairebé no l'havien
+> mirat. R1, després, hi ha tornat per resoldre B3 (§R1.5).
 
 ### R6.1 — Els tres problemes que anotava el pla, i què s'ha fet
 
@@ -852,8 +1053,9 @@ copiat idèntic a les sis llistes. Sis blocs de vuit línies passen a una línia
 
 - `UI.ER.ViewModels/ViewModels/ConfirmacioViewModel.cs`: `Titol`, `Missatge`,
   `TextAfirmatiu` i dues `ReactiveCommand<Unit, bool>`. **Tots els paràmetres amb valor per
-  defecte**, perquè el contenidor el registri (regla de §R0.1) i el `Design.DataContext`
-  el pugui instanciar.
+  defecte**, perquè el contenidor el registri (regla de §R0.1) i, aleshores, perquè el
+  `Design.DataContext` el pogués instanciar. És l'únic ViewModel que R1 no ha tocat: no
+  parla amb el BusinessLayer i per tant no li cal l'`IServiceFactory` (§R1.7).
 - `Pages/ConfirmacioWindow.axaml(.cs)`: `ReactiveWindow<ConfirmacioViewModel>`; el
   code-behind només tanca amb el resultat de la comanda, com fa `TancaSiDesat` a les
   classes base de R3.
@@ -865,7 +1067,7 @@ copiat idèntic a les sis llistes. Sis blocs de vuit línies passen a una línia
 
 ### R6.8 — Pendent de validació manual
 
-`dotnet build` net i `dotnet test` verd (32 tests). L'aplicació arrenca i pinta
+`dotnet build` net i `dotnet test` verd (32 tests aleshores, 40 des de R1). L'aplicació arrenca i pinta
 `MainWindow` sense cap error de binding ni res a `error.log`. Els tests **no obren cap
 finestra**, així que cal repassar amb la pantalla al davant:
 
@@ -904,9 +1106,12 @@ R4  navegació de MainWindow        ✅ FET  (-79 línies a MainWindow, +39 al h
  │
 R6  unificació visual i paleta     ✅ FET  (-324 línies als 30 AXAML preexistents, 96 colors literals → 0)
  │
-R1  eliminar SuperContext          ← següent pas: commit separat, travessa 2 projectes; cal B3 abans
+R1  eliminar SuperContext          ✅ FET  (51 crides estàtiques → 0, 27 VMs injectats, B3 resolt)
  │
-R7  BusinessLayer per comprensió   ← natural just després de R1
+R7  BusinessLayer per comprensió   ← següent pas: natural just després de R1
+ │
+R8  compiled bindings als 19 AXAML ← independent; on hi ha més a guanyar és a les 12
+    que R1 no ha tocat                finestres d'edició (§R1.7)
 ```
 
 > R3 s'ha fet abans que R5 a petició de l'usuari. No ha costat res: R5 era «redueix soroll per
@@ -918,11 +1123,18 @@ R7  BusinessLayer per comprensió   ← natural just després de R1
 > R4 ha sortit més barat del previst perquè R0 i R3 ja hi havien deixat les dues peces:
 > `IWindowFactory` i el helper de diàlegs. La feina real ha estat decidir **on posa la ratlla**
 > entre navegació (va al ViewModel) i estat de la finestra (es queda al code-behind) — §R4.4.
-> R6 s'ha avançat a R1 perquè R1 continua bloquejat per B3 i R6 no depenia de res. Ha resultat
+> R6 es va avançar a R1 perquè aleshores R1 estava bloquejat per B3 i R6 no depenia de res. Ha resultat
 > ser el mateix moviment de R3 però a l'AXAML: el que estava copiat 6 o 13 cops puja a
 > `App.axaml` com a classe d'estil i la vista només diu quina vol. El que costava no era
 > substituir els colors sinó **decidir el joc de claus**: 96 literals eren 23 idees, i unes
 > quantes estaven escrites dues vegades amb valors lleugerament diferents — §R6.2.
+> R1 ha sortit més barat del que el pla feia témer, i per una raó concreta: R0 i R3 ja havien
+> deixat **un sol punt** on cada ViewModel es construeix. Injectar l'`IServiceFactory` als 27
+> VMs és mecànic; el que calia decidir era **fins on portar-la**. La resposta ha estat «el VM
+> pare la passa al fill», que estalvia tocar els contractes de R3 a canvi de deixar les
+> operacions del diàleg d'edició apuntades a l'scope del pare — §R1.4. B3, l'únic blocador
+> real, no ha estat cap dels 14 blocs `<Design.DataContext>` sinó el `;assembly=` que els
+> `xmlns` no portaven, i que només es veu compilant amb `--no-incremental` — §R1.5.
 
 ---
 
@@ -932,13 +1144,15 @@ R7  BusinessLayer per comprensió   ← natural just després de R1
 - **Un refactor, un commit.** No barrejar R0 amb R1.
 - **No introduir dependències noves** sense preguntar. L'stack actual és: Avalonia 11.3.11, ReactiveUI.Avalonia, Material.Avalonia, Material.Icons.Avalonia, Serilog.Sinks.File.
 - **`dotnet build` ha de quedar net** després de cada pas. Els tests no obren cap finestra: cada canvi estructural es valida també obrint i tancant el diàleg afectat.
-- **No tocar** `BusinessLayer`, `DataLayer`, `DataModels` ni les migracions durant R0/R2/R3/R4. R1 i R7 sí que hi entren. `UI.ER.ViewModels` sí que es pot tocar: R3 hi ha afegit `Contracts/DialegContracts.cs`.
+- **No tocar** `BusinessLayer`, `DataLayer`, `DataModels` ni les migracions durant R0/R2/R3/R4. R7 sí que hi entra. R1 hi havia de poder entrar i no ha calgut: l'`IServiceFactory` ja hi era, a `BusinessLayer.Abstract/Generic/`, i només li faltava una implementació injectable. `UI.ER.ViewModels` sí que es pot tocar: R3 hi ha afegit `Contracts/DialegContracts.cs` i R1 `Services/ServiceFactory.cs`.
 - **`dotnet test UI.ER.AvaloniaUI.Test` ha de quedar verd després de cada pas.** Si un refactor canvia una invariant a consciència (p. ex. R3 introdueix classes base i el nombre de finestres es manté però els constructors canvien), s'actualitza el test amb el canvi, mai després.
 - **Vistes noves**: no s'instancien amb `new`. Registrar-les no cal (l'escaneig les agafa soles), però han de complir la convenció de noms o portar `[ViewModel(typeof(...))]`, altrament l'aplicació no arrenca.
 - Els fitxers `.axaml` i `.axaml.cs` van sempre junts: si es canvia l'`x:Class` o la classe base, revisar-ne els dos.
 - **Colors**: cap literal. Clau de `Themes/Paleta.axaml` o del `MaterialTheme` (§R6.2). Si en cal un de nou, s'afegeix a les **dues** taules de tema.
 - **Estils repetits**: si un bloc de disseny surt a més de dues vistes, va a `App.axaml` com a classe (§R6.3).
-- **Atenció als finals de línia**: `App.axaml` i `Views/MainWindow.axaml` són CRLF, la resta LF. Un script de reescriptura en Python els normalitza sense voler i converteix un canvi de dues línies en un diff de 478.
+- **Atenció als finals de línia**: els finals de línia són **barrejats fitxer a fitxer** (`App.axaml`, `Views/MainWindow.axaml`, `App.axaml.cs` i uns quants ViewModels són CRLF; la resta LF), i alguns `.cs` porten BOM. Un script de reescriptura en Python els normalitza sense voler i converteix un canvi de dues línies en un diff de 478: cal detectar el final de línia del fitxer i tornar-lo a escriure en binari.
+- **Mai `git checkout <fitxer>` per desfer una prova** sobre un fitxer amb feina no comitejada: se l'endú tota, no només la prova. Copiar el fitxer al directori temporal i restaurar-lo des d'allà.
+- **L'AXAML es compila per separat i de forma incremental.** Un `dotnet build` net **no** vol dir que l'AXAML compili: cal `--no-incremental` per veure els `AVLN####` (§R1.5).
 
 ---
 
@@ -967,4 +1181,4 @@ foreach (var contract in abstractAsm.GetTypes()
 
 Llançar en comptes d'ignorar silenciosament: així afegir una interfície sense implementació peta a l'arrencada, no en runtime dins d'un diàleg.
 
-⚠️ **Recordatori**: `IBLOperation : IDisposable`. Combinat amb `AddTransient` i resolució des del provider **arrel**, el contenidor reté totes les instàncies creades fins que es tanca l'aplicació — encara que el `using var bl = …` cridi `Dispose()`. És una fuita real i creixent. La resol l'`IServiceScope` per diàleg de R0.3.
+⚠️ **Recordatori**: `IBLOperation : IDisposable`. Combinat amb `AddTransient` i resolució des del provider **arrel**, el contenidor reté totes les instàncies creades fins que es tanca l'aplicació — encara que el `using var bl = …` cridi `Dispose()`. Era una fuita real i creixent, i **la va tancar R1**: l'`IServiceFactory` és `AddScoped`, els VMs la reben pel constructor i les operacions queden apuntades a l'scope del diàleg (§R1.2). R7 no ha de tornar-hi: el que li toca és **només** substituir la llista de 31 registres a mà per l'escaneig, sense canviar-ne el cicle de vida (`AddTransient` és el correcte).

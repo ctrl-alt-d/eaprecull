@@ -3,15 +3,14 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -19,8 +18,12 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected Dtoo.Etapa Model { get; }
-        public EtapaRowViewModel(Dtoo.Etapa EtapaDto, bool modeLookup = false)
+        private readonly IServiceFactory _serveis;
+
+        public EtapaRowViewModel(IServiceFactory serveis, Dtoo.Etapa EtapaDto, bool modeLookup = false)
         {
+
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
@@ -93,7 +96,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.Resolve<IEtapaActivaDesactiva>();
+            using var bl = _serveis.GetBLOperation<IEtapaActivaDesactiva>();
             var dto = await bl.Toggle(Id);
             DTO2ModelView(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
@@ -104,7 +107,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<EtapaUpdateViewModel, Dtoo.Etapa?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new EtapaUpdateViewModel(Id);
+            var update = new EtapaUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
             if (data != null) DTO2ModelView(data);
         }

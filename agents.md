@@ -737,23 +737,36 @@ using Models = DataModels.Models;
 
 ### Exemple d'Ús des de ViewModel
 
+El ViewModel rep la fàbrica de serveis pel constructor i la guarda a `_serveis`; no hi ha
+cap manera estàtica d'arribar al BusinessLayer (§R1 de `refactors.md`).
+
 ```csharp
-// Obtenir servei
-using var bl = SuperContext.GetBLOperation<IAlumneSet>();
-
-// Executar operació
-var dto = await bl.FromPredicate(new AlumneSearchParms(esActiu: true));
-
-// Gestionar resultat
-if (dto.BrokenRules.Any())
+public class AlumneSetViewModel : ViewModelBase
 {
-    // Mostrar errors
-    BrokenRules.AddRange(dto.BrokenRules.Select(r => r.Message));
-}
-else
-{
-    // Processar dades
-    var items = dto.Data.Select(d => new AlumneRowViewModel(d));
+    private readonly IServiceFactory _serveis;
+
+    public AlumneSetViewModel(IServiceFactory serveis, bool modeLookup = false) { … }
+
+    private async Task Carrega()
+    {
+        // Obtenir servei: una instància nova per crida, i es disposa en sortir de l'àmbit
+        using var bl = _serveis.GetBLOperation<IAlumneSet>();
+
+        // Executar operació
+        var dto = await bl.FromPredicate(new AlumneSearchParms(esActiu: true));
+
+        // Gestionar resultat
+        if (dto.BrokenRules.Any())
+        {
+            // Mostrar errors
+            BrokenRules.AddRange(dto.BrokenRules.Select(r => r.Message));
+        }
+        else
+        {
+            // Processar dades. El ViewModel fill també necessita la fàbrica: se li passa.
+            var items = dto.Data.Select(d => new AlumneRowViewModel(_serveis, d, cursActual));
+        }
+    }
 }
 ```
 

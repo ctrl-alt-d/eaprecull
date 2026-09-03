@@ -13,15 +13,18 @@ using System.Reactive.Linq;
 using DynamicData.Binding;
 using System;
 using ReactiveUI.Validation.Extensions;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class ActuacioCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Actuacio>
     {
 
-        protected virtual IActuacioCreate BLCreate() => SuperContext.Resolve<IActuacioCreate>();
-        public ActuacioCreateViewModel(int? alumneId = null)
+        private readonly IServiceFactory _serveis;
+
+        public ActuacioCreateViewModel(IServiceFactory serveis, int? alumneId = null)
         {
+            _serveis = serveis;
 
             RxApp.MainThreadScheduler.Schedule(() => LoadDadesInicials(alumneId));
 
@@ -58,7 +61,7 @@ namespace UI.ER.ViewModels.ViewModels
 
         protected virtual async void LoadDadesInicials(int? alumneId)
         {
-            using var bl = SuperContext.Resolve<ICursAcademicSet>();
+            using var bl = _serveis.GetBLOperation<ICursAcademicSet>();
             var dto = await bl.FromPredicate(new Dtoi.EsActiuParms(true));
             var cursActual = dto.Data?.FirstOrDefault();
             CursActuacioId = cursActual?.Id;
@@ -89,7 +92,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (alumneId == null) return;
 
             // Amb alumne? Portem les dades de l'alumne cap aquí
-            using (var bl = SuperContext.Resolve<IAlumneSet>())
+            using (var bl = _serveis.GetBLOperation<IAlumneSet>())
             {
                 var dto = await bl.FromId(alumneId!.Value);
                 var data = dto.Data;
@@ -320,7 +323,7 @@ namespace UI.ER.ViewModels.ViewModels
             );
 
             // cridar backend
-            using var bl = BLCreate();
+            using var bl = _serveis.GetBLOperation<IActuacioCreate>();
             var dto = await bl.Create(Parms);
             var data = dto.Data;
 

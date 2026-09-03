@@ -14,16 +14,18 @@ using System.Reactive.Linq;
 using DynamicData.Binding;
 using System;
 using ReactiveUI.Validation.Extensions;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class ActuacioUpdateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.Actuacio>
     {
 
-        protected virtual IActuacioUpdate BLUpdate() => SuperContext.Resolve<IActuacioUpdate>();
-        protected virtual IActuacioDelete BLDelete() => SuperContext.Resolve<IActuacioDelete>();
-        public ActuacioUpdateViewModel(int id)
+        private readonly IServiceFactory _serveis;
+
+        public ActuacioUpdateViewModel(IServiceFactory serveis, int id)
         {
+            _serveis = serveis;
             Id = id;
             RxApp.MainThreadScheduler.Schedule(LoadDadesInicials);
 
@@ -69,7 +71,7 @@ namespace UI.ER.ViewModels.ViewModels
             BrokenRules.Clear();
 
             // Backend request
-            using var bl = SuperContext.Resolve<IActuacioSet>();
+            using var bl = _serveis.GetBLOperation<IActuacioSet>();
             var dto = await bl.FromId(Id);
 
             // Update UI
@@ -97,7 +99,7 @@ namespace UI.ER.ViewModels.ViewModels
             if (alumneId == null) return;
 
             // Amb alumne? Portem les dades de l'alumne cap aquí
-            using (var bl = SuperContext.Resolve<IAlumneSet>())
+            using (var bl = _serveis.GetBLOperation<IAlumneSet>())
             {
                 var dto = await bl.FromId(alumneId!.Value);
                 var data = dto.Data;
@@ -341,7 +343,7 @@ namespace UI.ER.ViewModels.ViewModels
             );
 
             // cridar backend
-            using var bl = BLUpdate();
+            using var bl = _serveis.GetBLOperation<IActuacioUpdate>();
             var dto = await bl.Update(Parms);
             var data = dto.Data;
 
@@ -468,7 +470,7 @@ namespace UI.ER.ViewModels.ViewModels
 
             BrokenRules.Clear();
 
-            using var bl = BLDelete();
+            using var bl = _serveis.GetBLOperation<IActuacioDelete>();
             var result = await bl.Delete(new Dtoi.IdParms(Id));
 
             BrokenRules.AddRange(result.BrokenRules.Select(x => x.Message));

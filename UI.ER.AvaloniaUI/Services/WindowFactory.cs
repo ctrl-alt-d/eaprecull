@@ -12,9 +12,9 @@ namespace UI.ER.AvaloniaUI.Services
         /// <summary>Espai de noms on viuen tots els ViewModels de l'aplicació.</summary>
         private static readonly string ViewModelsNamespace = typeof(ViewModelBase).Namespace!;
 
-        public TWindow Get<TWindow>() where TWindow : Window
+        public TWindow Get<TWindow>(params object[] vmArgs) where TWindow : Window
             => Build<TWindow>(scope =>
-                (ViewModelBase)scope.ServiceProvider.GetRequiredService(ViewModelTypeFor(typeof(TWindow))));
+                CreaViewModel(scope.ServiceProvider, ViewModelTypeFor(typeof(TWindow)), vmArgs));
 
         public TWindow GetWith<TWindow>(ViewModelBase dataContext) where TWindow : Window
         {
@@ -44,6 +44,28 @@ namespace UI.ER.AvaloniaUI.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Construeix el ViewModel des d'un proveïdor. Sense arguments de runtime surt del
+        /// contenidor tal com el registra <c>DI.Injection</c>; amb arguments, els combina
+        /// amb les dependències registrades — l'<c>IServiceFactory</c> de l'scope, en tots
+        /// els casos d'avui.
+        /// </summary>
+        /// <remarks>
+        /// És <c>public</c> i <c>static</c> perquè els tests hi arribin: és l'única part de
+        /// la factory que no necessita una plataforma d'Avalonia per exercitar-se.
+        /// <c>ActivatorUtilities</c> aparella cada argument amb un paràmetre del mateix
+        /// tipus i omple la resta amb el contenidor o amb el valor per defecte. Els
+        /// paràmetres nullables hi entren igual (<c>WindowFactoryTest</c> ho fixa), però
+        /// l'aparellament és <em>per tipus</em>, no per posició: dos paràmetres del mateix
+        /// tipus no es poden distingir, i per això la <c>ConfirmacioWindow</c> —tres
+        /// <c>string</c> seguits— continua passant per <see cref="GetWith{TWindow}"/>.
+        /// </remarks>
+        public static ViewModelBase CreaViewModel(
+            IServiceProvider provider, Type viewModelType, params object[] vmArgs)
+            => (ViewModelBase)(vmArgs.Length == 0
+                ? provider.GetRequiredService(viewModelType)
+                : ActivatorUtilities.CreateInstance(provider, viewModelType, vmArgs));
 
         /// <summary>
         /// Comprova que el ViewModel rebut és el que la convenció assigna a la vista. Sense

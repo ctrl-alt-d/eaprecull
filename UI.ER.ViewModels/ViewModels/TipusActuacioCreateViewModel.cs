@@ -2,22 +2,25 @@ using System.Reactive;
 using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using Dtoi = DTO.i.DTOs;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
     public class TipusActuacioCreateViewModel : ViewModelBase, ISubmitViewModel<Dtoo.TipusActuacio>
     {
 
-        public TipusActuacioCreateViewModel()
+        private readonly IServiceFactory _serveis;
+
+        public TipusActuacioCreateViewModel(IServiceFactory serveis)
         {
+            _serveis = serveis;
+
             SubmitCommand = ReactiveCommand.CreateFromTask(CreateData);
         }
 
@@ -54,7 +57,7 @@ namespace UI.ER.ViewModels.ViewModels
             var Parms = new Dtoi.TipusActuacioCreateParms(Codi, Nom, true);
 
             // cridar backend
-            using var bl = SuperContext.Resolve<ITipusActuacioCreate>();
+            using var bl = _serveis.GetBLOperation<ITipusActuacioCreate>();
             var dto = await bl.Create(Parms);
             var data = dto.Data;
 

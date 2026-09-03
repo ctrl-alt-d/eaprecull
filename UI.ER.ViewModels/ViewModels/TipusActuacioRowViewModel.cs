@@ -3,15 +3,14 @@ using ReactiveUI;
 using Dtoo = DTO.o.DTOs;
 using CommonInterfaces;
 using System.Threading.Tasks;
-using UI.ER.ViewModels.Services;
 using BusinessLayer.Abstract.Services;
 using System.Windows.Input;
 using System.Reactive.Linq;
 using System.Collections.Generic;
 using BusinessLayer.Abstract.Exceptions;
-using UI.ER.ViewModels.Common;
 using System.Linq;
 using DynamicData.Binding;
+using BusinessLayer.Abstract.Generic;
 
 namespace UI.ER.ViewModels.ViewModels
 {
@@ -19,8 +18,12 @@ namespace UI.ER.ViewModels.ViewModels
     {
 
         protected Dtoo.TipusActuacio Model { get; }
-        public TipusActuacioRowViewModel(Dtoo.TipusActuacio TipusActuacioDto, bool modeLookup = false)
+        private readonly IServiceFactory _serveis;
+
+        public TipusActuacioRowViewModel(IServiceFactory serveis, Dtoo.TipusActuacio TipusActuacioDto, bool modeLookup = false)
         {
+
+            _serveis = serveis;
 
             // Behavior Parm
             ModeLookup = modeLookup;
@@ -93,7 +96,7 @@ namespace UI.ER.ViewModels.ViewModels
         public ReactiveCommand<Unit, Unit> DoActiuToggleCommand { get; }
         protected async Task RunActiuToggle()
         {
-            using var bl = SuperContext.Resolve<ITipusActuacioActivaDesactiva>();
+            using var bl = _serveis.GetBLOperation<ITipusActuacioActivaDesactiva>();
             var dto = await bl.Toggle(Id);
             DTO2ModelView(dto.Data);
             BrokenRules2ModelView(dto.BrokenRules);
@@ -104,7 +107,7 @@ namespace UI.ER.ViewModels.ViewModels
         public Interaction<TipusActuacioUpdateViewModel, Dtoo.TipusActuacio?> ShowUpdateDialog { get; } = new();
         private async Task ShowUpdateDialogHandle()
         {
-            var update = new TipusActuacioUpdateViewModel(Id);
+            var update = new TipusActuacioUpdateViewModel(_serveis, Id);
             var data = await ShowUpdateDialog.Handle(update);
             if (data != null) DTO2ModelView(data);
         }

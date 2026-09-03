@@ -6,13 +6,12 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
         x:Class="UI.ER.AvaloniaUI.Pages.AlumneInformeViewerWindow"
+        x:DataType="viewModels:AlumneInformeViewerViewModel"
+        x:CompileBindings="True"
         Title="Informe de l'Alumne"
         Width="950" Height="750" MinWidth="700" MinHeight="500"
         WindowStartupLocation="CenterOwner">
 
-    <Design.DataContext>
-        <viewModels:AlumneInformeViewerViewModel />
-    </Design.DataContext>
 
     <Grid RowDefinitions="*, Auto">
         
