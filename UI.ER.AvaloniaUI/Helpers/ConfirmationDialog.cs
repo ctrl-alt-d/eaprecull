@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Material.Styles.Controls;
 using System.Threading.Tasks;
 
 namespace UI.ER.AvaloniaUI.Helpers

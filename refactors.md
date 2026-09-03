@@ -11,8 +11,8 @@
 | **R0** — `IWindowFactory` + registre per comprensió | ✅ **FET** — veure §R0 |
 | **R3** — classes base + helpers | ✅ **FET** — veure §R3 |
 | **R2** — disposal de subscripcions | ✅ **FET dins de R3**, tret d'`AlumneInformeViewerWindow` — veure §R2 |
-| R5 — codi mort | ⬜ pendent (11 propietats `Result` ja marcades amb `ToDo (R5)`) |
-| R4 — navegació de `MainWindow` | ⬜ pendent (ja pot consumir `IWindowFactory`) |
+| **R5** — codi mort | ✅ **FET** — veure §R5 |
+| R4 — navegació de `MainWindow` | ⬜ **següent** (ja pot consumir `IWindowFactory`) |
 | R1 — eliminar `SuperContext` | ⬜ pendent (51 crides vives) |
 | R6 — unificació visual | ⬜ pendent |
 | R7 — registre del BusinessLayer per comprensió | ⬜ pendent |
@@ -21,12 +21,13 @@
 
 ## 1. Estat actual de `UI.ER.AvaloniaUI`
 
-**Volum després de R3**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.308 línies**
-(−925), a canvi de **368 línies** de codi compartit nou: tres classes base
+**Volum després de R3 i R5**: el codi rere les vistes (`*.axaml.cs`) ha passat de **2.233 a 1.256 línies**
+(−977: −925 de R3, −52 de R5), a canvi de **368 línies** de codi compartit nou: tres classes base
 (`Pages/Base/`), tres helpers (`Helpers/{DialegExtensions,FileExplorer,VisualRootExtensions}.cs`)
 i les tres interfícies de contracte dels ViewModels
 (`UI.ER.ViewModels/ViewModels/Contracts/DialegContracts.cs`). Els 30 fitxers `.axaml` (3.189 línies)
-no s'han tocat. `UI.ER.AvaloniaUI.Test`: 7 fitxers, 24 tests.
+no s'han tocat. Tot el projecte suma **2.061 línies** de `.cs`.
+`UI.ER.AvaloniaUI.Test`: 7 fitxers, 24 tests.
 
 ### Patrons en ús
 
@@ -396,6 +397,8 @@ Subscriu dins del constructor, sense `WhenActivated` ni disposal, i amb `async v
 `Opened`. No hereta de cap classe base perquè és un `Window` pelat, no un
 `ReactiveWindow<T>`. Convertir-lo a `ReactiveWindow<AlumneInformeViewerViewModel>` i moure
 les subscripcions a `WhenActivated` és un canvi d'un sol fitxer.
+R5 li ha tret el `using System.Reactive.Disposables;`, que era mort precisament per això:
+en fer la conversió, tornar-lo a posar (i afegir `System.Reactive.Disposables.Fluent`).
 
 ---
 
@@ -538,19 +541,63 @@ També: `try { } catch { }` buit a `DrawerSelectionChanged` (`MainWindow.axaml.c
 
 ---
 
-## R5 — Codi mort (verificat)
+## R5 — Codi mort ✅ FET
 
-| Element | Evidència |
-|---|---|
-| `ViewLocator.cs` | Cap referència. **No està registrat a `App.axaml`.** |
-| `Converters/StringDateConverter.cs` | Zero referències a cap `.axaml`. Existeix una còpia viva a `UI.ER.ViewModels/Services/`. |
-| `public OperationResult<T> Result { get; set; }` | Present a **11** finestres Create/Update, totes marcades amb `// ToDo (R5)` per R3. **Mai llegida ni escrita** (0 coincidències de `.Result`). Esborrant-les cauen també els `using BusinessLayer.Abstract;` d'aquells fitxers. |
-| `UI.ER.AvaloniaUI.csproj` | `<AvaloniaResource Include="Assets\**" />` duplicat; `<Folder Include="Models\" />` apunta a una carpeta inexistent. |
-| `using` no utilitzats | Molts menys que abans de R3, que va reescriure 24 fitxers de dalt a baix. Queden a `MainWindow`, `DateInput`, `LookupInput` i `AlumneInformeViewerWindow`. |
+> Neteja només d'esborrats: **121 línies de C# i 5 del `.csproj` fora**, cap línia afegida.
+> `dotnet build` net i els 24 tests verds, sense tocar cap test: R5 no canvia cap invariant.
 
-Neteja gratuïta, sense risc. Es pot fer en qualsevol moment. R3 ja s'ha endut per davant les
-altres dues entrades que hi havia a la llista original: les 10 còpies de `GetWindow()` i les 3
-d'`ObraFileExplorer()`, ara cobertes per un test (§R3.5).
+### R5.1 — Què s'ha esborrat
+
+| Element | Com s'ha verificat | Resultat |
+|---|---|---|
+| `ViewLocator.cs` | `grep` a tot el repo: cap referència fora de la seva pròpia declaració. No està registrat a `App.axaml`. | Fitxer esborrat (32 línies) |
+| `Converters/StringDateConverter.cs` | Cap `.axaml` el declara com a recurs ni hi ha cap `xmlns` cap a `UI.ER.AvaloniaUI.Converters`. Les 21 crides vives apunten totes a la còpia de `UI.ER.ViewModels/Services/StringDateConverter.cs`, que és una classe **estàtica** i no un `IValueConverter`. | Fitxer esborrat (34 línies); la carpeta `Converters/` queda buida i desapareix |
+| `public OperationResult<T> Result { get; set; }` | 11 finestres Create/Update, marcades amb `// ToDo (R5)` per R3. Zero coincidències de `.Result` a `UI.ER.AvaloniaUI`, `UI.ER.AvaloniaUI.Test` i `UI.ER.ViewModels`, i cap `Binding` a `Result` a l'AXAML. | 11 propietats + els seus 11 `using BusinessLayer.Abstract;` |
+| `UI.ER.AvaloniaUI.csproj` | `<AvaloniaResource Include="Assets\**" />` hi era dues vegades; `<Folder Include="Models\" />` apuntava a una carpeta que no existeix al disc. | Queda un sol `ItemGroup` amb l'`AvaloniaResource` |
+| `using` no utilitzats | 11 més, veure §R5.2 | — |
+
+`ActuacioUpdateWindow` **conserva** el seu `using BusinessLayer.Abstract;`: allà `OperationResult<T>`
+és viu, com a paràmetre de `TancaSiEsborrat`.
+
+### R5.2 — Com s'han trobat els `using` sobrants
+
+`dotnet format --diagnostics IDE0005` no reporta res, i `IDE0005` tampoc no surt a la compilació
+normal. Cal la combinació de tres coses alhora:
+
+```bash
+printf '[*.cs]\ndotnet_diagnostic.IDE0005.severity = warning\n' > UI.ER.AvaloniaUI/.editorconfig
+dotnet build UI.ER.AvaloniaUI/UI.ER.AvaloniaUI.csproj --no-incremental \
+  -p:GenerateDocumentationFile=true -p:NoWarn=1591 -p:EnforceCodeStyleInBuild=true
+rm UI.ER.AvaloniaUI/.editorconfig
+```
+
+`GenerateDocumentationFile` és el que fa que el compilador tingui la informació semàntica que
+`IDE0005` necessita; `EnforceCodeStyleInBuild` és el que carrega els analitzadors d'estil;
+l'`.editorconfig` és el que puja `IDE0005` de *silent* a *warning*. Sense els tres, silenci.
+
+⚠️ **`IDE0005` és iteratiu**: en treure un `using` en poden aparèixer de nous a la ronda següent
+(a `MainWindow`, treure `Avalonia.Data` i `System.Threading.Tasks` va destapar `System.Reactive`).
+Cal repetir fins que la ronda surti neta. I **filtrar per `IDE0005` de debò**: la mateixa
+compilació escup `CS1573`/`CS1712`/`CS1574` dels comentaris XML, que apunten a línies de codi
+real i no a `using`.
+
+Els 11 trobats: `System.Reflection` (`DI/Injection.cs`), `Material.Styles.Controls`
+(`Helpers/ConfirmationDialog.cs`), `Avalonia.Platform` (`Helpers/WindowHelper.cs`), `System`
+(`Actuacio{Create,RowUserCtrl}`, `Alumne{Create,Update}Window`), `System.Reactive.Disposables`
+(`AlumneInformeViewerWindow`), i `Avalonia.Data` + `System.Threading.Tasks` + `System.Reactive`
+(`MainWindow`).
+
+> La llista original d'aquest document deia que en quedaven a `DateInput` i `LookupInput`.
+> **No és cert**: els dos controls estan nets. En canvi n'hi havia a `DI/Injection.cs`,
+> `Helpers/ConfirmationDialog.cs`, `Helpers/WindowHelper.cs` i tres fitxers de `Pages/`,
+> que la llista no esmentava.
+
+> ⚠️ Per a **R2**: `AlumneInformeViewerWindow` ha perdut el `using System.Reactive.Disposables;`
+> justament perquè encara no fa `WhenActivated`. En convertir-lo a
+> `ReactiveWindow<AlumneInformeViewerViewModel>` caldrà tornar-lo a posar.
+
+R3 ja s'havia endut per davant les altres dues entrades de la llista original: les 10 còpies de
+`GetWindow()` i les 3 d'`ObraFileExplorer()`, ara cobertes per un test (§R3.5).
 
 ---
 
@@ -571,9 +618,9 @@ R3  classes base + helpers         ✅ FET  (-925 línies de codi rere les viste
  │
 R2  disposal de subscripcions      ✅ FET dins de R3, tret d'AlumneInformeViewerWindow
  │
-R5  neteja de codi mort            ← següent pas: sense risc, i R3 ja n'ha fet la meitat
+R5  neteja de codi mort            ✅ FET  (-121 línies de C#, cap afegida)
  │
-R4  navegació de MainWindow        ← consumeix IWindowFactory
+R4  navegació de MainWindow        ← següent pas: consumeix IWindowFactory
  │
 R1  eliminar SuperContext          ← commit separat, travessa 2 projectes; cal B3 abans
  │
@@ -586,6 +633,8 @@ R6  unificació visual              ← independent, es pot paral·lelitzar
 > a R3», i R3 ha reescrit igualment els 24 fitxers on hi havia el soroll.
 > R2 ha entrat dins de R3 perquè escriure les classes base amb el bug a dins no tenia sentit
 > (§R2).
+> R5, fet després, ha estat el que preveia: només esborrats, sense tocar cap test.
+> El que costava no era esborrar sinó **trobar** els `using` sobrants — veure §R5.2.
 
 ---
 

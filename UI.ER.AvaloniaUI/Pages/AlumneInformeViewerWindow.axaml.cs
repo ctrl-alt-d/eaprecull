@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 using System;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using UI.ER.ViewModels.ViewModels;
 using UI.ER.AvaloniaUI.Helpers;

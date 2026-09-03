@@ -1,10 +1,8 @@
-using System;
 using System.Reactive.Disposables;
 using System.Reactive.Disposables.Fluent;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using BusinessLayer.Abstract;
 using Microsoft.Extensions.DependencyInjection;
 using Dtoo = DTO.o.DTOs;
 using UI.ER.AvaloniaUI.Helpers;
@@ -16,9 +14,6 @@ namespace UI.ER.AvaloniaUI.Pages
 {
     public partial class ActuacioCreateWindow : EntityEditWindow<ActuacioCreateViewModel, Dtoo.Actuacio>
     {
-        // ToDo (R5): propietat morta, ningú no la llegeix ni l'escriu.
-        public OperationResult<Dtoo.Actuacio> Result { get; set; } = default!;
-
         private readonly IWindowFactory _windows;
 
         // Constructor pont: el manté el carregador XAML en temps d'execució i el

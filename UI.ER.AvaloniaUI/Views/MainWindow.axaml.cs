@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -14,8 +13,6 @@ using UI.ER.ViewModels.ViewModels;
 using ReactiveUI.Avalonia;
 using System;
 using ReactiveUI;
-using System.Threading.Tasks;
-using System.Reactive;
 using CommonInterfaces;
 using Microsoft.Extensions.DependencyInjection;
 
