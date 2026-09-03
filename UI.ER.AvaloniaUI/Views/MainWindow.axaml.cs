@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
@@ -134,10 +135,17 @@ namespace UI.ER.AvaloniaUI.Views
             SnackbarHost.Post("EAP Recull et desitja què passis un bon dia :)", "Root", DispatcherPriority.Normal);
         }
 
-        private void GoodbyeButtonMenuItem_OnClick(object? sender, RoutedEventArgs e)
+        private void SortirMenuItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            SnackbarHost.Post("See ya next time, user!", "Root", DispatcherPriority.Normal);
+            // Heretat de la plantilla de Material.Avalonia, l'entrada només escrivia
+            // un missatge a la snackbar i no tancava res.
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                desktop.Shutdown();
+            else
+                Close();
         }
+
+        private void TemaMenuItem_OnClick(object? sender, RoutedEventArgs e) => Tema.Alterna();
 
 
     }

@@ -19,9 +19,11 @@ namespace UI.ER.AvaloniaUI.Test
     {
         private static readonly Type TaulellVm = typeof(AppStatusViewModel);
 
-        // Handlers de Click que MainWindow conserva legítimament: no naveguen enlloc,
-        // només escriuen a la snackbar, que és una API de vista pura.
-        private static readonly string[] HandlersDeVista = ["GoodbyeButtonMenuItem_OnClick"];
+        // Handlers de Click que MainWindow conserva legítimament: cap obre una finestra.
+        // Són ordres a l'aplicació sencera —tancar-la, canviar de tema—, no navegació,
+        // i per tant no tenen ViewModel de destí a qui demanar-les.
+        private static readonly string[] HandlersDeVista =
+            ["SortirMenuItem_OnClick", "TemaMenuItem_OnClick"];
 
         [Fact]
         public void CadaLlistaDEntitatEsArribableDesDelTaulell()

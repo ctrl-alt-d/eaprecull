@@ -9,10 +9,13 @@
              RequestedThemeVariant="Light">
 
     <!--
-      RequestedThemeVariant i BaseTheme han d'anar sempre iguals: el primer tria quina
-      taula de Themes/Paleta.axaml s'aplica, el segon quina paleta fa servir el
-      MaterialTheme. Sense fixar-lo, Avalonia seguiria el tema del sistema operatiu i
-      la paleta pròpia passaria a fosca mentre Material es quedaria clar.
+      RequestedThemeVariant és l'únic lloc on es tria el tema: decideix quina taula de
+      Themes/Paleta.axaml s'aplica, i el MaterialTheme de sota el segueix perquè està
+      declarat amb BaseTheme="Inherit". Aquest valor aquí és només el tema d'arrencada;
+      Helpers/Tema.cs el commuta en calent des del menú.
+
+      No es deixa sense fixar a posta: així l'aplicació no canvia de cara segons el tema
+      del sistema operatiu sense que ningú ho hagi demanat.
     -->
 
     <Application.Resources>
@@ -25,7 +28,7 @@
 
     <Application.Styles>
       <!-- Modern color scheme: Indigo primary with Pink accent -->
-            <themes:MaterialTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Pink" />
+            <themes:MaterialTheme BaseTheme="Inherit" PrimaryColor="Indigo" SecondaryColor="Pink" />
       <avalonia:MaterialIconStyles />
 
             <Style Selector="Window">

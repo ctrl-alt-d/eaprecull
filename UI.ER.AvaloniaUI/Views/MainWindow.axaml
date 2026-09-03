@@ -129,8 +129,16 @@
                                 </MenuItem>
 
                                 <Separator />
-                                
-                                <MenuItem Header="Sortir" Click="GoodbyeButtonMenuItem_OnClick">
+
+                                <MenuItem Header="Canvia el tema" Click="TemaMenuItem_OnClick">
+                                    <MenuItem.Icon>
+                                        <avalonia:MaterialIcon Kind="ThemeLightDark" Width="24" Height="24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
+                                <Separator />
+
+                                <MenuItem Header="Sortir" Click="SortirMenuItem_OnClick">
                                     <MenuItem.Icon>
                                         <avalonia:MaterialIcon Kind="ExitRun" Width="24" Height="24" />
                                     </MenuItem.Icon>

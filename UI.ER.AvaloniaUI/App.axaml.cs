@@ -37,7 +37,8 @@ namespace UI.ER.AvaloniaUI
                 .DataLayerConfigureServices()
                 .BusinessLayerConfigureServices()
                 .UIConfigureServices()
-                .BuildServiceProvider();
+                .BuildServiceProvider()
+                .MigraBaseDeDades();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

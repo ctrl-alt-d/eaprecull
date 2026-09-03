@@ -13,9 +13,10 @@
       canviar el color d'un avís és tocar una línia, i el tema fosc és omplir la segona
       taula.
 
-      Com afegir el tema fosc: canviar `BaseTheme` i `RequestedThemeVariant` a Dark
-      dins d'App.axaml. Els dos han d'anar junts — el primer mou el MaterialTheme, el
-      segon tria quina d'aquestes dues taules s'aplica.
+      Quina de les dues taules s'aplica ho decideix `RequestedThemeVariant` d'App.axaml,
+      que `Helpers/Tema.cs` commuta en calent des del menú. El MaterialTheme el segueix
+      tot sol (`BaseTheme="Inherit"`), així que afegir un color és omplir la seva
+      entrada a les dues taules i prou.
 
       Convenció de noms:
         XxxBrush           el color de primer pla (text i icones) de la família Xxx

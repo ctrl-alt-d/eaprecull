@@ -15,8 +15,8 @@ namespace UI.ER.AvaloniaUI.Test
     /// </summary>
     public class RegistreDITest
     {
-        // UIConfigureServices no toca ni la base de dades ni el sistema de fitxers,
-        // a diferència de DataLayerConfigureServices (que executa les migracions).
+        // Cap dels *ConfigureServices toca la base de dades ni el sistema de fitxers:
+        // les migracions són a IServiceProvider.MigraBaseDeDades(), fora del registre.
         private static readonly IServiceCollection Serveis =
             new ServiceCollection().UIConfigureServices();
 

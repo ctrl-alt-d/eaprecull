@@ -15,7 +15,7 @@ Microsoft.Extensions.DependencyInjection · Serilog.Sinks.File · .NET 10.
 | Projecte | Què hi ha | Volum |
 |---|---|---|
 | `UI.ER.ViewModels` | ViewModels (ReactiveUI), contractes de diàleg, `ServiceFactory` | 5.144 línies de `.cs` |
-| `UI.ER.AvaloniaUI` | Vistes AXAML + code-behind, classes base, helpers, controls, paleta, DI | 2.053 línies de `.cs` · 33 AXAML |
+| `UI.ER.AvaloniaUI` | Vistes AXAML + code-behind, classes base, helpers, controls, paleta, DI | 2.089 línies de `.cs` · 33 AXAML |
 
 La separació és estricta: **cap ViewModel referencia Avalonia**. Quan un ViewModel necessita que
 passi alguna cosa a la pantalla —obrir un diàleg, demanar una confirmació— ho demana amb una
@@ -34,15 +34,23 @@ Tot el contenidor es construeix en un sol lloc, `App.OnFrameworkInitializationCo
 
 ```csharp
 _services = new ServiceCollection()
-    .DataLayerConfigureServices()        // DbContextFactory + migracions
+    .DataLayerConfigureServices()        // DbContextFactory
     .BusinessLayerConfigureServices()    // les 30 operacions de BL
     .UIConfigureServices()               // vistes, ViewModels, IWindowFactory
-    .BuildServiceProvider();
+    .BuildServiceProvider()
+    .MigraBaseDeDades();                 // ← ja amb el contenidor definitiu
 
 desktop.MainWindow = _services.GetRequiredService<IWindowFactory>().Get<MainWindow>();
 ```
 
-Els altres dos executables (`ImportData`, `CreateDemoData`) criden les dues primeres i prou.
+**Els `*ConfigureServices` només registren.** Aplicar les migracions és una passa a part,
+`MigraBaseDeDades()`, encadenada després del `BuildServiceProvider()`. Feta des de dins del
+registre —com estava— caldria un `BuildServiceProvider()` intermedi per arribar a la
+`IDbContextFactory`: un segon contenidor, amb els seus propis singletons i el seu propi pool de
+connexions, que es llença tot seguit.
+
+Els altres dos executables (`ImportData`, `CreateDemoData`) es munten igual, sense
+`UIConfigureServices()`.
 
 ### Tot es registra per comprensió
 
@@ -166,8 +174,9 @@ helpers a `Helpers/DialegExtensions.cs` cobreixen tots els casos:
 
 **Cap vista navega des d'un handler de `Click`.** A l'AXAML és `Command="{Binding CentreSetCommand}"`,
 i al code-behind una línia dins del `WhenActivated`. Els handlers que queden a `MainWindow`
-(el calaix lateral, el `Carousel`, la snackbar) no naveguen: són estat de la pròpia finestra.
-Un test ho vigila.
+no naveguen: uns són estat de la pròpia finestra (el calaix lateral, el `Carousel`, la snackbar)
+i els altres són ordres a l'aplicació sencera —canviar de tema, sortir—, que no tenen finestra de
+destí. Un test ho vigila, amb la llista dels que s'accepten escrita a `NavegacioTest`.
 
 ---
 
@@ -264,10 +273,17 @@ Les claus són **semàntiques, no descriptives** — `WarningBrush`, no `Taronja
 `XxxBrush` (primer pla), `XxxContainerBrush` (fons del bloc) i `XxxBorderBrush` (vora). Set
 famílies: neutres, `Info`, `Success`, `Warning`, `Danger`, `Accent` i `Header`.
 
-> ⚠️ `RequestedThemeVariant` (`App.axaml`) i `BaseTheme` (`MaterialTheme`) han d'anar **sempre
-> iguals**. El primer tria quina taula de la paleta s'aplica; el segon, la del `MaterialTheme`.
-> Deixar `RequestedThemeVariant` sense fixar fa que Avalonia segueixi el tema del sistema i la
-> paleta pròpia se'n vagi a fosc mentre Material es queda clar.
+**Canviar de tema** és moure `RequestedThemeVariant` (`App.axaml`), i prou: el `MaterialTheme`
+va declarat amb `BaseTheme="Inherit"` i el segueix tot sol. El valor de l'AXAML és només el tema
+d'arrencada; `Helpers/Tema.cs` el commuta en calent des de l'entrada de menú «Canvia el tema».
+
+> ⚠️ No es deixa `RequestedThemeVariant` **sense fixar**: Avalonia passaria a seguir el tema del
+> sistema operatiu i l'aplicació canviaria de cara sense que ningú ho hagi demanat.
+
+Els contrastos de la taula `Dark` estan per sobre de 4.5:1 a totes les parelles
+primer-pla/contenidor; l'únic que hi baixa és `TextTertiaryBrush` (3.7–4.5:1 segons la
+superfície), que és text auxiliar. La taula `Light` hi va més justa: `TextTertiaryBrush` es queda
+a ~2.5:1 i `WarningBrush` sobre el seu contenidor a 3.5:1.
 
 ### Estils compartits
 
@@ -329,7 +345,9 @@ vermells quan toca. Un test que no es pugui verificar per mutació no es deixa a
 7. **Les vistes no fan `new` d'altres vistes.** Tot passa per `IWindowFactory`.
 8. **Cap vista navega des d'un handler de `Click`.**
 9. **Cap color s'escriu a pèl.**
-10. **`RequestedThemeVariant` i `BaseTheme` van sempre iguals.**
+10. **El tema es tria en un sol lloc: `RequestedThemeVariant`.** El `MaterialTheme` el segueix
+    via `BaseTheme="Inherit"`; posar-hi `Light` o `Dark` a pèl torna a obrir la porta a què els
+    dos valors se separin.
 
 ---
 
@@ -364,13 +382,10 @@ Cap és un blocador; tots estan aquí perquè no s'oblidin.
 
 | # | Deute | Per què |
 |---|---|---|
-| 1 | **`AlumneInformeViewerWindow` és un `Window` pelat**, no un `ReactiveWindow<T>`: subscriu dins del constructor, sense `WhenActivated` ni disposal, i amb `async void` a `Opened`. | És l'última vista que no segueix §6. Convertir-la és un canvi d'un sol fitxer; caldrà tornar-hi a posar els `using` de `System.Reactive.Disposables{,.Fluent}`. |
-| 2 | **Els diàlegs d'edició fan servir l'scope del ViewModel pare.** Obrir i tancar la fitxa d'un centre 20 vegades acumula les seves operacions a l'scope de la `CentreSetWindow`, no a la seva. | Segueix sent una millora estricta sobre el provider arrel. Tancar-ho vol dir que la `Interaction` porti l'`id` en comptes del ViewModel sencer, i això toca els tres contractes de diàleg i les tres classes base. |
-| 3 | **El quart clon de `PerCadaViewModel`**: `MainWindow` es fa el seu, perquè no hereta de cap classe base. | Extreure'l demanaria tipar-lo sobre `IViewFor<TVm>` i comprovar que `WhenAnyValue` continua resolent l'`ICreatesObservableForProperty` d'Avalonia — verificable només amb `Avalonia.Headless`, que avui no hi és. |
-| 4 | **El tema fosc no s'ha vist mai.** La infraestructura hi és i els valors foscos també. | Activar-lo és un canvi de dues línies (invariant 10) i una repassada de contrast amb la pantalla al davant. |
-| 5 | 🐛 **L'entrada de menú «Sortir» no tanca l'aplicació**: només escriu «See ya next time, user!» a la snackbar, i en anglès. | Codi heretat de la plantilla de Material.Avalonia. És un canvi de comportament, no un refactor. |
-| 6 | **`DataLayer/DI/Injection.cs` fa un `BuildServiceProvider()` dins del mètode de registre** per aplicar les migracions: un provider intermedi que es llença. | — |
-| 7 | **Els 17 `App.Services` dels constructors pont.** | No reduïbles mentre l'AXAML pugui instanciar vistes pel seu compte (§3). |
+| 1 | **Els diàlegs d'edició fan servir l'scope del ViewModel pare.** Obrir i tancar la fitxa d'un centre 20 vegades acumula les seves operacions a l'scope de la `CentreSetWindow`, no a la seva. | Segueix sent una millora estricta sobre el provider arrel. Tancar-ho vol dir que la `Interaction` porti l'`id` en comptes del ViewModel sencer, i això toca els tres contractes de diàleg i les tres classes base. |
+| 2 | **El quart clon de `PerCadaViewModel`**: `MainWindow` es fa el seu, perquè no hereta de cap classe base. | Extreure'l demanaria tipar-lo sobre `IViewFor<TVm>` i comprovar que `WhenAnyValue` continua resolent l'`ICreatesObservableForProperty` d'Avalonia — verificable només amb `Avalonia.Headless`, que avui no hi és. |
+| 3 | **El tema fosc encara no s'ha mirat amb la pantalla al davant.** Ja és commutable des del menú i els contrastos calculats donen bé, però ningú n'ha vist les 22 finestres. | Les xifres no diuen res dels colors que venen del `MaterialTheme` ni de com queden les ombres i les vores sobre fons fosc. |
+| 4 | **Els 17 `App.Services` dels constructors pont.** | No reduïbles mentre l'AXAML pugui instanciar vistes pel seu compte (§3). |
 
 ---
 
@@ -399,6 +414,8 @@ mà el diàleg afectat. El recorregut mínim després de tocar la UI:
 - L'expedient d'un alumne i la seva exportació a Word, i el pivot d'`Utilitats`.
 - Obrir i tancar **el mateix diàleg tres vegades seguides** (invariant 1 + disposal d'scope).
 - El calaix lateral de `MainWindow`: les dues entrades seleccionables i el `Carousel` canviant de pàgina.
+- «Canvia el tema» del menú, i tornar a passar per sobre de les vistes obertes.
+- «Sortir» del menú: ha de tancar l'aplicació sencera, no només la finestra.
 - `error.log` buit.
 
 Per generar l'executable distribuïble, veure [`../README.md`](../README.md).

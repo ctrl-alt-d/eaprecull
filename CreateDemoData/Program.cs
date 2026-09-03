@@ -20,7 +20,8 @@ namespace CreateDemoData
                 new ServiceCollection()
                 .DataLayerConfigureServices()
                 .BusinessLayerConfigureServices()
-                .BuildServiceProvider();
+                .BuildServiceProvider()
+                .MigraBaseDeDades();
             return _ServiceProvider;
         }
 
