@@ -96,6 +96,13 @@ git tag -d v2026-02-13-001
 git push origin :refs/tags/v2026-02-13-001
 ```
 
+## Documentació
+
+* [`ARQUITECTURA.md`](ARQUITECTURA.md) — mapa global: capes, dependències, fluxos i invariants. **Punt d'entrada.**
+* [`agents.md`](agents.md) — recepta pas a pas per afegir una entitat o una operació de negoci.
+* [`UI.ER.AvaloniaUI/readme.md`](UI.ER.AvaloniaUI/readme.md) — arquitectura de la capa de presentació.
+* [`Upgrade.md`](Upgrade.md) — registre de la migració .NET 6 → .NET 10.
+
 ## Objectiu
 
 * Programari lliure per a la gestió de les actuacions del personal de l'EAP

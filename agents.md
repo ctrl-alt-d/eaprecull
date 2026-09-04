@@ -2,6 +2,10 @@
 
 > Document generat per proporcionar tot el context necessari per entendre, mantenir i ampliar aquesta aplicació.
 
+> **Comença per [`ARQUITECTURA.md`](ARQUITECTURA.md)**: hi ha el mapa global —capes,
+> dependències, fluxos, invariants i deutes coneguts—. Aquest document és la recepta
+> pas a pas; aquell és el terreny.
+
 ## 1. Visió General de l'Arquitectura
 
 ### Tipus d'Arquitectura
@@ -210,7 +214,17 @@ public class Alumne : IEntityTypeConfiguration<DM.Alumne>
 
 - **Tipus:** SQLite
 - **Ubicació:** `EapRecullData/BaseDeDades.db` (a Documents en mode DEBUG)
-- **Migracions:** Automàtiques a l'inici via `Database.Migrate()`
+- **Migracions:** S'apliquen automàticament a l'arrencada via `Database.Migrate()`, un cop
+  construït el contenidor (`MigraBaseDeDades()`). Hi ha **una sola migració**,
+  `20210821093532_inicial`, present a totes les instal·lacions existents.
+
+> ⚠️ **Aplicar-les és automàtic; generar-les, no.** El warning
+> `PendingModelChangesWarning` està silenciat a `AppOptionsBuilderConf`: si canvies una
+> entitat i no generes migració, **l'aplicació arrenca sense dir res** i peta en runtime a
+> la primera consulta que toqui la columna que falta. A més, `.config/dotnet-tools.json`
+> té `dotnet-ef` fixat a `6.0.6` amb el projecte en EF Core 10: cal pujar-lo primer.
+>
+> El procediment complet i el perquè són a [`ARQUITECTURA.md` §6](ARQUITECTURA.md#6-persistència).
 
 ---
 
@@ -268,13 +282,37 @@ namespace DataModels.Configuration.Configurations
 }
 ```
 
-### Pas 3: Registrar al DbContext
+### Pas 3: Registrar al DbContext i generar la migració
 
 **Ubicació:** `DataLayer/AppDbContext.cs`
 
 ```csharp
 public virtual DbSet<NovaEntitat> NovesEntitats => Set<NovaEntitat>();
 ```
+
+**I tot seguit, la migració.** Aquest pas no és opcional i **res no t'avisarà si te'l
+saltes**: el warning de canvis pendents d'EF està silenciat, o sigui que l'aplicació
+compilarà, arrencarà i només petarà quan una consulta toqui la taula que no existeix.
+
+```bash
+# Cal un cop: el manifest té dotnet-ef fixat a 6.0.6 i el projecte va amb EF Core 10
+dotnet tool update dotnet-ef
+
+dotnet ef migrations add AfegirNovaEntitat \
+  --project DataLayer \
+  --startup-project UI.ER.AvaloniaUI
+```
+
+Dues regles que no s'han de trencar:
+
+- **No esmenis `20210821093532_inicial`.** Està registrada com a aplicada a totes les
+  instal·lacions existents; el que hi afegeixis no hi arribarà mai.
+- **No la borris.** Sense ella, EF troba a `__EFMigrationsHistory` una migració aplicada
+  que no coneix.
+
+Val per a qualsevol canvi persistit, no només per a una entitat nova: afegir o treure una
+propietat, canviar-ne el tipus o tocar una relació. Detall a
+[`ARQUITECTURA.md` §6](ARQUITECTURA.md#6-persistència).
 
 ### Pas 4: Crear els DTOs d'Entrada
 
@@ -733,7 +771,8 @@ using Models = DataModels.Models;
 5. **Les validacions es fan ABANS de modificar** (fail-fast)
 6. **El context es crea per operació** (via Factory pattern)
 7. **Els serveis són `Transient`** (una instància per ús)
-8. **Les migracions s'executen automàticament** a l'inici
+8. **Les migracions s'*apliquen* automàticament** a l'inici, però **generar-les és manual i
+   ningú no t'ho recorda** (§3 i Pas 3)
 
 ### Exemple d'Ús des de ViewModel
 
