@@ -21,8 +21,8 @@ namespace UI.ER.ViewModels.ViewModels
         private readonly string NA = "N/A";
         private readonly IServiceFactory _serveis;
 
-        /// <summary>El porticó d'arrencada surt un sol cop per sessió.</summary>
-        private bool _jaSHaDemanatLesDadesDeLusuari;
+        /// <summary>Els porticons d'arrencada surten un sol cop per sessió.</summary>
+        private bool _jaSHanObertElsPorticons;
 
         public AppStatusViewModel(IServiceFactory serveis)
         {
@@ -51,12 +51,15 @@ namespace UI.ER.ViewModels.ViewModels
             TipusActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowTipusActuacioSetDialog.Handle(Unit.Default));
             UtilitatsCommand = ReactiveCommand.CreateFromObservable(() => ShowUtilitatsDialog.Handle(Unit.Default));
             DadesUsuariCommand = ReactiveCommand.CreateFromObservable(() => ShowDadesUsuariDialog.Handle(Unit.Default));
+            CopiaDeSeguretatCommand = ReactiveCommand.CreateFromObservable(() => ShowCopiaDeSeguretatDialog.Handle(Unit.Default));
         }
 
         /// <summary>
-        /// El porticó d'arrencada: si les dades de l'usuari no estan informades, el
-        /// formulari surt tot sol, un sol cop per sessió. Es pot tancar sense omplir-lo
-        /// —el programa funciona igual— i tornarà a sortir la propera arrencada.
+        /// Els dos porticons d'arrencada, en ordre. Primer, si les dades de l'usuari no
+        /// estan informades, el formulari surt tot sol; després, si fa més de dues
+        /// setmanes de l'última còpia i hi ha actuacions noves, la finestra de còpia.
+        /// Tots dos es poden tancar —el programa funciona igual— i tornen a sortir la
+        /// propera arrencada.
         /// </summary>
         /// <remarks>
         /// Qui el dispara és la vista, un cop ha mostrat la finestra i ha posat els seus
@@ -72,19 +75,61 @@ namespace UI.ER.ViewModels.ViewModels
         /// <c>MainWindow</c> assignada abans que res.
         /// </para>
         /// </remarks>
-        public void ObreLesDadesDeLusuariSiCal()
+        public void ObreElsPorticonsDArrencada()
         {
-            if (_jaSHaDemanatLesDadesDeLusuari || _serveis.DadesUsuari.EstaInformat)
+            if (_jaSHanObertElsPorticons)
                 return;
 
-            _jaSHaDemanatLesDadesDeLusuari = true;
+            _jaSHanObertElsPorticons = true;
+
+            // Si les dades ja hi són no hi ha porticó, i la còpia es proposa de seguida.
+            if (_serveis.DadesUsuari.EstaInformat)
+            {
+                ProposaLaCopiaSiCal();
+                return;
+            }
 
             ShowDadesUsuariDialog
                 .Handle(Unit.Default)
-                // Amb un gestor d'error buit a posta: quedar-se sense porticó és un
-                // inconvenient —l'entrada de menú hi és igualment—; tombar l'aplicació en
-                // arrencar, no.
-                .Subscribe(_ => { }, _ => { });
+                // Encadenat i no en paral·lel: dos ShowDialog alhora es taparien l'un a
+                // l'altre. La còpia es proposa quan el formulari de dades s'ha tancat,
+                // s'hagi omplert o no. Amb gestor d'error a posta: quedar-se sense
+                // porticó és un inconvenient —les entrades de menú hi són igualment—;
+                // tombar l'aplicació en arrencar, no.
+                .Subscribe(_ => ProposaLaCopiaSiCal(), _ => ProposaLaCopiaSiCal());
+        }
+
+        /// <summary>
+        /// Fa més de dues setmanes de l'última còpia i hi ha actuacions noves? Doncs la
+        /// finestra de còpia surt sola. Qui decideix <em>si cal</em> és el BusinessLayer
+        /// (<see cref="ICopiaDeSeguretat.CalFerCopia"/>), que és on viu la regla; aquí
+        /// només es decideix <em>què</em> s'obre.
+        /// </summary>
+        /// <remarks>
+        /// La finestra no bloqueja res: porta un botó «Ara no» i es pot tancar. Una còpia
+        /// de seguretat que impedeixi treballar el dia que el llapis no hi és fa més mal
+        /// que bé, i la proposta torna a sortir la propera arrencada.
+        /// </remarks>
+        private async void ProposaLaCopiaSiCal()
+        {
+            try
+            {
+                using var bl = _serveis.GetBLOperation<ICopiaDeSeguretat>();
+
+                if ((await bl.CalFerCopia()).Data is not { Cal: true })
+                    return;
+
+                ShowCopiaDeSeguretatDialog
+                    .Handle(Unit.Default)
+                    .Subscribe(_ => { }, _ => { });
+            }
+            catch (Exception)
+            {
+                // Silenciat a posta, i sense Log: UI.ER.ViewModels no veu Serilog, i
+                // CalFerCopia() ja registra els seus problemes abans de tornar «no cal».
+                // Un async void que propagui tomba l'aplicació, i quedar-se sense
+                // proposta és un inconvenient; no arrencar, no.
+            }
         }
 
         private async void LoadData()
@@ -215,5 +260,9 @@ namespace UI.ER.ViewModels.ViewModels
         /// <summary>«Les meves dades» tampoc: només s'obre i es tanca.</summary>
         public ICommand DadesUsuariCommand { get; }
         public Interaction<Unit, Unit> ShowDadesUsuariDialog { get; } = new();
+
+        /// <summary>«Còpia de seguretat» tampoc: només s'obre i es tanca.</summary>
+        public ICommand CopiaDeSeguretatCommand { get; }
+        public Interaction<Unit, Unit> ShowCopiaDeSeguretatDialog { get; } = new();
     }
 }

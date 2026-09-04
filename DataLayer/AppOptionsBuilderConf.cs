@@ -35,8 +35,10 @@ namespace DataLayer
                 if (!Directory.Exists(directori))
                 {
                     Directory.CreateDirectory(directori);
-                    var recordatoriCopies = Path.Combine(directori, "@@ Recorda Fer Copies Periodiques Del Fitxer BaseDeDades @@");
-                    File.Create(recordatoriCopies);
+                    // El programa ja les sap fer: el recordatori apunta al menú en comptes
+                    // de deixar l'usuari sol davant del fitxer.
+                    var recordatoriCopies = Path.Combine(directori, "@@ Fes Copies Des Del Menu - Copia De Seguretat @@");
+                    File.Create(recordatoriCopies).Dispose();
                 }
                 _carpeta = directori;
                 return _carpeta;

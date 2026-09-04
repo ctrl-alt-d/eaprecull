@@ -1,0 +1,309 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        xmlns:generic="clr-namespace:BusinessLayer.Abstract.Generic;assembly=BusinessLayer.Abstract"
+        x:Class="UI.ER.AvaloniaUI.Pages.CopiaDeSeguretatWindow"
+        x:DataType="viewModels:CopiaDeSeguretatViewModel"
+        x:CompileBindings="True"
+        HorizontalContentAlignment="Stretch"
+        Title="Còpia de seguretat"
+        Width="760" Height="720" MinWidth="680"
+        WindowStartupLocation="CenterOwner"
+        >
+
+    <DockPanel Margin="24">
+
+        <!-- Capçalera i pancarta fora del ScrollViewer: el motiu pel qual la finestra
+             s'ha obert sola no pot quedar amagat sota el desplaçament. -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- HEADER -->
+            <!-- ════════════════════════════════════════════ -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20" VerticalAlignment="Center">
+                <avalonia:MaterialIcon Kind="DatabaseExport" Width="28" Height="28"
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Classes="Headline5" Text="Còpia de seguretat"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+            </StackPanel>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- LA PROPOSTA D'ARRENCADA -->
+            <!-- Només quan la finestra s'ha obert sola: fa més de dues setmanes de
+                 l'última còpia i hi ha actuacions noves. Des del menú no surt. -->
+            <!-- ════════════════════════════════════════════ -->
+            <Border IsVisible="{Binding CalFerCopia}"
+                    Background="{DynamicResource WarningContainerBrush}"
+                    BorderBrush="{DynamicResource WarningBorderBrush}" BorderThickness="1"
+                    CornerRadius="6" Padding="14,12" Margin="0,0,0,16">
+                <Grid ColumnDefinitions="Auto,*">
+                    <avalonia:MaterialIcon Grid.Column="0" Kind="ShieldAlertOutline" Width="24" Height="24"
+                                           Foreground="{DynamicResource WarningBrush}"
+                                           VerticalAlignment="Top" Margin="0,0,12,0"/>
+                    <TextBlock Grid.Column="1" Classes="Body1" TextWrapping="Wrap"
+                               Foreground="{DynamicResource WarningBrush}"
+                               Text="{Binding Proposta}"/>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- 1. ON VAN LES CÒPIES -->
+            <!-- ════════════════════════════════════════════ -->
+            <material:Card Padding="0" Margin="0,0,0,16">
+                <StackPanel>
+                    <Border Background="{DynamicResource HeaderContainerBrush}" Padding="16,12">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="FolderMoveOutline" Width="22" Height="22"
+                                                   Foreground="{DynamicResource HeaderBrush}"
+                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Classes="Subtitle1" Text="On van les còpies"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource HeaderBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Margin="16,12,16,16">
+                        <TextBlock Classes="Body2" TextWrapping="Wrap" Margin="0,0,0,12"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="Tria una carpeta: un llapis USB, una unitat de xarxa del centre o la carpeta local d'un client de sincronització que ja tinguis instal·lat (Google Drive per a ordinadors, OneDrive…). En aquest darrer cas la còpia puja al núvol tota sola, ja xifrada."/>
+
+                        <!-- Selector de destí. Amb un sol destí no cal ensenyar-lo. -->
+                        <ComboBox IsVisible="{Binding HiHaMesDunDesti}"
+                                  Margin="0,0,0,12"
+                                  HorizontalAlignment="Left" MinWidth="240"
+                                  ItemsSource="{Binding Destins}"
+                                  SelectedItem="{Binding DestiTriat}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="generic:DestiDisponible">
+                                    <TextBlock Text="{Binding Titol}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <Border Background="{DynamicResource SurfaceMutedBrush}" CornerRadius="4"
+                                Padding="10,8" Margin="0,0,0,12">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <avalonia:MaterialIcon Grid.Column="0" Kind="FolderOutline" Width="18" Height="18"
+                                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                                       VerticalAlignment="Top" Margin="0,0,8,0"/>
+                                <TextBlock Grid.Column="1" Classes="Body2" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                           Text="{Binding Desti}"/>
+                            </Grid>
+                        </Border>
+
+                        <Button Command="{Binding TriaCarpetaCommand}" Classes="Flat"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <avalonia:MaterialIcon Kind="FolderSearchOutline" Width="20" Height="20"
+                                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Tria la carpeta…" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </material:Card>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- 2. FER LA CÒPIA -->
+            <!-- ════════════════════════════════════════════ -->
+            <material:Card Padding="0" Margin="0,0,0,16">
+                <StackPanel>
+                    <Border Background="{DynamicResource HeaderContainerBrush}" Padding="16,12">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="ShieldLockOutline" Width="22" Height="22"
+                                                   Foreground="{DynamicResource HeaderBrush}"
+                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Classes="Subtitle1" Text="Fer una còpia ara"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource HeaderBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Margin="16,12,16,16">
+                        <TextBlock Classes="Body2" TextWrapping="Wrap" Margin="0,0,0,4"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="La còpia es xifra amb AES-256 abans de sortir de l'ordinador. Per obrir-la et caldrà 7-Zip, WinRAR o Keka: l'explorador de fitxers del Windows no obre zips xifrats."/>
+
+                        <Border Background="{DynamicResource DangerContainerBrush}" CornerRadius="4"
+                                Padding="10,8" Margin="0,8,0,12">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <avalonia:MaterialIcon Grid.Column="0" Kind="KeyAlertOutline" Width="18" Height="18"
+                                                       Foreground="{DynamicResource DangerBrush}"
+                                                       VerticalAlignment="Top" Margin="0,0,8,0"/>
+                                <TextBlock Grid.Column="1" Classes="Body2" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource DangerBrush}"
+                                           Text="Apunta't la contrasenya en un lloc segur. No es desa enlloc, i si la perds la còpia no es pot recuperar de cap manera."/>
+                            </Grid>
+                        </Border>
+
+                        <TextBox Text="{Binding Password}"
+                                 PasswordChar="•"
+                                 IsEnabled="{Binding !EnMarxa}"
+                                 UseFloatingWatermark="True"
+                                 Classes="Filled"
+                                 assists:TextFieldAssist.Label="Contrasenya" />
+
+                        <TextBox Text="{Binding Confirmacio}"
+                                 PasswordChar="•"
+                                 IsEnabled="{Binding !EnMarxa}"
+                                 UseFloatingWatermark="True"
+                                 Classes="Filled"
+                                 assists:TextFieldAssist.Label="Repeteix la contrasenya" />
+
+                        <ItemsControl Margin="0,10" ItemsSource="{Binding BrokenRules}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Classes="Error" Text="{Binding, Mode=OneWay}" Margin="0,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Command="{Binding FesLaCopiaCommand}" Classes="Flat">
+                                <StackPanel Orientation="Horizontal">
+                                    <avalonia:MaterialIcon Kind="ContentSaveMoveOutline" Width="20" Height="20"
+                                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Fes la còpia ara" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding CancelaCommand}" Classes="Flat"
+                                    IsVisible="{Binding EnMarxa}">
+                                <StackPanel Orientation="Horizontal">
+                                    <avalonia:MaterialIcon Kind="CloseCircleOutline" Width="20" Height="20"
+                                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Cancel·la" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- La proposta és una proposta: es pot dir que no. -->
+                            <Button Command="{Binding AraNoCommand}" Classes="Flat"
+                                    IsVisible="{Binding CalFerCopia}">
+                                <StackPanel Orientation="Horizontal">
+                                    <avalonia:MaterialIcon Kind="ClockOutline" Width="20" Height="20"
+                                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Ara no" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Per què el botó està apagat. Sense això, un requisit que no es
+                             compleix deixa l'usuari clicant un botó que no respon. -->
+                        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,8,0,0"
+                                    IsVisible="{Binding QueFalta, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <avalonia:MaterialIcon Kind="InformationOutline" Width="16" Height="16"
+                                                   Foreground="{DynamicResource TextTertiaryBrush}"
+                                                   VerticalAlignment="Center"/>
+                            <TextBlock Classes="Caption" TextWrapping="Wrap"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextTertiaryBrush}"
+                                       Text="{Binding QueFalta}"/>
+                        </StackPanel>
+
+                        <!-- Què està passant -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,12,0,0"
+                                    IsVisible="{Binding Estat, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <avalonia:MaterialIcon Kind="Loading" Width="18" Height="18"
+                                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                   Classes="Rotating"/>
+                            <TextBlock Classes="Subtitle2" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                       Text="{Binding Estat}"/>
+                        </StackPanel>
+
+                        <!-- Com ha anat -->
+                        <Border IsVisible="{Binding Resultat, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Background="{DynamicResource SuccessContainerBrush}" CornerRadius="4"
+                                Padding="10,8" Margin="0,12,0,0">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <avalonia:MaterialIcon Grid.Column="0" Kind="CheckCircleOutline" Width="18" Height="18"
+                                                       Foreground="{DynamicResource SuccessBrush}"
+                                                       VerticalAlignment="Top" Margin="0,0,8,0"/>
+                                <TextBlock Grid.Column="1" Classes="Body2" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SuccessBrush}"
+                                           Text="{Binding Resultat}"/>
+                            </Grid>
+                        </Border>
+
+                        <Border IsVisible="{Binding Avis, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Background="{DynamicResource WarningContainerBrush}" CornerRadius="4"
+                                Padding="10,8" Margin="0,8,0,0">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <avalonia:MaterialIcon Grid.Column="0" Kind="InformationOutline" Width="18" Height="18"
+                                                       Foreground="{DynamicResource WarningBrush}"
+                                                       VerticalAlignment="Top" Margin="0,0,8,0"/>
+                                <TextBlock Grid.Column="1" Classes="Body2" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource WarningBrush}"
+                                           Text="{Binding Avis}"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </material:Card>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- 3. LES CÒPIES QUE HI HA -->
+            <!-- ════════════════════════════════════════════ -->
+            <material:Card Padding="0">
+                <StackPanel>
+                    <Border Background="{DynamicResource HeaderContainerBrush}" Padding="16,12">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="FileMultipleOutline" Width="22" Height="22"
+                                                   Foreground="{DynamicResource HeaderBrush}"
+                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Classes="Subtitle1" Text="Les còpies que hi ha al destí"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource HeaderBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Margin="16,12,16,16">
+                        <TextBlock Classes="Overline" Margin="0,0,0,4"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Text="{Binding DarreraCopia}"/>
+
+                        <TextBlock Classes="Caption" TextWrapping="Wrap" Margin="0,0,0,12"
+                                   Foreground="{DynamicResource TextTertiaryBrush}"
+                                   Text="{Binding QuantesEsGuarden}"/>
+
+                        <ItemsControl ItemsSource="{Binding Copies}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="generic:CopiaRemota">
+                                    <Border Background="{DynamicResource SurfaceSubtleBrush}"
+                                            CornerRadius="4" Padding="10,8" Margin="0,0,0,6">
+                                        <StackPanel Orientation="Horizontal">
+                                            <avalonia:MaterialIcon Kind="ZipBox" Width="18" Height="18"
+                                                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <StackPanel>
+                                                <TextBlock Classes="Body2" Text="{Binding Etiqueta}"/>
+                                                <TextBlock Classes="Caption"
+                                                           Foreground="{DynamicResource TextTertiaryBrush}"
+                                                           Text="{Binding Descripcio}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </material:Card>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </DockPanel>
+
+</Window>

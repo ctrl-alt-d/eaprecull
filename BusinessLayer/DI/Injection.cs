@@ -27,6 +27,18 @@ namespace BusinessLayer.DI
             // com les operacions que el demanin pel constructor.
             services.AddSingleton<IDadesDeLusuari, DadesDeLusuari>();
 
+            // Un magatzem de còpies per destí, i tots Singleton: la configuració del destí
+            // —i, en un adaptador de núvol, la sessió autoritzada— és una de sola per a tot
+            // el programa. ICopiaDeSeguretat, que és Transient com la resta d'operacions,
+            // els rep tots com a IEnumerable, i per això afegir un destí nou és una línia
+            // aquí i cap canvi a l'operació.
+            //
+            // Han d'anar abans del bucle: ActivatorUtilities.CreateInstance els resol pel
+            // constructor de l'operació. I cap dels seus constructors no toca ni el disc ni
+            // la xarxa, perquè InjeccioTest construeix el contenidor sencer i resol totes
+            // les operacions en un CI sense res de tot això.
+            services.AddSingleton<IMagatzemDeCopies, MagatzemDeCarpeta>();
+
             // Transient, com abans de R7: cada operació és d'un sol ús i el consumidor
             // la demana per l'IServiceFactory, que és Scoped i li marca el cicle de vida (R1).
             //

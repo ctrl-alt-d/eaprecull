@@ -622,6 +622,36 @@ Una operació que necessiti un servei transversal només l'ha de demanar pel con
 el seu contingut pot canviar mentre l'aplicació és oberta. Perquè hi arribi un ViewModel, en
 canvi, cal una propietat nova a `IServiceFactory`.
 
+#### Operació de negoci amb un port cap a l'exterior
+
+Quan una operació ha de sortir de l'ordinador —escriure a un disc que pot no ser-hi, parlar
+amb un núvol— el que canvia segons l'exterior **no va dins de l'operació**: va darrere d'un
+port, i l'operació es queda comuna. El primer cas és `ICopiaDeSeguretat` amb
+`IMagatzemDeCopies`.
+
+| Peça | On viu | Per què |
+|---|---|---|
+| L'operació (`ICopiaDeSeguretat` → `CopiaDeSeguretat`) | `Abstract/Services/` + `Services/` | És una operació normal: entra pel registre per convenció i es consumeix amb `using var bl = …` |
+| El port (`IMagatzemDeCopies`) | `Abstract/Generic/` | **No** a `Services/`: l'escaneig d'operacions filtra per aquell namespace i li reclamaria una implementació de nom `MagatzemDeCopies` |
+| Els adaptadors (`MagatzemDeCarpeta`, …) | `BusinessLayer/Common/` | Un `AddSingleton<IMagatzemDeCopies, …>()` a mà per cadascun, **abans** del bucle d'operacions |
+| El doble (`MagatzemFals`) | `BusinessLayer.Integration.Test/` | El que fa que l'operació sencera es provi sense xarxa i sense navegador |
+
+Les tres regles que el fan funcionar:
+
+1. **Tot el que és car és comú.** Al cas de les còpies: bolcat, verificació, xifratge,
+   retenció i la UI. Darrere del port hi queda «desa aquest fitxer, llista'ls, retira els
+   sobrants», que són cinquanta línies per adaptador.
+2. **L'operació rep `IEnumerable<TPort>`**, no una implementació concreta. Afegir un destí
+   nou és **una línia al registre** i cap canvi a l'operació ni als tests que ja hi ha.
+3. **Cap constructor d'adaptador toca res**: ni disc, ni xarxa, ni fitxers de credencials.
+   `InjeccioTest.CadaContracteTeLaSevaImplementacioPerConvencio` construeix el contenidor
+   sencer i resol totes les operacions en un CI sense res de tot això; tota la feina va
+   dins de `Prepara()`.
+
+I com totes les operacions: cap excepció crua cap amunt. Un disc ple, un llapis desendollat
+o una carpeta de només lectura han d'arribar a l'usuari com una `BrokenRule` que diu el camí,
+no com un `IOException`.
+
 ### Pas 10: Crear els ViewModels i Vistes (Opcional)
 
 Seguir el patró existent:

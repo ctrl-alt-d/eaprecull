@@ -314,6 +314,26 @@ refrescaran. Hi ha un test (`EntitatTest`) que ho vigila.
   sobreviure a l'executable: la base de dades, el recordatori de còpies i l'`Usuari.ini`
   amb les dades de qui fa servir el programa (`IDadesDeLusuari`, §7). Crear-la és tocar el
   disc: cap `*ConfigureServices` ni cap constructor de servei no hi pot arribar.
+
+### Copiar la base de dades: `VACUUM INTO`
+
+La manera correcta —i l'única— de copiar aquesta base de dades és
+`VACUUM INTO '<destí>'`, que és el que fa `CopiaDeSeguretat` (§4, informes i operacions):
+
+```csharp
+await GetContext().Database.ExecuteSqlRawAsync($"VACUUM INTO '{literal}'", ct);
+```
+
+- Dona una còpia **consistent** d'una base de dades viva, des d'una connexió qualsevol i
+  sense bloquejar-ne cap altra. De propina surt compactada i sense `-wal` ni `-journal`.
+- **`File.Copy` no serveix**: amb una transacció oberta a mitges dona un fitxer corrupte. I
+  tancar les connexions «a mà» tampoc es pot fer: la `IDbContextFactory` n'obre i en tanca
+  a cada operació i `Microsoft.Data.Sqlite` en manté un *pool*.
+- El destí **no pot existir**, i el camí va literal dins de l'SQL —`VACUUM INTO` no accepta
+  paràmetres—, amb les cometes simples escapades.
+- **`VACUUM` no fa res sobre una base de dades en memòria**, i no ho diu: acaba bé i no
+  escriu el fitxer. Per això `EntornDeTest.NouEnFitxer()` existeix, i per això
+  `CopiaDeSeguretat` comprova que el bolcat hi sigui abans de continuar.
 ### Migracions
 
 `context.Database.Migrate()` s'executa **un cop, després de construir el contenidor**
@@ -413,6 +433,7 @@ entre implementacions (`CentreSetAmbActuacions : CentreSet`) i més d'una classe
 | `IDbContextFactory<AppDbContext>` | Singleton | Estàndard d'EF |
 | `INotificadorDeCanvis` | **Singleton** | Un sol bus per a tota l'aplicació |
 | `IDadesDeLusuari` | **Singleton** | Un sol `Usuari.ini` per a tota l'aplicació, llegit un cop; el desat n'actualitza la còpia en memòria i tothom la veu |
+| `IMagatzemDeCopies` | **Singleton** (un per adaptador) | On van les còpies de seguretat. La configuració del destí —i, en un adaptador de núvol, la sessió autoritzada— és una de sola. `ICopiaDeSeguretat`, que és Transient, els rep **tots** com a `IEnumerable`: afegir un destí nou és una línia al registre i cap canvi a l'operació. Cap constructor d'adaptador pot tocar el disc ni la xarxa |
 | Operacions de negoci (`IXxx`) | **Transient** | Són d'un sol ús i `IDisposable`; es consumeixen amb `using var bl = ...` |
 | `IServiceFactory` | **Scoped** | És el que fa que l'scope per diàleg alliberi de debò les operacions |
 | ViewModels | Transient | — |
@@ -519,6 +540,9 @@ Detall complet a `README.md`. Resum:
 | **Un color nou** | A les **dues** taules de tema de `Paleta.axaml`. Cap color s'escriu a pèl | `UI.ER.AvaloniaUI/readme.md` §7 |
 | **Un servei transversal** (ni entitat ni operació: el bus, les dades de l'usuari) | Contracte a `BusinessLayer.Abstract/Generic/` —**no** a `Services/`, que és el que l'escaneig d'operacions mira— , implementació a `BusinessLayer/Common/` i `AddSingleton` a mà a `BusinessLayerConfigureServices()`. Si l'han de veure els ViewModels, propietat nova a `IServiceFactory` | §7, `agents.md` §4 |
 | **Una preferència de l'usuari desada a disc** | Una secció nova a l'`Usuari.ini` amb `FitxerIni`: llegir i escriure ja conserven el que no coneixen | §6 |
+| **Una comprovació nova en arrencar** | Regla al BusinessLayer (com `ICopiaDeSeguretat.CalFerCopia()`), i un baula més a `AppStatusViewModel.ObreElsPorticonsDArrencada()`, **encadenada** al `Subscribe` de l'anterior: dos `ShowDialog` alhora es tapen | `UI.ER.AvaloniaUI/readme.md` §5 |
+| **Un destí nou per a les còpies de seguretat** | Una classe a `BusinessLayer/Common/` que implementi `IMagatzemDeCopies` + un `AddSingleton<IMagatzemDeCopies, …>()` a `BusinessLayerConfigureServices()`. **Res més**: `CopiaDeSeguretat` no es toca, i el selector de la finestra el troba sol | §7 |
+| **Una operació de negoci amb una dependència externa** (disc de fora, xarxa, un núvol) | El que canvia segons l'exterior va darrere d'un **port** a `BusinessLayer.Abstract/Generic/`; l'operació, que és el que és car, es queda comuna a `Services/`. És el que permet provar-la sencera amb un doble i sense xarxa | `agents.md` §4 |
 
 ### Invariants globals
 

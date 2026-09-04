@@ -21,10 +21,10 @@ La separació és estricta: **cap ViewModel referencia Avalonia**. Quan un ViewM
 passi alguna cosa a la pantalla —obrir un diàleg, demanar una confirmació— ho demana amb una
 `Interaction<TEntrada, TSortida>` i és la vista qui decideix quina finestra l'atén (§5).
 
-**Inventari**: 23 `Window` (`MainWindow`, `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}{Create,Update,Set}Window`,
-`UtilitatsWindow`, `DadesUsuariWindow`, `AlumneInformeViewerWindow`, `ConfirmacioWindow`) i 9 `UserControl`
+**Inventari**: 24 `Window` (`MainWindow`, `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}{Create,Update,Set}Window`,
+`UtilitatsWindow`, `DadesUsuariWindow`, `CopiaDeSeguretatWindow`, `AlumneInformeViewerWindow`, `ConfirmacioWindow`) i 9 `UserControl`
 (els 6 `*RowUserCtrl` més `DateInput`, `LookupInput` i `IndicadorCarrega`).
-29 ViewModels, 28 dels quals reben serveis.
+30 ViewModels, 29 dels quals reben serveis.
 
 ---
 
@@ -200,15 +200,29 @@ no naveguen: uns són estat de la pròpia finestra (el calaix lateral, el `Carou
 i els altres són ordres a l'aplicació sencera —canviar de tema, sortir—, que no tenen finestra de
 destí. Un test ho vigila, amb la llista dels que s'accepten escrita a `NavegacioTest`.
 
-### El porticó d'arrencada
+### Els porticons d'arrencada
 
-`DadesUsuariWindow` («Les meves dades») és l'única finestra que es pot obrir sola: si
-`_serveis.DadesUsuari.EstaInformat` és fals, `AppStatusViewModel.ObreLesDadesDeLusuariSiCal()`
-llança `ShowDadesUsuariDialog` **un sol cop per sessió**. Es pot tancar sense omplir-la —el
-programa funciona igual— i tornarà a sortir la propera arrencada.
+Dues finestres es poden obrir soles, **en aquest ordre i un sol cop per sessió**, des
+d'`AppStatusViewModel.ObreElsPorticonsDArrencada()`:
 
-Qui el **dispara** és `MainWindow.Registra(d)`, just després de registrar la navegació, amb
-`Dispatcher.UIThread.Post(vm.ObreLesDadesDeLusuariSiCal, DispatcherPriority.Background)`. El
+| # | Finestra | Quan surt | Com se'n surt |
+|---|---|---|---|
+| 1 | `DadesUsuariWindow` | `_serveis.DadesUsuari.EstaInformat` és fals | Es tanca; el programa funciona igual |
+| 2 | `CopiaDeSeguretatWindow` | `ICopiaDeSeguretat.CalFerCopia()` diu que sí: fa més de dues setmanes de l'última còpia **i** hi ha actuacions noves | Botó «Ara no», o la creu |
+
+**Encadenats, no en paral·lel**: el segon es llança des del `Subscribe` del primer, quan el
+seu diàleg s'ha tancat. Dos `ShowDialog` alhora es taparien l'un a l'altre.
+
+El *si cal* de la còpia no és del ViewModel: la regla viu a `ICopiaDeSeguretat.CalFerCopia()`,
+i des d'allà la comparteixen el taulell —que decideix obrir la finestra— i la finestra
+mateixa, que amb la mateixa resposta pinta la pancarta i el botó «Ara no». Si fossin dues
+còpies de la regla, la finestra s'obriria dient que no cal fer res.
+
+Cap dels dos bloqueja. Una còpia de seguretat que impedeixi treballar el dia que el llapis no
+hi és fa més mal que bé; la proposta torna a sortir la propera arrencada.
+
+Qui els **dispara** és `MainWindow.Registra(d)`, just després de registrar la navegació, amb
+`Dispatcher.UIThread.Post(vm.ObreElsPorticonsDArrencada, DispatcherPriority.Background)`. El
 *si cal* i el *què s'obre* continuen sent del ViewModel; la vista només diu «ja tinc els
 handlers posats i la finestra mostrada».
 
@@ -514,6 +528,13 @@ refresquin. `EntitatTest` ho vigila.
 faci servir també fa fallar els tests.
 
 **Un bloc de disseny que surti a més de dues vistes**: va a `App.axaml` com a classe.
+
+**Un diàleg del sistema** (selector de carpetes, de fitxers): és d'Avalonia i el ViewModel no
+el pot conèixer. Va per `Interaction<TEntrada, TSortida>` com la navegació, però la registra el
+codi rere **la seva pròpia finestra**, no `MainWindow`: `CopiaDeSeguretatWindow` ho fa amb
+`ShowTriaCarpetaDialog` i `StorageProvider.OpenFolderPickerAsync`. `NavegacioTest` només mira les
+`Interaction` d'`AppStatusViewModel`, de manera que una d'aquestes no li demana cap comanda de
+taulell.
 
 **Idioma**: comentaris, missatges d'error i textos d'UI en **català**.
 

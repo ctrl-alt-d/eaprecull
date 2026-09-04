@@ -122,5 +122,37 @@ git push origin :refs/tags/v2026-02-13-001
 
 
 * Q: EAP Recull envia alguna dada a alguna banda?
-* A: No, pots revisar el codi en aquest repo i compilar la teva versió.
+* A: No, tret que li demanis expressament una còpia de seguretat. I el que surt de l'ordinador
+  és un fitxer `.zip` xifrat amb AES-256 que ningú més pot obrir: la contrasenya la tries tu,
+  no es desa enlloc i no viatja enlloc. Pots revisar el codi en aquest repo i compilar la teva versió.
+
+
+* Q: Com faig una còpia de seguretat?
+* A: Menú ⋮ → **Còpia de seguretat**. Tries una carpeta —un llapis USB, una unitat de xarxa del
+  centre o la carpeta local del Google Drive o el OneDrive que ja tinguis instal·lat—, poses una
+  contrasenya i ja està. Se'n guarden les 3 més recents; en fer-ne una de nova, la més antiga
+  s'esborra del destí.
+
+
+* Q: Per què em surt sola la finestra de còpia de seguretat en obrir el programa?
+* A: Perquè fa més de dues setmanes de l'última còpia **i** has fet actuacions noves des
+  d'aleshores. Si no has tocat res, no et diu res: una còpia sense feina nova no aporta res.
+  És una proposta, no una obligació: amb «Ara no» continues treballant i tornarà a sortir la
+  propera vegada que obris el programa.
+
+## Com restaurar una còpia de seguretat
+
+El pas que sempre falta, i el que de debò salva el dia. Les mateixes instruccions van dins de
+cada còpia, al fitxer `LLEGEIX-ME.txt`.
+
+1. Tanca EAP Recull.
+2. Obre el `.zip` de la còpia amb **7-Zip**, **WinRAR** o **Keka** i escriu-hi la teva
+   contrasenya. L'explorador de fitxers del Windows **no** obre zips xifrats amb AES: cal un
+   d'aquests programes.
+3. Substitueix el fitxer `BaseDeDades.db` de la carpeta de dades d'EAP Recull pel
+   `BaseDeDades.db` que hi ha dins del zip.
+4. Torna a obrir EAP Recull.
+
+> Si perds la contrasenya no hi ha cap manera de recuperar el contingut de la còpia. No la té
+> desada ningú, ni el programa ni nosaltres, i és així a posta.
 

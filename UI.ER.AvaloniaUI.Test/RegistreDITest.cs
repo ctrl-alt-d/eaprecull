@@ -103,7 +103,7 @@ namespace UI.ER.AvaloniaUI.Test
             Type[] necessaris =
             [
                 typeof(AppStatusViewModel), typeof(UtilitatsViewModel),
-                typeof(DadesUsuariViewModel),
+                typeof(DadesUsuariViewModel), typeof(CopiaDeSeguretatViewModel),
                 typeof(ActuacioSetViewModel), typeof(AlumneSetViewModel),
                 typeof(CentreSetViewModel), typeof(CursAcademicSetViewModel),
                 typeof(EtapaSetViewModel), typeof(TipusActuacioSetViewModel),
