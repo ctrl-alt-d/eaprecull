@@ -21,6 +21,9 @@ namespace UI.ER.ViewModels.ViewModels
         private readonly string NA = "N/A";
         private readonly IServiceFactory _serveis;
 
+        /// <summary>El porticó d'arrencada surt un sol cop per sessió.</summary>
+        private bool _jaSHaDemanatLesDadesDeLusuari;
+
         public AppStatusViewModel(IServiceFactory serveis)
         {
             _serveis = serveis;
@@ -38,7 +41,7 @@ namespace UI.ER.ViewModels.ViewModels
                     .DisposeWith(d));
 
             // Una comanda per cada entrada de navegació de la finestra principal: les tres
-            // targetes del taulell i les set entrades del menú. La vista només hi enganxa
+            // targetes del taulell i les vuit entrades del menú. La vista només hi enganxa
             // quina finestra atén cada Interaction; el que s'obre es decideix aquí.
             ActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowActuacioSetDialog.Handle(Unit.Default));
             AlumneSetCommand = ReactiveCommand.CreateFromObservable(() => ShowAlumneSetDialog.Handle(Unit.Default));
@@ -47,6 +50,41 @@ namespace UI.ER.ViewModels.ViewModels
             EtapaSetCommand = ReactiveCommand.CreateFromObservable(() => ShowEtapaSetDialog.Handle(Unit.Default));
             TipusActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowTipusActuacioSetDialog.Handle(Unit.Default));
             UtilitatsCommand = ReactiveCommand.CreateFromObservable(() => ShowUtilitatsDialog.Handle(Unit.Default));
+            DadesUsuariCommand = ReactiveCommand.CreateFromObservable(() => ShowDadesUsuariDialog.Handle(Unit.Default));
+        }
+
+        /// <summary>
+        /// El porticó d'arrencada: si les dades de l'usuari no estan informades, el
+        /// formulari surt tot sol, un sol cop per sessió. Es pot tancar sense omplir-lo
+        /// —el programa funciona igual— i tornarà a sortir la propera arrencada.
+        /// </summary>
+        /// <remarks>
+        /// Qui el dispara és la vista, un cop ha mostrat la finestra i ha posat els seus
+        /// <c>RegisterHandler</c>; el <em>què</em> s'obre i el <em>si cal</em> continuen
+        /// sent d'aquí. No es pot llançar des del <c>WhenActivated</c> d'aquest ViewModel,
+        /// ni tan sols diferit: l'<c>AvaloniaScheduler</c> executa <strong>en línia</strong>
+        /// les accions sense retard quan ja s'és al fil d'UI, i la <c>Interaction</c>
+        /// arribaria abans que els handlers de la vista —que es registren a la mateixa
+        /// passada d'activació— i petaria amb <c>UnhandledInteractionException</c>.
+        /// <para>
+        /// I tampoc a <c>App.OnFrameworkInitializationCompleted()</c>: un <c>ShowDialog</c>
+        /// necessita propietari, i el cicle de vida d'escriptori d'Avalonia vol la
+        /// <c>MainWindow</c> assignada abans que res.
+        /// </para>
+        /// </remarks>
+        public void ObreLesDadesDeLusuariSiCal()
+        {
+            if (_jaSHaDemanatLesDadesDeLusuari || _serveis.DadesUsuari.EstaInformat)
+                return;
+
+            _jaSHaDemanatLesDadesDeLusuari = true;
+
+            ShowDadesUsuariDialog
+                .Handle(Unit.Default)
+                // Amb un gestor d'error buit a posta: quedar-se sense porticó és un
+                // inconvenient —l'entrada de menú hi és igualment—; tombar l'aplicació en
+                // arrencar, no.
+                .Subscribe(_ => { }, _ => { });
         }
 
         private async void LoadData()
@@ -173,5 +211,9 @@ namespace UI.ER.ViewModels.ViewModels
         /// <summary>Utilitats no és una llista d'entitats: només s'obre i es tanca.</summary>
         public ICommand UtilitatsCommand { get; }
         public Interaction<Unit, Unit> ShowUtilitatsDialog { get; } = new();
+
+        /// <summary>«Les meves dades» tampoc: només s'obre i es tanca.</summary>
+        public ICommand DadesUsuariCommand { get; }
+        public Interaction<Unit, Unit> ShowDadesUsuariDialog { get; } = new();
     }
 }

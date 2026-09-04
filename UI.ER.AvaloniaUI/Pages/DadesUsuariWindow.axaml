@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:material="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:viewModels="clr-namespace:UI.ER.ViewModels.ViewModels;assembly=UI.ER.ViewModels"
+        x:Class="UI.ER.AvaloniaUI.Pages.DadesUsuariWindow"
+        x:DataType="viewModels:DadesUsuariViewModel"
+        x:CompileBindings="True"
+        HorizontalContentAlignment="Stretch"
+        Title="Les meves dades"
+        Width="640" Height="520" MinWidth="560"
+        WindowStartupLocation="CenterOwner"
+        >
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" Margin="24">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- HEADER -->
+            <!-- ════════════════════════════════════════════ -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20" VerticalAlignment="Center">
+                <avalonia:MaterialIcon Kind="AccountEdit" Width="28" Height="28"
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Classes="Headline5" Text="Les meves dades"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+            </StackPanel>
+
+            <material:Card Padding="0">
+                <StackPanel>
+                    <!-- Capçalera -->
+                    <Border Background="{DynamicResource HeaderContainerBrush}" Padding="16,12">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="AccountCircleOutline" Width="22" Height="22"
+                                                   Foreground="{DynamicResource HeaderBrush}"
+                                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Classes="Subtitle1" Text="Qui fa servir el programa"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource HeaderBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Contingut -->
+                    <StackPanel Margin="16,12,16,16">
+                        <TextBlock Classes="Body2" TextWrapping="Wrap" Margin="0,0,0,12"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="Aquestes dades identifiquen qui treballa amb l'aplicació. Es desen en un fitxer al costat de la base de dades i no s'envien enlloc."/>
+
+                        <TextBox Text="{Binding Nom}"
+                                 UseFloatingWatermark="True"
+                                 Classes="Filled"
+                                 assists:TextFieldAssist.Label="Nom" />
+
+                        <TextBox Text="{Binding Cognoms}"
+                                 UseFloatingWatermark="True"
+                                 Classes="Filled"
+                                 assists:TextFieldAssist.Label="Cognoms" />
+
+                        <TextBox Text="{Binding AdrecaXtec}"
+                                 UseFloatingWatermark="True"
+                                 Classes="Filled"
+                                 assists:TextFieldAssist.Label="Adreça xtec" />
+
+                        <ItemsControl Margin="0,10" ItemsSource="{Binding BrokenRules}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Classes="Error" Text="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <material:FloatingButton Classes="Desar" IsExtended="True"
+                                                 HorizontalAlignment="Left"
+                                                 Command="{Binding SubmitCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </material:Card>
+
+            <!-- On és el fitxer, per si l'usuari el vol trobar o copiar. -->
+            <StackPanel Orientation="Horizontal" Margin="4,16,0,0">
+                <avalonia:MaterialIcon Kind="FileOutline" Width="16" Height="16"
+                                       Foreground="{DynamicResource TextTertiaryBrush}"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Classes="Caption" TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextTertiaryBrush}"
+                           Text="{Binding Ubicacio}"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</Window>

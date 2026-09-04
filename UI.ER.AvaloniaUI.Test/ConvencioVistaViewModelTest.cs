@@ -47,7 +47,7 @@ namespace UI.ER.AvaloniaUI.Test
             // Si aquest nombre canvia sense voler, vol dir que algú ha afegit o esborrat
             // una finestra: la resta de tests d'aquest fitxer ja l'hauran cobert, però
             // convé que el canvi sigui explícit.
-            Assert.Equal(22, Vistes.Finestres.Count);
+            Assert.Equal(23, Vistes.Finestres.Count);
         }
 
         [Fact]

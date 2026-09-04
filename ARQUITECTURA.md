@@ -310,6 +310,10 @@ refrescaran. Hi ha un test (`EntitatTest`) que ho vigila.
 - **Ubicació del fitxer**: `AppOptionsBuilderConf.dataSource`. En `RELEASE`, `Data/` al
   costat de l'executable; en `DEBUG`, `~/Documents/EapRecullData/`. La primera vegada crea
   el directori i hi deixa un fitxer buit amb nom recordatori de fer còpies.
+- **La carpeta és `AppOptionsBuilderConf.CarpetaDeDades`**, i hi viu tot el que ha de
+  sobreviure a l'executable: la base de dades, el recordatori de còpies i l'`Usuari.ini`
+  amb les dades de qui fa servir el programa (`IDadesDeLusuari`, §7). Crear-la és tocar el
+  disc: cap `*ConfigureServices` ni cap constructor de servei no hi pot arribar.
 ### Migracions
 
 `context.Database.Migrate()` s'executa **un cop, després de construir el contenidor**
@@ -408,6 +412,7 @@ entre implementacions (`CentreSetAmbActuacions : CentreSet`) i més d'una classe
 |---|---|---|
 | `IDbContextFactory<AppDbContext>` | Singleton | Estàndard d'EF |
 | `INotificadorDeCanvis` | **Singleton** | Un sol bus per a tota l'aplicació |
+| `IDadesDeLusuari` | **Singleton** | Un sol `Usuari.ini` per a tota l'aplicació, llegit un cop; el desat n'actualitza la còpia en memòria i tothom la veu |
 | Operacions de negoci (`IXxx`) | **Transient** | Són d'un sol ús i `IDisposable`; es consumeixen amb `using var bl = ...` |
 | `IServiceFactory` | **Scoped** | És el que fa que l'scope per diàleg alliberi de debò les operacions |
 | ViewModels | Transient | — |
@@ -434,7 +439,7 @@ El detall és a **`UI.ER.AvaloniaUI/readme.md`**; aquí, el mínim per orientar-
   `UI.ER.AvaloniaUI` (AXAML i plataforma). La frontera és estricta.
 - **Dos ports, un per sentit**: de la vista al ViewModel hi ha `IWindowFactory`
   (construeix finestra + ViewModel, obre un **scope de DI per diàleg**); del ViewModel al
-  negoci hi ha `IServiceFactory` (`GetBLOperation<T>()` + `Canvis`), que és l'**única**
+  negoci hi ha `IServiceFactory` (`GetBLOperation<T>()` + `Canvis` + `DadesUsuari`), que és l'**única**
   porta i substitueix l'antic service locator estàtic.
 - **Cinc ViewModels per entitat**, i les seves vistes correlatives:
 
@@ -512,6 +517,8 @@ Detall complet a `README.md`. Resum:
 | **Un filtre nou en una llista** | Propietat al `*SetViewModel` + camp al `*SearchParms` + clàusula a `GetModels()` del `BLSet`. Text lliure → `FuncionsSql.Conte()` | §4, §6 |
 | **Un informe nou** | Heretar de `BLReport<SaveResult>`, usar `CalculatePath()` i retornar el path | §4 |
 | **Un color nou** | A les **dues** taules de tema de `Paleta.axaml`. Cap color s'escriu a pèl | `UI.ER.AvaloniaUI/readme.md` §7 |
+| **Un servei transversal** (ni entitat ni operació: el bus, les dades de l'usuari) | Contracte a `BusinessLayer.Abstract/Generic/` —**no** a `Services/`, que és el que l'escaneig d'operacions mira— , implementació a `BusinessLayer/Common/` i `AddSingleton` a mà a `BusinessLayerConfigureServices()`. Si l'han de veure els ViewModels, propietat nova a `IServiceFactory` | §7, `agents.md` §4 |
+| **Una preferència de l'usuari desada a disc** | Una secció nova a l'`Usuari.ini` amb `FitxerIni`: llegir i escriure ja conserven el que no coneixen | §6 |
 
 ### Invariants globals
 

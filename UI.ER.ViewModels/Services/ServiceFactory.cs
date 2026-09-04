@@ -37,5 +37,7 @@ namespace UI.ER.ViewModels.Services
             => provider.GetRequiredService<T>();
 
         public INotificadorDeCanvis Canvis => provider.GetRequiredService<INotificadorDeCanvis>();
+
+        public IDadesDeLusuari DadesUsuari => provider.GetRequiredService<IDadesDeLusuari>();
     }
 }

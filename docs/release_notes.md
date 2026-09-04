@@ -39,3 +39,9 @@ Migració a net 10
 2026.09.04
 Refactor Avalonia.UI.
 Bus de notificacions.
+
+# 0.10
+2026.09.04
+Dades de l'usuari (nom, cognoms i adreça xtec) desades a `Usuari.ini`, al costat de la
+base de dades.
+Nova finestra «Les meves dades», al menú i en obrir el programa si encara no s'han informat.

@@ -600,6 +600,28 @@ services.AddTransient<INovaEntitatUpdate, NovaEntitatUpdate>();
 services.AddTransient<INovaEntitatActivaDesactiva, NovaEntitatActivaDesactiva>();
 ```
 
+#### Els serveis transversals no segueixen aquest camí
+
+Una peça que **no és ni entitat ni operació** —el bus de canvis `INotificadorDeCanvis`, les
+dades de l'usuari `IDadesDeLusuari`— es registra diferent:
+
+| | Operació de negoci | Servei transversal |
+|---|---|---|
+| Contracte | `BusinessLayer.Abstract/Services/IXxx.cs` | `BusinessLayer.Abstract/Generic/IXxx.cs` |
+| Implementació | `BusinessLayer/Services/Xxx.cs` | `BusinessLayer/Common/Xxx.cs` |
+| Registre | sol, per convenció de nom | `AddSingleton` **a mà** a `BusinessLayerConfigureServices()` |
+| Cicle de vida | `Transient` | `Singleton` |
+| `IBLOperation`/`IDisposable` | sí, `using var bl = …` | **no**: és de llarga vida |
+
+El namespace no és decoratiu: l'escaneig d'`Injection.Contractes()` filtra per
+`BusinessLayer.Abstract.Services`, i un contracte transversal posat allà petaria a
+l'arrencada reclamant una implementació que no existeix.
+
+Una operació que necessiti un servei transversal només l'ha de demanar pel constructor
+(`ActivatorUtilities` la construeix i el Singleton ja hi és); **no l'ha de cachejar**, perquè
+el seu contingut pot canviar mentre l'aplicació és oberta. Perquè hi arribi un ViewModel, en
+canvi, cal una propietat nova a `IServiceFactory`.
+
 ### Pas 10: Crear els ViewModels i Vistes (Opcional)
 
 Seguir el patró existent:
@@ -770,7 +792,8 @@ using Models = DataModels.Models;
 4. **Els DTOs d'Update inclouen `IId`** per identificar l'entitat
 5. **Les validacions es fan ABANS de modificar** (fail-fast)
 6. **El context es crea per operació** (via Factory pattern)
-7. **Els serveis són `Transient`** (una instància per ús)
+7. **Els serveis són `Transient`** (una instància per ús), tret dels transversals —el bus i
+   les dades de l'usuari—, que són `Singleton`
 8. **Les migracions s'*apliquen* automàticament** a l'inici, però **generar-les és manual i
    ningú no t'ho recorda** (§3 i Pas 3)
 

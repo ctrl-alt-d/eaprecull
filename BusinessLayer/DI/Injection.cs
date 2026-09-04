@@ -22,6 +22,11 @@ namespace BusinessLayer.DI
             // root ja passa sola perquè BusinessLayerConfigureServices() hi va primer.
             services.AddSingleton<INotificadorDeCanvis, NotificadorDeCanvis>();
 
+            // Singleton pel mateix motiu: un sol fitxer per a tota l'aplicació, llegit un
+            // cop. Ni és una operació ni toca la base de dades, i el llegeixen tant la UI
+            // com les operacions que el demanin pel constructor.
+            services.AddSingleton<IDadesDeLusuari, DadesDeLusuari>();
+
             // Transient, com abans de R7: cada operació és d'un sol ús i el consumidor
             // la demana per l'IServiceFactory, que és Scoped i li marca el cicle de vida (R1).
             //
