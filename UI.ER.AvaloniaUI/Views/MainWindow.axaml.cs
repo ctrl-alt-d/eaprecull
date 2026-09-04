@@ -95,6 +95,16 @@ namespace UI.ER.AvaloniaUI.Views
                     this.RegistraNavegacio<EtapaSetWindow>(_windows, vm.ShowEtapaSetDialog).DisposeWith(d);
                     this.RegistraNavegacio<TipusActuacioSetWindow>(_windows, vm.ShowTipusActuacioSetDialog).DisposeWith(d);
                     this.RegistraNavegacio<UtilitatsWindow>(_windows, vm.ShowUtilitatsDialog).DisposeWith(d);
+                    this.RegistraNavegacio<DadesUsuariWindow>(_windows, vm.ShowDadesUsuariDialog).DisposeWith(d);
+                    this.RegistraNavegacio<CopiaDeSeguretatWindow>(_windows, vm.ShowCopiaDeSeguretatDialog).DisposeWith(d);
+
+                    // Els porticons d'arrencada, un cop la canonada de dalt està muntada. El
+                    // Post no s'executa mai en línia —a diferència del scheduler de
+                    // ReactiveUI, que sí que ho fa quan ja s'és al fil d'UI—, i per això
+                    // arriba amb els RegisterHandler posats i la finestra ja mostrada, que
+                    // és el que necessita un ShowDialog per tenir propietari. Si cal obrir
+                    // cap diàleg, i quins, ho decideix el ViewModel.
+                    Dispatcher.UIThread.Post(vm.ObreElsPorticonsDArrencada, DispatcherPriority.Background);
                 })
                 .DisposeWith(d);
 

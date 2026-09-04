@@ -15,16 +15,16 @@ Microsoft.Extensions.DependencyInjection · Serilog.Sinks.File · .NET 10.
 | Projecte | Què hi ha | Volum |
 |---|---|---|
 | `UI.ER.ViewModels` | ViewModels (ReactiveUI), contractes de diàleg, `ServiceFactory` | 5.042 línies de `.cs` |
-| `UI.ER.AvaloniaUI` | Vistes AXAML + code-behind, classes base, helpers, controls, paleta, DI | 2.089 línies de `.cs` · 33 AXAML |
+| `UI.ER.AvaloniaUI` | Vistes AXAML + code-behind, classes base, helpers, controls, paleta, DI | 2.089 línies de `.cs` · 34 AXAML |
 
 La separació és estricta: **cap ViewModel referencia Avalonia**. Quan un ViewModel necessita que
 passi alguna cosa a la pantalla —obrir un diàleg, demanar una confirmació— ho demana amb una
 `Interaction<TEntrada, TSortida>` i és la vista qui decideix quina finestra l'atén (§5).
 
-**Inventari**: 22 `Window` (`MainWindow`, `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}{Create,Update,Set}Window`,
-`UtilitatsWindow`, `AlumneInformeViewerWindow`, `ConfirmacioWindow`) i 9 `UserControl`
+**Inventari**: 24 `Window` (`MainWindow`, `{Actuacio,Alumne,Centre,CursAcademic,Etapa,TipusActuacio}{Create,Update,Set}Window`,
+`UtilitatsWindow`, `DadesUsuariWindow`, `CopiaDeSeguretatWindow`, `AlumneInformeViewerWindow`, `ConfirmacioWindow`) i 9 `UserControl`
 (els 6 `*RowUserCtrl` més `DateInput`, `LookupInput` i `IndicadorCarrega`).
-28 ViewModels, 27 dels quals reben serveis.
+30 ViewModels, 29 dels quals reben serveis.
 
 ---
 
@@ -60,11 +60,12 @@ deriva, un escaneig no.
 | Registre | Regla | Cicle de vida |
 |---|---|---|
 | Finestres (`DI/Injection.cs`) | tot tipus no abstracte assignable a `Window` de l'assembly | `Transient` |
-| ViewModels (`DI/Injection.cs`) | tot `ViewModelBase` amb **tots els paràmetres del constructor resolubles** (registrats o amb valor per defecte) → en surten 15 | `Transient` |
+| ViewModels (`DI/Injection.cs`) | tot `ViewModelBase` amb **tots els paràmetres del constructor resolubles** (registrats o amb valor per defecte) → en surten 16 | `Transient` |
 | `IServiceFactory` (`DI/Injection.cs`) | fix | `Scoped` |
 | `IWindowFactory` (`DI/Injection.cs`) | fix | `Singleton` |
 | Operacions de BL (`BusinessLayer/DI/Injection.cs`) | cada `IXxx` del namespace `BusinessLayer.Abstract.Services` aparellada amb `BusinessLayer.Services.Xxx` **pel nom** → 30 | `Transient` |
 | `INotificadorDeCanvis` (`BusinessLayer/DI/Injection.cs`) | fix | `Singleton` |
+| `IDadesDeLusuari` (`BusinessLayer/DI/Injection.cs`) | fix | `Singleton` |
 
 El filtre dels ViewModels deixa fora, sols, els 13 que necessiten un argument de runtime
 (els 6 `{…}UpdateViewModel(int id)`, els 6 `{…}RowViewModel(DTO)` i `AlumneInformeViewerViewModel(int alumneId)`).
@@ -163,14 +164,21 @@ operació que s'hagués fet mai i només es buidava en tancar l'aplicació. Amb 
 és la de l'scope del diàleg i mor amb ell. Dos tests ho fixen, un dels quals comprova que
 `BuildServiceProvider(validateScopes: true)` **es nega** a resoldre-la des de l'arrel.
 
-`IServiceFactory` és **el port únic dels ViewModels cap al BusinessLayer**, amb dues cares:
-`T GetBLOperation<T>() where T : IBLOperation` per demanar-li operacions i
-`INotificadorDeCanvis Canvis` per escoltar-ne els canvis (§5). Segueix sense ser un
-`IServiceProvider` disfressat: des d'aquí no s'arriba a cap altre servei.
+`IServiceFactory` és **el port únic dels ViewModels cap al BusinessLayer**, amb tres cares:
+`T GetBLOperation<T>() where T : IBLOperation` per demanar-li operacions,
+`INotificadorDeCanvis Canvis` per escoltar-ne els canvis (§5) i `IDadesDeLusuari DadesUsuari`
+per saber qui fa servir el programa. Segueix sense ser un `IServiceProvider` disfressat: des
+d'aquí no s'arriba a cap altre servei.
 
-La segona cara hi és per una raó pràctica: hi ha **27 punts** on un ViewModel en construeix un
-altre amb `new`, i qualsevol paràmetre de constructor nou s'hauria d'anar propagant amunt i
-avall de tota la jerarquia. La fàbrica ja hi arriba a tots.
+Les dues propietats hi són pel mateix motiu: el genèric de `GetBLOperation<T>()` està acotat a
+`IBLOperation` i no les pot tornar, i demanar-les pel constructor del ViewModel el faria
+semblar un ViewModel amb arguments de runtime —la col·lecció de `FabricaDeServeisTest` és
+`UIConfigureServices()` tota sola, sense BusinessLayer— i el test exigiria que el primer
+paràmetre fos l'`IServiceFactory`.
+
+I hi ha una raó pràctica que val per a totes dues: hi ha **27 punts** on un ViewModel en
+construeix un altre amb `new`, i qualsevol paràmetre de constructor nou s'hauria d'anar
+propagant amunt i avall de tota la jerarquia. La fàbrica ja hi arriba a tots.
 
 ---
 
@@ -191,6 +199,41 @@ i al code-behind una línia dins del `WhenActivated`. Els handlers que queden a 
 no naveguen: uns són estat de la pròpia finestra (el calaix lateral, el `Carousel`, la snackbar)
 i els altres són ordres a l'aplicació sencera —canviar de tema, sortir—, que no tenen finestra de
 destí. Un test ho vigila, amb la llista dels que s'accepten escrita a `NavegacioTest`.
+
+### Els porticons d'arrencada
+
+Dues finestres es poden obrir soles, **en aquest ordre i un sol cop per sessió**, des
+d'`AppStatusViewModel.ObreElsPorticonsDArrencada()`:
+
+| # | Finestra | Quan surt | Com se'n surt |
+|---|---|---|---|
+| 1 | `DadesUsuariWindow` | `_serveis.DadesUsuari.EstaInformat` és fals | Es tanca; el programa funciona igual |
+| 2 | `CopiaDeSeguretatWindow` | `ICopiaDeSeguretat.CalFerCopia()` diu que sí: fa més de dues setmanes de l'última còpia **i** hi ha actuacions noves | Botó «Ara no», o la creu |
+
+**Encadenats, no en paral·lel**: el segon es llança des del `Subscribe` del primer, quan el
+seu diàleg s'ha tancat. Dos `ShowDialog` alhora es taparien l'un a l'altre.
+
+El *si cal* de la còpia no és del ViewModel: la regla viu a `ICopiaDeSeguretat.CalFerCopia()`,
+i des d'allà la comparteixen el taulell —que decideix obrir la finestra— i la finestra
+mateixa, que amb la mateixa resposta pinta la pancarta i el botó «Ara no». Si fossin dues
+còpies de la regla, la finestra s'obriria dient que no cal fer res.
+
+Cap dels dos bloqueja. Una còpia de seguretat que impedeixi treballar el dia que el llapis no
+hi és fa més mal que bé; la proposta torna a sortir la propera arrencada.
+
+Qui els **dispara** és `MainWindow.Registra(d)`, just després de registrar la navegació, amb
+`Dispatcher.UIThread.Post(vm.ObreElsPorticonsDArrencada, DispatcherPriority.Background)`. El
+*si cal* i el *què s'obre* continuen sent del ViewModel; la vista només diu «ja tinc els
+handlers posats i la finestra mostrada».
+
+> ⚠️ És el punt més delicat de tot el camí, i el primer a mirar si el diàleg no surt.
+> Llançar-lo des del `WhenActivated` del ViewModel **no funciona**, ni tan sols diferit amb
+> `RxApp.MainThreadScheduler.Schedule`: l'`AvaloniaScheduler` executa **en línia** les
+> accions sense retard quan ja s'és al fil d'UI, i la `Interaction` arriba abans que els
+> `RegisterHandler` de la vista —que es registren a la mateixa passada d'activació— i peta
+> amb `UnhandledInteractionException`, que a l'arrencada tomba l'aplicació. `Post`, en canvi,
+> no s'executa mai en línia. I no pot anar a `App.OnFrameworkInitializationCompleted()`
+> perquè un `ShowDialog` necessita un propietari ja mostrat.
 
 ### El bus de canvis de domini
 
@@ -406,7 +449,7 @@ sobre el codi font. Corren en ~80 ms.
 
 ```
 dotnet test UI.ER.AvaloniaUI.Test      → 60/60
-dotnet test BusinessLayer.Integration.Test → 15/15
+dotnet test BusinessLayer.Integration.Test → 56/56
 ```
 
 | Fitxer | Què fixa |
@@ -425,6 +468,7 @@ dotnet test BusinessLayer.Integration.Test → 15/15
 | `DissenyTest` | cap color literal; els dos temes defineixen les mateixes claus; cap clau morta ni cap errata en un `DynamicResource` |
 | `BindingsCompilatsTest` | els 33 AXAML declaren `x:CompileBindings`; cap `<Design.DataContext>` |
 | `InjeccioTest` (BL) | cada contracte té la seva implementació per convenció, i les 30 es resolen de debò; el bus és `Singleton` i es registra abans |
+| `DadesUsuariTest` (BL) | l'`Usuari.ini`: sense fitxer no es crea res, l'anada i tornada conserva accents i ela geminada, una dada invàlida no toca ni el disc ni la memòria, les claus alienes es conserven i un fitxer escombraria no impedeix arrencar |
 | `EmissioTest` (BL) | les cinc classes base d'escriptura publiquen al bus i cap operació se salta l'emissió; alta, modificació, baixa i massiu emeten el que toca contra una base de dades de veritat |
 
 `DissenyTest` i `BindingsCompilatsTest` escanegen el **codi font** (via `[CallerFilePath]`). És
@@ -485,6 +529,13 @@ faci servir també fa fallar els tests.
 
 **Un bloc de disseny que surti a més de dues vistes**: va a `App.axaml` com a classe.
 
+**Un diàleg del sistema** (selector de carpetes, de fitxers): és d'Avalonia i el ViewModel no
+el pot conèixer. Va per `Interaction<TEntrada, TSortida>` com la navegació, però la registra el
+codi rere **la seva pròpia finestra**, no `MainWindow`: `CopiaDeSeguretatWindow` ho fa amb
+`ShowTriaCarpetaDialog` i `StorageProvider.OpenFolderPickerAsync`. `NavegacioTest` només mira les
+`Interaction` d'`AppStatusViewModel`, de manera que una d'aquestes no li demana cap comanda de
+taulell.
+
 **Idioma**: comentaris, missatges d'error i textos d'UI en **català**.
 
 **Finals de línia**: són **barrejats fitxer a fitxer** (`App.axaml`, `Views/MainWindow.axaml`,
@@ -502,7 +553,7 @@ Cap és un blocador; tots estan aquí perquè no s'oblidin.
 |---|---|---|
 | 1 | **Els diàlegs d'edició fan servir l'scope del ViewModel pare.** Obrir i tancar la fitxa d'un centre 20 vegades acumula les seves operacions a l'scope de la `CentreSetWindow`, no a la seva. | Segueix sent una millora estricta sobre el provider arrel. Tancar-ho vol dir que la `Interaction` porti l'`id` en comptes del ViewModel sencer, i això toca els tres contractes de diàleg i les tres classes base. La conseqüència principal —subscripcions que no moren amb el diàleg— la mitiga l'activació del ViewModel (§6). |
 | 2 | **El quart clon de `PerCadaViewModel`**: `MainWindow` es fa el seu, perquè no hereta de cap classe base. | Extreure'l demanaria tipar-lo sobre `IViewFor<TVm>` i comprovar que `WhenAnyValue` continua resolent l'`ICreatesObservableForProperty` d'Avalonia — verificable només amb `Avalonia.Headless`, que avui no hi és. |
-| 3 | **El tema fosc encara no s'ha mirat amb la pantalla al davant.** Ja és commutable des del menú i els contrastos calculats donen bé, però ningú n'ha vist les 22 finestres. | Les xifres no diuen res dels colors que venen del `MaterialTheme` ni de com queden les ombres i les vores sobre fons fosc. |
+| 3 | **El tema fosc encara no s'ha mirat amb la pantalla al davant.** Ja és commutable des del menú i els contrastos calculats donen bé, però ningú n'ha vist les 23 finestres. | Les xifres no diuen res dels colors que venen del `MaterialTheme` ni de com queden les ombres i les vores sobre fons fosc. |
 | 4 | **Els 17 `App.Services` dels constructors pont.** | No reduïbles mentre l'AXAML pugui instanciar vistes pel seu compte (§3). |
 
 ---

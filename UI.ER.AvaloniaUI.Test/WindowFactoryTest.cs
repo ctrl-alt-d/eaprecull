@@ -140,6 +140,9 @@ namespace UI.ER.AvaloniaUI.Test
 
             public INotificadorDeCanvis Canvis
                 => throw new NotSupportedException("Cap test d'aquest fitxer escolta el bus.");
+
+            public IDadesDeLusuari DadesUsuari
+                => throw new NotSupportedException("Cap test d'aquest fitxer llegeix el .ini.");
         }
     }
 }

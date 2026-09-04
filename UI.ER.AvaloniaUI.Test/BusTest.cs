@@ -139,6 +139,9 @@ namespace UI.ER.AvaloniaUI.Test
                 => throw new NotSupportedException("Aquest test no toca el backend.");
 
             public INotificadorDeCanvis Canvis { get; } = canvis;
+
+            public IDadesDeLusuari DadesUsuari
+                => throw new NotSupportedException("Aquest test no llegeix les dades de l'usuari.");
         }
 
         /// <summary>Un notificador que sap quanta gent l'escolta.</summary>

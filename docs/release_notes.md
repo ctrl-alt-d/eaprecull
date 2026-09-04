@@ -39,3 +39,20 @@ Migració a net 10
 2026.09.04
 Refactor Avalonia.UI.
 Bus de notificacions.
+
+# 0.10
+2026.09.04
+Dades de l'usuari (nom, cognoms i adreça xtec) desades a `Usuari.ini`, al costat de la
+base de dades.
+Nova finestra «Les meves dades», al menú i en obrir el programa si encara no s'han informat.
+
+# 0.11
+2026.09.04
+Còpies de seguretat de la base de dades, a petició de l'usuari: menú → «Còpia de seguretat».
+Bolcat consistent amb `VACUUM INTO`, comprovació d'integritat, zip xifrat amb AES-256 i desat
+a una carpeta que tria l'usuari (llapis USB, unitat de xarxa o carpeta local d'un client de
+sincronització, que la puja al núvol ja xifrada). Se'n conserven les 3 més recents.
+La contrasenya no es desa enlloc.
+En obrir el programa, si fa més de dues setmanes de l'última còpia i hi ha actuacions noves,
+es proposa fer-ne una. Es pot dir «Ara no». La data i el recompte d'actuacions de l'última
+còpia queden a l'`Usuari.ini`.

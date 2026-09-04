@@ -2,6 +2,10 @@
 
 > Document generat per proporcionar tot el context necessari per entendre, mantenir i ampliar aquesta aplicació.
 
+> **Comença per [`ARQUITECTURA.md`](ARQUITECTURA.md)**: hi ha el mapa global —capes,
+> dependències, fluxos, invariants i deutes coneguts—. Aquest document és la recepta
+> pas a pas; aquell és el terreny.
+
 ## 1. Visió General de l'Arquitectura
 
 ### Tipus d'Arquitectura
@@ -210,7 +214,17 @@ public class Alumne : IEntityTypeConfiguration<DM.Alumne>
 
 - **Tipus:** SQLite
 - **Ubicació:** `EapRecullData/BaseDeDades.db` (a Documents en mode DEBUG)
-- **Migracions:** Automàtiques a l'inici via `Database.Migrate()`
+- **Migracions:** S'apliquen automàticament a l'arrencada via `Database.Migrate()`, un cop
+  construït el contenidor (`MigraBaseDeDades()`). Hi ha **una sola migració**,
+  `20210821093532_inicial`, present a totes les instal·lacions existents.
+
+> ⚠️ **Aplicar-les és automàtic; generar-les, no.** El warning
+> `PendingModelChangesWarning` està silenciat a `AppOptionsBuilderConf`: si canvies una
+> entitat i no generes migració, **l'aplicació arrenca sense dir res** i peta en runtime a
+> la primera consulta que toqui la columna que falta. A més, `.config/dotnet-tools.json`
+> té `dotnet-ef` fixat a `6.0.6` amb el projecte en EF Core 10: cal pujar-lo primer.
+>
+> El procediment complet i el perquè són a [`ARQUITECTURA.md` §6](ARQUITECTURA.md#6-persistència).
 
 ---
 
@@ -268,13 +282,37 @@ namespace DataModels.Configuration.Configurations
 }
 ```
 
-### Pas 3: Registrar al DbContext
+### Pas 3: Registrar al DbContext i generar la migració
 
 **Ubicació:** `DataLayer/AppDbContext.cs`
 
 ```csharp
 public virtual DbSet<NovaEntitat> NovesEntitats => Set<NovaEntitat>();
 ```
+
+**I tot seguit, la migració.** Aquest pas no és opcional i **res no t'avisarà si te'l
+saltes**: el warning de canvis pendents d'EF està silenciat, o sigui que l'aplicació
+compilarà, arrencarà i només petarà quan una consulta toqui la taula que no existeix.
+
+```bash
+# Cal un cop: el manifest té dotnet-ef fixat a 6.0.6 i el projecte va amb EF Core 10
+dotnet tool update dotnet-ef
+
+dotnet ef migrations add AfegirNovaEntitat \
+  --project DataLayer \
+  --startup-project UI.ER.AvaloniaUI
+```
+
+Dues regles que no s'han de trencar:
+
+- **No esmenis `20210821093532_inicial`.** Està registrada com a aplicada a totes les
+  instal·lacions existents; el que hi afegeixis no hi arribarà mai.
+- **No la borris.** Sense ella, EF troba a `__EFMigrationsHistory` una migració aplicada
+  que no coneix.
+
+Val per a qualsevol canvi persistit, no només per a una entitat nova: afegir o treure una
+propietat, canviar-ne el tipus o tocar una relació. Detall a
+[`ARQUITECTURA.md` §6](ARQUITECTURA.md#6-persistència).
 
 ### Pas 4: Crear els DTOs d'Entrada
 
@@ -562,6 +600,58 @@ services.AddTransient<INovaEntitatUpdate, NovaEntitatUpdate>();
 services.AddTransient<INovaEntitatActivaDesactiva, NovaEntitatActivaDesactiva>();
 ```
 
+#### Els serveis transversals no segueixen aquest camí
+
+Una peça que **no és ni entitat ni operació** —el bus de canvis `INotificadorDeCanvis`, les
+dades de l'usuari `IDadesDeLusuari`— es registra diferent:
+
+| | Operació de negoci | Servei transversal |
+|---|---|---|
+| Contracte | `BusinessLayer.Abstract/Services/IXxx.cs` | `BusinessLayer.Abstract/Generic/IXxx.cs` |
+| Implementació | `BusinessLayer/Services/Xxx.cs` | `BusinessLayer/Common/Xxx.cs` |
+| Registre | sol, per convenció de nom | `AddSingleton` **a mà** a `BusinessLayerConfigureServices()` |
+| Cicle de vida | `Transient` | `Singleton` |
+| `IBLOperation`/`IDisposable` | sí, `using var bl = …` | **no**: és de llarga vida |
+
+El namespace no és decoratiu: l'escaneig d'`Injection.Contractes()` filtra per
+`BusinessLayer.Abstract.Services`, i un contracte transversal posat allà petaria a
+l'arrencada reclamant una implementació que no existeix.
+
+Una operació que necessiti un servei transversal només l'ha de demanar pel constructor
+(`ActivatorUtilities` la construeix i el Singleton ja hi és); **no l'ha de cachejar**, perquè
+el seu contingut pot canviar mentre l'aplicació és oberta. Perquè hi arribi un ViewModel, en
+canvi, cal una propietat nova a `IServiceFactory`.
+
+#### Operació de negoci amb un port cap a l'exterior
+
+Quan una operació ha de sortir de l'ordinador —escriure a un disc que pot no ser-hi, parlar
+amb un núvol— el que canvia segons l'exterior **no va dins de l'operació**: va darrere d'un
+port, i l'operació es queda comuna. El primer cas és `ICopiaDeSeguretat` amb
+`IMagatzemDeCopies`.
+
+| Peça | On viu | Per què |
+|---|---|---|
+| L'operació (`ICopiaDeSeguretat` → `CopiaDeSeguretat`) | `Abstract/Services/` + `Services/` | És una operació normal: entra pel registre per convenció i es consumeix amb `using var bl = …` |
+| El port (`IMagatzemDeCopies`) | `Abstract/Generic/` | **No** a `Services/`: l'escaneig d'operacions filtra per aquell namespace i li reclamaria una implementació de nom `MagatzemDeCopies` |
+| Els adaptadors (`MagatzemDeCarpeta`, …) | `BusinessLayer/Common/` | Un `AddSingleton<IMagatzemDeCopies, …>()` a mà per cadascun, **abans** del bucle d'operacions |
+| El doble (`MagatzemFals`) | `BusinessLayer.Integration.Test/` | El que fa que l'operació sencera es provi sense xarxa i sense navegador |
+
+Les tres regles que el fan funcionar:
+
+1. **Tot el que és car és comú.** Al cas de les còpies: bolcat, verificació, xifratge,
+   retenció i la UI. Darrere del port hi queda «desa aquest fitxer, llista'ls, retira els
+   sobrants», que són cinquanta línies per adaptador.
+2. **L'operació rep `IEnumerable<TPort>`**, no una implementació concreta. Afegir un destí
+   nou és **una línia al registre** i cap canvi a l'operació ni als tests que ja hi ha.
+3. **Cap constructor d'adaptador toca res**: ni disc, ni xarxa, ni fitxers de credencials.
+   `InjeccioTest.CadaContracteTeLaSevaImplementacioPerConvencio` construeix el contenidor
+   sencer i resol totes les operacions en un CI sense res de tot això; tota la feina va
+   dins de `Prepara()`.
+
+I com totes les operacions: cap excepció crua cap amunt. Un disc ple, un llapis desendollat
+o una carpeta de només lectura han d'arribar a l'usuari com una `BrokenRule` que diu el camí,
+no com un `IOException`.
+
 ### Pas 10: Crear els ViewModels i Vistes (Opcional)
 
 Seguir el patró existent:
@@ -732,8 +822,10 @@ using Models = DataModels.Models;
 4. **Els DTOs d'Update inclouen `IId`** per identificar l'entitat
 5. **Les validacions es fan ABANS de modificar** (fail-fast)
 6. **El context es crea per operació** (via Factory pattern)
-7. **Els serveis són `Transient`** (una instància per ús)
-8. **Les migracions s'executen automàticament** a l'inici
+7. **Els serveis són `Transient`** (una instància per ús), tret dels transversals —el bus i
+   les dades de l'usuari—, que són `Singleton`
+8. **Les migracions s'*apliquen* automàticament** a l'inici, però **generar-les és manual i
+   ningú no t'ho recorda** (§3 i Pas 3)
 
 ### Exemple d'Ús des de ViewModel
 

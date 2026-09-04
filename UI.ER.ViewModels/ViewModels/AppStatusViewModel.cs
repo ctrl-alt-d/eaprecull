@@ -21,6 +21,9 @@ namespace UI.ER.ViewModels.ViewModels
         private readonly string NA = "N/A";
         private readonly IServiceFactory _serveis;
 
+        /// <summary>Els porticons d'arrencada surten un sol cop per sessió.</summary>
+        private bool _jaSHanObertElsPorticons;
+
         public AppStatusViewModel(IServiceFactory serveis)
         {
             _serveis = serveis;
@@ -38,7 +41,7 @@ namespace UI.ER.ViewModels.ViewModels
                     .DisposeWith(d));
 
             // Una comanda per cada entrada de navegació de la finestra principal: les tres
-            // targetes del taulell i les set entrades del menú. La vista només hi enganxa
+            // targetes del taulell i les vuit entrades del menú. La vista només hi enganxa
             // quina finestra atén cada Interaction; el que s'obre es decideix aquí.
             ActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowActuacioSetDialog.Handle(Unit.Default));
             AlumneSetCommand = ReactiveCommand.CreateFromObservable(() => ShowAlumneSetDialog.Handle(Unit.Default));
@@ -47,6 +50,86 @@ namespace UI.ER.ViewModels.ViewModels
             EtapaSetCommand = ReactiveCommand.CreateFromObservable(() => ShowEtapaSetDialog.Handle(Unit.Default));
             TipusActuacioSetCommand = ReactiveCommand.CreateFromObservable(() => ShowTipusActuacioSetDialog.Handle(Unit.Default));
             UtilitatsCommand = ReactiveCommand.CreateFromObservable(() => ShowUtilitatsDialog.Handle(Unit.Default));
+            DadesUsuariCommand = ReactiveCommand.CreateFromObservable(() => ShowDadesUsuariDialog.Handle(Unit.Default));
+            CopiaDeSeguretatCommand = ReactiveCommand.CreateFromObservable(() => ShowCopiaDeSeguretatDialog.Handle(Unit.Default));
+        }
+
+        /// <summary>
+        /// Els dos porticons d'arrencada, en ordre. Primer, si les dades de l'usuari no
+        /// estan informades, el formulari surt tot sol; després, si fa més de dues
+        /// setmanes de l'última còpia i hi ha actuacions noves, la finestra de còpia.
+        /// Tots dos es poden tancar —el programa funciona igual— i tornen a sortir la
+        /// propera arrencada.
+        /// </summary>
+        /// <remarks>
+        /// Qui el dispara és la vista, un cop ha mostrat la finestra i ha posat els seus
+        /// <c>RegisterHandler</c>; el <em>què</em> s'obre i el <em>si cal</em> continuen
+        /// sent d'aquí. No es pot llançar des del <c>WhenActivated</c> d'aquest ViewModel,
+        /// ni tan sols diferit: l'<c>AvaloniaScheduler</c> executa <strong>en línia</strong>
+        /// les accions sense retard quan ja s'és al fil d'UI, i la <c>Interaction</c>
+        /// arribaria abans que els handlers de la vista —que es registren a la mateixa
+        /// passada d'activació— i petaria amb <c>UnhandledInteractionException</c>.
+        /// <para>
+        /// I tampoc a <c>App.OnFrameworkInitializationCompleted()</c>: un <c>ShowDialog</c>
+        /// necessita propietari, i el cicle de vida d'escriptori d'Avalonia vol la
+        /// <c>MainWindow</c> assignada abans que res.
+        /// </para>
+        /// </remarks>
+        public void ObreElsPorticonsDArrencada()
+        {
+            if (_jaSHanObertElsPorticons)
+                return;
+
+            _jaSHanObertElsPorticons = true;
+
+            // Si les dades ja hi són no hi ha porticó, i la còpia es proposa de seguida.
+            if (_serveis.DadesUsuari.EstaInformat)
+            {
+                ProposaLaCopiaSiCal();
+                return;
+            }
+
+            ShowDadesUsuariDialog
+                .Handle(Unit.Default)
+                // Encadenat i no en paral·lel: dos ShowDialog alhora es taparien l'un a
+                // l'altre. La còpia es proposa quan el formulari de dades s'ha tancat,
+                // s'hagi omplert o no. Amb gestor d'error a posta: quedar-se sense
+                // porticó és un inconvenient —les entrades de menú hi són igualment—;
+                // tombar l'aplicació en arrencar, no.
+                .Subscribe(_ => ProposaLaCopiaSiCal(), _ => ProposaLaCopiaSiCal());
+        }
+
+        /// <summary>
+        /// Fa més de dues setmanes de l'última còpia i hi ha actuacions noves? Doncs la
+        /// finestra de còpia surt sola. Qui decideix <em>si cal</em> és el BusinessLayer
+        /// (<see cref="ICopiaDeSeguretat.CalFerCopia"/>), que és on viu la regla; aquí
+        /// només es decideix <em>què</em> s'obre.
+        /// </summary>
+        /// <remarks>
+        /// La finestra no bloqueja res: porta un botó «Ara no» i es pot tancar. Una còpia
+        /// de seguretat que impedeixi treballar el dia que el llapis no hi és fa més mal
+        /// que bé, i la proposta torna a sortir la propera arrencada.
+        /// </remarks>
+        private async void ProposaLaCopiaSiCal()
+        {
+            try
+            {
+                using var bl = _serveis.GetBLOperation<ICopiaDeSeguretat>();
+
+                if ((await bl.CalFerCopia()).Data is not { Cal: true })
+                    return;
+
+                ShowCopiaDeSeguretatDialog
+                    .Handle(Unit.Default)
+                    .Subscribe(_ => { }, _ => { });
+            }
+            catch (Exception)
+            {
+                // Silenciat a posta, i sense Log: UI.ER.ViewModels no veu Serilog, i
+                // CalFerCopia() ja registra els seus problemes abans de tornar «no cal».
+                // Un async void que propagui tomba l'aplicació, i quedar-se sense
+                // proposta és un inconvenient; no arrencar, no.
+            }
         }
 
         private async void LoadData()
@@ -173,5 +256,13 @@ namespace UI.ER.ViewModels.ViewModels
         /// <summary>Utilitats no és una llista d'entitats: només s'obre i es tanca.</summary>
         public ICommand UtilitatsCommand { get; }
         public Interaction<Unit, Unit> ShowUtilitatsDialog { get; } = new();
+
+        /// <summary>«Les meves dades» tampoc: només s'obre i es tanca.</summary>
+        public ICommand DadesUsuariCommand { get; }
+        public Interaction<Unit, Unit> ShowDadesUsuariDialog { get; } = new();
+
+        /// <summary>«Còpia de seguretat» tampoc: només s'obre i es tanca.</summary>
+        public ICommand CopiaDeSeguretatCommand { get; }
+        public Interaction<Unit, Unit> ShowCopiaDeSeguretatDialog { get; } = new();
     }
 }
